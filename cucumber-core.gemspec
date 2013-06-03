@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
-require "cucumber/platform"
+require "cucumber/core/version"
 
 Gem::Specification.new do |s|
   s.name        = 'cucumber-core'
-  s.version     = '2.0.0.pre'
+  s.version     = Cucumber::Core::Version
   s.authors     = ["Aslak Hellesøy", "Matt Wynne", "Steve Tooke", "Oleg Sukhodolsky"]
   s.description = 'Core library for the Cucumber BDD app'
   s.summary     = "cucumber-core-#{s.version}"
