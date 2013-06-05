@@ -28,10 +28,10 @@ module Cucumber
           units.inject(0) { |total, unit| total += unit.step_count }
         end
 
-        def describe_to(visitor)
+        def describe_to(visitor, *args)
           visitor.feature(self) do
             children.each do |child|
-              child.describe_to(visitor)
+              child.describe_to(visitor, *args)
             end
           end
         end
@@ -49,10 +49,6 @@ module Cucumber
               feature_element.accept(visitor)
             end
           end
-        end
-
-        def executables
-          units
         end
 
         def indented_name

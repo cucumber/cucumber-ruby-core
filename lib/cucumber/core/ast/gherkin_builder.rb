@@ -5,6 +5,8 @@ require 'cucumber/platform'
 module Cucumber
   module Core
     module Ast
+      # Builds an AST of a feature by listening to events from the
+      # Gherkin parser.
       class GherkinBuilder
         include Gherkin::Rubify
 

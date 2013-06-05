@@ -34,9 +34,6 @@ module Cucumber
     describe "compiling a test suite" do
       it "compiles two scenarios into two test cases" do
         feature = parse_gherkin %{Feature: Feature name
-                                      Background: Background name
-                                        Given passing
-
                                       Scenario: Scenario name 1
                                         Given passing
 

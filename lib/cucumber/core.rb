@@ -1,5 +1,5 @@
 require 'cucumber/core/ast/gherkin_builder.rb'
-require 'cucumber/core/test_suite.rb'
+require 'cucumber/core/compiler.rb'
 require 'gherkin/parser/parser'
 
 module Cucumber
@@ -19,7 +19,8 @@ module Cucumber
     end
 
     def compile(features)
-      TestSuite.new([])
+      Compiler.new(features).test_suite
     end
+
   end
 end
