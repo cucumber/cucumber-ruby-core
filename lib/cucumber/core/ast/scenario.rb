@@ -1,3 +1,4 @@
+require 'cucumber/core/describes_itself'
 require 'cucumber/ast/names'
 require 'cucumber/ast/empty_background'
 require 'cucumber/ast/location'
@@ -8,6 +9,7 @@ module Cucumber
       class Scenario #:nodoc:
         include Names
         include HasLocation
+        include DescribesItself
 
         attr_reader   :feature_tags
         attr_accessor :feature
@@ -22,16 +24,8 @@ module Cucumber
           @gherkin_statement = node
         end
 
-        def describe_to(visitor)
-          visitor.scenario(self) do
-            children.each do |child|
-              child.describe_to(visitor)
-            end
-          end
-        end
-
         def children
-          []
+          @raw_steps
         end
 
         def accept(visitor)
@@ -125,6 +119,10 @@ module Cucumber
 
         def skip_hooks?
           @background.failed? || @executed
+        end
+
+        def description_for_visitors
+          :scenario
         end
 
       end

@@ -1,3 +1,4 @@
+require 'cucumber/core/describes_itself'
 require 'cucumber/ast/location'
 
 module Cucumber
@@ -5,6 +6,7 @@ module Cucumber
     module Ast
       class Step #:nodoc:
         include HasLocation
+        include DescribesItself
 
         attr_reader :keyword, :name, :language
         attr_writer :step_collection, :options
@@ -45,10 +47,6 @@ module Cucumber
           StepInvocation.new(self, name, multiline_arg, matched_cells)
         end
 
-        def describe_to(visitor, *args)
-          visitor.step(self, *args)
-        end
-
         def first_match(visitor)
           # feature_element is always a ScenarioOutline in this case
           feature_element.each_example_row do |cells|
@@ -82,6 +80,10 @@ module Cucumber
         end
 
         private
+
+        def description_for_visitors
+          :step
+        end
 
         def matched_cells(cells)
           col_index = 0

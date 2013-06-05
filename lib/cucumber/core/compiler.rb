@@ -1,4 +1,6 @@
-require 'cucumber/core/test_suite.rb'
+require 'cucumber/core/describes_itself'
+require 'cucumber/core/test_suite'
+
 module Cucumber
   module Core
     class Compiler
@@ -7,8 +9,8 @@ module Cucumber
       end
 
       def test_suite
-        @features.inject(TestSuiteBuilder.new) do |builder, feature|
-          builder.add_feature(feature)
+        TestSuiteBuilder.new.tap do |builder|
+          @features.each { |f| f.describe_to(builder) }
         end.result
       end
 
@@ -20,28 +22,90 @@ module Cucumber
           @test_cases = []
         end
 
-        def add_feature(feature)
-          feature.describe_to(self)
-          self
-        end
-
         def feature(feature, &descend)
           @current_feature = feature
           descend.call
         end
 
-        def scenario(scenario)
-          new_scenario(current_feature, scenario)
+        def scenario(scenario, &descend)
+          test_case_builders << ScenarioBuilder.new(current_feature, scenario)
+          descend.call(test_case_builders.last)
         end
 
         def result
-          TestSuite.new(@test_cases)
+          TestSuite.new(test_cases)
         end
 
         private
-        def new_scenario(feature, scenario)
-          @test_cases << :new_test_case
+
+        def test_cases
+          test_case_builders.map(&:result)
         end
+
+        def test_case_builders
+          @test_case_builders ||= []
+        end
+
+        class ScenarioBuilder
+          attr_reader :feature, :scenario
+          private :feature, :scenario
+
+          def initialize(feature, scenario)
+            @feature = feature
+            @scenario = scenario
+          end
+
+          def result
+            TestCase::Scenario.new(feature, scenario, test_steps)
+          end
+
+          def step(step)
+            parents = [feature, scenario, step]
+            test_steps << TestStep.new(parents)
+          end
+
+          private
+          def test_steps
+            @test_steps ||= []
+          end
+        end
+
+        module TestCase
+          class Scenario
+            include DescribesItself
+
+            def initialize(feature, scenario, test_steps)
+              @test_steps = test_steps
+            end
+
+            def execute(mappings, report)
+              report.before_test_case(self)
+              # TODO: Execute steps
+              report.after_test_case(self)
+            end
+
+            private
+            def children
+              @test_steps
+            end
+
+            def description_for_visitors
+              :test_case
+            end
+          end
+        end
+
+        class TestStep
+          include DescribesItself
+          def initialize(parents)
+
+          end
+
+          def description_for_visitors
+            :test_step
+          end
+        end
+
       end
     end
   end

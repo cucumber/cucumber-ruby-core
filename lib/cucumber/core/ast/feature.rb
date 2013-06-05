@@ -1,3 +1,4 @@
+require 'cucumber/core/describes_itself'
 require 'cucumber/core/ast/names'
 require 'cucumber/core/ast/location'
 
@@ -8,6 +9,7 @@ module Cucumber
       class Feature #:nodoc:
         include Names
         include HasLocation
+        include DescribesItself
 
         attr_accessor :language
         attr_reader :feature_elements
@@ -26,14 +28,6 @@ module Cucumber
 
         def step_count
           units.inject(0) { |total, unit| total += unit.step_count }
-        end
-
-        def describe_to(visitor, *args)
-          visitor.feature(self) do
-            children.each do |child|
-              child.describe_to(visitor, *args)
-            end
-          end
         end
 
         def children
@@ -99,6 +93,10 @@ module Cucumber
         private
 
         attr_reader :background
+
+        def description_for_visitors
+          :feature
+        end
 
       end
     end

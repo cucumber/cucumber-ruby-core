@@ -1,5 +1,6 @@
 require 'cucumber/ast/names'
 require 'cucumber/ast/location'
+require 'cucumber/core/describes_itself'
 
 module Cucumber
   module Core
@@ -7,6 +8,7 @@ module Cucumber
       class Background
         include Names
         include HasLocation
+        include DescribesItself
         attr_accessor :feature
         attr_accessor :comment, :keyword
 
@@ -18,16 +20,8 @@ module Cucumber
           @gherkin_statement = node
         end
 
-        def describe_to(visitor)
-          visitor.background(self) do
-            children.each do |child|
-              child.describe_to(visitor)
-            end
-          end
-        end
-
         def children
-          []
+          @raw_steps
         end
 
         def to_sexp
@@ -48,6 +42,11 @@ module Cucumber
 
         def source_tag_names
           source_tags.map { |tag| tag.name }
+        end
+
+        private
+        def description_for_visitors
+          :background
         end
 
       end

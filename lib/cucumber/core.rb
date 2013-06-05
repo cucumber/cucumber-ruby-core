@@ -22,5 +22,8 @@ module Cucumber
       Compiler.new(features).test_suite
     end
 
+    def execute(test_suite, mappings, report)
+      test_suite.execute(mappings, report)
+    end
   end
 end

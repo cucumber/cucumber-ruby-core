@@ -2,7 +2,8 @@ module Cucumber
   module Core
     module Ast
       class EmptyBackground
-        def describe_to(visitor)
+        def describe_to(*)
+          self
         end
 
         def steps
