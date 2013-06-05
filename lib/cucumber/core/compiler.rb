@@ -1,6 +1,7 @@
 require 'cucumber/core/describes_itself'
 require 'cucumber/core/test_suite'
 require 'cucumber/core/test_case'
+require 'cucumber/core/test_step'
 
 module Cucumber
   module Core
@@ -70,18 +71,6 @@ module Cucumber
             @test_steps ||= []
           end
         end
-
-        class TestStep
-          include DescribesItself
-          def initialize(parents)
-
-          end
-
-          def description_for_visitors
-            :test_step
-          end
-        end
-
       end
     end
   end
