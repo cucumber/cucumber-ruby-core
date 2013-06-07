@@ -1,31 +1,32 @@
 require 'cucumber/initializer'
-require 'cucumber/core/describes_itself'
 require 'cucumber/core/result'
 
 module Cucumber
   module Core
     class TestStep
-      include DescribesItself
-      include Cucumber.initializer(:step, :parents)
 
       def initialize(parents)
-        step = parents.pop
-        super(step, parents)
+        @parents = parents
       end
 
       def execute(mappings)
         mappings.execute(step)
         Result::Passed.new(self)
-      rescue Exception
-        Result::Failed.new(self)
+      rescue Exception => exception
+        Result::Failed.new(self, exception)
       end
 
-      def children
-        [step]
+      def describe_to(visitor, *args)
+        parents.each do |parent|
+          parent.describe_to(visitor, *args)
+        end
       end
 
-      def description_for_visitors
-        :test_step
+      attr_reader :parents
+      private :parents
+
+      def step
+        parents.last
       end
 
     end
