@@ -1,4 +1,4 @@
-require 'cucumber/initialize'
+require 'cucumber/initializer'
 require 'cucumber/ast/names'
 require 'cucumber/ast/location'
 require 'cucumber/core/describes_itself'
@@ -10,7 +10,7 @@ module Cucumber
         include Names
         include HasLocation
         include DescribesItself
-        include Cucumber::Initialize(:language, :location, :comment, :keyword, :title, :description, :raw_steps)
+        include Cucumber.initializer(:language, :location, :comment, :keyword, :title, :description, :raw_steps)
 
         attr_accessor :feature
         attr_accessor :comment, :keyword

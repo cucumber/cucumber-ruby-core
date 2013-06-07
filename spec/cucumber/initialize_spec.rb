@@ -1,9 +1,9 @@
-require 'cucumber/initialize'
+require 'cucumber/initializer'
 
 module Cucumber
   describe 'generating initializers' do
     class Book
-      include Cucumber::Initialize(:title, :author)
+      include Cucumber.initializer(:title, :author)
 
       def description
         "#{title} by #{author}"
@@ -37,7 +37,7 @@ module Cucumber
 
     context 'with an overridden reader' do
       class Score
-        include Cucumber::Initialize(:score)
+        include Cucumber.initializer(:score)
         attr_reader :score
       end
 

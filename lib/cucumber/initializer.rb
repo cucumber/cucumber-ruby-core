@@ -1,5 +1,5 @@
 module Cucumber
-  def self.Initialize(*attributes)
+  def self.initializer(*attributes)
     Module.new do
       attr_reader *attributes
       private *attributes

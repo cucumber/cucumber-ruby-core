@@ -1,4 +1,4 @@
-require 'cucumber/initialize'
+require 'cucumber/initializer'
 module Cucumber
   module Core
     module Ast
@@ -10,7 +10,7 @@ module Cucumber
       # This gets parsed into a Comment with value <tt>"# Lorem ipsum\n# dolor sit amet\n"</tt>
       #
       class Comment #:nodoc:
-        include Cucumber::Initialize(:value)
+        include Cucumber.initializer(:value)
 
         def empty?
           value.nil? || value == ""

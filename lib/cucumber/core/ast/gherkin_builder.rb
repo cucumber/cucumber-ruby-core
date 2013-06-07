@@ -1,4 +1,4 @@
-require 'cucumber/initialize'
+require 'cucumber/initializer'
 require 'cucumber/core/ast'
 require 'gherkin/rubify'
 require 'cucumber/platform'
@@ -105,7 +105,7 @@ module Cucumber
         end
 
         class Builder
-          include Cucumber::Initialize(:file, :node)
+          include Cucumber.initializer(:file, :node)
           private
 
           def tags

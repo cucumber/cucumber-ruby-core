@@ -1,4 +1,4 @@
-require 'cucumber/initialize'
+require 'cucumber/initializer'
 require 'cucumber/core/describes_itself'
 require 'cucumber/core/ast/names'
 require 'cucumber/core/ast/location'
@@ -16,7 +16,7 @@ module Cucumber
         attr_reader :feature_elements
         attr_reader :comment, :background, :tags, :keyword
 
-        include Cucumber::Initialize(:location, :background, :comment, :tags, :keyword, :title, :description, :feature_elements)
+        include Cucumber.initializer(:location, :background, :comment, :tags, :keyword, :title, :description, :feature_elements)
         def initialize(*)
           super
           feature_elements.each { |e| e.feature = self }

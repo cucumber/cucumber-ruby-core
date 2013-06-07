@@ -1,4 +1,4 @@
-require 'cucumber/initialize'
+require 'cucumber/initializer'
 require 'cucumber/core/describes_itself'
 require 'cucumber/ast/names'
 require 'cucumber/ast/empty_background'
@@ -16,7 +16,7 @@ module Cucumber
         attr_accessor :feature
         attr_reader   :comment, :tags, :keyword, :background
 
-        include Cucumber::Initialize(:language, :location, :background, :comment, :tags, :feature_tags, :keyword, :title, :description, :raw_steps)
+        include Cucumber.initializer(:language, :location, :background, :comment, :tags, :feature_tags, :keyword, :title, :description, :raw_steps)
 
         def initialize(*)
           super
