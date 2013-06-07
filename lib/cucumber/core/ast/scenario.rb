@@ -1,3 +1,4 @@
+require 'cucumber/initialize'
 require 'cucumber/core/describes_itself'
 require 'cucumber/ast/names'
 require 'cucumber/ast/empty_background'
@@ -15,8 +16,10 @@ module Cucumber
         attr_accessor :feature
         attr_reader   :comment, :tags, :keyword, :background
 
-        def initialize(language, location, background, comment, tags, feature_tags, keyword, title, description, raw_steps)
-          @language, @location, @background, @comment, @tags, @feature_tags, @keyword, @title, @description, @raw_steps = language, location, background, comment, tags, feature_tags, keyword, title, description, raw_steps
+        include Cucumber::Initialize(:language, :location, :background, :comment, :tags, :feature_tags, :keyword, :title, :description, :raw_steps)
+
+        def initialize(*)
+          super
           @exception = @executed = nil
         end
 
@@ -25,7 +28,7 @@ module Cucumber
         end
 
         def children
-          @raw_steps
+          raw_steps
         end
 
         def accept(visitor)
@@ -76,10 +79,10 @@ module Cucumber
         end
 
         def to_sexp
-          sexp = [:scenario, line, @keyword, name]
-          comment = @comment.to_sexp
+          sexp = [:scenario, line, keyword, name]
+          comment = comment.to_sexp
           sexp += [comment] if comment
-          tags = @tags.to_sexp
+          tags = tags.to_sexp
           sexp += tags if tags.any?
           sexp += step_invocations.to_sexp if step_invocations.any?
           sexp
@@ -96,7 +99,7 @@ module Cucumber
         end
 
         def step_invocations
-          @step_invocation ||= @background.create_step_invocations(my_step_invocations)
+          @step_invocation ||= background.create_step_invocations(my_step_invocations)
         end
 
         def executable_steps
@@ -104,21 +107,21 @@ module Cucumber
         end
 
         def all_steps
-          background.raw_steps + @raw_steps
+          background.raw_steps + raw_steps
         end
 
         private
 
         def steps
-          StepCollection.new(@raw_steps)
+          StepCollection.new(raw_steps)
         end
 
         def my_step_invocations
-          @raw_steps.map { |step| step.step_invocation }
+          raw_steps.map { |step| step.step_invocation }
         end
 
         def skip_hooks?
-          @background.failed? || @executed
+          background.failed? || @executed
         end
 
         def description_for_visitors

@@ -1,3 +1,4 @@
+require 'cucumber/initialize'
 require 'cucumber/core/ast'
 require 'gherkin/rubify'
 require 'cucumber/platform'
@@ -104,10 +105,7 @@ module Cucumber
         end
 
         class Builder
-          def initialize(file, node)
-            @file, @node = file, node
-          end
-
+          include Cucumber::Initialize(:file, :node)
           private
 
           def tags
@@ -259,9 +257,8 @@ module Cucumber
             @children ||= []
           end
 
-          private
-
           attr_reader :examples_sections
+          private :examples_sections
         end
 
         class StepBuilder < Builder

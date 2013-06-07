@@ -1,3 +1,4 @@
+require 'cucumber/initialize'
 require 'cucumber/core/describes_itself'
 require 'cucumber/core/test_suite'
 require 'cucumber/core/test_case'
@@ -49,13 +50,7 @@ module Cucumber
         end
 
         class ScenarioBuilder
-          attr_reader :feature, :scenario
-          private :feature, :scenario
-
-          def initialize(feature, scenario)
-            @feature = feature
-            @scenario = scenario
-          end
+          include Cucumber::Initialize(:feature, :scenario)
 
           def result
             TestCase::Scenario.new(feature, scenario, test_steps)

@@ -1,3 +1,4 @@
+require 'cucumber/initialize'
 require 'cucumber/ast/names'
 require 'cucumber/ast/location'
 require 'cucumber/core/describes_itself'
@@ -9,25 +10,23 @@ module Cucumber
         include Names
         include HasLocation
         include DescribesItself
+        include Cucumber::Initialize(:language, :location, :comment, :keyword, :title, :description, :raw_steps)
+
         attr_accessor :feature
         attr_accessor :comment, :keyword
-
-        def initialize(language, location, comment, keyword, title, description, raw_steps)
-          @language, @location, @comment, @keyword, @title, @description, @raw_steps = language, location, comment, keyword, title, description, raw_steps
-        end
 
         def gherkin_statement(node)
           @gherkin_statement = node
         end
 
         def children
-          @raw_steps
+          raw_steps
         end
 
         def to_sexp
-          sexp = [:background, line, @keyword]
+          sexp = [:background, line, keyword]
           sexp += [name] unless name.empty?
-          comment = @comment.to_sexp
+          comment = comment.to_sexp
           sexp += [comment] if comment
           sexp += steps.to_sexp if steps.any?
           sexp
