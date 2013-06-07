@@ -54,15 +54,24 @@ module Cucumber
     describe "executing a test suite" do
       class ReportSpy
         def initialize
-          @total_test_cases = 0
+          @total_passed = @total_failed = @total_test_cases = 0
         end
 
         def before_test_case(test_case)
 
         end
 
-        def after_test_case(test_case)
+        def after_test_case(test_case, result)
           @total_test_cases += 1
+          result.describe_to(self)
+        end
+
+        def passed(result)
+          @total_passed +=1 
+        end
+
+        def failed(result)
+          @total_failed +=1 
         end
 
         def total_test_cases
@@ -70,11 +79,20 @@ module Cucumber
         end
 
         def total_passed_test_cases
-          0
+          @total_passed
         end
 
         def total_failed_test_cases
-          0
+          @total_failed
+        end
+      end
+
+
+      class FakeMappings
+        Failure = Class.new(StandardError)
+
+        def execute(step)
+          raise Failure if step.name =~ /fail/
         end
       end
 
@@ -89,7 +107,7 @@ module Cucumber
 
         test_suite = compile([feature])
         report = ReportSpy.new
-        mappings = stub
+        mappings = FakeMappings.new
 
         execute(test_suite, mappings, report)
 
