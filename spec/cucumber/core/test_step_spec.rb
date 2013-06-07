@@ -28,6 +28,20 @@ module Cucumber::Core
           test_step.execute(mappings).should == Result::Failed.new(test_step)
         end
       end
+
+    end
+
+    describe "describing itself" do
+      it "delegates to each of its parents in turn" do
+        feature, scenario, step = stub, stub, stub
+        visitor = stub
+        args = stub
+        feature.should_receive(:describe_to).with(visitor, args)
+        scenario.should_receive(:describe_to).with(visitor, args)
+        step.should_receive(:describe_to).with(visitor, args)
+        test_step = TestStep.new([feature, scenario, step])
+        test_step.describe_to(visitor, args)
+      end
     end
   end
 end
