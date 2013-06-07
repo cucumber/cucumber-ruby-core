@@ -34,5 +34,16 @@ module Cucumber
       cucumber_book.upcase!
       cucumber_book.description.should == 'THE CUCUMBER BOOK by MATT WYNNE'
     end
+
+    context 'with an overridden reader' do
+      class Score
+        include Cucumber::Initialize(:score)
+        attr_reader :score
+      end
+
+      it 'makes the reader public' do
+        expect { Score.new(12).score }.to_not raise_error
+      end
+    end
   end
 end
