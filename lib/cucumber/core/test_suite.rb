@@ -1,14 +1,12 @@
+require 'cucumber/initializer'
 module Cucumber
   module Core
     class TestSuite
       include DescribesItself
-
-      def initialize(test_cases)
-        @test_cases = test_cases
-      end
+      include Cucumber.initializer(:test_cases)
 
       def execute(mappings, report)
-        @test_cases.each do |test_case|
+        test_cases.each do |test_case|
           test_case.execute(mappings, report)
         end
         self
@@ -16,7 +14,7 @@ module Cucumber
 
       private
       def children
-        @test_cases
+        test_cases
       end
 
       def description_for_visitors
