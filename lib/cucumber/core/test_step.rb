@@ -20,6 +20,10 @@ module Cucumber
         Result::Failed.new(self)
       end
 
+      def children
+        [step]
+      end
+
       def description_for_visitors
         :test_step
       end

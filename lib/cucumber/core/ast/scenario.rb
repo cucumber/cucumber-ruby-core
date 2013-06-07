@@ -14,7 +14,7 @@ module Cucumber
 
         attr_reader   :feature_tags
         attr_accessor :feature
-        attr_reader   :comment, :tags, :keyword, :background
+        attr_reader   :comment, :tags, :keyword, :background, :location, :title
 
         include Cucumber.initializer(:language, :location, :background, :comment, :tags, :feature_tags, :keyword, :title, :description, :raw_steps)
 
