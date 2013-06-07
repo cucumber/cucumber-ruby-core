@@ -1,3 +1,4 @@
+require 'cucumber/initializer'
 require 'cucumber/core/describes_itself'
 require 'cucumber/core/ast/names'
 require 'cucumber/core/ast/location'
@@ -15,10 +16,10 @@ module Cucumber
         attr_reader :feature_elements
         attr_reader :comment, :background, :tags, :keyword
 
-        def initialize(location, background, comment, tags, keyword, title, description, feature_elements)
-          @background, @comment, @tags, @keyword, @title, @description, @feature_elements = background, comment, tags, keyword, title, description, feature_elements
-          @location = location
-          @feature_elements.each { |e| e.feature = self }
+        include Cucumber.initializer(:location, :background, :comment, :tags, :keyword, :title, :description, :feature_elements)
+        def initialize(*)
+          super
+          feature_elements.each { |e| e.feature = self }
         end
 
         attr_reader :gherkin_statement

@@ -1,3 +1,4 @@
+require 'cucumber/initializer'
 require 'cucumber/core/describes_itself'
 
 module Cucumber
@@ -5,10 +6,7 @@ module Cucumber
     module TestCase
       class Scenario
         include DescribesItself
-
-        def initialize(feature, scenario, test_steps)
-          @test_steps = test_steps
-        end
+        include Cucumber.initializer(:feature, :scenario, :test_steps)
 
         def execute(mappings, report)
           report.before_test_case(self)
@@ -18,7 +16,7 @@ module Cucumber
 
         private
         def children
-          @test_steps
+          test_steps
         end
 
         def description_for_visitors
