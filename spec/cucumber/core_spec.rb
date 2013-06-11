@@ -58,12 +58,17 @@ module Cucumber
         end
 
         def before_test_case(test_case)
-
         end
 
         def after_test_case(test_case, result)
           @total_test_cases += 1
           result.describe_to(self)
+        end
+
+        def before_test_step(test_step)
+        end
+
+        def after_test_step(test_step, result)
         end
 
         def passed(result)
