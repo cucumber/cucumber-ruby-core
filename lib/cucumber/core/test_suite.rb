@@ -13,6 +13,7 @@ module Cucumber
       end
 
       private
+
       def children
         test_cases
       end

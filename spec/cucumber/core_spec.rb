@@ -42,7 +42,7 @@ module Cucumber
                                         When failing
         }
         suite = compile([feature])
-        visitor = stub
+        visitor = stub(feature: nil, scenario: nil)
         visitor.should_receive(:test_suite).once.and_yield
         visitor.should_receive(:test_case).exactly(2).times.and_yield
         visitor.should_receive(:test_step).exactly(3).times
@@ -58,10 +58,10 @@ module Cucumber
         end
 
         def before_test_case(test_case)
+          @total_test_cases += 1
         end
 
         def after_test_case(test_case, result)
-          @total_test_cases += 1
           result.describe_to(self)
         end
 
@@ -75,7 +75,7 @@ module Cucumber
           @total_passed +=1 
         end
 
-        def failed(result)
+        def failed(result, exception)
           @total_failed +=1 
         end
 

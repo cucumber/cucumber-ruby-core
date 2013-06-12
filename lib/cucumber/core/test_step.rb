@@ -4,10 +4,7 @@ require 'cucumber/core/result'
 module Cucumber
   module Core
     class TestStep
-
-      def initialize(parents)
-        @parents = parents
-      end
+      include Cucumber.initializer(:parents)
 
       def execute(mappings)
         mappings.execute(step)
@@ -17,13 +14,14 @@ module Cucumber
       end
 
       def describe_to(visitor, *args)
+        visitor.test_step(self, *args)
+      end
+
+      def describe_source_to(visitor, *args)
         parents.each do |parent|
           parent.describe_to(visitor, *args)
         end
       end
-
-      attr_reader :parents
-      private :parents
 
       def step
         parents.last

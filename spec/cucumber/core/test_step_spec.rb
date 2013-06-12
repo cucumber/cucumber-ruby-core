@@ -19,20 +19,30 @@ module Cucumber::Core
       end
 
       context "when a failing mapping exists for the step" do
+        let(:exception) { StandardError.new('oops') }
+
         before do
-          mappings.stub(:execute).with(ast_step).and_raise(StandardError, 'failed')
+          mappings.stub(:execute).with(ast_step).and_raise(exception)
         end
 
         it "returns a failing result" do
           test_step = TestStep.new([ast_step])
-          test_step.execute(mappings).should == Result::Failed.new(test_step)
+          test_step.execute(mappings).should == Result::Failed.new(test_step, exception)
         end
       end
 
     end
 
     describe "describing itself" do
-      it "delegates to each of its parents in turn" do
+      it "describes itself to a visitor" do
+        visitor = stub
+        args = stub
+        test_step = TestStep.new(stub)
+        visitor.should_receive(:test_step).with(test_step, args)
+        test_step.describe_to(visitor, args)
+      end
+
+      it "describes its source to a visitor" do
         feature, scenario, step = stub, stub, stub
         visitor = stub
         args = stub
@@ -40,7 +50,7 @@ module Cucumber::Core
         scenario.should_receive(:describe_to).with(visitor, args)
         step.should_receive(:describe_to).with(visitor, args)
         test_step = TestStep.new([feature, scenario, step])
-        test_step.describe_to(visitor, args)
+        test_step.describe_source_to(visitor, args)
       end
     end
   end
