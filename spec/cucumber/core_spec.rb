@@ -53,42 +53,51 @@ module Cucumber
 
     describe "executing a test suite" do
       class ReportSpy
+        class Summary
+          attr_reader :total_failed, :total_passed
+
+          def initialize
+            @total_failed = @total_passed = 0
+          end
+
+          def failed(*args)
+            @total_failed += 1
+          end
+
+          def passed(*args)
+            @total_passed += 1
+          end
+
+          def total
+            total_passed + total_failed
+          end
+        end
+
         def initialize
-          @total_passed = @total_failed = @total_test_cases = 0
+          @test_case_summary = Summary.new
+          @test_step_summary = Summary.new
+        end
+
+        def test_cases
+          @test_case_summary
+        end
+
+        def test_steps
+          @test_step_summary
         end
 
         def before_test_case(test_case)
-          @total_test_cases += 1
         end
 
         def after_test_case(test_case, result)
-          result.describe_to(self)
+          result.describe_to(@test_case_summary)
         end
 
         def before_test_step(test_step)
         end
 
         def after_test_step(test_step, result)
-        end
-
-        def passed(result)
-          @total_passed +=1 
-        end
-
-        def failed(result, exception)
-          @total_failed +=1 
-        end
-
-        def total_test_cases
-          @total_test_cases
-        end
-
-        def total_passed_test_cases
-          @total_passed
-        end
-
-        def total_failed_test_cases
-          @total_failed
+          result.describe_to(@test_step_summary)
         end
       end
 
@@ -107,6 +116,7 @@ module Cucumber
           Given passing
 
         Scenario: The one that fails
+          Given passing
           Given failing
         }
 
@@ -116,9 +126,12 @@ module Cucumber
 
         execute(test_suite, mappings, report)
 
-        report.total_test_cases.should == 2
-        report.total_passed_test_cases.should == 1
-        report.total_failed_test_cases.should == 1
+        report.test_cases.total.should == 2
+        report.test_cases.total_passed.should == 1
+        report.test_cases.total_failed.should == 1
+        report.test_steps.total.should == 3
+        report.test_steps.total_passed.should == 2
+        report.test_steps.total_failed.should == 1
       end
     end
   end
