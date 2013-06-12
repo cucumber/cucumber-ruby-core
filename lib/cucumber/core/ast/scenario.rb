@@ -1,5 +1,5 @@
 require 'cucumber/initializer'
-require 'cucumber/core/describes_itself'
+require 'cucumber/core/ast/describes_itself'
 require 'cucumber/ast/names'
 require 'cucumber/ast/empty_background'
 require 'cucumber/ast/location'

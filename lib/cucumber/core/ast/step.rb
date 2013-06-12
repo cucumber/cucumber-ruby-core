@@ -1,4 +1,4 @@
-require 'cucumber/core/describes_itself'
+require 'cucumber/core/ast/describes_itself'
 require 'cucumber/ast/location'
 
 module Cucumber
