@@ -33,19 +33,22 @@ module Cucumber
 
     describe "compiling features to a test suite" do
       it "compiles two scenarios into two test cases" do
-        feature = parse_gherkin %{Feature: Feature name
-                                      Scenario: Scenario name 1
-                                        Given passing
+        feature = parse_gherkin %{Feature:
+                                    Background:
+                                      Given passing
 
-                                      Scenario: Scenario name 2
-                                        Given passing
-                                        When failing
+                                    Scenario:
+                                      Given passing
+
+                                    Scenario:
+                                      Given passing
+                                      When failing
         }
         suite = compile([feature])
         visitor = stub
         visitor.should_receive(:test_suite).once.and_yield
         visitor.should_receive(:test_case).exactly(2).times.and_yield
-        visitor.should_receive(:test_step).exactly(3).times
+        visitor.should_receive(:test_step).exactly(5).times
         suite.describe_to(visitor)
       end
 
