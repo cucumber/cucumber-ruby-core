@@ -42,7 +42,7 @@ module Cucumber
                                         When failing
         }
         suite = compile([feature])
-        visitor = stub(feature: nil, scenario: nil)
+        visitor = stub
         visitor.should_receive(:test_suite).once.and_yield
         visitor.should_receive(:test_case).exactly(2).times.and_yield
         visitor.should_receive(:test_step).exactly(3).times
