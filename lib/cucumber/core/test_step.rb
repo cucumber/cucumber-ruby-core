@@ -4,7 +4,7 @@ require 'cucumber/core/result'
 module Cucumber
   module Core
     class TestStep
-      include Cucumber.initializer(:parents)
+      include Cucumber.initializer(:source)
 
       def execute(mappings)
         mappings.execute(step)
@@ -18,13 +18,13 @@ module Cucumber
       end
 
       def describe_source_to(visitor, *args)
-        parents.each do |parent|
-          parent.describe_to(visitor, *args)
+        source.each do |node|
+          node.describe_to(visitor, *args)
         end
       end
 
       def step
-        parents.last
+        source.last
       end
 
     end

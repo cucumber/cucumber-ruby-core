@@ -53,12 +53,12 @@ module Cucumber
           include Cucumber.initializer(:feature, :scenario)
 
           def result
-            TestCase::Scenario.new(feature, scenario, test_steps)
+            TestCase::Scenario.new(test_steps, feature, scenario)
           end
 
           def step(step)
-            parents = [feature, scenario, step]
-            test_steps << TestStep.new(parents)
+            source = [feature, scenario, step]
+            test_steps << TestStep.new(source)
           end
 
           private

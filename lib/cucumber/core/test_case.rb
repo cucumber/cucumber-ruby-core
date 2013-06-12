@@ -1,13 +1,15 @@
 require 'cucumber/initializer'
-require 'cucumber/core/describes_itself'
 require 'cucumber/core/result'
 
 module Cucumber
   module Core
     module TestCase
       class Scenario
-        include DescribesItself
-        include Cucumber.initializer(:feature, :scenario, :test_steps)
+        include Cucumber.initializer(:test_steps, :source)
+
+        def initialize(test_steps, *source)
+          super(test_steps, source)
+        end
 
         def execute(mappings, report)
           result = Result::Unknown.new
@@ -30,20 +32,11 @@ module Cucumber
         end
 
         def describe_source_to(visitor, *args)
-          [feature, scenario].each do |node|
+          source.each do |node|
             node.describe_to(visitor, *args)
           end
         end
 
-        private
-
-        def children
-          test_steps
-        end
-
-        def description_for_visitors
-          :test_case
-        end
       end
     end
   end
