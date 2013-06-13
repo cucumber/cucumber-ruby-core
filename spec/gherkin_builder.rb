@@ -7,9 +7,9 @@ module GherkinBuilder
 
   class Gherkin
 
-    def feature(name=nil, &source)
-      @feature = Feature.new(name)
-      @feature.instance_exec(&source)
+    def feature(name=nil, options={}, &source)
+      @feature = Feature.new(name, options)
+      @feature.instance_exec(&source) if source
       self
     end
 
@@ -18,10 +18,13 @@ module GherkinBuilder
     end
 
     class Feature
-      attr_reader :name
-      private :name
-      def initialize(name)
+      attr_reader :name, :language, :keyword
+      private :name, :language, :keyword
+
+      def initialize(name, options)
         @name = name
+        @language = options[:language]
+        @keyword = options.fetch(:keyword) { 'Feature' }
       end
 
       def background(name=nil, &source)
@@ -41,11 +44,18 @@ module GherkinBuilder
       end
 
       def build
-        elements.inject(["Feature: #{name}"]) { |acc, el| el.build(acc) }.join("\n")
+        elements.inject(strings) { |acc, el| el.build(acc) }.join("\n")
       end
 
+      private
       def elements
         @elements ||= []
+      end
+
+      def strings
+        strings = []
+        strings << "# language: #{language}" if language
+        strings << "#{keyword}: #{name}"
       end
 
       class Background

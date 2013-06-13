@@ -32,9 +32,11 @@ module Cucumber
       end
 
       it "sets the language from the Gherkin" do
-        feature = parse_gherkin %{# language: ja
-                機能: Feature name
-        }
+        feature = parse_gherkin(
+          gherkin do
+            feature 'Feature name', language: 'ja', keyword: '機能'
+          end
+        )
         feature.language.iso_code.should == 'ja'
       end
     end
