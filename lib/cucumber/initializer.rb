@@ -1,8 +1,8 @@
 module Cucumber
   def self.initializer(*attributes)
     Module.new do
-      attr_reader *attributes
-      private *attributes
+      attr_reader(*attributes)
+      private(*attributes)
 
       define_method(:initialize) do |*arguments|
         if attributes.size != arguments.size

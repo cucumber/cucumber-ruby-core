@@ -93,8 +93,6 @@ module Cucumber
 
         private
 
-        attr_reader :background
-
         def description_for_visitors
           :feature
         end
