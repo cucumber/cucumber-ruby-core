@@ -1,8 +1,11 @@
 require 'cucumber/core'
+require 'gherkin_builder'
 
 module Cucumber
   describe Core do
     include Core
+    include GherkinBuilder
+
     describe "parsing gherkin" do
 
       # String -> Gherkin::Parser -> Core::Ast::GherkinBuilder -> Ast objects
@@ -13,13 +16,18 @@ module Cucumber
       end
 
       it "parses valid gherkin" do
-        feature = parse_gherkin %{Feature: Feature name
-                                      Background: Background name
-                                        Given passing
-
-                                      Scenario: Scenario name
-                                        Given passing
-        }
+        feature = parse_gherkin(
+          gherkin do
+            feature 'Feature name' do
+              background 'Background name' do
+                step 'passing'
+              end
+              scenario do
+                step 'passing'
+              end
+            end
+          end
+        )
         feature.name.should == 'Feature name'
       end
 
@@ -33,17 +41,23 @@ module Cucumber
 
     describe "compiling features to a test suite" do
       it "compiles two scenarios into two test cases" do
-        feature = parse_gherkin %{Feature:
-                                    Background:
-                                      Given passing
+        feature = parse_gherkin(
+          gherkin do
+            feature do
+              background do
+                step 'passing'
+              end
+              scenario do
+                step 'passing'
+              end
+              scenario do
+                step 'passing'
+                step 'failing'
+              end
+            end
+          end
+        )
 
-                                    Scenario:
-                                      Given passing
-
-                                    Scenario:
-                                      Given passing
-                                      When failing
-        }
         suite = compile([feature])
         visitor = stub
         visitor.should_receive(:test_suite).once.and_yield
@@ -114,15 +128,20 @@ module Cucumber
       end
 
       it "executes the test cases in the suite" do
-        feature = parse_gherkin %{Feature: Feature name
-        Scenario: The one that passes
-          Given passing
+        feature = parse_gherkin(
+          gherkin do
+            feature 'Feature name' do
+              scenario 'The one that passes' do
+                step 'passing'
+              end
 
-        Scenario: The one that fails
-          Given passing
-          Given failing
-        }
-
+              scenario 'The one that fails' do
+                step 'passing'
+                step 'failing'
+              end
+            end
+          end
+        )
         test_suite = compile([feature])
         report = ReportSpy.new
         mappings = FakeMappings.new
