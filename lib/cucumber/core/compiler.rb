@@ -13,58 +13,72 @@ module Cucumber
       def test_suite
         TestSuiteBuilder.new.tap do |builder|
           @features.each { |f| f.describe_to(builder) }
-        end.result
+        end.test_suite
       end
 
       class TestSuiteBuilder
-        attr_reader :current_feature
-        private :current_feature
-
         def initialize
           @test_cases = []
         end
 
         def feature(feature, &descend)
-          @current_feature = feature
-          descend.call
+          @feature_compiler = FeatureCompiler.new(feature)
+          descend.call(@feature_compiler)
         end
 
-        def scenario(scenario, &descend)
-          test_case_builders << ScenarioBuilder.new(current_feature, scenario)
-          descend.call(test_case_builders.last)
+        def test_suite
+          TestSuite.new(@feature_compiler.test_cases)
         end
 
-        def result
-          TestSuite.new(test_cases)
-        end
+        class FeatureCompiler
+          include Cucumber.initializer(:feature)
 
-        private
-
-        def test_cases
-          test_case_builders.map(&:result)
-        end
-
-        def test_case_builders
-          @test_case_builders ||= []
-        end
-
-        class ScenarioBuilder
-          include Cucumber.initializer(:feature, :scenario)
-
-          def result
-            TestCase::Scenario.new(test_steps, feature, scenario)
+          def background(background, &descend)
+            source = [feature, background]
+            @background_compiler = StepCompiler.new(source)
+            descend.call(@background_compiler)
           end
 
-          def step(step)
-            source = [feature, scenario, step]
-            test_steps << TestStep.new(source)
+          def scenario(scenario, &descend)
+            source = [feature, scenario]
+            scenario_compiler = StepCompiler.new(source)
+            descend.call(scenario_compiler)
+            scenario_test_steps = background_test_steps + scenario_compiler.test_steps
+            test_cases << TestCase::Scenario.new(scenario_test_steps, source)
+          end
+
+          def test_cases
+            @test_cases ||= []
           end
 
           private
-          def test_steps
-            @test_steps ||= []
+
+          def background_test_steps
+            return [] unless @background_compiler
+            @background_compiler.test_steps
           end
         end
+
+        class StepCompiler
+          include Cucumber.initializer(:source)
+
+          def test_steps
+            steps.map do |step|
+              TestStep.new(source + [step])
+            end
+          end
+
+          def step(step)
+            steps << step
+          end
+
+          private
+
+          def steps
+            @steps ||= []
+          end
+        end
+
       end
     end
   end
