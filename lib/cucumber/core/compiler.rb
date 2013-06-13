@@ -36,15 +36,14 @@ module Cucumber
           def background(background, &descend)
             source = [feature, background]
             @background_compiler = StepCompiler.new(source)
-            descend.call(@background_compiler)
+            descend.call(background_compiler)
           end
 
           def scenario(scenario, &descend)
             source = [feature, scenario]
             scenario_compiler = StepCompiler.new(source)
             descend.call(scenario_compiler)
-            scenario_test_steps = background_test_steps + scenario_compiler.test_steps
-            test_cases << TestCase::Scenario.new(scenario_test_steps, source)
+            new_test_case(scenario_compiler.test_steps, source)
           end
 
           def test_cases
@@ -53,9 +52,13 @@ module Cucumber
 
           private
 
-          def background_test_steps
-            return [] unless @background_compiler
-            @background_compiler.test_steps
+          def new_test_case(test_steps, source)
+            test_steps = background_compiler.test_steps + test_steps
+            test_cases << TestCase::Scenario.new(test_steps, source)
+          end
+
+          def background_compiler
+            @background_compiler ||= StepCompiler.new([feature])
           end
         end
 
