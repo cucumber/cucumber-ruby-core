@@ -84,9 +84,14 @@ module GherkinBuilder
   module Indentation
     def self.level(number)
       Module.new do
-        define_method :indent do |string, modifier=0|
+        define_method :indent do |string, amount=nil|
+          amount ||= number
           return string if string.nil? || string.empty?
-          (' ' * (number + modifier)) + string
+          (' ' * amount) + string
+        end
+
+        define_method :prepare_statements do |*statements|
+          statements.flatten.compact.map { |s| indent(s) }
         end
       end
     end
@@ -102,8 +107,8 @@ module GherkinBuilder
     end
 
     private
-    def row_statements(indent_modifier=0)
-      rows.map { |row| indent(table_row(row), indent_modifier) }
+    def row_statements(indent=nil)
+      rows.map { |row| indent(table_row(row), indent) }
     end
 
     def table_row(row)
@@ -185,10 +190,7 @@ module GherkinBuilder
 
     private
     def statements
-      [
-        tag_statement,
-        name_statement
-      ].compact.map { |s| indent(s) }
+      prepare_statements tag_statement, name_statement
     end
   end
 
@@ -203,10 +205,7 @@ module GherkinBuilder
 
     private
     def statements
-      [
-        tag_statement,
-        name_statement
-      ].compact.map { |s| indent(s) }
+      prepare_statements tag_statement, name_statement
     end
   end
 
@@ -221,10 +220,7 @@ module GherkinBuilder
 
     private
     def statements
-      [
-        tag_statement,
-        name_statement
-      ].compact.map { |s| indent(s) }
+      prepare_statements tag_statement, name_statement
     end
   end
 
@@ -243,7 +239,7 @@ module GherkinBuilder
 
     private
     def statements
-      [ name_statement ].map { |s| indent(s) }
+      prepare_statements name_statement
     end
 
     def name_statement
@@ -281,9 +277,7 @@ module GherkinBuilder
 
     private
     def statements
-      [
-        doc_string_statement
-      ].flatten.map { |s| indent(s) }
+      prepare_statements doc_string_statement
     end
 
     def doc_string_statement
@@ -307,16 +301,16 @@ module GherkinBuilder
     end
 
     private
-    def rows
-      @rows ||= []
+    def statements
+      prepare_statements header_statements, row_statements(2)
     end
 
-    def statements
+    def header_statements
       [
         NEW_LINE,
         tag_statement,
         name_statement
-      ].compact.map { |s| indent(s) } + row_statements(2)
+      ]
     end
   end
 end
