@@ -1,4 +1,5 @@
 module GherkinBuilder
+  NEW_LINE = ''
   def gherkin(&source)
     builder = Gherkin.new(&source)
     builder.build
@@ -25,6 +26,14 @@ module GherkinBuilder
 
     def name_statement
       "#{keyword}: #{name}".strip
+    end
+
+    def tag_statement
+      tags
+    end
+
+    def tags
+      options[:tags]
     end
 
     module HasDefaultKeyword
@@ -76,6 +85,7 @@ module GherkinBuilder
     def self.level(number)
       Module.new do
         define_method :indent do |string, modifier=0|
+          return string if string.nil? || string.empty?
           (' ' * (number + modifier)) + string
         end
       end
@@ -142,7 +152,7 @@ module GherkinBuilder
     elements :background, :scenario, :scenario_outline
 
     def build(source = [])
-      elements.inject(source + statements) { |acc, el| el.build(acc) + [''] }
+      elements.inject(source + statements) { |acc, el| el.build(acc) + [NEW_LINE] }
     end
 
     private
@@ -153,8 +163,9 @@ module GherkinBuilder
     def statements
       strings = [
         language_statement,
+        tag_statement,
         name_statement,
-        ''
+        NEW_LINE
       ].compact
     end
 
@@ -174,7 +185,10 @@ module GherkinBuilder
 
     private
     def statements
-      [ name_statement ].map { |s| indent(s) }
+      [
+        tag_statement,
+        name_statement
+      ].compact.map { |s| indent(s) }
     end
   end
 
@@ -189,7 +203,10 @@ module GherkinBuilder
 
     private
     def statements
-      [ name_statement ].map { |s| indent(s) }
+      [
+        tag_statement,
+        name_statement
+      ].compact.map { |s| indent(s) }
     end
   end
 
@@ -204,7 +221,10 @@ module GherkinBuilder
 
     private
     def statements
-      [ name_statement ].map { |s| indent(s) }
+      [
+        tag_statement,
+        name_statement
+      ].compact.map { |s| indent(s) }
     end
   end
 
@@ -293,9 +313,10 @@ module GherkinBuilder
 
     def statements
       [
-        '',
-        indent(name_statement)
-      ] + row_statements(2)
+        NEW_LINE,
+        tag_statement,
+        name_statement
+      ].compact.map { |s| indent(s) } + row_statements(2)
     end
   end
 end

@@ -68,7 +68,7 @@ describe GherkinBuilder do
 
   it 'generates a complex feature' do
     source = gherkin do
-      feature 'Fully featured', language: 'en' do
+      feature 'Fully featured', language: 'en', tags: '@always' do
         background do
           step 'passing'
         end
@@ -77,7 +77,7 @@ describe GherkinBuilder do
           step 'passing'
         end
 
-        scenario 'with doc string' do
+        scenario 'with doc string', tags: '@first @second' do
           step 'passing'
           step 'failing', keyword: 'When' do
             doc_string <<-END
@@ -112,6 +112,7 @@ describe GherkinBuilder do
 
     expected = <<-END
     # language: en
+    @always
     Feature: Fully featured
 
       Background:
@@ -120,6 +121,7 @@ describe GherkinBuilder do
       Scenario:
         Given passing
 
+      @first @second
       Scenario: with doc string
         Given passing
         When failing
