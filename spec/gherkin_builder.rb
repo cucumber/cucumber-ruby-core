@@ -39,6 +39,10 @@ module GherkinBuilder
   end
 
   module HasElements
+    def self.included(base)
+      base.extend HasElementBuilders
+    end
+
     def build(source = [])
       elements.inject(source + statements) { |acc, el| el.build(acc) }
     end
@@ -46,6 +50,25 @@ module GherkinBuilder
     private
     def elements
       @elements ||= []
+    end
+
+    module HasElementBuilders
+      def elements(*names)
+        names.each { |name| element(name) }
+      end
+
+      private
+      def element(name)
+        define_method name do |*args, &source|
+          factory_name = String(name).split("_").map(&:capitalize).join
+          factory = GherkinBuilder.const_get(factory_name)
+          factory.new(*args).tap do |builder|
+            builder.instance_exec(&source) if source
+            elements << builder
+          end
+          self
+        end
+      end
     end
   end
 
@@ -109,32 +132,10 @@ module GherkinBuilder
 
     default_keyword 'Feature'
 
+    elements :background, :scenario, :scenario_outline
+
     def build(source = [])
       elements.inject(source + statements) { |acc, el| el.build(acc) + [''] }
-    end
-
-    def background(*args, &source)
-      Background.new(*args).tap do |builder|
-        builder.instance_exec(&source) if source
-        elements << builder
-      end
-      self
-    end
-
-    def scenario(*args, &source)
-      Scenario.new(*args).tap do |builder|
-        builder.instance_exec(&source) if source
-        elements << builder
-      end
-      self
-    end
-
-    def scenario_outline(*args, &source)
-      ScenarioOutline.new(*args).tap do |builder|
-        builder.instance_exec(&source) if source
-        elements << builder
-      end
-      self
     end
 
     private
@@ -153,7 +154,6 @@ module GherkinBuilder
     def language_statement
       "# language: #{language}" if language
     end
-
   end
 
   class Background
@@ -163,13 +163,7 @@ module GherkinBuilder
 
     default_keyword 'Background'
 
-    def step(*args, &source)
-      Step.new(*args).tap do |builder|
-        builder.instance_exec(&source) if source
-        elements << builder
-      end
-      self
-    end
+    elements :step
 
     private
     def statements
@@ -184,13 +178,7 @@ module GherkinBuilder
 
     default_keyword 'Scenario'
 
-    def step(*args, &source)
-      Step.new(*args).tap do |builder|
-        builder.instance_exec(&source) if source
-        elements << builder
-      end
-      self
-    end
+    elements :step
 
     private
     def statements
@@ -205,21 +193,7 @@ module GherkinBuilder
 
     default_keyword 'Scenario Outline'
 
-    def step(*args, &source)
-      Step.new(*args).tap do |builder|
-        builder.instance_exec(&source) if source
-        elements << builder
-      end
-      self
-    end
-
-    def examples(*args, &source)
-      Examples.new(*args).tap do |builder|
-        builder.instance_exec(&source) if source
-        elements << builder
-      end
-      self
-    end
+    elements :step, :examples
 
     private
     def statements
@@ -234,15 +208,10 @@ module GherkinBuilder
 
     default_keyword 'Given'
 
+    elements :table
+
     def doc_string(string)
       elements << DocString.new(string)
-    end
-
-    def table(&source)
-      Table.new.tap do |builder|
-        builder.instance_exec(&source) if source
-        elements << builder
-      end
     end
 
     private
@@ -272,6 +241,9 @@ module GherkinBuilder
   class DocString
     include Indentation.level(6)
 
+    attr_reader :strings
+    private :strings
+
     def initialize(string)
       @strings = string.split("\n").map(&:strip)
     end
@@ -280,6 +252,7 @@ module GherkinBuilder
       source + statements
     end
 
+    private
     def statements
       [
         doc_string_statement
@@ -293,9 +266,6 @@ module GherkinBuilder
         '"""'
       ]
     end
-
-    attr_reader :strings
-    private :strings
   end
 
   class Examples
