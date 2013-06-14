@@ -92,19 +92,26 @@ module GherkinBuilder
     end
 
     private
-    def pad(row)
-      row.map.with_index { |cell, index| cell.ljust(column_length(index)) }
+    def row_statements(indent_modifier=0)
+      rows.map { |row| indent(table_row(row), indent_modifier) }
     end
 
-    def row_statements(indent_modifier=0)
-      rows.map do |row|
-        "| #{pad(row).join(' | ')} |"
-      end.map { |s| indent(s, indent_modifier) }
+    def table_row(row)
+      padded = pad(row)
+      "| #{padded.join(' | ')} |"
+    end
+
+    def pad(row)
+      row.map.with_index { |text, position| justify_cell(text, position) }
     end
 
     def column_length(column)
       lengths = rows.transpose.map { |r| r.map(&:length).max }
       lengths[column]
+    end
+
+    def justify_cell(cell, position)
+      cell.ljust(column_length(position))
     end
   end
 
