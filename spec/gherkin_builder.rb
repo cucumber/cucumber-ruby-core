@@ -5,6 +5,10 @@ module GherkinBuilder
   end
 
   module HasOptionsInitializer
+    def self.included(base)
+      base.extend HasDefaultKeyword
+    end
+
     attr_reader :name, :options
     private :name, :options
 
@@ -12,6 +16,25 @@ module GherkinBuilder
       @options = args.pop if args.last.is_a?(Hash)
       @options ||= {}
       @name = args.first
+    end
+
+    private
+    def keyword
+      options.fetch(:keyword) { self.class.keyword }
+    end
+
+    def name_statement
+      "#{keyword}: #{name}".strip
+    end
+
+    module HasDefaultKeyword
+      def default_keyword(keyword)
+        @keyword = keyword
+      end
+
+      def keyword
+        @keyword
+      end
     end
   end
 
@@ -36,6 +59,32 @@ module GherkinBuilder
     end
   end
 
+  module HasRows
+    def row(*cells)
+      rows << cells
+    end
+
+    def rows
+      @rows ||= []
+    end
+
+    private
+    def pad(row)
+      row.map.with_index { |cell, index| cell.ljust(column_length(index)) }
+    end
+
+    def row_statements(indent_modifier=0)
+      rows.map do |row|
+        "| #{pad(row).join(' | ')} |"
+      end.map { |s| indent(s, indent_modifier) }
+    end
+
+    def column_length(column)
+      lengths = rows.transpose.map { |r| r.map(&:length).max }
+      lengths[column]
+    end
+  end
+
   class Gherkin
     def initialize(&source)
       @source = source
@@ -57,6 +106,8 @@ module GherkinBuilder
   class Feature
     include HasElements
     include HasOptionsInitializer
+
+    default_keyword 'Feature'
 
     def build(source = [])
       elements.inject(source + statements) { |acc, el| el.build(acc) + [''] }
@@ -91,10 +142,6 @@ module GherkinBuilder
       options[:language]
     end
 
-    def keyword
-      options.fetch(:keyword) { 'Feature' }
-    end
-
     def statements
       strings = [
         language_statement,
@@ -107,13 +154,6 @@ module GherkinBuilder
       "# language: #{language}" if language
     end
 
-    def keyword
-      options.fetch(:keyword) { 'Feature' }
-    end
-
-    def name_statement
-      "#{keyword}: #{name}".strip
-    end
   end
 
   class Background
@@ -121,6 +161,8 @@ module GherkinBuilder
     include HasOptionsInitializer
     include Indentation.level 2
 
+    default_keyword 'Background'
+
     def step(*args, &source)
       Step.new(*args).tap do |builder|
         builder.instance_exec(&source) if source
@@ -133,15 +175,6 @@ module GherkinBuilder
     def statements
       [ name_statement ].map { |s| indent(s) }
     end
-
-    def keyword
-      options.fetch(:keyword) { 'Background' }
-    end
-
-    def name_statement
-      "#{keyword}: #{name}".strip
-    end
-
   end
 
   class Scenario
@@ -149,6 +182,8 @@ module GherkinBuilder
     include HasOptionsInitializer
     include Indentation.level 2
 
+    default_keyword 'Scenario'
+
     def step(*args, &source)
       Step.new(*args).tap do |builder|
         builder.instance_exec(&source) if source
@@ -161,21 +196,14 @@ module GherkinBuilder
     def statements
       [ name_statement ].map { |s| indent(s) }
     end
-
-    def keyword
-      options.fetch(:keyword) { 'Scenario' }
-    end
-
-    def name_statement
-      "#{keyword}: #{name}".strip
-    end
-
   end
 
   class ScenarioOutline
     include HasElements
     include HasOptionsInitializer
     include Indentation.level 2
+
+    default_keyword 'Scenario Outline'
 
     def step(*args, &source)
       Step.new(*args).tap do |builder|
@@ -197,21 +225,14 @@ module GherkinBuilder
     def statements
       [ name_statement ].map { |s| indent(s) }
     end
-
-    def keyword
-      options.fetch(:keyword) { 'Scenario Outline' }
-    end
-
-    def name_statement
-      "#{keyword}: #{name}".strip
-    end
-
   end
 
   class Step
     include HasElements
     include HasOptionsInitializer
     include Indentation.level 4
+
+    default_keyword 'Given'
 
     def doc_string(string)
       elements << DocString.new(string)
@@ -232,41 +253,19 @@ module GherkinBuilder
     def name_statement
       "#{keyword} #{name}"
     end
-
-    def keyword
-      options.fetch(:keyword) { 'Given' }
-    end
   end
 
   class Table
     include Indentation.level(6)
-
-    def row(*cells)
-      rows << cells
-    end
+    include HasRows
 
     def build(source)
       source + statements
     end
 
     private
-    def rows
-      @rows ||= []
-    end
-
     def statements
-      rows.map do |row|
-        "| #{pad(row).join(' | ')} |"
-      end.map { |s| indent(s) }
-    end
-
-    def pad(row)
-      row.map.with_index { |cell, index| cell.ljust(column_length(index)) }
-    end
-
-    def column_length(column)
-      lengths = rows.transpose.map { |r| r.map(&:length).max }
-      lengths[column]
+      row_statements
     end
   end
 
@@ -290,19 +289,21 @@ module GherkinBuilder
     def doc_string_statement
       [
         '"""',
-        @strings,
+        strings,
         '"""'
       ]
     end
+
+    attr_reader :strings
+    private :strings
   end
 
   class Examples
     include HasOptionsInitializer
+    include HasRows
     include Indentation.level(4)
 
-    def row(*cells)
-      rows << cells
-    end
+    default_keyword 'Examples'
 
     def build(source)
       source + statements
@@ -317,31 +318,7 @@ module GherkinBuilder
       [
         '',
         indent(name_statement)
-      ] + row_statements
-    end
-
-    def pad(row)
-      row.map.with_index { |cell, index| cell.ljust(column_length(index)) }
-    end
-
-    def row_statements
-      rows.map do |row|
-        "| #{pad(row).join(' | ')} |"
-      end.map { |s| indent(s, 2) }
-    end
-
-    def name_statement
-      "#{keyword}: #{name}".strip
-    end
-
-    def keyword
-      options.fetch(:keyword) { 'Examples' }
-    end
-
-    def column_length(column)
-      lengths = rows.transpose.map { |r| r.map(&:length).max }
-      lengths[column]
+      ] + row_statements(2)
     end
   end
-
 end
