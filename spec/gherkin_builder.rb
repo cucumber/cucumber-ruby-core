@@ -29,8 +29,8 @@ module GherkinBuilder
   module Indentation
     def self.level(number)
       Module.new do
-        define_method :indent do |string|
-          (' ' * number) + string
+        define_method :indent do |string, modifier=0|
+          (' ' * (number + modifier)) + string
         end
       end
     end
@@ -72,6 +72,14 @@ module GherkinBuilder
 
     def scenario(*args, &source)
       Scenario.new(*args).tap do |builder|
+        builder.instance_exec(&source) if source
+        elements << builder
+      end
+      self
+    end
+
+    def scenario_outline(*args, &source)
+      ScenarioOutline.new(*args).tap do |builder|
         builder.instance_exec(&source) if source
         elements << builder
       end
@@ -149,9 +157,40 @@ module GherkinBuilder
       self
     end
 
+    private
+    def statements
+      [ name_statement ].map { |s| indent(s) }
+    end
 
-    def build(source)
-      super
+    def keyword
+      options.fetch(:keyword) { 'Scenario' }
+    end
+
+    def name_statement
+      "#{keyword}: #{name}".strip
+    end
+
+  end
+
+  class ScenarioOutline
+    include HasElements
+    include HasOptionsInitializer
+    include Indentation.level 2
+
+    def step(*args, &source)
+      Step.new(*args).tap do |builder|
+        builder.instance_exec(&source) if source
+        elements << builder
+      end
+      self
+    end
+
+    def examples(*args, &source)
+      Examples.new(*args).tap do |builder|
+        builder.instance_exec(&source) if source
+        elements << builder
+      end
+      self
     end
 
     private
@@ -160,7 +199,7 @@ module GherkinBuilder
     end
 
     def keyword
-      options.fetch(:keyword) { 'Scenario' }
+      options.fetch(:keyword) { 'Scenario Outline' }
     end
 
     def name_statement
@@ -256,4 +295,53 @@ module GherkinBuilder
       ]
     end
   end
+
+  class Examples
+    include HasOptionsInitializer
+    include Indentation.level(4)
+
+    def row(*cells)
+      rows << cells
+    end
+
+    def build(source)
+      source + statements
+    end
+
+    private
+    def rows
+      @rows ||= []
+    end
+
+    def statements
+      [
+        '',
+        indent(name_statement)
+      ] + row_statements
+    end
+
+    def pad(row)
+      row.map.with_index { |cell, index| cell.ljust(column_length(index)) }
+    end
+
+    def row_statements
+      rows.map do |row|
+        "| #{pad(row).join(' | ')} |"
+      end.map { |s| indent(s, 2) }
+    end
+
+    def name_statement
+      "#{keyword}: #{name}".strip
+    end
+
+    def keyword
+      options.fetch(:keyword) { 'Examples' }
+    end
+
+    def column_length(column)
+      lengths = rows.transpose.map { |r| r.map(&:length).max }
+      lengths[column]
+    end
+  end
+
 end

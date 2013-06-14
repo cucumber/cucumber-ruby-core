@@ -66,7 +66,7 @@ describe GherkinBuilder do
     end
   end
 
-  it 'does' do
+  it 'generates a complex feature' do
     source = gherkin do
       feature 'Fully featured', language: 'en' do
         background do
@@ -82,7 +82,6 @@ describe GherkinBuilder do
           step 'failing', keyword: 'When' do
             doc_string <<-END
               I wish I was a little bit taller.
-
               I wish I was a baller.
             END
           end
@@ -94,6 +93,18 @@ describe GherkinBuilder do
               row 'name',   'age', 'location'
               row 'Janine', '43',  'Antarctica'
             end
+          end
+        end
+
+        scenario_outline 'eating' do
+          step 'there are <start> cucumbers'
+          step 'I eat <eat> cucumbers', keyword: 'When'
+          step 'I should have <left> cucumbers', keyword: 'Then'
+
+          examples do
+            row 'start', 'eat', 'left'
+            row '12',    '5',   '7'
+            row '20',    '5',   '15'
           end
         end
       end
@@ -114,7 +125,6 @@ describe GherkinBuilder do
         When failing
           """
           I wish I was a little bit taller.
-          
           I wish I was a baller.
           """
 
@@ -122,10 +132,18 @@ describe GherkinBuilder do
         Given passes:
           | name   | age | location   |
           | Janine | 43  | Antarctica |
+
+      Scenario Outline: eating
+        Given there are <start> cucumbers
+        When I eat <eat> cucumbers
+        Then I should have <left> cucumbers
+
+        Examples:
+          | start | eat | left |
+          | 12    | 5   | 7    |
+          | 20    | 5   | 15   |
     END
 
     source.should == expected.unindent
-
-
   end
 end
