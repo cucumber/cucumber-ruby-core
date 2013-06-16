@@ -20,6 +20,22 @@ describe GherkinBuilder do
       end
     end
 
+    context 'when a description is provided' do
+      it 'includes the description in the feature statement' do
+        source = gherkin do
+          feature "A Feature", description: "This is the description\nwhich can span\nmultiple lines."
+        end
+        expected = <<-END
+Feature: A Feature
+  This is the description
+  which can span
+  multiple lines.
+        END
+
+        source.should == expected
+      end
+    end
+
     context 'when a keyword is provided' do
       it 'uses the supplied keyword' do
         source = gherkin do
