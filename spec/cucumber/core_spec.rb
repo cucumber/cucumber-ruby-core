@@ -41,21 +41,23 @@ module Cucumber
       end
 
       it "parses doc strings without error" do
-        gherkin = %Q{
-          Feature:
-          Scenario: 
-            Given something with a docstring: 
-            """text/json
-            { 'this': 'example' }
-            """
-        }
-        feature = parse_gherkin(gherkin)
+        feature = parse_gherkin(
+          gherkin do
+            feature do
+              scenario do
+                step do
+                  doc_string("content")
+                end
+              end
+            end
+          end
+        )
         visitor = stub
         visitor.stub(:feature).and_yield
         visitor.stub(:scenario).and_yield
         visitor.stub(:step).and_yield
 
-        expected = Core::Ast::DocString.new("{ 'this': 'example' }", "text/json")
+        expected = Core::Ast::DocString.new("content", "")
         visitor.should_receive(:doc_string).with(expected)
         feature.describe_to(visitor)
       end
