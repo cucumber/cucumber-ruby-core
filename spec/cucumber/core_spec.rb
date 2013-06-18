@@ -67,14 +67,14 @@ module Cucumber
           gherkin do
             feature do
               background do
-                step 'passing'
+                step
               end
               scenario do
-                step 'passing'
+                step
               end
               scenario do
-                step 'passing'
-                step 'failing'
+                step
+                step
               end
             end
           end
