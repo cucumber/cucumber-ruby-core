@@ -39,6 +39,26 @@ module Cucumber
         )
         feature.language.iso_code.should == 'ja'
       end
+
+      it "parses doc strings without error" do
+        gherkin = %Q{
+          Feature:
+          Scenario: 
+            Given something with a docstring: 
+            """text/json
+            { 'this': 'example' }
+            """
+        }
+        feature = parse_gherkin(gherkin)
+        visitor = stub
+        visitor.stub(:feature).and_yield
+        visitor.stub(:scenario).and_yield
+        visitor.stub(:step).and_yield
+
+        expected = Core::Ast::DocString.new("{ 'this': 'example' }", "text/json")
+        visitor.should_receive(:doc_string).with(expected)
+        feature.describe_to(visitor)
+      end
     end
 
     describe "compiling features to a test suite" do
