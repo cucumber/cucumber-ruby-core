@@ -7,4 +7,5 @@ require 'cucumber/core/ast/scenario'
 require 'cucumber/core/ast/step'
 require 'cucumber/core/ast/multiline_argument'
 require 'cucumber/core/ast/doc_string'
+require 'cucumber/core/ast/table'
 
