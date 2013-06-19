@@ -52,6 +52,30 @@ module Cucumber
           end
 
         end
+        context "a Scenario with a Table" do
+          source do
+            feature do
+              scenario do
+                step do
+                  table do
+                    row "name", "surname"
+                    row "rob",  "westgeest"
+                  end
+                end
+              end
+            end
+          end
+          it "parses data tables without error" do
+            visitor = stub
+            visitor.stub(:feature).and_yield
+            visitor.stub(:scenario).and_yield
+            visitor.stub(:step).and_yield
+
+            expected = Core::Ast::Table.new([['name', 'surname'], ['rob', 'westgeest']])
+            visitor.should_receive(:table).with(expected)
+            feature.describe_to(visitor)
+          end
+        end
       end
     end
   end

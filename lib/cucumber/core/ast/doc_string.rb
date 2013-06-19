@@ -48,6 +48,7 @@ module Cucumber
         def has_text?(text)
           index(text)
         end
+
         private
 
         def description_for_visitors
