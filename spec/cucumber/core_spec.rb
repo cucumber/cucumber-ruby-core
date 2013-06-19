@@ -10,12 +10,7 @@ module Cucumber
 
       # String -> Gherkin::Parser -> Core::Ast::GherkinBuilder -> Ast objects
 
-      it "raises an error when parsing invalid gherkin" do
-        expect { parse_gherkin('not gherkin') }.
-          to raise_error(Gherkin::Lexer::LexingError)
-      end
-
-      it "parses valid gherkin" do
+      it "parses valid gherkin, returning an Ast::Feature" do
         feature = parse_gherkin(
           gherkin do
             feature 'Feature name' do
@@ -28,39 +23,16 @@ module Cucumber
             end
           end
         )
+        feature.should be_a(Core::Ast::Feature)
         feature.name.should == 'Feature name'
       end
 
-      it "sets the language from the Gherkin" do
-        feature = parse_gherkin(
-          gherkin do
-            feature 'Feature name', language: 'ja', keyword: '機能'
-          end
-        )
-        feature.language.iso_code.should == 'ja'
+      it "raises an error when parsing invalid gherkin" do
+        expect { parse_gherkin('not gherkin') }.
+          to raise_error(Gherkin::Lexer::LexingError)
       end
 
-      it "parses doc strings without error" do
-        feature = parse_gherkin(
-          gherkin do
-            feature do
-              scenario do
-                step do
-                  doc_string("content")
-                end
-              end
-            end
-          end
-        )
-        visitor = stub
-        visitor.stub(:feature).and_yield
-        visitor.stub(:scenario).and_yield
-        visitor.stub(:step).and_yield
 
-        expected = Core::Ast::DocString.new("content", "")
-        visitor.should_receive(:doc_string).with(expected)
-        feature.describe_to(visitor)
-      end
     end
 
     describe "compiling features to a test suite" do

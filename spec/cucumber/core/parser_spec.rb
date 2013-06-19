@@ -8,23 +8,38 @@ module Cucumber
       describe Parser do
         include ::GherkinBuilder
 
-        def parse_gherkin(source)
+        let(:feature) do
           Parser.new(source, __FILE__).feature
         end
 
+        def self.source(&block)
+          let(:source) do
+            gherkin(&block)
+          end
+        end
+
+        context "when the Gherkin has a language header" do
+          source do
+            feature(language: 'ja', keyword: '機能')
+          end
+
+          it "sets the language from the Gherkin" do
+            feature.language.iso_code.should == 'ja'
+          end
+        end
+
         context "a Scenario with a DocString" do
-          it "parses doc strings without error" do
-            feature = parse_gherkin(
-              gherkin do
-                feature do
-                  scenario do
-                    step do
-                      doc_string("content")
-                    end
-                  end
+          source do
+            feature do
+              scenario do
+                step do
+                  doc_string("content")
                 end
               end
-            )
+            end
+          end
+
+          it "parses doc strings without error" do
             visitor = stub
             visitor.stub(:feature).and_yield
             visitor.stub(:scenario).and_yield
