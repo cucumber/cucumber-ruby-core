@@ -1,7 +1,7 @@
 require 'cucumber/initializer'
 require 'cucumber/core/ast'
+require 'cucumber/core/platform'
 require 'gherkin/rubify'
-require 'cucumber/platform'
 
 module Cucumber
   module Core
