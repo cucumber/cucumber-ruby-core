@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 require 'cucumber/core/result'
 
 module Cucumber
