@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 require 'cucumber/initializer'
 require 'cucumber/core/parser'
 require 'gherkin_builder'
