@@ -1,16 +1,16 @@
 # -*- encoding: utf-8 -*-
 require 'cucumber/initializer'
-require 'cucumber/core/parser'
+require 'cucumber/core/gherkin_parser'
 require 'gherkin_builder'
 
 module Cucumber
   module Core
     module Ast
-      describe Parser do
+      describe GherkinParser do
         include ::GherkinBuilder
 
         let(:feature) do
-          Parser.new(source, __FILE__).feature
+          GherkinParser.new(source, __FILE__).feature
         end
 
         def self.source(&block)

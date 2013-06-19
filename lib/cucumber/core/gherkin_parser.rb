@@ -3,7 +3,7 @@ require 'gherkin/parser/parser'
 
 module Cucumber
   module Core
-    class Parser
+    class GherkinParser
       include Cucumber.initializer(:source, :path)
 
       def feature
