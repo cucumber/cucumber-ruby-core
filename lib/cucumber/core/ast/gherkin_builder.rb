@@ -50,21 +50,12 @@ module Cucumber
           @current = builder
         end
 
-        def examples(examples)
-          examples_fields = [
-            Ast::Location.new(file, examples.line),
-            Ast::Comment.new(examples.comments.map{|comment| comment.value}.join("\n")),
-            examples.keyword,
-            examples.name,
-            examples.description,
-            matrix(examples.rows)
-          ]
-          @current.add_examples examples_fields, examples
+        def examples(node)
+          @current.add_examples file, node
         end
 
         def step(node)
-          builder = StepBuilder.new(file, node)
-          @current.add_child builder
+          @current.add_step file, node
         end
 
         def eof
@@ -81,17 +72,6 @@ module Cucumber
           ArrayList.__persistent__ = true
         end
 
-        def matrix(gherkin_table)
-          gherkin_table.map do |gherkin_row|
-            row = gherkin_row.cells
-            class << row
-              attr_accessor :line
-            end
-            row.line = gherkin_row.line
-            row
-          end
-        end
-
         def language
           @language || raise("Language has not been set")
         end
@@ -106,18 +86,19 @@ module Cucumber
 
         class Builder
           include Cucumber.initializer(:file, :node)
+
           private
 
           def tags
-            Ast::Tags.new(nil, node.tags)
+            Tags.new(nil, node.tags)
           end
 
           def location
-            Ast::Location.new(file, node.line)
+            Location.new(file, node.line)
           end
 
           def comment
-            Ast::Comment.new(node.comments.map{ |comment| comment.value }.join("\n"))
+            Comment.new(node.comments.map{ |comment| comment.value }.join("\n"))
           end
 
           attr_reader :file, :node
@@ -126,7 +107,7 @@ module Cucumber
         class FeatureBuilder < Builder
           def result(language)
             background = background(language)
-            feature = Ast::Feature.new(
+            feature = Feature.new(
               location,
               background,
               comment,
@@ -156,14 +137,14 @@ module Cucumber
           private
 
           def background(language)
-            return Ast::EmptyBackground.new unless @background_builder
+            return EmptyBackground.new unless @background_builder
             @background ||= @background_builder.result(language)
           end
         end
 
         class BackgroundBuilder < Builder
           def result(language)
-            background = Ast::Background.new(
+            background = Background.new(
               language,
               location,
               comment,
@@ -176,23 +157,25 @@ module Cucumber
             background
           end
 
+          def add_step(file, node)
+            step_builders << ScenarioBuilder::StepBuilder.new(file, node)
+          end
+
+          private
+
           def steps(language)
-            children.map { |child| child.result(language) }
+            step_builders.map { |step_builder| step_builder.result(language) }
           end
 
-          def add_child(child)
-            children << child
-          end
-
-          def children
-            @children ||= []
+          def step_builders
+            @step_builders ||= []
           end
 
         end
 
         class ScenarioBuilder < Builder
           def result(background, language, feature_tags)
-            scenario = Ast::Scenario.new(
+            scenario = Scenario.new(
               language,
               location,
               background,
@@ -208,22 +191,38 @@ module Cucumber
             scenario
           end
 
+          def add_step(file, node)
+            step_builders << StepBuilder.new(file, node)
+          end
+
+          private
+
           def steps(language)
-            children.map { |child| child.result(language) }
+            step_builders.map { |step_builder| step_builder.result(language) }
           end
 
-          def add_child(child)
-            children << child
+          def step_builders
+            @step_builders ||= []
           end
 
-          def children
-            @children ||= []
+          class StepBuilder < Builder
+            def result(language)
+              step = Step.new(
+                language,
+                location,
+                node.keyword,
+                node.name,
+                MultilineArgument.from(node.doc_string || node.rows)
+              )
+              step.gherkin_statement(node)
+              step
+            end
           end
         end
 
         class ScenarioOutlineBuilder < Builder
           def result(background, language, feature_tags)
-            scenario_outline = Ast::ScenarioOutline.new(
+            scenario_outline = ScenarioOutline.new(
               language,
               location,
               background,
@@ -234,44 +233,73 @@ module Cucumber
               node.name,
               node.description,
               steps(language),
-              examples_sections
+              examples_tables
             )
             scenario_outline.gherkin_statement(node)
             scenario_outline
           end
 
-          def add_examples(examples_section, node)
-            @examples_sections ||= []
-            @examples_sections << [examples_section, node]
+          def add_examples(file, node)
+            examples_tables << ExamplesTableBuilder.new(file, node).result
           end
+
+          def add_step(file, node)
+            step_builders << StepBuilder.new(file, node)
+          end
+
+          private
 
           def steps(language)
-            children.map { |child| child.result(language) }
+            step_builders.map { |step_builder| step_builder.result(language) }
           end
 
-          def add_child(child)
-            children << child
+          def step_builders
+            @step_builders ||= []
           end
 
-          def children
-            @children ||= []
+          def examples_tables
+            @examples_tables ||= []
           end
 
-          attr_reader :examples_sections
-          private :examples_sections
-        end
+          class ExamplesTableBuilder < Builder
+            def result
+              ExamplesTable.new(
+                location,
+                comment,
+                node.keyword,
+                node.name,
+                node.description,
+                header,
+                example_rows
+              )
+            end
 
-        class StepBuilder < Builder
-          def result(language)
-            step = Ast::Step.new(
-              language,
-              location,
-              node.keyword,
-              node.name,
-              Ast::MultilineArgument.from(node.doc_string || node.rows)
-            )
-            step.gherkin_statement(node)
-            step
+            private
+
+            def header
+              row = node.rows[0]
+              ExamplesTable::Header.new(row.cells)
+            end
+
+            def example_rows
+              node.rows[1..-1].map do |row|
+                ExamplesTable::Row.new(row.cells)
+              end
+            end
+          end
+
+          class StepBuilder < Builder
+            def result(language)
+              step = ScenarioOutline::Step.new(
+                language,
+                location,
+                node.keyword,
+                node.name,
+                MultilineArgument.from(node.doc_string || node.rows)
+              )
+              step.gherkin_statement(node)
+              step
+            end
           end
         end
 
