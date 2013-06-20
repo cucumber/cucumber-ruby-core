@@ -56,9 +56,9 @@ module Cucumber
 
         suite = compile([feature])
         visitor = stub
-        visitor.should_receive(:test_suite).once.and_yield
-        visitor.should_receive(:test_case).exactly(2).times.and_yield
-        visitor.should_receive(:test_step).exactly(5).times
+        visitor.should_receive(:test_suite).once.and_yield.ordered
+        visitor.should_receive(:test_case).exactly(2).times.and_yield.ordered
+        visitor.should_receive(:test_step).exactly(5).times.ordered
         suite.describe_to(visitor)
       end
 
@@ -113,7 +113,6 @@ module Cucumber
           result.describe_to(@test_step_summary)
         end
       end
-
 
       class FakeMappings
         Failure = Class.new(StandardError)
