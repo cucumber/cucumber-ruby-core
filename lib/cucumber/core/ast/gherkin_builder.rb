@@ -283,14 +283,14 @@ module Cucumber
 
             def example_rows
               node.rows[1..-1].map do |row|
-                ExamplesTable::Row.new(row.cells)
+                header.build_row(row.cells)
               end
             end
           end
 
           class StepBuilder < Builder
             def result(language)
-              step = ScenarioOutline::Step.new(
+              step = OutlineStep.new(
                 language,
                 location,
                 node.keyword,

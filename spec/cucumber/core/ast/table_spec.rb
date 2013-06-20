@@ -128,6 +128,19 @@ module Cucumber
           end
         end
 
+        describe "#map" do
+          let(:table) { Table.new([ %w{foo bar}, %w{1 2} ]) }
+
+          it 'yields the contents of each cell to the block' do
+
+            expect { |b| table.map(&b) }.to yield_successive_args('foo', 'bar', '1', '2')
+          end
+
+          it 'returns a new table with the cells modified by the block' do
+            table.map { |cell| "*#{cell}*" }.should ==  Table.new([%w{*foo* *bar*}, %w{*1* *2*}])
+          end
+        end
+
         describe "#transpose" do
           before(:each) do
             @table = Table.new([

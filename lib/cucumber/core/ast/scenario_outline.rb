@@ -9,6 +9,9 @@ module Cucumber
       class ScenarioOutline
         include Names
         include HasLocation
+        include DescribesItself
+
+        MissingExamples = Class.new(StandardError)
 
         attr_accessor :feature
         attr_reader :feature_tags
@@ -16,18 +19,6 @@ module Cucumber
 
         def initialize(language, location, background, comment, tags, feature_tags, keyword, title, description, steps, examples_tables)
           @language, @location, @background, @comment, @tags, @feature_tags, @keyword, @title, @description, @steps, @examples_tables = language, location, background, comment, tags, feature_tags, keyword, title, description, steps, examples_tables
-        end
-
-        def describe_to(visitor)
-          visitor.scenario_outline(self) do
-            children.each do |child|
-              child.describe_to(visitor)
-            end
-          end
-        end
-
-        def children
-          @steps + @examples_tables
         end
 
         def gherkin_statement(node)
@@ -48,101 +39,20 @@ module Cucumber
         attr_reader :line
 
         def raise_missing_examples_error
+          # TODO: move this into the parser
           raise MissingExamples, "Missing Example Section for Scenario Outline at #{@location}"
         end
 
-        MissingExamples = Class.new(StandardError)
-
-        class Step
-          include DescribesItself
-
-          attr_reader :name
-
-          def initialize(language, location, keyword, name, multiline_arg=nil)
-            @language, @location, @keyword, @name, @multiline_arg = language, location, keyword, name, multiline_arg
-            @language || raise("Language is required!")
-          end
-
-          attr_reader :gherkin_statement
-          def gherkin_statement(statement=nil)
-            @gherkin_statement ||= statement
-          end
-
-          private
-
-          def description_for_visitors
-            :scenario_outline_step
-          end
-
-          def children
-            []
-          end
+        def children
+          @steps + @examples_tables
         end
-      end
-
-      class ExamplesTable
-        include DescribesItself
-
-        attr_reader :header
-
-        include Cucumber.initializer(:location, :comment, :keyword, :name, :description, :header, :example_rows)
-
-        def gherkin_statement(node)
-          @gherkin_statement = node
-        end
-
-        private
 
         def description_for_visitors
-          :examples_table
-        end
-
-        def children
-          [@header] + @example_rows
-        end
-
-        class Header
-          include DescribesItself
-
-          def initialize(cells)
-            @cells = cells
-          end
-
-          def ==(other)
-            other == @cells
-          end
-
-          private
-
-          def description_for_visitors
-            :examples_table_header
-          end
-        end
-
-        class Row
-          include DescribesItself
-
-          def initialize(cells)
-            @cells = cells
-          end
-
-          def ==(other)
-            other == @cells
-          end
-
-          private
-
-          def description_for_visitors
-            :examples_table_row
-          end
-
-          def children
-            []
-          end
+          :scenario_outline
         end
 
       end
+
     end
   end
-
 end
