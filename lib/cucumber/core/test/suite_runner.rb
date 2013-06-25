@@ -9,9 +9,9 @@ module Cucumber
         end
 
         def test_case(test_case, &descend)
-          report.before_test_case(self)
+          report.before_test_case(test_case)
           descend.call
-          report.after_test_case(self, test_case_result)
+          report.after_test_case(test_case, test_case_result)
         end
 
         def test_step(test_step)
