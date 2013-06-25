@@ -1,5 +1,5 @@
 require 'cucumber/core/ast/describes_itself'
-require 'cucumber/ast/location'
+require 'cucumber/core/ast/location'
 
 module Cucumber
   module Core
@@ -80,6 +80,11 @@ module Cucumber
         end
 
         private
+
+        def children
+          return [] unless @multiline_arg # TODO: use a null object
+          [@multiline_arg]
+        end
 
         def description_for_visitors
           :step

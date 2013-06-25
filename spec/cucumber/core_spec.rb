@@ -1,21 +1,16 @@
 require 'cucumber/core'
-require 'gherkin_builder'
+require 'cucumber/core/generates_gherkin'
 
 module Cucumber
   describe Core do
     include Core
-    include GherkinBuilder
+    include Core::GeneratesGherkin
 
     describe "parsing gherkin" do
 
       # String -> Gherkin::Parser -> Core::Ast::GherkinBuilder -> Ast objects
 
-      it "raises an error when parsing invalid gherkin" do
-        expect { parse_gherkin('not gherkin') }.
-          to raise_error(Gherkin::Lexer::LexingError)
-      end
-
-      it "parses valid gherkin" do
+      it "parses valid gherkin, returning an Ast::Feature" do
         feature = parse_gherkin(
           gherkin do
             feature 'Feature name' do
@@ -28,17 +23,16 @@ module Cucumber
             end
           end
         )
+        feature.should be_a(Core::Ast::Feature)
         feature.name.should == 'Feature name'
       end
 
-      it "sets the language from the Gherkin" do
-        feature = parse_gherkin(
-          gherkin do
-            feature 'Feature name', language: 'ja', keyword: '機能'
-          end
-        )
-        feature.language.iso_code.should == 'ja'
+      it "raises an error when parsing invalid gherkin" do
+        expect { parse_gherkin('not gherkin') }.
+          to raise_error(Gherkin::Lexer::LexingError)
       end
+
+
     end
 
     describe "compiling features to a test suite" do
@@ -47,14 +41,14 @@ module Cucumber
           gherkin do
             feature do
               background do
-                step 'passing'
+                step
               end
               scenario do
-                step 'passing'
+                step
               end
               scenario do
-                step 'passing'
-                step 'failing'
+                step
+                step
               end
             end
           end
@@ -62,9 +56,9 @@ module Cucumber
 
         suite = compile([feature])
         visitor = stub
-        visitor.should_receive(:test_suite).once.and_yield
-        visitor.should_receive(:test_case).exactly(2).times.and_yield
-        visitor.should_receive(:test_step).exactly(5).times
+        visitor.should_receive(:test_suite).once.and_yield.ordered
+        visitor.should_receive(:test_case).exactly(2).times.and_yield.ordered
+        visitor.should_receive(:test_step).exactly(5).times.ordered
         suite.describe_to(visitor)
       end
 
@@ -119,7 +113,6 @@ module Cucumber
           result.describe_to(@test_step_summary)
         end
       end
-
 
       class FakeMappings
         Failure = Class.new(StandardError)

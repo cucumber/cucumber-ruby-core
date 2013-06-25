@@ -1,6 +1,6 @@
 require 'cucumber/initializer'
-require 'cucumber/ast/names'
-require 'cucumber/ast/location'
+require 'cucumber/core/ast/names'
+require 'cucumber/core/ast/location'
 require 'cucumber/core/ast/describes_itself'
 
 module Cucumber

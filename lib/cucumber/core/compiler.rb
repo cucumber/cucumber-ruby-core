@@ -1,7 +1,7 @@
 require 'cucumber/initializer'
-require 'cucumber/core/test_suite'
-require 'cucumber/core/test_case'
-require 'cucumber/core/test_step'
+require 'cucumber/core/test/suite'
+require 'cucumber/core/test/case'
+require 'cucumber/core/test/step'
 
 module Cucumber
   module Core
@@ -27,7 +27,7 @@ module Cucumber
         end
 
         def test_suite
-          TestSuite.new(@feature_compiler.test_cases)
+          Test::Suite.new(@feature_compiler.test_cases)
         end
 
         class FeatureCompiler
@@ -54,7 +54,7 @@ module Cucumber
 
           def new_test_case(test_steps, source)
             test_steps = background_compiler.test_steps + test_steps
-            test_cases << TestCase::Scenario.new(test_steps, source)
+            test_cases << Test::Case.new(test_steps, source)
           end
 
           def background_compiler
@@ -67,7 +67,7 @@ module Cucumber
 
           def test_steps
             steps.map do |step|
-              TestStep.new(source + [step])
+              Test::Step.new(source + [step])
             end
           end
 
