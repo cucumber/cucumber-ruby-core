@@ -39,10 +39,7 @@ module Cucumber
 
         private
 
-        def raise_missing_examples_error
-          # TODO: move this into the parser
-          raise MissingExamples, "Missing Example Section for Scenario Outline at #{@location}"
-        end
+        attr_reader :line
 
         def children
           @steps + @examples_tables
