@@ -6,13 +6,13 @@ require 'cucumber/core/test/step'
 module Cucumber
   module Core
     class Compiler
-      def initialize(features)
-        @features = features
+      def initialize(ast)
+        @ast = ast
       end
 
       def test_suite
         TestSuiteBuilder.new.tap do |builder|
-          @features.each { |f| f.describe_to(builder) }
+          @ast.each { |feature| feature.describe_to(builder) }
         end.test_suite
       end
 
@@ -22,12 +22,13 @@ module Cucumber
         end
 
         def feature(feature, &descend)
-          @feature_compiler = FeatureCompiler.new(feature)
-          descend.call(@feature_compiler)
+          feature_compiler = FeatureCompiler.new(feature)
+          descend.call(feature_compiler)
+          @test_cases << feature_compiler.test_cases
         end
 
         def test_suite
-          Test::Suite.new(@feature_compiler.test_cases)
+          Test::Suite.new(@test_cases.flatten)
         end
 
         class FeatureCompiler

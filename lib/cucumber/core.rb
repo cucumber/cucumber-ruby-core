@@ -7,8 +7,8 @@ module Cucumber
       GherkinParser.new(source, path).feature
     end
 
-    def compile(features)
-      Compiler.new(features).test_suite
+    def compile(ast)
+      Compiler.new(ast).test_suite
     end
 
     def execute(test_suite, mappings, report)

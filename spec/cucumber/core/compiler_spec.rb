@@ -7,6 +7,32 @@ module Cucumber::Core
     include GeneratesGherkin
     include Cucumber::Core
 
+    it "compiles multiple features" do
+      features = [
+        gherkin do
+          feature do
+            scenario do
+              step 'passing'
+            end
+          end
+        end,
+        gherkin do
+          feature do
+            scenario do
+              step 'passing'
+            end
+          end
+        end
+      ]
+
+      ast = features.map { |f| parse_gherkin(f) }
+      suite = compile(ast)
+      visit(suite) do |visitor|
+        visitor.should_receive(:test_case).exactly(2).times.and_yield
+        visitor.should_receive(:test_step).exactly(2).times
+      end
+    end
+
     it "compiles a scenario outline to test cases" do
       feature = gherkin do
         feature do
