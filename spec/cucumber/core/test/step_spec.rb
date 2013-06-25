@@ -3,36 +3,6 @@ require 'cucumber/core/test/step'
 module Cucumber::Core::Test
   describe Step do
 
-    describe "executing" do
-      let(:mappings) { stub }
-      let(:ast_step) { stub }
-
-      context "when a passing mapping exists for the step" do
-        before do
-          mappings.stub(:execute).with(ast_step).and_return(mappings)
-        end
-
-        it "returns a passing result" do
-          test_step = Step.new([ast_step])
-          test_step.execute(mappings).should == Result::Passed.new(test_step)
-        end
-      end
-
-      context "when a failing mapping exists for the step" do
-        let(:exception) { StandardError.new('oops') }
-
-        before do
-          mappings.stub(:execute).with(ast_step).and_raise(exception)
-        end
-
-        it "returns a failing result" do
-          test_step = Step.new([ast_step])
-          test_step.execute(mappings).should == Result::Failed.new(test_step, exception)
-        end
-      end
-
-    end
-
     describe "describing itself" do
       it "describes itself to a visitor" do
         visitor = stub

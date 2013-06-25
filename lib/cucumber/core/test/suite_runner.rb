@@ -1,3 +1,5 @@
+require 'cucumber/initializer'
+
 module Cucumber
   module Core
     module Test
@@ -16,12 +18,19 @@ module Cucumber
 
         def test_step(test_step)
           report.before_test_step(test_step)
-          result = test_step.execute(mappings)
+          result = execute(test_step)
           test_step_result(result)
           report.after_test_step(test_step, result)
         end
 
         private
+
+        def execute(test_step)
+          mappings.execute(test_step.step)
+          Result::Passed.new(test_step)
+        rescue Exception => exception
+          Result::Failed.new(test_step, exception)
+        end
 
         def test_step_result(test_step_result)
           @test_case_result = test_step_result
