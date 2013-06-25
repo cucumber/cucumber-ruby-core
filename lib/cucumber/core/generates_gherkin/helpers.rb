@@ -43,7 +43,6 @@ module Cucumber
             @keyword
           end
         end
-
       end
 
       module HasElements
@@ -87,6 +86,10 @@ module Cucumber
             amount ||= number
             return string if string.nil? || string.empty?
             (' ' * amount) + string
+            end
+
+            define_method :indent_level do
+              number
             end
 
             define_method :prepare_statements do |*statements|

@@ -22,7 +22,7 @@ module Cucumber
         end
 
         def build
-          instance_exec &@source
+          instance_exec(&@source)
           @feature.build.join("\n")
         end
       end
@@ -30,6 +30,7 @@ module Cucumber
       class Feature
         include HasElements
         include HasOptionsInitializer
+        include Indentation.level(0)
 
         default_keyword 'Feature'
 
@@ -45,16 +46,25 @@ module Cucumber
         end
 
         def statements
-          strings = [
+          [
             language_statement,
             tag_statement,
             name_statement,
+            description_statement,
             NEW_LINE
           ].compact
         end
 
         def language_statement
           "# language: #{language}" if language
+        end
+
+        def description
+          options.fetch(:description) { '' }.split("\n").map(&:strip)
+        end
+
+        def description_statement
+          description.map { |s| indent(s,indent_level+2) } unless description.empty?
         end
       end
 
