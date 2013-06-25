@@ -17,7 +17,7 @@ module Cucumber::Core::Test
       it "describes itself to a visitor" do
         visitor = stub
         args = stub
-        visitor.should_receive(:passed).with(result, args)
+        visitor.should_receive(:passed).with(args)
         result.describe_to(visitor, args)
       end
 
@@ -45,7 +45,8 @@ module Cucumber::Core::Test
       it "describes itself to a visitor" do
         visitor = stub
         args = stub
-        visitor.should_receive(:failed).with(result, exception, args)
+        visitor.should_receive(:failed).with(args)
+        visitor.should_receive(:exception).with(exception, args)
         result.describe_to(visitor, args)
       end
 

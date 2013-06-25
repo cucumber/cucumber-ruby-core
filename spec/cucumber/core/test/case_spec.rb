@@ -4,7 +4,7 @@ module Cucumber
   module Core
     module Test
       describe Case do
-        let(:test_case) { Test::Case.new(test_steps, feature, scenario) }
+        let(:test_case) { Test::Case.new(test_steps, [feature, scenario]) }
         let(:feature) { stub }
         let(:scenario) { stub }
         let(:test_steps) { [stub, stub] }

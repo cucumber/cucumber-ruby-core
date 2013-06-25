@@ -7,10 +7,6 @@ module Cucumber
       class Case
         include Cucumber.initializer(:test_steps, :source)
 
-        def initialize(test_steps, *source)
-          super(test_steps, source)
-        end
-
         def describe_to(visitor, *args)
           visitor.test_case(self, *args) do
             test_steps.each do |test_step|

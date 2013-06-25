@@ -10,7 +10,7 @@ module Cucumber
 
         Passed = Struct.new(:subject) do
           def describe_to(visitor, *args)
-            visitor.passed(self, *args)
+            visitor.passed(*args)
           end
 
           def to_s
@@ -20,7 +20,8 @@ module Cucumber
 
         Failed = Struct.new(:subject, :exception) do
           def describe_to(visitor, *args)
-            visitor.failed(self, exception, *args)
+            visitor.failed(*args)
+            visitor.exception(exception, *args)
           end
 
           def to_s

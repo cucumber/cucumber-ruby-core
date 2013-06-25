@@ -87,6 +87,9 @@ module Cucumber
             @total_passed += 1
           end
 
+          def exception(*)
+          end
+
           def total
             total_passed + total_failed
           end

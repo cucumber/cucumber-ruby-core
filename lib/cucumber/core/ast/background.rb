@@ -13,7 +13,7 @@ module Cucumber
         include Cucumber.initializer(:language, :location, :comment, :keyword, :title, :description, :raw_steps)
 
         attr_accessor :feature
-        attr_accessor :comment, :keyword
+        attr_accessor :comment, :keyword, :location
 
         def gherkin_statement(node)
           @gherkin_statement = node
