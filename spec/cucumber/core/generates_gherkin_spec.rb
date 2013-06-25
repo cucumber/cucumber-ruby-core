@@ -72,6 +72,29 @@ module Cucumber
             source.should =~ /Scenario:/
           end
 
+          context 'when a description is provided' do
+            it 'includes the description in the scenario statement' do
+              source = gherkin do
+                feature do
+                  scenario description: <<-END
+                    This is the description
+                    which can span
+                    multiple lines.
+                    END
+                end
+              end
+
+              source.should == <<-END.unindent
+              Feature:
+
+                Scenario:
+                  This is the description
+                  which can span
+                  multiple lines.
+              END
+            end
+          end
+
           context 'with a step' do
             it 'includes the step statement' do
               source = gherkin do

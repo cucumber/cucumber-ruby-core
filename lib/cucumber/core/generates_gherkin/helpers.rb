@@ -99,6 +99,17 @@ module Cucumber
         end
       end
 
+      module HasDescription
+        private
+        def description
+          options.fetch(:description) { '' }.split("\n").map(&:strip)
+        end
+
+        def description_statement
+          description.map { |s| indent(s,2) } unless description.empty?
+        end
+      end
+
       module HasRows
         def row(*cells)
           rows << cells

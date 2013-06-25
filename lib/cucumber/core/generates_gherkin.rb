@@ -30,6 +30,7 @@ module Cucumber
       class Feature
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
         include Indentation.level(0)
 
         default_keyword 'Feature'
@@ -46,25 +47,15 @@ module Cucumber
         end
 
         def statements
-          [
-            language_statement,
-            tag_statement,
-            name_statement,
-            description_statement,
-            NEW_LINE
-          ].compact
+          prepare_statements language_statement,
+                             tag_statement,
+                             name_statement,
+                             description_statement,
+                             NEW_LINE
         end
 
         def language_statement
           "# language: #{language}" if language
-        end
-
-        def description
-          options.fetch(:description) { '' }.split("\n").map(&:strip)
-        end
-
-        def description_statement
-          description.map { |s| indent(s,indent_level+2) } unless description.empty?
         end
       end
 
@@ -86,6 +77,7 @@ module Cucumber
       class Scenario
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
         include Indentation.level 2
 
         default_keyword 'Scenario'
@@ -94,7 +86,7 @@ module Cucumber
 
         private
         def statements
-          prepare_statements tag_statement, name_statement
+          prepare_statements tag_statement, name_statement, description_statement
         end
       end
 
