@@ -18,7 +18,7 @@ module Cucumber::Core::Test
         visitor = stub
         args = stub
         visitor.should_receive(:passed).with(args)
-        result.describe_to(visitor, args)
+        result.describe_to(visitor, args).should == result
       end
 
       it "converts to a string" do
@@ -47,7 +47,7 @@ module Cucumber::Core::Test
         args = stub
         visitor.should_receive(:failed).with(args)
         visitor.should_receive(:exception).with(exception, args)
-        result.describe_to(visitor, args)
+        result.describe_to(visitor, args).should == result
       end
 
       it "is equal to another result for the same subject and exception" do
@@ -73,7 +73,7 @@ module Cucumber::Core::Test
       it "describes itself to a visitor" do
         visitor = stub
         args = stub
-        result.describe_to(visitor, args)
+        result.describe_to(visitor, args).should == result
       end
 
       it "is equal to another result for the same subject" do

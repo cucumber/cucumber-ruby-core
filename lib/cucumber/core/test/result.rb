@@ -5,12 +5,14 @@ module Cucumber
       module Result
         Unknown = Struct.new(:subject) do
           def describe_to(visitor, *args)
+            self
           end
         end
 
         Passed = Struct.new(:subject) do
           def describe_to(visitor, *args)
             visitor.passed(*args)
+            self
           end
 
           def to_s
@@ -22,6 +24,7 @@ module Cucumber
           def describe_to(visitor, *args)
             visitor.failed(*args)
             visitor.exception(exception, *args)
+            self
           end
 
           def to_s
