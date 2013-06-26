@@ -19,7 +19,7 @@ module Cucumber::Core::Test
         suite = stub
         report.should_receive(:after_test_suite) do |suite, result|
           suite.should == suite
-          result.should == 'TODO: what can we say about the result here?'
+          result.should_not be_nil
         end
         runner.test_suite(suite) {}
       end
