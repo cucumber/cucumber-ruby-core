@@ -3,10 +3,29 @@ require 'cucumber/core/test/step'
 
 module Cucumber::Core::Test
   describe SuiteRunner do
+
+    let(:runner) { SuiteRunner.new(mappings, report) }
+    let(:mappings) { stub }
+    let(:report)   { stub.as_null_object }
+
+    describe "running a suite" do
+      it "calls the report before running the suite" do
+        suite = stub
+        report.should_receive(:before_test_suite).with(suite)
+        runner.test_suite(suite) {}
+      end
+
+      it "calls the report after running the suite" do
+        suite = stub
+        report.should_receive(:after_test_suite) do |suite, result|
+          suite.should == suite
+          result.should == 'foo'
+        end
+        runner.test_suite(suite) {}
+      end
+    end
+
     describe "executing a test step" do
-      let(:runner) { SuiteRunner.new(mappings, report) }
-      let(:mappings) { stub }
-      let(:report)   { stub.as_null_object }
       let(:ast_step) { stub }
 
       context "when a passing mapping exists for the step" do

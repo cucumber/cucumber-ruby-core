@@ -7,7 +7,9 @@ module Cucumber
         include Cucumber.initializer(:mappings, :report)
 
         def test_suite(test_suite, &descend)
+          report.before_test_suite(test_suite)
           descend.call
+          report.after_test_suite(test_suite, test_suite_result)
         end
 
         def test_case(test_case, &descend)
@@ -38,6 +40,10 @@ module Cucumber
 
         def test_case_result
           @test_case_result ||= Result::Unknown.new
+        end
+
+        def test_suite_result
+          @test_suite_result ||= Result::Unknown.new
         end
       end
     end
