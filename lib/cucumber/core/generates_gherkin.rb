@@ -22,7 +22,7 @@ module Cucumber
         end
 
         def build
-          instance_exec &@source
+          instance_exec(&@source)
           @feature.build.join("\n")
         end
       end
@@ -30,6 +30,8 @@ module Cucumber
       class Feature
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
+        include Indentation.level(0)
 
         default_keyword 'Feature'
 
@@ -45,12 +47,11 @@ module Cucumber
         end
 
         def statements
-          strings = [
-            language_statement,
-            tag_statement,
-            name_statement,
-            NEW_LINE
-          ].compact
+          prepare_statements language_statement,
+                             tag_statement,
+                             name_statement,
+                             description_statement,
+                             NEW_LINE
         end
 
         def language_statement
@@ -76,6 +77,7 @@ module Cucumber
       class Scenario
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
         include Indentation.level 2
 
         default_keyword 'Scenario'
@@ -84,7 +86,7 @@ module Cucumber
 
         private
         def statements
-          prepare_statements tag_statement, name_statement
+          prepare_statements tag_statement, name_statement, description_statement
         end
       end
 
