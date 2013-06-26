@@ -108,6 +108,12 @@ module Cucumber
           @test_step_summary
         end
 
+        def before_test_suite(test_suite)
+        end
+
+        def after_test_suite(test_suite, report)
+        end
+
         def before_test_case(test_case)
         end
 
