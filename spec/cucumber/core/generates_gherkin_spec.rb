@@ -109,6 +109,64 @@ module Cucumber
             end
           end
         end
+
+        context 'with a background' do
+          it 'can have a description' do
+            source = gherkin do
+              feature do
+                background description: "One line,\nand two.."
+              end
+            end
+
+            source.should == <<-END.unindent
+            Feature:
+
+              Background:
+                One line,
+                and two..
+            END
+          end
+        end
+
+        context 'with a scenario outline' do
+          it 'can have a description' do
+            source = gherkin do
+              feature do
+                scenario_outline description: "Doesn't need to be multi-line."
+              end
+            end
+
+            source.should == <<-END.unindent
+            Feature:
+
+              Scenario Outline:
+                Doesn't need to be multi-line.
+            END
+          end
+
+          context 'and examples table' do
+            it 'can have a description' do
+              source = gherkin do
+                feature do
+                  scenario_outline do
+                    examples description: "Doesn't need to be multi-line." do
+
+                    end
+                  end
+                end
+              end
+
+              source.should == <<-END.unindent
+              Feature:
+
+                Scenario Outline:
+
+                  Examples:
+                    Doesn't need to be multi-line.
+              END
+            end
+          end
+        end
       end
 
       it 'generates a complex feature' do

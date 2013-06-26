@@ -62,6 +62,7 @@ module Cucumber
       class Background
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
         include Indentation.level 2
 
         default_keyword 'Background'
@@ -70,7 +71,7 @@ module Cucumber
 
         private
         def statements
-          prepare_statements tag_statement, name_statement
+          prepare_statements tag_statement, name_statement, description_statement
         end
       end
 
@@ -93,6 +94,7 @@ module Cucumber
       class ScenarioOutline
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
         include Indentation.level 2
 
         default_keyword 'Scenario Outline'
@@ -101,7 +103,7 @@ module Cucumber
 
         private
         def statements
-          prepare_statements tag_statement, name_statement
+          prepare_statements tag_statement, name_statement, description_statement
         end
       end
 
@@ -173,6 +175,7 @@ module Cucumber
       class Examples
         include HasOptionsInitializer
         include HasRows
+        include HasDescription
         include Indentation.level(4)
 
         default_keyword 'Examples'
@@ -183,15 +186,11 @@ module Cucumber
 
         private
         def statements
-          prepare_statements header_statements, row_statements(2)
-        end
-
-        def header_statements
-          [
-            NEW_LINE,
-            tag_statement,
-            name_statement
-          ]
+          prepare_statements NEW_LINE,
+                             tag_statement,
+                             name_statement,
+                             description_statement,
+                             row_statements(2)
         end
       end
     end
