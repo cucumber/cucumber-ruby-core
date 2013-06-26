@@ -19,7 +19,6 @@ module Cucumber
           @language || raise("Language is required!")
         end
 
-        attr_reader :gherkin_statement
         def gherkin_statement(statement=nil)
           @gherkin_statement ||= statement
         end

@@ -22,7 +22,6 @@ module Cucumber
           feature_elements.each { |e| e.feature = self }
         end
 
-        attr_reader :gherkin_statement
         def gherkin_statement(statement=nil)
           @gherkin_statement ||= statement
         end

@@ -247,8 +247,6 @@ module Cucumber
               %w{4444 55555}
             ])
 
-            dev_null = table.hashes.size
-
             table.map_headers! do |header|
               header.downcase
             end
@@ -269,8 +267,8 @@ module Cucumber
           it "should return a new table with arguments replaced with values" do
             table_with_replaced_args = @table.arguments_replaced({'<book>' => 'Unbearable lightness of being', '<qty>' => '5'})
 
-            table_with_replaced_args.hashes[0]['book'].should == 'Unbearable lightness of being'
-            table_with_replaced_args.hashes[0]['qty'].should == '5'
+            table_with_replaced_args.hashes[0]['book'].should eq('Unbearable lightness of being')
+            table_with_replaced_args.hashes[0]['qty'].should eq('5')
           end
 
           it "should recognise when entire cell is delimited" do

@@ -149,12 +149,12 @@ module Cucumber
 
         execute(test_suite, mappings, report)
 
-        report.test_cases.total.should == 2
-        report.test_cases.total_passed.should == 1
-        report.test_cases.total_failed.should == 1
-        report.test_steps.total.should == 3
-        report.test_steps.total_passed.should == 2
-        report.test_steps.total_failed.should == 1
+        report.test_cases.total.should eq(2)
+        report.test_cases.total_passed.should eq(1)
+        report.test_cases.total_failed.should eq(1)
+        report.test_steps.total.should eq(3)
+        report.test_steps.total_passed.should eq(2)
+        report.test_steps.total_failed.should eq(1)
       end
     end
   end

@@ -48,8 +48,8 @@ module Cucumber
 
           def scenario_outline(scenario_outline, &descend)
             source = [feature, scenario_outline]
-            scenario_outline_compiler = ScenarioOutlineCompiler.new(source) do |test_steps, source|
-              new_test_case(test_steps, source)
+            scenario_outline_compiler = ScenarioOutlineCompiler.new(source) do |test_steps, scenario_outline_source|
+              new_test_case(test_steps, scenario_outline_source)
             end
             descend.call(scenario_outline_compiler)
           end

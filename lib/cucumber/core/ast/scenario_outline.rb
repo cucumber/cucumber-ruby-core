@@ -17,6 +17,9 @@ module Cucumber
         attr_reader :feature_tags
         attr_reader :comment, :tags, :keyword, :background
 
+        attr_reader :line
+        private :line
+
         def initialize(language, location, background, comment, tags, feature_tags, keyword, title, description, steps, examples_tables)
           @language, @location, @background, @comment, @tags, @feature_tags, @keyword, @title, @description, @steps, @examples_tables = language, location, background, comment, tags, feature_tags, keyword, title, description, steps, examples_tables
         end
@@ -35,8 +38,6 @@ module Cucumber
         end
 
         private
-
-        attr_reader :line
 
         def raise_missing_examples_error
           # TODO: move this into the parser
