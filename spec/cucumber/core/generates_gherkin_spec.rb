@@ -107,6 +107,31 @@ module Cucumber
 
               source.should =~ /Given passing\Z/m
             end
+
+            context 'when a docstring is provided' do
+              it 'includes the content type when provided' do
+                source = gherkin do
+                  feature do
+                    scenario do
+                      step 'failing' do
+                        doc_string 'some text', 'text/plain'
+                      end
+                    end
+                  end
+
+                end
+
+                source.should == <<-END.unindent
+                Feature:
+
+                  Scenario:
+                    Given failing
+                      """text/plain
+                      some text
+                      """
+                END
+              end
+            end
           end
         end
 

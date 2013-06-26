@@ -116,8 +116,8 @@ module Cucumber
 
         elements :table
 
-        def doc_string(string)
-          elements << DocString.new(string)
+        def doc_string(string, content_type='')
+          elements << DocString.new(string, content_type)
         end
 
         private
@@ -147,11 +147,12 @@ module Cucumber
       class DocString
         include Indentation.level(6)
 
-        attr_reader :strings
-        private :strings
+        attr_reader :strings, :content_type
+        private :strings, :content_type
 
-        def initialize(string)
+        def initialize(string, content_type)
           @strings = string.split("\n").map(&:strip)
+          @content_type = content_type
         end
 
         def build(source)
@@ -165,7 +166,7 @@ module Cucumber
 
         def doc_string_statement
           [
-            '"""',
+            %["""#{content_type}],
             strings,
             '"""'
           ]
