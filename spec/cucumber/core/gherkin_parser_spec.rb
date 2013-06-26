@@ -112,7 +112,7 @@ module Cucumber
             visitor.stub(:feature).and_yield
             visitor.stub(:scenario_outline).and_yield
             visitor.stub(:examples_table)
-            visitor.should_receive(:scenario_outline_step) do |step|
+            visitor.should_receive(:outline_step) do |step|
               step.name.should == 'passing <arg>'
             end
             feature.describe_to(visitor)
@@ -121,19 +121,16 @@ module Cucumber
           it "creates an examples table node for each examples table" do
             visitor.stub(:feature).and_yield
             visitor.stub(:scenario_outline).and_yield
-            visitor.stub(:scenario_outline_step).and_yield
+            visitor.stub(:outline_step)
             visitor.should_receive(:examples_table).exactly(2).times.and_yield
-            visitor.should_receive(:examples_table_header) do |header|
-              header.should == ['arg']
-            end.exactly(2).times
             visitor.should_receive(:examples_table_row) do |row|
-              row.should == ['1']
+              row.values.should == ['1']
             end.once.ordered
             visitor.should_receive(:examples_table_row) do |row|
-              row.should == ['2']
+              row.values.should == ['2']
             end.once.ordered
             visitor.should_receive(:examples_table_row) do |row|
-              row.should == ['a']
+              row.values.should == ['a']
             end.once.ordered
             feature.describe_to(visitor)
           end

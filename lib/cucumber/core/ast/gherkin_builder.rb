@@ -100,11 +100,17 @@ module Cucumber
           def comment
             Comment.new(node.comments.map{ |comment| comment.value }.join("\n"))
           end
-
-          attr_reader :file, :node
         end
 
         class FeatureBuilder < Builder
+          attr_accessor :background_builder
+          private :background_builder
+
+          def initialize(*)
+            super
+            @background_builder = nil
+          end
+
           def result(language)
             background = background(language)
             feature = Feature.new(
@@ -122,10 +128,6 @@ module Cucumber
             feature
           end
 
-          def background_builder=(builder)
-            @background_builder = builder
-          end
-
           def add_child(child)
             children << child
           end
@@ -137,8 +139,8 @@ module Cucumber
           private
 
           def background(language)
-            return EmptyBackground.new unless @background_builder
-            @background ||= @background_builder.result(language)
+            return EmptyBackground.new unless background_builder
+            @background ||= background_builder.result(language)
           end
         end
 
@@ -283,14 +285,14 @@ module Cucumber
 
             def example_rows
               node.rows[1..-1].map do |row|
-                ExamplesTable::Row.new(row.cells)
+                header.build_row(row.cells)
               end
             end
           end
 
           class StepBuilder < Builder
             def result(language)
-              step = ScenarioOutline::Step.new(
+              step = OutlineStep.new(
                 language,
                 location,
                 node.keyword,

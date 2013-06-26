@@ -52,7 +52,6 @@ module Cucumber
           end
         end
 
-        include Enumerable
         include Gherkin::Rubify
 
         NULL_CONVERSIONS = Hash.new({ :strict => false, :proc => lambda{ |cell_value| cell_value } }).freeze
@@ -85,6 +84,7 @@ module Cucumber
           @conversion_procs = conversion_procs
           @header_mappings = header_mappings
           @header_conversion_proc = header_conversion_proc
+          @rows_hash = nil
         end
 
         def to_step_definition_arg
@@ -111,6 +111,14 @@ module Cucumber
         #
         def transpose
           self.class.new(raw.transpose, @conversion_procs.dup, @header_mappings.dup, @header_conversion_proc)
+        end
+
+        def map(&block)
+          new_raw = raw.map do |row|
+            row.map(&block)
+          end
+
+          self.class.new(new_raw, @conversion_procs.dup, @header_mappings.dup, @header_conversion_proc)
         end
 
         # Converts this table into an Array of Hash where the keys of each
@@ -173,7 +181,7 @@ module Cucumber
 
         def rows
           hashes.map do |hash|
-            hash.values_at *headers
+            hash.values_at(*headers)
           end
         end
 
@@ -271,8 +279,8 @@ module Cucumber
         end
 
         def to_hash(cells) #:nodoc:
-          hash = Hash.new do |hash, key|
-            hash[key.to_s] if key.is_a?(Symbol)
+          hash = Hash.new do |the_hash, key|
+            the_hash[key.to_s] if key.is_a?(Symbol)
           end
           column_names.each_with_index do |column_name, column_index|
             hash[column_name] = cells.value(column_index)
@@ -369,11 +377,11 @@ module Cucumber
 
         def create_cell_matrix(raw) #:nodoc:
           @cell_matrix = raw.map do |raw_row|
-          line = raw_row.line rescue -1
-          raw_row.map do |raw_cell|
-            new_cell(raw_cell, line)
+            line = raw_row.line rescue -1
+            raw_row.map do |raw_cell|
+              new_cell(raw_cell, line)
+            end
           end
-        end
         end
 
         def convert_columns! #:nodoc:

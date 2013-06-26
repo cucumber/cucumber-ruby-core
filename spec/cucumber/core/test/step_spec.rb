@@ -37,7 +37,7 @@ module Cucumber::Core::Test
       it "describes itself to a visitor" do
         visitor = stub
         args = stub
-        test_step = Step.new(stub)
+        test_step = Step.new([stub])
         visitor.should_receive(:test_step).with(test_step, args)
         test_step.describe_to(visitor, args)
       end

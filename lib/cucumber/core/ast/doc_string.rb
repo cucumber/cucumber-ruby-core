@@ -1,3 +1,4 @@
+require 'cucumber/core/ast/describes_itself'
 module Cucumber
   module Core
     module Ast
@@ -17,7 +18,7 @@ module Cucumber
       #
       # Note how the indentation from the source is stripped away.
       #
-      class DocString < String #:nodoc:
+      class DocString
         include DescribesItself
         attr_accessor :file
 
@@ -25,28 +26,29 @@ module Cucumber
           "string"
         end
 
-        attr_reader :content_type
+        attr_reader :content_type, :content
 
         def initialize(string, content_type)
+          @content = string
           @content_type = content_type
-          super string
+        end
+
+        def map(&block)
+          raise ArgumentError unless block
+          new_content = block.call(content)
+          self.class.new(new_content, content_type)
         end
 
         def to_step_definition_arg
           self
         end
 
-        def arguments_replaced(arguments) #:nodoc:
-          string = self
-          arguments.each do |name, value|
-            value ||= ''
-            string = string.gsub(name, value)
-          end
-          DocString.new(string, content_type)
-        end
-
         def has_text?(text)
           index(text)
+        end
+
+        def ==(other)
+          content == other.content && content_type == other.content_type
         end
 
         private

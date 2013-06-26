@@ -128,6 +128,19 @@ module Cucumber
           end
         end
 
+        describe "#map" do
+          let(:table) { Table.new([ %w{foo bar}, %w{1 2} ]) }
+
+          it 'yields the contents of each cell to the block' do
+
+            expect { |b| table.map(&b) }.to yield_successive_args('foo', 'bar', '1', '2')
+          end
+
+          it 'returns a new table with the cells modified by the block' do
+            table.map { |cell| "*#{cell}*" }.should ==  Table.new([%w{*foo* *bar*}, %w{*1* *2*}])
+          end
+        end
+
         describe "#transpose" do
           before(:each) do
             @table = Table.new([
@@ -234,8 +247,6 @@ module Cucumber
               %w{4444 55555}
             ])
 
-            dev_null = table.hashes.size
-
             table.map_headers! do |header|
               header.downcase
             end
@@ -256,8 +267,8 @@ module Cucumber
           it "should return a new table with arguments replaced with values" do
             table_with_replaced_args = @table.arguments_replaced({'<book>' => 'Unbearable lightness of being', '<qty>' => '5'})
 
-            table_with_replaced_args.hashes[0]['book'].should == 'Unbearable lightness of being'
-            table_with_replaced_args.hashes[0]['qty'].should == '5'
+            table_with_replaced_args.hashes[0]['book'].should eq('Unbearable lightness of being')
+            table_with_replaced_args.hashes[0]['qty'].should eq('5')
           end
 
           it "should recognise when entire cell is delimited" do
