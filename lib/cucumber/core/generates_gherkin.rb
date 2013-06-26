@@ -22,7 +22,7 @@ module Cucumber
         end
 
         def build
-          instance_exec &@source
+          instance_exec(&@source)
           @feature.build.join("\n")
         end
       end
@@ -30,6 +30,8 @@ module Cucumber
       class Feature
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
+        include Indentation.level(0)
 
         default_keyword 'Feature'
 
@@ -45,12 +47,11 @@ module Cucumber
         end
 
         def statements
-          strings = [
-            language_statement,
-            tag_statement,
-            name_statement,
-            NEW_LINE
-          ].compact
+          prepare_statements language_statement,
+                             tag_statement,
+                             name_statement,
+                             description_statement,
+                             NEW_LINE
         end
 
         def language_statement
@@ -61,6 +62,7 @@ module Cucumber
       class Background
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
         include Indentation.level 2
 
         default_keyword 'Background'
@@ -69,13 +71,14 @@ module Cucumber
 
         private
         def statements
-          prepare_statements tag_statement, name_statement
+          prepare_statements tag_statement, name_statement, description_statement
         end
       end
 
       class Scenario
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
         include Indentation.level 2
 
         default_keyword 'Scenario'
@@ -84,13 +87,14 @@ module Cucumber
 
         private
         def statements
-          prepare_statements tag_statement, name_statement
+          prepare_statements tag_statement, name_statement, description_statement
         end
       end
 
       class ScenarioOutline
         include HasElements
         include HasOptionsInitializer
+        include HasDescription
         include Indentation.level 2
 
         default_keyword 'Scenario Outline'
@@ -99,7 +103,7 @@ module Cucumber
 
         private
         def statements
-          prepare_statements tag_statement, name_statement
+          prepare_statements tag_statement, name_statement, description_statement
         end
       end
 
@@ -112,8 +116,8 @@ module Cucumber
 
         elements :table
 
-        def doc_string(string)
-          elements << DocString.new(string)
+        def doc_string(string, content_type='')
+          elements << DocString.new(string, content_type)
         end
 
         private
@@ -143,11 +147,12 @@ module Cucumber
       class DocString
         include Indentation.level(6)
 
-        attr_reader :strings
-        private :strings
+        attr_reader :strings, :content_type
+        private :strings, :content_type
 
-        def initialize(string)
+        def initialize(string, content_type)
           @strings = string.split("\n").map(&:strip)
+          @content_type = content_type
         end
 
         def build(source)
@@ -161,7 +166,7 @@ module Cucumber
 
         def doc_string_statement
           [
-            '"""',
+            %["""#{content_type}],
             strings,
             '"""'
           ]
@@ -171,6 +176,7 @@ module Cucumber
       class Examples
         include HasOptionsInitializer
         include HasRows
+        include HasDescription
         include Indentation.level(4)
 
         default_keyword 'Examples'
@@ -181,15 +187,11 @@ module Cucumber
 
         private
         def statements
-          prepare_statements header_statements, row_statements(2)
-        end
-
-        def header_statements
-          [
-            NEW_LINE,
-            tag_statement,
-            name_statement
-          ]
+          prepare_statements NEW_LINE,
+                             tag_statement,
+                             name_statement,
+                             description_statement,
+                             row_statements(2)
         end
       end
     end

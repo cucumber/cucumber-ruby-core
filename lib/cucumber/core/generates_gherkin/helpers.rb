@@ -43,7 +43,6 @@ module Cucumber
             @keyword
           end
         end
-
       end
 
       module HasElements
@@ -89,10 +88,25 @@ module Cucumber
             (' ' * amount) + string
             end
 
+            define_method :indent_level do
+              number
+            end
+
             define_method :prepare_statements do |*statements|
               statements.flatten.compact.map { |s| indent(s) }
             end
           end
+        end
+      end
+
+      module HasDescription
+        private
+        def description
+          options.fetch(:description) { '' }.split("\n").map(&:strip)
+        end
+
+        def description_statement
+          description.map { |s| indent(s,2) } unless description.empty?
         end
       end
 
