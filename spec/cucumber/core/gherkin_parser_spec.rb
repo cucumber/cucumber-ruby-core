@@ -7,19 +7,29 @@ module Cucumber
   module Core
     module Ast
       describe GherkinParser do
-        include GeneratesGherkin
 
-        let(:feature) do
-          GherkinParser.new(source, __FILE__).feature
+        let(:feature) { GherkinParser.new(source, path).feature }
+        let(:path)    { 'path_to/the.feature' }
+        let(:visitor) { stub }
+
+        context "for invalid gherkin" do
+          let(:source) { "not gherkin" }
+
+          it "raises an error" do
+            expect { feature }.
+              to raise_error(Cucumber::Core::Gherkin::ParseError) { |error|
+                error.message.should =~ /not gherkin/
+                error.message.should =~ /#{path}/
+            }
+          end
         end
 
+        include GeneratesGherkin
         def self.source(&block)
           let(:source) do
             gherkin(&block)
           end
         end
-
-        let(:visitor) { stub }
 
         context "when the Gherkin has a language header" do
           source do
@@ -134,6 +144,7 @@ module Cucumber
             end.once.ordered
             feature.describe_to(visitor)
           end
+
         end
       end
     end

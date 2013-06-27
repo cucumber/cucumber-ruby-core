@@ -29,15 +29,9 @@ module Cucumber
       end
 
       it "raises an error when parsing invalid gherkin" do
-        expected_error = if Cucumber::JRUBY
-                           gherkin::lexer::lexingError
-                         else
-                           Gherkin::Lexer::LexingError
-                         end
         expect { parse_gherkin('not gherkin') }.
-          to raise_error(expected_error)
+          to raise_error(Cucumber::Core::Gherkin::ParseError)
       end
-
 
     end
 
