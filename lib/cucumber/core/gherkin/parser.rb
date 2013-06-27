@@ -17,10 +17,23 @@ module Cucumber
             parser.parse(source, path, 0)
             builder.language = parser.i18n_language
             builder.result
-          rescue ::Gherkin::Lexer::LexingError, ::Gherkin::Parser::ParseError, ::Java::GherkinLexer::LexingError => e
+          rescue *PARSER_ERRORS => e
             raise Core::Gherkin::ParseError.new("#{path}: #{e.message}")
           end
         end
+
+        private
+
+        PARSER_ERRORS = if Cucumber::JRUBY
+                          [
+                            ::Java::GherkinLexer::LexingError
+                          ]
+                        else
+                          [
+                            ::Gherkin::Lexer::LexingError,
+                            ::Gherkin::Parser::ParseError,
+                          ]
+                        end
       end
     end
   end
