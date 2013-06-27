@@ -25,7 +25,24 @@ module Cucumber::Core::Test
       end
     end
 
-    describe "executing a test step" do
+    describe "running a case" do
+      it "calls the report before running the case" do
+        test_case = stub
+        report.should_receive(:before_test_case).with(test_case)
+        runner.test_case(test_case) {}
+      end
+
+      it "calls the report after running the case" do
+        expected_test_case = stub
+        report.should_receive(:after_test_case) do |test_case, result|
+          test_case.should == expected_test_case
+          result.should be_a(Result::Unknown)
+        end
+        runner.test_case(expected_test_case) {}
+      end
+    end
+
+    describe "running a step" do
       let(:ast_step) { stub }
 
       context "when a passing mapping exists for the step" do
