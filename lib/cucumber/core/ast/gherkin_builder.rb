@@ -9,7 +9,6 @@ module Cucumber
       # Builds an AST of a feature by listening to events from the
       # Gherkin parser.
       class GherkinBuilder
-        include Gherkin::Rubify
 
         def initialize(path = 'UNKNOWN-FILE')
           @path = path
@@ -264,6 +263,8 @@ module Cucumber
           end
 
           class ExamplesTableBuilder < Builder
+            include Gherkin::Rubify
+
             def result
               ExamplesTable.new(
                 location,
@@ -284,7 +285,7 @@ module Cucumber
             end
 
             def example_rows
-              node.rows[1..-1].map do |row|
+              rubify(node.rows)[1..-1].map do |row|
                 header.build_row(row.cells)
               end
             end
