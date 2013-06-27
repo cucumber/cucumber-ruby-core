@@ -1,11 +1,11 @@
 require 'cucumber/core'
-require 'cucumber/core/generates_gherkin'
+require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
 
 module Cucumber
   describe Core do
     include Core
-    include Core::GeneratesGherkin
+    include Core::Gherkin::Writer
 
     describe "parsing gherkin" do
 

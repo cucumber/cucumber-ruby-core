@@ -1,10 +1,10 @@
 require 'cucumber/core'
 require 'cucumber/core/compiler'
-require 'cucumber/core/generates_gherkin'
+require 'cucumber/core/gherkin/writer'
 
 module Cucumber::Core
   describe Compiler do
-    include GeneratesGherkin
+    include Gherkin::Writer
     include Cucumber::Core
 
     it "compiles multiple features" do

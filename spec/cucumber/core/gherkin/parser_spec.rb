@@ -1,14 +1,13 @@
 # -*- encoding: utf-8 -*-
 require 'cucumber/initializer'
-require 'cucumber/core/gherkin_parser'
-require 'cucumber/core/generates_gherkin'
+require 'cucumber/core/gherkin/parser'
+require 'cucumber/core/gherkin/writer'
 
 module Cucumber
   module Core
-    module Ast
-      describe GherkinParser do
-
-        let(:feature) { GherkinParser.new(source, path).feature }
+    module Gherkin
+      describe Parser do
+        let(:feature) { Parser.new(source, path).feature }
         let(:path)    { 'path_to/the.feature' }
         let(:visitor) { stub }
 
@@ -16,15 +15,14 @@ module Cucumber
           let(:source) { "not gherkin" }
 
           it "raises an error" do
-            expect { feature }.
-              to raise_error(Cucumber::Core::Gherkin::ParseError) { |error|
-                error.message.should =~ /not gherkin/
-                error.message.should =~ /#{path}/
-            }
+            expect { feature }.to raise_error(ParseError) do |error|
+              error.message.should =~ /not gherkin/
+              error.message.should =~ /#{path}/
+            end
           end
         end
 
-        include GeneratesGherkin
+        include Writer
         def self.source(&block)
           let(:source) do
             gherkin(&block)
@@ -57,7 +55,7 @@ module Cucumber
             visitor.stub(:scenario).and_yield
             visitor.stub(:step).and_yield
 
-            expected = Core::Ast::DocString.new("content", "")
+            expected = Ast::DocString.new("content", "")
             visitor.should_receive(:doc_string).with(expected)
             feature.describe_to(visitor)
           end
@@ -84,7 +82,7 @@ module Cucumber
             visitor.stub(:scenario).and_yield
             visitor.stub(:step).and_yield
 
-            expected = Core::Ast::Table.new([['name', 'surname'], ['rob', 'westgeest']])
+            expected = Ast::Table.new([['name', 'surname'], ['rob', 'westgeest']])
             visitor.should_receive(:table).with(expected)
             feature.describe_to(visitor)
           end
@@ -150,4 +148,3 @@ module Cucumber
     end
   end
 end
-

@@ -1,10 +1,10 @@
-require 'cucumber/core/gherkin_parser.rb'
+require 'cucumber/core/gherkin/parser.rb'
 require 'cucumber/core/compiler.rb'
 
 module Cucumber
   module Core
     def parse_gherkin(source, path='unknown')
-      GherkinParser.new(source, path).feature
+      Gherkin::Parser.new(source, path).feature
     end
 
     def compile(ast)
