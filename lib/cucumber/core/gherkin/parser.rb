@@ -1,4 +1,4 @@
-require 'cucumber/core/ast/gherkin_builder'
+require 'cucumber/core/gherkin/ast_builder'
 require 'gherkin/parser/parser'
 
 module Cucumber
@@ -10,14 +10,14 @@ module Cucumber
         include Cucumber.initializer(:source, :path)
 
         def feature
-          builder = Ast::GherkinBuilder.new(path)
+          builder = AstBuilder.new(path)
           parser = ::Gherkin::Parser::Parser.new(builder, true, "root", false)
 
           begin
             parser.parse(source, path, 0)
             builder.language = parser.i18n_language
             builder.result
-          rescue ::Gherkin::Lexer::LexingError, ::Gherkin::Parser::ParseError, Java::GherkinLexer::LexingError => e
+          rescue ::Gherkin::Lexer::LexingError, ::Gherkin::Parser::ParseError, ::Java::GherkinLexer::LexingError => e
             raise Core::Gherkin::ParseError.new("#{path}: #{e.message}")
           end
         end

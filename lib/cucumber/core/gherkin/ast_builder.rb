@@ -5,10 +5,10 @@ require 'gherkin/rubify'
 
 module Cucumber
   module Core
-    module Ast
+    module Gherkin
       # Builds an AST of a feature by listening to events from the
       # Gherkin parser.
-      class GherkinBuilder
+      class AstBuilder
 
         def initialize(path = 'UNKNOWN-FILE')
           @path = path
@@ -89,15 +89,15 @@ module Cucumber
           private
 
           def tags
-            Tags.new(nil, node.tags)
+            Ast::Tags.new(nil, node.tags)
           end
 
           def location
-            Location.new(file, node.line)
+            Ast::Location.new(file, node.line)
           end
 
           def comment
-            Comment.new(node.comments.map{ |comment| comment.value }.join("\n"))
+            Ast::Comment.new(node.comments.map{ |comment| comment.value }.join("\n"))
           end
         end
 
@@ -112,7 +112,7 @@ module Cucumber
 
           def result(language)
             background = background(language)
-            feature = Feature.new(
+            feature = Ast::Feature.new(
               location,
               background,
               comment,
@@ -138,14 +138,14 @@ module Cucumber
           private
 
           def background(language)
-            return EmptyBackground.new unless background_builder
+            return Ast::EmptyBackground.new unless background_builder
             @background ||= background_builder.result(language)
           end
         end
 
         class BackgroundBuilder < Builder
           def result(language)
-            background = Background.new(
+            background = Ast::Background.new(
               language,
               location,
               comment,
@@ -176,7 +176,7 @@ module Cucumber
 
         class ScenarioBuilder < Builder
           def result(background, language, feature_tags)
-            scenario = Scenario.new(
+            scenario = Ast::Scenario.new(
               language,
               location,
               background,
@@ -208,12 +208,12 @@ module Cucumber
 
           class StepBuilder < Builder
             def result(language)
-              step = Step.new(
+              step = Ast::Step.new(
                 language,
                 location,
                 node.keyword,
                 node.name,
-                MultilineArgument.from(node.doc_string || node.rows)
+                Ast::MultilineArgument.from(node.doc_string || node.rows)
               )
               step.gherkin_statement(node)
               step
@@ -223,7 +223,7 @@ module Cucumber
 
         class ScenarioOutlineBuilder < Builder
           def result(background, language, feature_tags)
-            scenario_outline = ScenarioOutline.new(
+            scenario_outline = Ast::ScenarioOutline.new(
               language,
               location,
               background,
@@ -263,10 +263,10 @@ module Cucumber
           end
 
           class ExamplesTableBuilder < Builder
-            include Gherkin::Rubify
+            include ::Gherkin::Rubify
 
             def result
-              ExamplesTable.new(
+              Ast::ExamplesTable.new(
                 location,
                 comment,
                 node.keyword,
@@ -281,7 +281,7 @@ module Cucumber
 
             def header
               row = node.rows[0]
-              ExamplesTable::Header.new(row.cells)
+              Ast::ExamplesTable::Header.new(row.cells)
             end
 
             def example_rows
@@ -293,12 +293,12 @@ module Cucumber
 
           class StepBuilder < Builder
             def result(language)
-              step = OutlineStep.new(
+              step = Ast::OutlineStep.new(
                 language,
                 location,
                 node.keyword,
                 node.name,
-                MultilineArgument.from(node.doc_string || node.rows)
+                Ast::MultilineArgument.from(node.doc_string || node.rows)
               )
               step.gherkin_statement(node)
               step
