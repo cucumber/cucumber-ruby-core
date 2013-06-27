@@ -1,7 +1,6 @@
 require 'cucumber/initializer'
 require 'cucumber/core/ast'
 require 'cucumber/core/platform'
-require 'gherkin/rubify'
 
 module Cucumber
   module Core
@@ -65,11 +64,6 @@ module Cucumber
         end
 
         private
-
-        if defined?(JRUBY_VERSION)
-          java_import java.util.ArrayList
-          ArrayList.__persistent__ = true
-        end
 
         def language
           @language || raise("Language has not been set")
@@ -263,7 +257,6 @@ module Cucumber
           end
 
           class ExamplesTableBuilder < Builder
-            include ::Gherkin::Rubify
 
             def result
               Ast::ExamplesTable.new(
@@ -285,10 +278,12 @@ module Cucumber
             end
 
             def example_rows
-              rubify(node.rows)[1..-1].map do |row|
+              raw_header, *raw_examples = *node.rows
+              raw_examples.map do |row|
                 header.build_row(row.cells)
               end
             end
+
           end
 
           class StepBuilder < Builder
