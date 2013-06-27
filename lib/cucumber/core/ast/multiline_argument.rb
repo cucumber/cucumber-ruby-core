@@ -19,7 +19,7 @@ module Cucumber
             when ::Gherkin::Formatter::Model::DocString
               Ast::DocString.new(argument.value, argument.content_type)
             when Array
-              Ast::Table.new(argument.map{|row| row.cells})
+              Ast::DataTable.new(argument.map{|row| row.cells})
             else
               raise ArgumentError, "Don't know how to convert #{argument} into a MultilineArgument"
             end

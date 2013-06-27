@@ -1,12 +1,12 @@
 # encoding: utf-8
-require 'cucumber/core/ast/table'
+require 'cucumber/core/ast/data_table'
 
 module Cucumber
   module Core
     module Ast
-      describe Table do
+      describe DataTable do
         before do
-          @table = Table.new([
+          @table = DataTable.new([
             %w{one four seven},
             %w{4444 55555 666666}
           ])
@@ -51,15 +51,15 @@ module Cucumber
 
         describe "equality" do
           it "is equal to another table with the same data" do
-            Table.new([[1,2],[3,4]]).should == Table.new([[1,2],[3,4]])
+            DataTable.new([[1,2],[3,4]]).should == DataTable.new([[1,2],[3,4]])
           end
 
           it "is not equal to another table with different data" do
-            Table.new([[1,2],[3,4]]).should_not == Table.new([[1,2]])
+            DataTable.new([[1,2],[3,4]]).should_not == DataTable.new([[1,2]])
           end
 
           it "is not equal to a non table" do
-            Table.new([[1,2],[3,4]]).should_not == Object.new
+            DataTable.new([[1,2],[3,4]]).should_not == Object.new
           end
         end
 
@@ -72,7 +72,7 @@ module Cucumber
           it "applies the block once to each value" do
             headers = ['header']
             rows = ['value']
-            table = Table.new [headers, rows]
+            table = DataTable.new [headers, rows]
             count = 0
             table.map_column!('header') { |value| count +=1 }
             table.rows
@@ -111,7 +111,7 @@ module Cucumber
 
         describe "#match" do
           before(:each) do
-            @table = Table.new([
+            @table = DataTable.new([
               %w{one four seven},
               %w{4444 55555 666666}
             ])
@@ -129,7 +129,7 @@ module Cucumber
         end
 
         describe "#map" do
-          let(:table) { Table.new([ %w{foo bar}, %w{1 2} ]) }
+          let(:table) { DataTable.new([ %w{foo bar}, %w{1 2} ]) }
 
           it 'yields the contents of each cell to the block' do
 
@@ -137,13 +137,13 @@ module Cucumber
           end
 
           it 'returns a new table with the cells modified by the block' do
-            table.map { |cell| "*#{cell}*" }.should ==  Table.new([%w{*foo* *bar*}, %w{*1* *2*}])
+            table.map { |cell| "*#{cell}*" }.should ==  DataTable.new([%w{*foo* *bar*}, %w{*1* *2*}])
           end
         end
 
         describe "#transpose" do
           before(:each) do
-            @table = Table.new([
+            @table = DataTable.new([
               %w{one 1111},
               %w{two 22222}
             ])
@@ -157,7 +157,7 @@ module Cucumber
         describe "#rows_hash" do
 
           it "should return a hash of the rows" do
-            table = Table.new([
+            table = DataTable.new([
               %w{one 1111},
               %w{two 22222}
             ])
@@ -165,7 +165,7 @@ module Cucumber
           end
 
           it "should fail if the table doesn't have two columns" do
-            faulty_table = Table.new([
+            faulty_table = DataTable.new([
               %w{one 1111 abc},
               %w{two 22222 def}
             ])
@@ -175,7 +175,7 @@ module Cucumber
           end
 
           it "should support header and column mapping" do
-            table = Table.new([
+            table = DataTable.new([
               %w{one 1111},
               %w{two 22222}
             ])
@@ -203,7 +203,7 @@ module Cucumber
           end
 
           it "takes a block and operates on all the headers with it" do
-            table = Table.new([
+            table = DataTable.new([
               ['HELLO', 'WORLD'],
               %w{4444 55555}
             ])
@@ -216,7 +216,7 @@ module Cucumber
           end
 
           it "treats the mappings in the provided hash as overrides when used with a block" do
-            table = Table.new([
+            table = DataTable.new([
               ['HELLO', 'WORLD'],
               %w{4444 55555}
             ])
@@ -229,7 +229,7 @@ module Cucumber
           end
 
           it "should allow mapping of headers before table.hashes has been accessed" do
-            table = Table.new([
+            table = DataTable.new([
               ['HELLO', 'WORLD'],
               %w{4444 55555}
             ])
@@ -242,7 +242,7 @@ module Cucumber
           end
 
           it "should allow mapping of headers after table.hashes has been accessed" do
-            table = Table.new([
+            table = DataTable.new([
               ['HELLO', 'WORLD'],
               %w{4444 55555}
             ])
@@ -258,7 +258,7 @@ module Cucumber
         describe "replacing arguments" do
 
           before(:each) do
-            @table = Table.new([
+            @table = DataTable.new([
               %w{qty book},
               %w{<qty> <book>}
             ])
@@ -276,7 +276,7 @@ module Cucumber
           end
 
           it "should recognise when just a subset of a cell is delimited" do
-            table = Table.new([
+            table = DataTable.new([
               %w{qty book},
               [nil, "This is <who>'s book"]
             ])
@@ -290,7 +290,7 @@ module Cucumber
           end
 
           it "should preserve values which don't match a placeholder when replacing with nil" do
-            table = Table.new([
+            table = DataTable.new([
               %w{book},
               %w{cat}
             ])
@@ -306,7 +306,7 @@ module Cucumber
           end
 
           it "should not raise an error when there are nil values in the table" do
-            table = Table.new([
+            table = DataTable.new([
               ['book', 'qty'],
               ['<book>', nil],
             ])
@@ -320,7 +320,7 @@ module Cucumber
 
         describe "#new" do
           it "should allow Array of Hash" do
-            t1 = Table.new([{'name' => 'aslak', 'male' => 'true'}])
+            t1 = DataTable.new([{'name' => 'aslak', 'male' => 'true'}])
             t1.hashes.should == [{'name' => 'aslak', 'male' => 'true'}]
           end
         end

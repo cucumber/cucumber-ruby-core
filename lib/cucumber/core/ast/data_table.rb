@@ -7,7 +7,7 @@ module Cucumber
   module Core
     module Ast
       # Step Definitions that match a plain text Step with a multiline argument table
-      # will receive it as an instance of Table. A Table object holds the data of a
+      # will receive it as an instance of DataTable. A DataTable object holds the data of a
       # table parsed from a feature file and lets you access and manipulate the data
       # in different ways.
       #
@@ -25,7 +25,7 @@ module Cucumber
       #
       # This will store <tt>[['a', 'b'], ['c', 'd']]</tt> in the <tt>data</tt> variable.
       #
-      class Table
+      class DataTable
         include DescribesItself
 
         class Different < StandardError
@@ -71,7 +71,7 @@ module Cucumber
 
         # Creates a new instance. +raw+ should be an Array of Array of String
         # or an Array of Hash (similar to what #hashes returns).
-        # You don't typically create your own Table objects - Cucumber will do
+        # You don't typically create your own DataTable objects - Cucumber will do
         # it internally and pass them to your Step Definitions.
         #
         def initialize(raw, conversion_procs = NULL_CONVERSIONS.dup, header_mappings = {}, header_conversion_proc = nil)
@@ -122,7 +122,7 @@ module Cucumber
         end
 
         # Converts this table into an Array of Hash where the keys of each
-        # Hash are the headers in the table. For example, a Table built from
+        # Hash are the headers in the table. For example, a DataTable built from
         # the following plain text:
         #
         #   | a | b | sum |
@@ -157,7 +157,7 @@ module Cucumber
           @rows_hash = self.transpose.hashes[0]
         end
 
-        # Gets the raw data of this table. For example, a Table built from
+        # Gets the raw data of this table. For example, a DataTable built from
         # the following plain text:
         #
         #   | a | b |
@@ -254,7 +254,7 @@ module Cucumber
           @header_conversion_proc = block
         end
 
-        # Returns a new Table where the headers are redefined. See #map_headers!
+        # Returns a new DataTable where the headers are redefined. See #map_headers!
         def map_headers(mappings={})
           table = self.dup
           table.map_headers!(mappings)
@@ -312,7 +312,7 @@ module Cucumber
             cell_with_replaced_args
           end
         end
-        Table.new(raw_with_replaced_args)
+        DataTable.new(raw_with_replaced_args)
         end
 
         def has_text?(text) #:nodoc:
@@ -481,8 +481,8 @@ module Cucumber
         end
 
         def ensure_table(table_or_array) #:nodoc:
-          return table_or_array if Table === table_or_array
-          Table.new(table_or_array)
+          return table_or_array if DataTable === table_or_array
+          DataTable.new(table_or_array)
         end
 
         def ensure_array_of_array(array)

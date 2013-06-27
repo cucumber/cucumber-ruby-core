@@ -1,6 +1,6 @@
 require 'cucumber/core/ast/outline_step'
 require 'cucumber/core/ast/examples_table'
-require 'cucumber/core/ast/table'
+require 'cucumber/core/ast/data_table'
 require 'cucumber/core/ast/doc_string'
 
 module Cucumber
@@ -26,7 +26,7 @@ module Cucumber
           context "when the step has a DataTable" do
             let(:outline_step) { OutlineStep.new(language, location, keyword, name, table) }
             let(:name)  { "anything" }
-            let(:table) { Table.new([['x', 'y'],['a', 'a <arg>']]) } # TODO: rename to DataTable
+            let(:table) { DataTable.new([['x', 'y'],['a', 'a <arg>']]) }
 
             it "replaces the arguments in the DataTable" do
               visitor = stub
