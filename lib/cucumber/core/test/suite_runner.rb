@@ -13,6 +13,7 @@ module Cucumber
         end
 
         def test_case(test_case, &descend)
+          @test_case_result = nil
           report.before_test_case(test_case)
           descend.call
           report.after_test_case(test_case, test_case_result)
@@ -28,6 +29,7 @@ module Cucumber
         private
 
         def execute(test_step)
+          return Result::Skipped.new(test_step) if already_failed?
           mappings.execute(test_step.step)
           Result::Passed.new(test_step)
         rescue Exception => exception
@@ -35,7 +37,7 @@ module Cucumber
         end
 
         def test_step_result(test_step_result)
-          @test_case_result = test_step_result
+          @test_case_result = test_step_result unless already_failed?
         end
 
         def test_case_result
@@ -44,6 +46,10 @@ module Cucumber
 
         def test_suite_result
           @test_suite_result ||= Result::Unknown.new
+        end
+
+        def already_failed?
+          test_case_result.is_a?(Result::Failed)
         end
       end
     end

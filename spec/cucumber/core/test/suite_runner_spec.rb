@@ -1,4 +1,6 @@
 require 'cucumber/core/test/suite_runner'
+require 'cucumber/core/test/suite'
+require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
 
 module Cucumber::Core::Test
@@ -39,6 +41,91 @@ module Cucumber::Core::Test
           result.should be_a(Result::Unknown)
         end
         runner.test_case(expected_test_case) {}
+      end
+
+      context 'with steps' do
+        let(:source) { stub }
+        let(:passing_ast_step) { stub }
+        let(:failing_ast_step) { stub }
+
+        before do
+          mappings.stub(:execute).with(passing_ast_step).and_return(mappings)
+          mappings.stub(:execute).with(failing_ast_step).and_raise
+        end
+
+        it 'passes when all steps pass' do
+          test_steps = [
+            Step.new([passing_ast_step]),
+            Step.new([passing_ast_step]),
+          ]
+
+          report.should_receive(:after_test_case) do |test_case, result|
+            result.should be_a(Result::Passed)
+          end
+
+          test_case = Case.new(test_steps, source)
+          test_case.describe_to(runner)
+        end
+
+        it 'fails when a step fails' do
+          test_steps = [
+            Step.new([failing_ast_step]),
+          ]
+
+          report.should_receive(:after_test_case) do |test_case, result|
+            result.should be_a(Result::Failed)
+          end
+
+          test_case = Case.new(test_steps, source)
+          test_case.describe_to(runner)
+        end
+
+        it 'fails the test case after the first step failure' do
+          test_steps = [
+            failing = Step.new([failing_ast_step]),
+            passing = Step.new([passing_ast_step]),
+          ]
+
+          report.should_receive(:after_test_step).with(failing, anything) do |test_step, result|
+            result.should be_a(Result::Failed)
+          end
+
+          report.should_receive(:after_test_step).with(passing, anything) do |test_step, result|
+            result.should be_a(Result::Skipped)
+          end
+
+          report.should_receive(:after_test_case) do |test_case, result|
+            result.should be_a(Result::Failed)
+          end
+
+          mappings.should_not_receive(:execute).with(passing_ast_step)
+
+          test_case = Case.new(test_steps, source)
+          test_case.describe_to(runner)
+        end
+
+        context 'running multiple test cases' do
+          context 'when the first test case fails' do
+            it 'reports the results correctly for the following test case' do
+              test_steps = [
+                failing = Step.new([failing_ast_step]),
+                passing = Step.new([passing_ast_step]),
+              ]
+
+              first_test_case = Case.new(test_steps, source)
+              last_test_case = Case.new([passing], source)
+
+              suite = Suite.new([first_test_case, last_test_case])
+
+              report.should_receive(:after_test_case).with(last_test_case, anything) do |test_case, result|
+                result.should be_a(Result::Passed)
+              end
+
+              suite.describe_to(runner)
+            end
+          end
+        end
+
       end
     end
 

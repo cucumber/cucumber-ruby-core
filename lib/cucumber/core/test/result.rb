@@ -31,6 +31,18 @@ module Cucumber
             "✗"
           end
         end
+
+        Skipped = Struct.new(:subject) do
+          def describe_to(visitor, *args)
+            visitor.skipped(*args)
+            self
+          end
+
+          def to_s
+            "-"
+          end
+        end
+
       end
     end
   end
