@@ -278,7 +278,7 @@ module Cucumber
             end
 
             def example_rows
-              raw_header, *raw_examples = *node.rows
+              _raw_header, *raw_examples = *node.rows
               raw_examples.map do |row|
                 header.build_row(row.cells)
               end

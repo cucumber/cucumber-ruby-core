@@ -16,12 +16,12 @@ module Cucumber::Core::Test
       end
 
       it "calls the report after running the suite" do
-        suite = stub
+        expected_suite = stub
         report.should_receive(:after_test_suite) do |suite, result|
-          suite.should == suite
+          suite.should eq(expected_suite)
           result.should be_a(Result::Unknown)
         end
-        runner.test_suite(suite) {}
+        runner.test_suite(expected_suite) {}
       end
     end
 
@@ -35,7 +35,7 @@ module Cucumber::Core::Test
       it "calls the report after running the case" do
         expected_test_case = stub
         report.should_receive(:after_test_case) do |test_case, result|
-          test_case.should == expected_test_case
+          test_case.should eq(expected_test_case)
           result.should be_a(Result::Unknown)
         end
         runner.test_case(expected_test_case) {}
@@ -53,8 +53,8 @@ module Cucumber::Core::Test
         it "returns a passing result" do
           expected_test_step = Step.new([ast_step])
           report.should_receive(:after_test_step) do |test_step, result|
-            test_step.should == expected_test_step
-            result.should == Result::Passed.new(expected_test_step)
+            test_step.should eq(expected_test_step)
+            result.should eq(Result::Passed.new(expected_test_step))
           end
           runner.test_step(expected_test_step)
         end
@@ -70,8 +70,8 @@ module Cucumber::Core::Test
         it "returns a failing result" do
           expected_test_step = Step.new([ast_step])
           report.should_receive(:after_test_step) do |test_step, result|
-            test_step.should == expected_test_step
-            result.should == Result::Failed.new(test_step, exception)
+            test_step.should eq(expected_test_step)
+            result.should eq(Result::Failed.new(test_step, exception))
           end
           runner.test_step(expected_test_step)
         end

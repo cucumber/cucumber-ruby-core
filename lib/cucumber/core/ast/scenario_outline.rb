@@ -39,8 +39,6 @@ module Cucumber
 
         private
 
-        attr_reader :line
-
         def children
           @steps + @examples_tables
         end
