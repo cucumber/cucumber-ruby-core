@@ -38,6 +38,7 @@ RSpec.configure do |config|
         puts "-" * 75
         puts
       else
+        puts
         puts "Non cucumber-ruby-core warnings hidden. To view set VIEW_OTHER_WARNINGS environment variable."
       end
     end
