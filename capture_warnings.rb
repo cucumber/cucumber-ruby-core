@@ -27,14 +27,22 @@ RSpec.configure do |config|
       puts
     end
 
-    if other_warnings.any?
-      File.open('tmp/warnings.txt', 'w') { |f| f.write(other_warnings.join("\n")) }
-      puts
-      puts "Non-cucumber-ruby-core warnings written to tmp/warnings.txt"
-      puts
+    if other_warnings.any? 
+      if ENV['VIEW_OTHER_WARNINGS']
+        File.open('tmp/warnings.txt', 'w') { |f| f.write(other_warnings.join("\n")) }
+        puts
+        puts "-" * 30 + " other warnings: " + "-" * 30
+        puts
+        puts other_warnings.join("\n")
+        puts
+        puts "-" * 75
+        puts
+      else
+        puts "Non cucumber-ruby-core warnings hidden. To view set VIEW_OTHER_WARNINGS environment variable."
+      end
     end
 
     # fail the build...
-    exit(1) if cucumber_core_warnings.any?
+   raise "Failing the build because of warnings." if cucumber_core_warnings.any?
   end
 end
