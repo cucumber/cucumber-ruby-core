@@ -106,14 +106,12 @@ module Cucumber::Core::Test
 
         context 'running multiple test cases' do
           context 'when the first test case fails' do
-            it 'reports the results correctly for the following test case' do
-              test_steps = [
-                failing = Step.new([failing_ast_step]),
-                passing = Step.new([passing_ast_step]),
-              ]
+            let(:failing_test_step) { Step.new([failing_ast_step]) }
+            let(:passing_test_step) { Step.new([passing_ast_step]) }
 
-              first_test_case = Case.new(test_steps, source)
-              last_test_case = Case.new([passing], source)
+            it 'reports the results correctly for the following test case' do
+              first_test_case = Case.new([failing_test_step], source)
+              last_test_case  = Case.new([passing_test_step], source)
 
               suite = Suite.new([first_test_case, last_test_case])
 
