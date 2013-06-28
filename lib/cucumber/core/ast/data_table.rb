@@ -216,7 +216,7 @@ module Cucumber
           [:table, *cells_rows.map{|row| row.to_sexp}]
         end
 
-        # Redefines the table headers. This makes it possible to use
+        # Returns a new DataTable with redefined headers. This makes it possible to use
         # prettier and more flexible header names in the features.  The
         # keys of +mappings+ are Strings or regular expressions
         # (anything that responds to #=== will work) that may match
@@ -232,14 +232,14 @@ module Cucumber
         # A StepDefinition receiving this table can then map the columns
         # with both Regexp and String:
         #
-        #   table.map_headers!(/phone( number)?/i => :phone, 'Address' => :address)
-        #   table.hashes
+        #   new_table = table.map_headers(/phone( number)?/i => :phone, 'Address' => :address)
+        #   new_table.hashes
         #   # => [{:phone => '123456', :address => 'xyz'}, {:phone => '345678', :address => 'abc'}]
         #
         # You may also pass in a block if you wish to convert all of the headers:
         #
-        #   table.map_headers! { |header| header.downcase }
-        #   table.hashes.keys
+        #   new_table = table.map_headers { |header| header.downcase }
+        #   new_table.hashes.keys
         #   # => ['phone number', 'address']
         #
         # When a block is passed in along with a hash then the mappings in the hash take precendence:
@@ -248,17 +248,9 @@ module Cucumber
         #   table.hashes.keys
         #   # => ['phone number', 'ADDRESS']
         #
-        def map_headers!(mappings={}, &block)
-          clear_cache!
-          @header_mappings = mappings
-          @header_conversion_proc = block
-        end
-
-        # Returns a new DataTable where the headers are redefined. See #map_headers!
-        def map_headers(mappings={})
-          table = self.dup
-          table.map_headers!(mappings)
-          table
+        # Returns a new DataTable where the headers are redefined. See #map_headers
+        def map_headers(mappings={}, &block)
+          self.class.new(raw, @conversion_procs.dup, mappings, block)
         end
 
         # Change how #hashes converts column values. The +column_name+ argument identifies the column

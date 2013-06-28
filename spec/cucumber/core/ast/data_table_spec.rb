@@ -179,7 +179,7 @@ module Cucumber
               %w{one 1111},
               %w{two 22222}
             ])
-            table.map_headers!({ 'two' => 'Two' }) { |header| header.upcase }
+            table = table.map_headers({ 'two' => 'Two' }) { |header| header.upcase }
             table.map_column!('two', false) { |val| val.to_i }
             table.rows_hash.should == { 'ONE' => '1111', 'Two' => 22222 }
           end
@@ -208,11 +208,11 @@ module Cucumber
               %w{4444 55555}
             ])
 
-            table.map_headers! do |header|
+            mapped_table = table.map_headers do |header|
               header.downcase
             end
 
-            table.hashes.first.keys.should =~ %w[hello world]
+            mapped_table.hashes.first.keys.should =~ %w[hello world]
           end
 
           it "treats the mappings in the provided hash as overrides when used with a block" do
@@ -221,11 +221,11 @@ module Cucumber
               %w{4444 55555}
             ])
 
-            table.map_headers!('WORLD' => 'foo') do |header|
+            mapped_table = table.map_headers('WORLD' => 'foo') do |header|
               header.downcase
             end
 
-            table.hashes.first.keys.should =~ %w[hello foo]
+            mapped_table.hashes.first.keys.should =~ %w[hello foo]
           end
 
           it "should allow mapping of headers before table.hashes has been accessed" do
@@ -234,11 +234,11 @@ module Cucumber
               %w{4444 55555}
             ])
 
-            table.map_headers! do |header|
+            mapped_table = table.map_headers do |header|
               header.downcase
             end
 
-            table.hashes.first.keys.should =~ %w[hello world]
+            mapped_table.hashes.first.keys.should =~ %w[hello world]
           end
 
           it "should allow mapping of headers after table.hashes has been accessed" do
@@ -247,11 +247,11 @@ module Cucumber
               %w{4444 55555}
             ])
 
-            table.map_headers! do |header|
+            mapped_table = table.map_headers do |header|
               header.downcase
             end
 
-            table.hashes.first.keys.should =~ %w[hello world]
+            mapped_table.hashes.first.keys.should =~ %w[hello world]
           end
         end
 
