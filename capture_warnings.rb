@@ -29,7 +29,6 @@ RSpec.configure do |config|
 
     if other_warnings.any? 
       if ENV['VIEW_OTHER_WARNINGS']
-        File.open('tmp/warnings.txt', 'w') { |f| f.write(other_warnings.join("\n")) }
         puts
         puts "-" * 30 + " other warnings: " + "-" * 30
         puts
