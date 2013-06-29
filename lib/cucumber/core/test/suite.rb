@@ -14,9 +14,9 @@ module Cucumber
         end
 
         def describe_to(visitor, *args)
-          visitor.test_suite(self, *args) do
+          visitor.test_suite(self, *args) do |child_visitor=visitor|
             test_cases.each do |test_case|
-              test_case.describe_to(visitor, *args)
+              test_case.describe_to(child_visitor, *args)
             end
           end
           self

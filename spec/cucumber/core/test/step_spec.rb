@@ -23,5 +23,36 @@ module Cucumber::Core::Test
         test_step.describe_source_to(visitor, args)
       end
     end
+
+    describe "executing a step" do
+      let(:ast_step) { stub }
+      let(:mappings) { stub }
+
+      context "when a passing mapping exists for the step" do
+        before do
+          mappings.stub(:execute).with(ast_step).and_return(mappings)
+        end
+
+        it "returns a passing result" do
+          expected_test_step = Step.new([ast_step])
+          expected_test_step.execute(mappings).should == Result::Passed.new(expected_test_step)
+        end
+      end
+
+      context "when a failing mapping exists for the step" do
+        let(:exception) { StandardError.new('oops') }
+
+        before do
+          mappings.stub(:execute).with(ast_step).and_raise(exception)
+        end
+
+        it "returns a failing result" do
+          expected_test_step = Step.new([ast_step])
+          expected_test_step.execute(mappings).should == Result::Failed.new(expected_test_step, exception)
+        end
+      end
+
+    end
+
   end
 end

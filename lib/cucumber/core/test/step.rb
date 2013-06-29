@@ -22,6 +22,13 @@ module Cucumber
           end
         end
 
+        def execute(mappings)
+          mappings.execute(step)
+          Result::Passed.new(self)
+        rescue Exception => exception
+          Result::Failed.new(self, exception)
+        end
+
         def step
           source.last
         end

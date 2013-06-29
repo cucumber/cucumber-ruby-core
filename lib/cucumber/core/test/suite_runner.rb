@@ -13,43 +13,40 @@ module Cucumber
         end
 
         def test_case(test_case, &descend)
-          @test_case_result = nil
-          report.before_test_case(test_case)
-          descend.call
-          report.after_test_case(test_case, test_case_result)
-        end
+          case_runner = CaseRunner.new(mappings, report)
 
-        def test_step(test_step)
-          report.before_test_step(test_step)
-          result = execute(test_step)
-          test_step_result(result)
-          report.after_test_step(test_step, result)
+          report.before_test_case(test_case)
+          descend.call(case_runner)
+          report.after_test_case(test_case, case_runner.test_case_result)
         end
 
         private
-
-        def execute(test_step)
-          return Result::Skipped.new(test_step) if already_failed?
-          mappings.execute(test_step.step)
-          Result::Passed.new(test_step)
-        rescue Exception => exception
-          Result::Failed.new(test_step, exception)
-        end
-
-        def test_step_result(test_step_result)
-          @test_case_result = test_step_result unless already_failed?
-        end
-
-        def test_case_result
-          @test_case_result ||= Result::Unknown.new
-        end
 
         def test_suite_result
           @test_suite_result ||= Result::Unknown.new
         end
 
-        def already_failed?
-          test_case_result.is_a?(Result::Failed)
+        class CaseRunner
+          include Cucumber.initializer(:mappings, :report)
+
+          def test_step(test_step)
+            report.before_test_step(test_step)
+            result = test_case_result.execute(test_step, mappings)
+            test_step_result(result)
+            report.after_test_step(test_step, result)
+          end
+
+          def test_case_result
+            @test_case_result ||= Result::Unknown.new
+          end
+
+          def test_step_result(test_step_result)
+            @test_case_result = test_step_result unless already_failed?
+          end
+
+          def already_failed?
+            test_case_result.is_a?(Result::Failed)
+          end
         end
       end
     end
