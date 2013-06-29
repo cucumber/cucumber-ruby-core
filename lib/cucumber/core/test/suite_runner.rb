@@ -21,20 +21,12 @@ module Cucumber
 
         def test_step(test_step)
           report.before_test_step(test_step)
-          result = execute(test_step)
+          result = test_case_result.execute(test_step, mappings)
           test_step_result(result)
           report.after_test_step(test_step, result)
         end
 
         private
-
-        def execute(test_step)
-          return Result::Skipped.new(test_step) if already_failed?
-          mappings.execute(test_step.step)
-          Result::Passed.new(test_step)
-        rescue Exception => exception
-          Result::Failed.new(test_step, exception)
-        end
 
         def test_step_result(test_step_result)
           @test_case_result = test_step_result unless already_failed?
