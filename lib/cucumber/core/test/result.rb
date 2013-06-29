@@ -9,10 +9,7 @@ module Cucumber
           end
 
           def execute(test_step, mappings)
-            mappings.execute(test_step.step)
-            Result::Passed.new(test_step)
-          rescue Exception => exception
-            Result::Failed.new(test_step, exception)
+            test_step.execute(mappings)
           end
         end
 
@@ -23,10 +20,7 @@ module Cucumber
           end
 
           def execute(test_step, mappings)
-            mappings.execute(test_step.step)
-            Result::Passed.new(test_step)
-          rescue Exception => exception
-            Result::Failed.new(test_step, exception)
+            test_step.execute(mappings)
           end
 
           def to_s
