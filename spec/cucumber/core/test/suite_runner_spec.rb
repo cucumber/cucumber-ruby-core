@@ -56,7 +56,7 @@ module Cucumber::Core::Test
               reported_test_case.should eq(test_case)
               result.should be_a(Result::Unknown)
             end
-            runner.test_case(test_case) {}
+            suite.describe_to(runner)
           end
         end
 
