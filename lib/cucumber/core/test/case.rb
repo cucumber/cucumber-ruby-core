@@ -8,9 +8,9 @@ module Cucumber
         include Cucumber.initializer(:test_steps, :source)
 
         def describe_to(visitor, *args)
-          visitor.test_case(self, *args) do
+          visitor.test_case(self, *args) do |child_visitor=visitor|
             test_steps.each do |test_step|
-              test_step.describe_to(visitor, *args)
+              test_step.describe_to(child_visitor, *args)
             end
           end
           self

@@ -7,12 +7,20 @@ module Cucumber
           def describe_to(visitor, *args)
             self
           end
+
+          def execute(test_step, mappings)
+            test_step.execute(mappings)
+          end
         end
 
         Passed = Struct.new(:subject) do
           def describe_to(visitor, *args)
             visitor.passed(*args)
             self
+          end
+
+          def execute(test_step, mappings)
+            test_step.execute(mappings)
           end
 
           def to_s
@@ -25,6 +33,10 @@ module Cucumber
             visitor.failed(*args)
             visitor.exception(exception, *args)
             self
+          end
+
+          def execute(test_step, mappings)
+            return Skipped.new(test_step)
           end
 
           def to_s
