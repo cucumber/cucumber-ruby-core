@@ -8,8 +8,10 @@ module Cucumber
             self
           end
 
-          def execute(test_step, mappings)
-            test_step.execute(mappings)
+          def execute(test_step, mappings, test_case_runner)
+            result = test_step.execute(mappings)
+            test_case_runner.test_case_result = result
+            result
           end
         end
 
@@ -19,8 +21,10 @@ module Cucumber
             self
           end
 
-          def execute(test_step, mappings)
-            test_step.execute(mappings)
+          def execute(test_step, mappings, test_case_runner)
+            result = test_step.execute(mappings)
+            test_case_runner.test_case_result = result if result != self
+            result
           end
 
           def to_s
@@ -35,7 +39,7 @@ module Cucumber
             self
           end
 
-          def execute(test_step, mappings)
+          def execute(test_step, mappings, test_case_runner)
             return Skipped.new(test_step)
           end
 

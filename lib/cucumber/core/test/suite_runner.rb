@@ -29,24 +29,18 @@ module Cucumber
         class CaseRunner
           include Cucumber.initializer(:mappings, :report)
 
+          attr_writer :test_case_result
+
           def test_step(test_step)
             report.before_test_step(test_step)
-            result = test_case_result.execute(test_step, mappings)
-            test_step_result(result)
-            report.after_test_step(test_step, result)
+            test_step_result = test_case_result.execute(test_step, mappings, self)
+            report.after_test_step(test_step, test_step_result)
           end
 
           def test_case_result
             @test_case_result ||= Result::Unknown.new
           end
 
-          def test_step_result(test_step_result)
-            @test_case_result = test_step_result unless already_failed?
-          end
-
-          def already_failed?
-            test_case_result.is_a?(Result::Failed)
-          end
         end
       end
     end
