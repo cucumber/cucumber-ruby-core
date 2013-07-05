@@ -11,19 +11,38 @@ module Cucumber
       end
 
       def test_suite
-        builder = TestSuiteBuilder.new
-        compiler = FeatureCompiler.new(builder)
+        suite_builder = TestSuiteBuilder.new
+        case_builder = TestCaseBuilder.new(suite_builder)
+        compiler = FeatureCompiler.new(case_builder)
         @ast.each { |feature| feature.describe_to(compiler) }
-        builder.result
+        suite_builder.result
       end
 
       class TestSuiteBuilder
+        def test_case(test_case)
+          test_cases << test_case
+        end
+
+        def result
+          Test::Suite.new(test_cases)
+        end
+
+        private
+
+        def test_cases
+          @test_cases ||= []
+        end
+      end
+
+      class TestCaseBuilder
+        include Cucumber.initializer(:receiver)
+
         def background_test_step(source)
           background_test_steps << Test::Step.new(source)
         end
 
         def test_case(source)
-          test_cases << Test::Case.new(test_steps, source)
+          receiver.test_case Test::Case.new(test_steps, source)
           @test_steps = nil
         end
 
@@ -31,18 +50,10 @@ module Cucumber
           test_steps << Test::Step.new(source)
         end
 
-        def result
-          Test::Suite.new(@test_cases)
-        end
-
         private
 
         def background_test_steps
           @background_test_steps ||= []
-        end
-
-        def test_cases
-          @test_cases ||= []
         end
 
         def test_steps
@@ -86,15 +97,15 @@ module Cucumber
         end
 
         def examples_table(examples_table, &descend)
-          source << examples_table
-          descend.call
+          @examples_table = examples_table
+          descend.call(self)
         end
 
         def examples_table_row(row)
           steps(row).each do |step|
-            receiver.test_step(source + [row, step])
+            receiver.test_step(source + [@examples_table, row, step])
           end
-          receiver.test_case(source)
+          receiver.test_case(source + [@examples_table, row])
         end
 
         private
