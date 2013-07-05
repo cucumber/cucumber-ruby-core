@@ -7,16 +7,16 @@ module Cucumber
       ParseError = Class.new(StandardError)
 
       class Parser
-        include Cucumber.initializer(:source, :path)
+        include Cucumber.initializer(:receiver)
 
-        def feature
+        def document(source, path)
           builder = AstBuilder.new(path)
           parser = ::Gherkin::Parser::Parser.new(builder, true, "root", false)
 
           begin
             parser.parse(source, path, 0)
             builder.language = parser.i18n_language
-            builder.result
+            receiver.feature builder.result
           rescue *PARSER_ERRORS => e
             raise Core::Gherkin::ParseError.new("#{path}: #{e.message}")
           end

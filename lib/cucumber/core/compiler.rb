@@ -6,16 +6,18 @@ require 'cucumber/core/test/step'
 module Cucumber
   module Core
     class Compiler
-      def initialize(ast)
-        @ast = ast
+      def initialize
+        @suite_builder = TestSuiteBuilder.new
+        case_builder = TestCaseBuilder.new(@suite_builder)
+        @compiler = FeatureCompiler.new(case_builder)
+      end
+
+      def feature(feature)
+        feature.describe_to(@compiler)
       end
 
       def test_suite
-        suite_builder = TestSuiteBuilder.new
-        case_builder = TestCaseBuilder.new(suite_builder)
-        compiler = FeatureCompiler.new(case_builder)
-        @ast.each { |feature| feature.describe_to(compiler) }
-        suite_builder.result
+        @suite_builder.result
       end
 
       class TestSuiteBuilder

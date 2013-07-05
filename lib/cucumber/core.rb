@@ -5,10 +5,12 @@ module Cucumber
   module Core
 
     def compile(*gherkin_documents)
-      ast = gherkin_documents.map do |document|
-        Gherkin::Parser.new(document, 'UNKNOWN').feature
+      compiler = Compiler.new
+      parser = Core::Gherkin::Parser.new(compiler)
+      gherkin_documents.map do |document|
+        parser.document(document, 'UNKNOWN')
       end
-      Compiler.new(ast).test_suite
+      compiler.test_suite
     end
 
     def execute(test_suite, mappings, report)

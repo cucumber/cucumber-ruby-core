@@ -36,37 +36,22 @@ module Cucumber
 
     describe "executing a test suite" do
       class ReportSpy
+        attr_reader :test_cases, :test_steps
+
         def initialize
-          @test_case_summary = Core::Test::Result::Summary.new
-          @test_step_summary = Core::Test::Result::Summary.new
-        end
-
-        def test_cases
-          @test_case_summary
-        end
-
-        def test_steps
-          @test_step_summary
-        end
-
-        def before_test_suite(test_suite)
-        end
-
-        def after_test_suite(test_suite, report)
-        end
-
-        def before_test_case(test_case)
+          @test_cases = Core::Test::Result::Summary.new
+          @test_steps = Core::Test::Result::Summary.new
         end
 
         def after_test_case(test_case, result)
-          result.describe_to(@test_case_summary)
-        end
-
-        def before_test_step(test_step)
+          result.describe_to test_cases
         end
 
         def after_test_step(test_step, result)
-          result.describe_to(@test_step_summary)
+          result.describe_to test_steps
+        end
+
+        def method_missing(*)
         end
       end
 

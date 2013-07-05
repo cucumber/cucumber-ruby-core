@@ -7,15 +7,27 @@ module Cucumber
   module Core
     module Gherkin
       describe Parser do
-        let(:feature) { Parser.new(source, path).feature }
-        let(:path)    { 'path_to/the.feature' }
-        let(:visitor) { stub }
+        let(:receiver) { stub }
+        let(:parser)   { Parser.new(receiver) }
+        let(:path)     { 'path_to/the.feature' }
+        let(:visitor)  { stub }
+
+        def parse
+          parser.document(source, path)
+        end
+
+        def feature
+          result = nil
+          receiver.stub(:feature) { |feature| result = feature }
+          parse
+          result
+        end
 
         context "for invalid gherkin" do
           let(:source) { "not gherkin" }
 
           it "raises an error" do
-            expect { feature }.to raise_error(ParseError) do |error|
+            expect { parse }.to raise_error(ParseError) do |error|
               error.message.should =~ /not gherkin/
               error.message.should =~ /#{path}/
             end
