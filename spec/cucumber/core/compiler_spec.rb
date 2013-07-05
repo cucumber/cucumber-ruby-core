@@ -168,12 +168,12 @@ module Cucumber::Core
           receiver.should_receive(:test_case).with(
             [feature, scenario]
           )
-          compiler.feature(feature) do |compiler|
-            compiler.background(background) do |compiler|
-              compiler.step background_step
+          compiler.feature(feature) do |f|
+            f.background(background) do |b|
+              b.step background_step
             end
-            compiler.scenario(scenario) do |compiler|
-              compiler.step scenario_step
+            f.scenario(scenario) do |s|
+              s.step scenario_step
             end
           end
         end
@@ -190,7 +190,6 @@ module Cucumber::Core
                       :outline_ast_step,
                   :examples_table_2,
                     :examples_table_2_row_1,
-                      :outline_ast_step,
              )
 
         it "sets the source correctly on the test steps" do
@@ -207,14 +206,14 @@ module Cucumber::Core
           receiver.should_receive(:test_case).with(
             [feature, scenario_outline, examples_table_2, examples_table_2_row_1]
           ).ordered
-          compiler.feature(feature) do |compiler|
-            compiler.scenario_outline(scenario_outline) do |compiler|
-              compiler.outline_step outline_step
-              compiler.examples_table(examples_table_1) do |compiler|
-                compiler.examples_table_row(examples_table_1_row_1)
+          compiler.feature(feature) do |f|
+            f.scenario_outline(scenario_outline) do |o|
+              o.outline_step outline_step
+              o.examples_table(examples_table_1) do |t|
+                t.examples_table_row(examples_table_1_row_1)
               end
-              compiler.examples_table(examples_table_2) do |compiler|
-                compiler.examples_table_row(examples_table_2_row_1)
+              o.examples_table(examples_table_2) do |t|
+                t.examples_table_row(examples_table_2_row_1)
               end
             end
           end
