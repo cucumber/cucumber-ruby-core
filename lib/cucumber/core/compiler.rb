@@ -22,17 +22,23 @@ module Cucumber
         end
 
         def feature(feature, &descend)
-          feature_compiler = FeatureCompiler.new(feature)
+          feature_compiler = FeatureCompiler.new(feature) do |test_steps, source|
+            @test_cases << Test::Case.new(test_steps, source)
+          end
           descend.call(feature_compiler)
-          @test_cases << feature_compiler.test_cases
         end
 
         def test_suite
-          Test::Suite.new(@test_cases.flatten)
+          Test::Suite.new(@test_cases)
         end
 
         class FeatureCompiler
           include Cucumber.initializer(:feature)
+
+          def initialize(feature, &on_test_case)
+            super
+            @on_test_case = on_test_case
+          end
 
           def background(background, &descend)
             source = [feature, background]
@@ -49,21 +55,15 @@ module Cucumber
 
           def scenario_outline(scenario_outline, &descend)
             source = [feature, scenario_outline]
-            scenario_outline_compiler = ScenarioOutlineCompiler.new(source) do |test_steps, scenario_outline_source|
-              new_test_case(test_steps, scenario_outline_source)
-            end
-            descend.call(scenario_outline_compiler)
-          end
-
-          def test_cases
-            @test_cases ||= []
+            compiler = ScenarioOutlineCompiler.new(source, &method(:new_test_case))
+            descend.call(compiler)
           end
 
           private
 
-          def new_test_case(test_steps, source)
-            test_steps = background_compiler.test_steps + test_steps
-            test_cases << Test::Case.new(test_steps, source)
+          def new_test_case(scenario_test_steps, source)
+            test_steps = background_compiler.test_steps + scenario_test_steps
+            @on_test_case[test_steps, source]
           end
 
           def background_compiler
@@ -87,7 +87,7 @@ module Cucumber
           end
 
           def examples_table_row(row)
-            @on_test_case.call(test_steps(row), @source)
+            @on_test_case[test_steps(row), @source]
           end
 
           private

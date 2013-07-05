@@ -36,6 +36,10 @@ module Cucumber::Core
     it "compiles a scenario outline to test cases" do
       feature = gherkin do
         feature do
+          background do
+            step 'passing'
+          end
+
           scenario_outline do
             step 'passing <arg>'
             step 'passing'
@@ -56,7 +60,7 @@ module Cucumber::Core
       suite = compile([parse_gherkin(feature)])
       visit(suite) do |visitor|
         visitor.should_receive(:test_case).exactly(3).times.and_yield
-        visitor.should_receive(:test_step).exactly(6).times
+        visitor.should_receive(:test_step).exactly(9).times
       end
     end
 
