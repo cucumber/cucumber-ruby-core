@@ -22,63 +22,57 @@ module Cucumber
         end
 
         def feature(feature, &descend)
-          feature_compiler = FeatureCompiler.new(feature) do |test_steps, source|
-            @test_cases << Test::Case.new(test_steps, source)
-          end
+          feature_compiler = FeatureCompiler.new(feature, self)
           descend.call(feature_compiler)
+        end
+
+        def background_steps(test_steps)
+          @background_test_steps = test_steps
+        end
+
+        def test_case(test_steps, source)
+          @test_cases << Test::Case.new(background_test_steps + test_steps, source)
         end
 
         def test_suite
           Test::Suite.new(@test_cases)
         end
 
-        class FeatureCompiler
-          include Cucumber.initializer(:feature)
+        private
 
-          def initialize(feature, &on_test_case)
-            super
-            @on_test_case = on_test_case
-          end
+        def background_test_steps
+          @background_test_steps || []
+        end
+
+        class FeatureCompiler
+          include Cucumber.initializer(:feature, :receiver)
 
           def background(background, &descend)
             source = [feature, background]
-            @background_compiler = StepsCompiler.new(source)
-            descend.call(background_compiler)
+            compiler = StepsCompiler.new(source)
+            descend.call(compiler)
+            receiver.background_steps(compiler.test_steps)
           end
 
           def scenario(scenario, &descend)
             source = [feature, scenario]
             scenario_compiler = StepsCompiler.new(source)
             descend.call(scenario_compiler)
-            new_test_case(scenario_compiler.test_steps, source)
+            receiver.test_case(scenario_compiler.test_steps, source)
           end
 
           def scenario_outline(scenario_outline, &descend)
             source = [feature, scenario_outline]
-            compiler = ScenarioOutlineCompiler.new(source, &method(:new_test_case))
+            compiler = ScenarioOutlineCompiler.new(source, receiver)
             descend.call(compiler)
-          end
-
-          private
-
-          def new_test_case(scenario_test_steps, source)
-            test_steps = background_compiler.test_steps + scenario_test_steps
-            @on_test_case[test_steps, source]
-          end
-
-          def background_compiler
-            @background_compiler ||= StepsCompiler.new([feature])
           end
         end
 
         class ScenarioOutlineCompiler
-          def initialize(source, &on_test_case)
-            @source, @on_test_case = source, on_test_case
-            @outline_steps = []
-          end
+          include Cucumber.initializer(:source, :receiver)
 
           def outline_step(outline_step)
-            @outline_steps << outline_step
+            outline_steps << outline_step
           end
 
           def examples_table(examples_table, &descend)
@@ -87,7 +81,7 @@ module Cucumber
           end
 
           def examples_table_row(row)
-            @on_test_case[test_steps(row), @source]
+            receiver.test_case(test_steps(row), @source)
           end
 
           private
@@ -99,7 +93,11 @@ module Cucumber
           end
 
           def steps(row)
-            @outline_steps.map { |s| s.to_step(row) }
+            outline_steps.map { |s| s.to_step(row) }
+          end
+
+          def outline_steps
+            @outline_steps ||= []
           end
         end
 
