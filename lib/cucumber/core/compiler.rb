@@ -18,20 +18,17 @@ module Cucumber
       end
 
       class TestSuiteBuilder
-        def initialize
-          @test_cases = []
+        def background_test_step(source)
+          background_test_steps << Test::Step.new(source)
         end
 
-        def background_steps(test_steps)
-          @background_test_steps = test_steps
-        end
-
-        def test_case(test_steps, source)
-          @test_cases << Test::Case.new(background_test_steps + test_steps, source)
+        def test_case(source)
+          test_cases << Test::Case.new(test_steps, source)
+          @test_steps = nil
         end
 
         def test_step(source)
-          Test::Step.new(source)
+          test_steps << Test::Step.new(source)
         end
 
         def result
@@ -41,7 +38,15 @@ module Cucumber
         private
 
         def background_test_steps
-          @background_test_steps || []
+          @background_test_steps ||= []
+        end
+
+        def test_cases
+          @test_cases ||= []
+        end
+
+        def test_steps
+          @test_steps ||= background_test_steps.dup
         end
       end
 
@@ -55,16 +60,15 @@ module Cucumber
 
         def background(background, &descend)
           source = [@feature, background]
-          compiler = StepsCompiler.new(source, receiver)
+          compiler = BackgroundCompiler.new(source, receiver)
           descend.call(compiler)
-          receiver.background_steps(compiler.test_steps)
         end
 
         def scenario(scenario, &descend)
           source = [@feature, scenario]
-          scenario_compiler = StepsCompiler.new(source, receiver)
+          scenario_compiler = ScenarioCompiler.new(source, receiver)
           descend.call(scenario_compiler)
-          receiver.test_case(scenario_compiler.test_steps, source)
+          receiver.test_case(source)
         end
 
         def scenario_outline(scenario_outline, &descend)
@@ -82,21 +86,18 @@ module Cucumber
         end
 
         def examples_table(examples_table, &descend)
-          @source << examples_table
+          source << examples_table
           descend.call
         end
 
         def examples_table_row(row)
-          receiver.test_case(test_steps(row), @source)
+          steps(row).each do |step|
+            receiver.test_step(source + [row, step])
+          end
+          receiver.test_case(source)
         end
 
         private
-
-        def test_steps(row)
-          steps(row).map do |step|
-            receiver.test_step(@source + [row, step])
-          end
-        end
 
         def steps(row)
           outline_steps.map { |s| s.to_step(row) }
@@ -107,23 +108,19 @@ module Cucumber
         end
       end
 
-      class StepsCompiler
+      class ScenarioCompiler
         include Cucumber.initializer(:source, :receiver)
 
-        def test_steps
-          steps.map do |step|
-            receiver.test_step(source + [step])
-          end
+        def step(step)
+          receiver.test_step(source + [step])
         end
+      end
+
+      class BackgroundCompiler
+        include Cucumber.initializer(:source, :receiver)
 
         def step(step)
-          steps << step
-        end
-
-        private
-
-        def steps
-          @steps ||= []
+          receiver.background_test_step(source + [step])
         end
       end
 

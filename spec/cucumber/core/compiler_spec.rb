@@ -7,6 +7,46 @@ module Cucumber::Core
     include Gherkin::Writer
     include Cucumber::Core
 
+    it "compiles a feature with a single scenario" do
+      feature = parse_gherkin(
+        gherkin do
+          feature do
+            scenario do
+              step 'passing'
+            end
+          end
+        end
+      )
+
+      suite = compile([feature])
+      visit(suite) do |visitor|
+        visitor.should_receive(:test_case).exactly(1).times.and_yield
+        visitor.should_receive(:test_step).exactly(1).times
+      end
+    end
+
+    it "compiles a feature with a background" do
+      feature = parse_gherkin(
+        gherkin do
+          feature do
+            background do
+              step 'passing'
+            end
+
+            scenario do
+              step 'passing'
+            end
+          end
+        end
+      )
+
+      suite = compile([feature])
+      visit(suite) do |visitor|
+        visitor.should_receive(:test_case).exactly(1).times.and_yield
+        visitor.should_receive(:test_step).exactly(2).times
+      end
+    end
+
     it "compiles multiple features" do
       features = [
         gherkin do
