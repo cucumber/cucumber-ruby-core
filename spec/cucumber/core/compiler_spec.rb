@@ -14,7 +14,7 @@ module Cucumber::Core
     end
 
     it "compiles a feature with a single scenario" do
-      feature = parse_gherkin(
+      suite = compile(
         gherkin do
           feature do
             scenario do
@@ -23,8 +23,6 @@ module Cucumber::Core
           end
         end
       )
-
-      suite = compile([feature])
       visit(suite) do |visitor|
         visitor.should_receive(:test_case).exactly(1).times.and_yield
         visitor.should_receive(:test_step).exactly(1).times
@@ -32,7 +30,7 @@ module Cucumber::Core
     end
 
     it "compiles a feature with a background" do
-      feature = parse_gherkin(
+      suite = compile(
         gherkin do
           feature do
             background do
@@ -45,8 +43,6 @@ module Cucumber::Core
           end
         end
       )
-
-      suite = compile([feature])
       visit(suite) do |visitor|
         visitor.should_receive(:test_case).exactly(1).times.and_yield
         visitor.should_receive(:test_step).exactly(2).times
@@ -54,7 +50,7 @@ module Cucumber::Core
     end
 
     it "compiles multiple features" do
-      features = [
+      suite = compile(
         gherkin do
           feature do
             scenario do
@@ -69,10 +65,7 @@ module Cucumber::Core
             end
           end
         end
-      ]
-
-      ast = features.map { |f| parse_gherkin(f) }
-      suite = compile(ast)
+      )
       visit(suite) do |visitor|
         visitor.should_receive(:test_case).exactly(2).times.and_yield
         visitor.should_receive(:test_step).exactly(2).times
@@ -81,30 +74,31 @@ module Cucumber::Core
 
     context "compiling scenario outlines" do
       it "compiles a scenario outline to test cases" do
-        feature = gherkin do
-          feature do
-            background do
-              step 'passing'
-            end
-
-            scenario_outline do
-              step 'passing <arg>'
-              step 'passing'
-
-              examples 'examples 1' do
-                row 'arg'
-                row '1'
-                row '2'
+        suite = compile(
+          gherkin do
+            feature do
+              background do
+                step 'passing'
               end
 
-              examples 'examples 2' do
-                row 'arg'
-                row 'a'
+              scenario_outline do
+                step 'passing <arg>'
+                step 'passing'
+
+                examples 'examples 1' do
+                  row 'arg'
+                  row '1'
+                  row '2'
+                end
+
+                examples 'examples 2' do
+                  row 'arg'
+                  row 'a'
+                end
               end
             end
           end
-        end
-        suite = compile([parse_gherkin(feature)])
+        )
         visit(suite) do |visitor|
           visitor.should_receive(:test_case).exactly(3).times.and_yield
           visitor.should_receive(:test_step).exactly(9).times
@@ -112,20 +106,21 @@ module Cucumber::Core
       end
 
       it 'replaces arguments correctly when generating test steps' do
-        feature = gherkin do
-          feature do
-            scenario_outline do
-              step 'passing <arg1> with <arg2>'
-              step 'as well as <arg3>'
+        suite = compile(
+          gherkin do
+            feature do
+              scenario_outline do
+                step 'passing <arg1> with <arg2>'
+                step 'as well as <arg3>'
 
-              examples do
-                row 'arg1', 'arg2', 'arg3'
-                row '1',    '2',    '3'
+                examples do
+                  row 'arg1', 'arg2', 'arg3'
+                  row '1',    '2',    '3'
+                end
               end
             end
           end
-        end
-        suite = compile([parse_gherkin(feature)])
+        )
 
         visit(suite) do |visitor|
           visitor.should_receive(:test_step) do |test_step|

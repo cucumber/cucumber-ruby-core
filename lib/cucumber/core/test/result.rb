@@ -59,6 +59,28 @@ module Cucumber
           end
         end
 
+        class Summary
+          attr_reader :total_failed, :total_passed
+
+          def initialize
+            @total_failed = @total_passed = 0
+          end
+
+          def failed(*args)
+            @total_failed += 1
+          end
+
+          def passed(*args)
+            @total_passed += 1
+          end
+
+          def exception(*)
+          end
+
+          def total
+            total_passed + total_failed
+          end
+        end
       end
     end
   end

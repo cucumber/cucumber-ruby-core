@@ -7,37 +7,9 @@ module Cucumber
     include Core
     include Core::Gherkin::Writer
 
-    describe "parsing gherkin" do
-
-      # String -> Gherkin::Parser -> Core::Ast::GherkinBuilder -> Ast objects
-
-      it "parses valid gherkin, returning an Ast::Feature" do
-        feature = parse_gherkin(
-          gherkin do
-            feature 'Feature name' do
-              background 'Background name' do
-                step 'passing'
-              end
-              scenario do
-                step 'passing'
-              end
-            end
-          end
-        )
-        feature.should be_a(Core::Ast::Feature)
-        feature.name.should == 'Feature name'
-      end
-
-      it "raises an error when parsing invalid gherkin" do
-        expect { parse_gherkin('not gherkin') }.
-          to raise_error(Cucumber::Core::Gherkin::ParseError)
-      end
-
-    end
-
     describe "compiling features to a test suite" do
       it "compiles two scenarios into two test cases" do
-        feature = parse_gherkin(
+        suite = compile(
           gherkin do
             feature do
               background do
@@ -53,8 +25,6 @@ module Cucumber
             end
           end
         )
-
-        suite = compile([feature])
         visitor = stub
         visitor.should_receive(:test_suite).once.and_yield.ordered
         visitor.should_receive(:test_case).exactly(2).times.and_yield.ordered
@@ -66,32 +36,9 @@ module Cucumber
 
     describe "executing a test suite" do
       class ReportSpy
-        class Summary
-          attr_reader :total_failed, :total_passed
-
-          def initialize
-            @total_failed = @total_passed = 0
-          end
-
-          def failed(*args)
-            @total_failed += 1
-          end
-
-          def passed(*args)
-            @total_passed += 1
-          end
-
-          def exception(*)
-          end
-
-          def total
-            total_passed + total_failed
-          end
-        end
-
         def initialize
-          @test_case_summary = Summary.new
-          @test_step_summary = Summary.new
+          @test_case_summary = Core::Test::Result::Summary.new
+          @test_step_summary = Core::Test::Result::Summary.new
         end
 
         def test_cases
@@ -132,7 +79,7 @@ module Cucumber
       end
 
       it "executes the test cases in the suite" do
-        feature = parse_gherkin(
+        suite = compile(
           gherkin do
             feature 'Feature name' do
               scenario 'The one that passes' do
@@ -146,11 +93,10 @@ module Cucumber
             end
           end
         )
-        test_suite = compile([feature])
         report = ReportSpy.new
         mappings = FakeMappings.new
 
-        execute(test_suite, mappings, report)
+        execute(suite, mappings, report)
 
         report.test_cases.total.should eq(2)
         report.test_cases.total_passed.should eq(1)
