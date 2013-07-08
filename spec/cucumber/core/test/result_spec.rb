@@ -5,7 +5,7 @@ module Cucumber::Core::Test
   describe Result do
 
     # the thing that the result is about
-    let(:subject) { stub }
+    let(:subject) { double }
 
     describe Result::Passed do
       let(:result) { Result::Passed.new(subject) }
@@ -15,8 +15,8 @@ module Cucumber::Core::Test
       end
 
       it "describes itself to a visitor" do
-        visitor = stub
-        args = stub
+        visitor = double
+        args = double
         visitor.should_receive(:passed).with(args)
         result.describe_to(visitor, args).should == result
       end
@@ -30,7 +30,7 @@ module Cucumber::Core::Test
       end
 
       it "is not equal to another result for a different subject" do
-        result.should_not eq(Result::Passed.new(stub))
+        result.should_not eq(Result::Passed.new(double))
       end
     end
 
@@ -43,8 +43,8 @@ module Cucumber::Core::Test
       end
 
       it "describes itself to a visitor" do
-        visitor = stub
-        args = stub
+        visitor = double
+        args = double
         visitor.should_receive(:failed).with(args)
         visitor.should_receive(:exception).with(exception, args)
         result.describe_to(visitor, args).should == result
@@ -55,11 +55,11 @@ module Cucumber::Core::Test
       end
 
       it "is not equal to another result for a different subject" do
-        result.should_not eq(Result::Failed.new(stub, exception))
+        result.should_not eq(Result::Failed.new(double, exception))
       end
 
       it "is not equal to another result for a different exception" do
-        result.should_not eq(Result::Failed.new(subject, stub))
+        result.should_not eq(Result::Failed.new(subject, double))
       end
     end
 
@@ -71,8 +71,8 @@ module Cucumber::Core::Test
       end
 
       it "describes itself to a visitor" do
-        visitor = stub
-        args = stub
+        visitor = double
+        args = double
         result.describe_to(visitor, args).should == result
       end
 
@@ -81,7 +81,7 @@ module Cucumber::Core::Test
       end
 
       it "is not equal to another result for a different subject" do
-        result.should_not eq(Result::Unknown.new(stub))
+        result.should_not eq(Result::Unknown.new(double))
       end
     end
   end

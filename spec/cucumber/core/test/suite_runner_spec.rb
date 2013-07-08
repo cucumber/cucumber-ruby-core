@@ -7,8 +7,8 @@ module Cucumber::Core::Test
   describe SuiteRunner do
 
     let(:runner)   { SuiteRunner.new(mappings, report) }
-    let(:mappings) { stub }
-    let(:report)   { stub.as_null_object }
+    let(:mappings) { double }
+    let(:report)   { double.as_null_object }
     let(:suite)    { Suite.new(test_cases) }
 
     context "an empty suite" do
@@ -29,9 +29,9 @@ module Cucumber::Core::Test
     end
 
     context "with test cases" do
-      let(:source) { stub }
-      let(:passing_ast_step) { stub }
-      let(:failing_ast_step) { stub }
+      let(:source) { double }
+      let(:passing_ast_step) { double }
+      let(:failing_ast_step) { double }
       let(:passing) { Step.new([passing_ast_step]) }
       let(:failing) { Step.new([failing_ast_step]) }
 

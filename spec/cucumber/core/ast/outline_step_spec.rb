@@ -9,9 +9,9 @@ module Cucumber
       describe OutlineStep do
         describe "converting to a Step" do
           let(:outline_step) { OutlineStep.new(language, location, keyword, name) }
-          let(:language) { stub }
-          let(:location) { stub }
-          let(:keyword)  { stub }
+          let(:language) { double }
+          let(:location) { double }
+          let(:keyword)  { double }
 
           context "a single argument in the name" do
             let(:name) { 'a <color> cucumber' }
@@ -29,7 +29,7 @@ module Cucumber
             let(:table) { DataTable.new([['x', 'y'],['a', 'a <arg>']]) }
 
             it "replaces the arguments in the DataTable" do
-              visitor = stub
+              visitor = double
               visitor.stub(:step).and_yield
               visitor.should_receive(:table) do |data_table| # TODO: rename this message to :data_table
                 data_table.raw.should == [['x', 'y'], ['a', 'a replacement']]
@@ -46,7 +46,7 @@ module Cucumber
             let(:name) { 'anything' }
 
             it "replaces the arguments in the DocString" do
-              visitor = stub
+              visitor = double
               visitor.stub(:step).and_yield
               visitor.should_receive(:doc_string) do |doc_string|
                 doc_string.content.should == "a replacement that needs replacing"

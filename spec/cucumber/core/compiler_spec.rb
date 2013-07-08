@@ -9,7 +9,7 @@ module Cucumber::Core
 
     def self.stubs(*names)
       names.each do |name|
-        let(name) { stub(name.to_s) }
+        let(name) { double(name.to_s) }
       end
     end
 
@@ -143,7 +143,7 @@ module Cucumber::Core
     end
 
     describe Compiler::FeatureCompiler do
-      let(:receiver) { stub('receiver') }
+      let(:receiver) { double('receiver') }
       let(:compiler) { Compiler::FeatureCompiler.new(receiver) }
 
       context "a scenario with a background" do
@@ -217,13 +217,13 @@ module Cucumber::Core
     end
 
     def visit_source(node)
-      visitor = stub.as_null_object
+      visitor = double.as_null_object
       yield visitor
       node.describe_source_to(visitor)
     end
 
     def visit(suite)
-      visitor = stub
+      visitor = double
       visitor.stub(:test_suite).and_yield
       visitor.stub(:test_case).and_yield
       yield visitor

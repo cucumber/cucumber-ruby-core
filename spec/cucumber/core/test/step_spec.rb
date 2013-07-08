@@ -5,17 +5,17 @@ module Cucumber::Core::Test
 
     describe "describing itself" do
       it "describes itself to a visitor" do
-        visitor = stub
-        args = stub
-        test_step = Step.new([stub])
+        visitor = double
+        args = double
+        test_step = Step.new([double])
         visitor.should_receive(:test_step).with(test_step, args)
         test_step.describe_to(visitor, args)
       end
 
       it "describes its source to a visitor" do
-        feature, scenario, step = stub, stub, stub
-        visitor = stub
-        args = stub
+        feature, scenario, step = double, double, double
+        visitor = double
+        args = double
         feature.should_receive(:describe_to).with(visitor, args)
         scenario.should_receive(:describe_to).with(visitor, args)
         step.should_receive(:describe_to).with(visitor, args)
@@ -25,8 +25,8 @@ module Cucumber::Core::Test
     end
 
     describe "executing a step" do
-      let(:ast_step) { stub }
-      let(:mappings) { stub }
+      let(:ast_step) { double }
+      let(:mappings) { double }
 
       context "when a passing mapping exists for the step" do
         before do

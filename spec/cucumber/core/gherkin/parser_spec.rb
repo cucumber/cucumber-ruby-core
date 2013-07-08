@@ -7,10 +7,10 @@ module Cucumber
   module Core
     module Gherkin
       describe Parser do
-        let(:receiver) { stub }
+        let(:receiver) { double }
         let(:parser)   { Parser.new(receiver) }
         let(:path)     { 'path_to/the.feature' }
-        let(:visitor)  { stub }
+        let(:visitor)  { double }
 
         def parse
           parser.document(source, path)
@@ -89,7 +89,7 @@ module Cucumber
           end
 
           it "parses the DataTable" do
-            visitor = stub
+            visitor = double
             visitor.stub(:feature).and_yield
             visitor.stub(:scenario).and_yield
             visitor.stub(:step).and_yield

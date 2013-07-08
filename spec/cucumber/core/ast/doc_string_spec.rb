@@ -7,7 +7,7 @@ module Cucumber
         context '#map' do
           let(:doc_string) { DocString.new(original_content, content_type) }
           let(:original_content) { 'original content' }
-          let(:content_type) { stub }
+          let(:content_type) { double }
 
           it 'yields with the content' do
             expect { |b| doc_string.map(&b) }.to yield_with_args(original_content)

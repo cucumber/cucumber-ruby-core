@@ -25,7 +25,7 @@ module Cucumber
             end
           end
         )
-        visitor = stub
+        visitor = double
         visitor.should_receive(:test_suite).once.and_yield.ordered
         visitor.should_receive(:test_case).exactly(2).times.and_yield.ordered
         visitor.should_receive(:test_step).exactly(5).times.ordered

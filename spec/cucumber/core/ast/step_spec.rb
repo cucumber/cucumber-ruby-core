@@ -5,12 +5,12 @@ module Cucumber
     module Ast
       describe Step do
         let(:step) do
-          language, location, keyword, name = stub, stub, stub, stub
+          language, location, keyword, name = double, double, double, double
           Step.new(language, location, keyword, name)
         end
 
         describe "describing itself" do
-          let(:visitor) { stub }
+          let(:visitor) { double }
 
           it "describes itself as a step" do
             visitor.should_receive(:step).with(step)
@@ -25,8 +25,8 @@ module Cucumber
           end
 
           context "with a multiline argument" do
-            let(:step) { Step.new(stub, stub, stub, stub, multiline_arg) }
-            let(:multiline_arg) { stub }
+            let(:step) { Step.new(double, double, double, double, multiline_arg) }
+            let(:multiline_arg) { double }
 
             it "tells its multiline argument to describe itself" do
               visitor.stub(:step).with(step).and_yield
