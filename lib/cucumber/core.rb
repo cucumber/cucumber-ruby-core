@@ -1,6 +1,5 @@
 require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/compiler'
-require 'cucumber/core/test/suite_builder'
 
 module Cucumber
   module Core
