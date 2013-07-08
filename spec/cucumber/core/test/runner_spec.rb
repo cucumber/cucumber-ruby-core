@@ -1,11 +1,11 @@
-require 'cucumber/core/test/suite_runner'
+require 'cucumber/core/test/runner'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
 
 module Cucumber::Core::Test
-  describe SuiteRunner do
+  describe Runner do
 
-    let(:runner)   { SuiteRunner.new(mappings, report) }
+    let(:runner)   { Runner.new(mappings, report) }
     let(:mappings) { double }
     let(:report)   { double.as_null_object }
 

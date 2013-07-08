@@ -3,7 +3,7 @@ require 'cucumber/initializer'
 module Cucumber
   module Core
     module Test
-      class SuiteRunner
+      class Runner
         include Cucumber.initializer(:mappings, :report)
 
         def test_suite(test_suite, &descend)
