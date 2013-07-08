@@ -9,7 +9,7 @@ module Cucumber
 
     describe "compiling features to a test suite" do
       it "compiles two scenarios into two test cases" do
-        suite = compile(
+        suite = compile([
           gherkin do
             feature do
               background do
@@ -24,7 +24,7 @@ module Cucumber
               end
             end
           end
-        )
+        ])
         visitor = double
         visitor.should_receive(:test_suite).once.and_yield.ordered
         visitor.should_receive(:test_case).exactly(2).times.and_yield.ordered
@@ -64,8 +64,7 @@ module Cucumber
       end
 
       it "executes the test cases in the suite" do
-        suite = compile(
-          gherkin do
+        gherkin = gherkin do
             feature 'Feature name' do
               scenario 'The one that passes' do
                 step 'passing'
@@ -77,11 +76,10 @@ module Cucumber
               end
             end
           end
-        )
         report = ReportSpy.new
         mappings = FakeMappings.new
 
-        execute(suite, mappings, report)
+        execute [gherkin], mappings, report
 
         report.test_cases.total.should eq(2)
         report.test_cases.total_passed.should eq(1)

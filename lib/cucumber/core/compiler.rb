@@ -6,34 +6,13 @@ require 'cucumber/core/test/step'
 module Cucumber
   module Core
     class Compiler
-      def initialize
-        @suite_builder = TestSuiteBuilder.new
-        case_builder = TestCaseBuilder.new(@suite_builder)
+      def initialize(receiver)
+        case_builder = TestCaseBuilder.new(receiver)
         @compiler = FeatureCompiler.new(case_builder)
       end
 
       def feature(feature)
         feature.describe_to(@compiler)
-      end
-
-      def test_suite
-        @suite_builder.result
-      end
-
-      class TestSuiteBuilder
-        def test_case(test_case)
-          test_cases << test_case
-        end
-
-        def result
-          Test::Suite.new(test_cases)
-        end
-
-        private
-
-        def test_cases
-          @test_cases ||= []
-        end
       end
 
       class TestCaseBuilder
@@ -48,7 +27,7 @@ module Cucumber
         end
 
         def on_test_case(source)
-          receiver.test_case Test::Case.new(test_steps, source)
+          Test::Case.new(test_steps, source).describe_to(receiver)
           @test_steps = nil
         end
 
