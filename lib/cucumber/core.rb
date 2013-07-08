@@ -3,7 +3,6 @@ require 'cucumber/core/compiler'
 
 module Cucumber
   module Core
-
     def compile(gherkin_documents, receiver)
       compiler = Compiler.new(receiver)
       parser = Core::Gherkin::Parser.new(compiler)
