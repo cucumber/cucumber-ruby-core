@@ -1,5 +1,4 @@
 require 'cucumber/initializer'
-require 'cucumber/core/test/suite'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
 
