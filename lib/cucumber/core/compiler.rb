@@ -39,17 +39,17 @@ module Cucumber
       class TestCaseBuilder
         include Cucumber.initializer(:receiver)
 
-        def background_test_step(source)
+        def on_background_step(source)
           background_test_steps << Test::Step.new(source)
         end
 
-        def test_case(source)
-          receiver.test_case Test::Case.new(test_steps, source)
-          @test_steps = nil
+        def on_step(source)
+          test_steps << Test::Step.new(source)
         end
 
-        def test_step(source)
-          test_steps << Test::Step.new(source)
+        def on_test_case(source)
+          receiver.test_case Test::Case.new(test_steps, source)
+          @test_steps = nil
         end
 
         private
@@ -81,7 +81,7 @@ module Cucumber
           source = [@feature, scenario]
           scenario_compiler = ScenarioCompiler.new(source, receiver)
           descend.call(scenario_compiler)
-          receiver.test_case(source)
+          receiver.on_test_case(source)
         end
 
         def scenario_outline(scenario_outline, &descend)
@@ -105,9 +105,9 @@ module Cucumber
 
         def examples_table_row(row)
           steps(row).each do |step|
-            receiver.test_step(source + [@examples_table, row, step])
+            receiver.on_step(source + [@examples_table, row, step])
           end
-          receiver.test_case(source + [@examples_table, row])
+          receiver.on_test_case(source + [@examples_table, row])
         end
 
         private
@@ -125,7 +125,7 @@ module Cucumber
         include Cucumber.initializer(:source, :receiver)
 
         def step(step)
-          receiver.test_step(source + [step])
+          receiver.on_step(source + [step])
         end
       end
 
@@ -133,7 +133,7 @@ module Cucumber
         include Cucumber.initializer(:source, :receiver)
 
         def step(step)
-          receiver.background_test_step(source + [step])
+          receiver.on_background_step(source + [step])
         end
       end
 

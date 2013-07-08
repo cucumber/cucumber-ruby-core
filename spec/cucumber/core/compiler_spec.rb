@@ -154,13 +154,13 @@ module Cucumber::Core
                   :scenario_step)
 
         it "sets the source correctly on the test steps" do
-          receiver.should_receive(:background_test_step).with(
+          receiver.should_receive(:on_background_step).with(
             [feature, background, background_step]
           )
-          receiver.should_receive(:test_step).with(
+          receiver.should_receive(:on_step).with(
             [feature, scenario, scenario_step]
           )
-          receiver.should_receive(:test_case).with(
+          receiver.should_receive(:on_test_case).with(
             [feature, scenario]
           )
           compiler.feature(feature) do |f|
@@ -189,16 +189,16 @@ module Cucumber::Core
 
         it "sets the source correctly on the test steps" do
           outline_step.stub(to_step: outline_ast_step)
-          receiver.should_receive(:test_step).with(
+          receiver.should_receive(:on_step).with(
             [feature, scenario_outline, examples_table_1, examples_table_1_row_1, outline_ast_step]
           ).ordered
-          receiver.should_receive(:test_case).with(
+          receiver.should_receive(:on_test_case).with(
             [feature, scenario_outline, examples_table_1, examples_table_1_row_1]
           ).ordered
-          receiver.should_receive(:test_step).with(
+          receiver.should_receive(:on_step).with(
             [feature, scenario_outline, examples_table_2, examples_table_2_row_1, outline_ast_step]
           ).ordered
-          receiver.should_receive(:test_case).with(
+          receiver.should_receive(:on_test_case).with(
             [feature, scenario_outline, examples_table_2, examples_table_2_row_1]
           ).ordered
           compiler.feature(feature) do |f|
