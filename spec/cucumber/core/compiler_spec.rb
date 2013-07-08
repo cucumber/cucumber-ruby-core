@@ -13,8 +13,11 @@ module Cucumber::Core
       end
     end
 
+    let(:suite_builder) { Test::SuiteBuilder.new }
+    let(:suite) { suite_builder.result }
+
     it "compiles a feature with a single scenario" do
-      suite = compile([
+      compile([
         gherkin do
           feature do
             scenario do
@@ -22,7 +25,7 @@ module Cucumber::Core
             end
           end
         end
-      ])
+      ], suite_builder)
       visit(suite) do |visitor|
         visitor.should_receive(:test_case).exactly(1).times.and_yield
         visitor.should_receive(:test_step).exactly(1).times
@@ -30,7 +33,7 @@ module Cucumber::Core
     end
 
     it "compiles a feature with a background" do
-      suite = compile([
+      compile([
         gherkin do
           feature do
             background do
@@ -42,7 +45,7 @@ module Cucumber::Core
             end
           end
         end
-      ])
+      ], suite_builder)
       visit(suite) do |visitor|
         visitor.should_receive(:test_case).exactly(1).times.and_yield
         visitor.should_receive(:test_step).exactly(2).times
@@ -50,7 +53,7 @@ module Cucumber::Core
     end
 
     it "compiles multiple features" do
-      suite = compile([
+      compile([
         gherkin do
           feature do
             scenario do
@@ -65,7 +68,7 @@ module Cucumber::Core
             end
           end
         end
-      ])
+      ], suite_builder)
       visit(suite) do |visitor|
         visitor.should_receive(:test_case).exactly(2).times.and_yield
         visitor.should_receive(:test_step).exactly(2).times
@@ -74,7 +77,7 @@ module Cucumber::Core
 
     context "compiling scenario outlines" do
       it "compiles a scenario outline to test cases" do
-        suite = compile([
+        compile([
           gherkin do
             feature do
               background do
@@ -98,7 +101,7 @@ module Cucumber::Core
               end
             end
           end
-        ])
+        ], suite_builder)
         visit(suite) do |visitor|
           visitor.should_receive(:test_case).exactly(3).times.and_yield
           visitor.should_receive(:test_step).exactly(9).times
@@ -106,7 +109,7 @@ module Cucumber::Core
       end
 
       it 'replaces arguments correctly when generating test steps' do
-        suite = compile([
+        compile([
           gherkin do
             feature do
               scenario_outline do
@@ -120,7 +123,7 @@ module Cucumber::Core
               end
             end
           end
-        ])
+        ], suite_builder)
 
         visit(suite) do |visitor|
           visitor.should_receive(:test_step) do |test_step|

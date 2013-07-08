@@ -9,7 +9,8 @@ module Cucumber
 
     describe "compiling features to a test suite" do
       it "compiles two scenarios into two test cases" do
-        suite = compile([
+        suite_builder = Core::Test::SuiteBuilder.new
+        compile([
           gherkin do
             feature do
               background do
@@ -24,12 +25,12 @@ module Cucumber
               end
             end
           end
-        ])
+        ], suite_builder)
         visitor = double
         visitor.should_receive(:test_suite).once.and_yield.ordered
         visitor.should_receive(:test_case).exactly(2).times.and_yield.ordered
         visitor.should_receive(:test_step).exactly(5).times.ordered
-        suite.describe_to(visitor)
+        suite_builder.result.describe_to(visitor)
       end
 
     end
