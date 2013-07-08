@@ -15,9 +15,8 @@ module Cucumber
     end
 
     def execute(gherkin_documents, mappings, report)
-      suite_builder = Test::SuiteBuilder.new
-      compile(gherkin_documents, suite_builder)
-      suite_builder.result.execute(mappings, report)
+      runner = Test::SuiteRunner.new(mappings, report)
+      compile(gherkin_documents, runner)
       self
     end
   end
