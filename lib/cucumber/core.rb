@@ -4,12 +4,18 @@ require 'cucumber/core/test/runner'
 
 module Cucumber
   module Core
-    def compile(gherkin_documents, receiver)
-      compiler = Compiler.new(receiver)
+
+    def parse(gherkin_documents, compiler)
       parser = Core::Gherkin::Parser.new(compiler)
       gherkin_documents.map do |document|
         parser.document(document, 'UNKNOWN')
       end
+      self
+    end
+
+    def compile(gherkin_documents, receiver)
+      compiler = Compiler.new(receiver)
+      parse(gherkin_documents, compiler)
       self
     end
 
@@ -18,5 +24,6 @@ module Cucumber
       compile(gherkin_documents, runner)
       self
     end
+
   end
 end
