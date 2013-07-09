@@ -1,48 +1,51 @@
 # With thanks to @myronmarston
 # https://github.com/vcr/vcr/blob/master/spec/capture_warnings.rb
-require 'rubygems' if RUBY_VERSION =~ /^1\.8/
-require 'rspec/core'
-require 'rspec/expectations'
-require 'tempfile'
 
-stderr_file = Tempfile.new("cucumber-ruby-core.stderr")
-$stderr.reopen(stderr_file.path)
-current_dir = Dir.pwd
+unless ENV['SHOW_ALL_ERRORS']
+  require 'rubygems' if RUBY_VERSION =~ /^1\.8/
+  require 'rspec/core'
+  require 'rspec/expectations'
+  require 'tempfile'
 
-RSpec.configure do |config|
-  config.after(:suite) do
-    stderr_file.rewind
-    lines = stderr_file.read.split("\n").uniq
-    stderr_file.close!
+  stderr_file = Tempfile.new("cucumber-ruby-core.stderr")
+  $stderr.reopen(stderr_file.path)
+  current_dir = Dir.pwd
 
-    cucumber_core_warnings, other_warnings = lines.partition { |line| line.include?(current_dir) }
+  RSpec.configure do |config|
+    config.after(:suite) do
+      stderr_file.rewind
+      lines = stderr_file.read.split("\n").uniq
+      stderr_file.close!
 
-    if cucumber_core_warnings.any?
-      puts
-      puts "-" * 30 + " cucumber-ruby-core warnings: " + "-" * 30
-      puts
-      puts cucumber_core_warnings.join("\n")
-      puts
-      puts "-" * 75
-      puts
-    end
+      cucumber_core_warnings, other_warnings = lines.partition { |line| line.include?(current_dir) }
 
-    if other_warnings.any? 
-      if ENV['VIEW_OTHER_WARNINGS']
+      if cucumber_core_warnings.any?
         puts
-        puts "-" * 30 + " other warnings: " + "-" * 30
+        puts "-" * 30 + " cucumber-ruby-core warnings: " + "-" * 30
         puts
-        puts other_warnings.join("\n")
+        puts cucumber_core_warnings.join("\n")
         puts
         puts "-" * 75
         puts
-      else
-        puts
-        puts "Non cucumber-ruby-core warnings hidden. To view set VIEW_OTHER_WARNINGS environment variable."
       end
-    end
 
-    # fail the build...
-   raise "Failing the build because of warnings." if cucumber_core_warnings.any?
+      if other_warnings.any? 
+        if ENV['VIEW_OTHER_WARNINGS']
+          puts
+          puts "-" * 30 + " other warnings: " + "-" * 30
+          puts
+          puts other_warnings.join("\n")
+          puts
+          puts "-" * 75
+          puts
+        else
+          puts
+          puts "Non cucumber-ruby-core warnings hidden. To view set VIEW_OTHER_WARNINGS environment variable."
+        end
+      end
+
+      # fail the build...
+      raise "Failing the build because of warnings." if cucumber_core_warnings.any?
+    end
   end
 end
