@@ -6,25 +6,14 @@ module Cucumber
       class Runner
         include Cucumber.initializer(:mappings, :report)
 
-        def test_suite(test_suite, &descend)
-          report.before_test_suite(test_suite)
-          descend.call
-          report.after_test_suite(test_suite, test_suite_result)
-        end
-
         def test_case(test_case, &descend)
           case_runner = CaseRunner.new(mappings, report)
-
           report.before_test_case(test_case)
           descend.call(case_runner)
           report.after_test_case(test_case, case_runner.test_case_result)
         end
 
         private
-
-        def test_suite_result
-          @test_suite_result ||= Result::Unknown.new
-        end
 
         class CaseRunner
           include Cucumber.initializer(:mappings, :report)
