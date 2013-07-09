@@ -12,6 +12,7 @@ module Cucumber
 
       def feature(feature)
         feature.describe_to(@compiler)
+        self
       end
 
       class TestCaseBuilder
@@ -19,15 +20,18 @@ module Cucumber
 
         def on_background_step(source)
           background_test_steps << Test::Step.new(source)
+          self
         end
 
         def on_step(source)
           test_steps << Test::Step.new(source)
+          self
         end
 
         def on_test_case(source)
           Test::Case.new(test_steps, source).describe_to(receiver)
           @test_steps = nil
+          self
         end
 
         private
@@ -47,12 +51,14 @@ module Cucumber
         def feature(feature, &descend)
           @feature = feature
           descend.call(self)
+          self
         end
 
         def background(background, &descend)
           source = [@feature, background]
           compiler = BackgroundCompiler.new(source, receiver)
           descend.call(compiler)
+          self
         end
 
         def scenario(scenario, &descend)
@@ -60,12 +66,14 @@ module Cucumber
           scenario_compiler = ScenarioCompiler.new(source, receiver)
           descend.call(scenario_compiler)
           receiver.on_test_case(source)
+          self
         end
 
         def scenario_outline(scenario_outline, &descend)
           source = [@feature, scenario_outline]
           compiler = ScenarioOutlineCompiler.new(source, receiver)
           descend.call(compiler)
+          self
         end
       end
 
@@ -74,11 +82,13 @@ module Cucumber
 
         def outline_step(outline_step)
           outline_steps << outline_step
+          self
         end
 
         def examples_table(examples_table, &descend)
           @examples_table = examples_table
           descend.call(self)
+          self
         end
 
         def examples_table_row(row)
@@ -86,6 +96,7 @@ module Cucumber
             receiver.on_step(source + [@examples_table, row, step])
           end
           receiver.on_test_case(source + [@examples_table, row])
+          self
         end
 
         private
@@ -104,6 +115,7 @@ module Cucumber
 
         def step(step)
           receiver.on_step(source + [step])
+          self
         end
       end
 
@@ -112,6 +124,7 @@ module Cucumber
 
         def step(step)
           receiver.on_background_step(source + [step])
+          self
         end
       end
 
