@@ -1,51 +1,57 @@
 # With thanks to @myronmarston
 # https://github.com/vcr/vcr/blob/master/spec/capture_warnings.rb
 
-unless ENV['SHOW_ALL_ERRORS']
-  require 'rubygems' if RUBY_VERSION =~ /^1\.8/
-  require 'rspec/core'
-  require 'rspec/expectations'
-  require 'tempfile'
+module CaptureWarnings
+  def report_warnings(&block)
+    current_dir = Dir.pwd
+    warnings, errors = capture_error(&block).partition { |line| line.include?('warning') }
+    project_warnings, other_warnings = warnings.uniq.partition { |line| line.include?(current_dir) }
 
-  stderr_file = Tempfile.new("cucumber-ruby-core.stderr")
-  $stderr.reopen(stderr_file.path)
-  current_dir = Dir.pwd
-
-  RSpec.configure do |config|
-    config.after(:suite) do
-      stderr_file.rewind
-      lines = stderr_file.read.split("\n").uniq
-      stderr_file.close!
-
-      cucumber_core_warnings, other_warnings = lines.partition { |line| line.include?(current_dir) }
-
-      if cucumber_core_warnings.any?
-        puts
-        puts "-" * 30 + " cucumber-ruby-core warnings: " + "-" * 30
-        puts
-        puts cucumber_core_warnings.join("\n")
-        puts
-        puts "-" * 75
-        puts
-      end
-
-      if other_warnings.any? 
-        if ENV['VIEW_OTHER_WARNINGS']
-          puts
-          puts "-" * 30 + " other warnings: " + "-" * 30
-          puts
-          puts other_warnings.join("\n")
-          puts
-          puts "-" * 75
-          puts
-        else
-          puts
-          puts "Non cucumber-ruby-core warnings hidden. To view set VIEW_OTHER_WARNINGS environment variable."
-        end
-      end
-
-      # fail the build...
-      raise "Failing the build because of warnings." if cucumber_core_warnings.any?
+    if errors.any?
+      puts errors.join("\n")
     end
+
+    if other_warnings.any?
+      puts "#{ other_warnings.count } non-cucumber-core warnings detected, set VIEW_OTHER_WARNINGS=true to see them."
+      print_warnings('other', other_warnings) if ENV['VIEW_OTHER_WARNINGS']
+    end
+
+    if project_warnings.any?
+      puts "#{ project_warnings.count } cucumber-core warnings detected" 
+      print_warnings('cucumber-core', project_warnings)
+      fail "Please remove all cucumber-core warnings."
+    end
+  end
+
+  def capture_error(&block)
+    old_stderr = STDERR.clone
+    pipe_r, pipe_w = IO.pipe
+    pipe_r.sync    = true
+    error         = ""
+    reader = Thread.new do
+      begin
+        loop do
+          error << pipe_r.readpartial(1024)
+        end
+      rescue EOFError
+      end
+    end
+    STDERR.reopen(pipe_w)
+    block.call
+  ensure
+    STDERR.reopen(old_stderr)
+    pipe_w.close
+    reader.join
+    return error.split("\n")
+  end
+
+  def print_warnings(type, warnings)
+    puts
+    puts "-" * 30 + " #{type} warnings: " + "-" * 30
+    puts
+    puts warnings.join("\n")
+    puts
+    puts "-" * 75
+    puts
   end
 end
