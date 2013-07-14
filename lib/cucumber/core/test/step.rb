@@ -1,5 +1,6 @@
 require 'cucumber/initializer'
 require 'cucumber/core/test/result'
+require 'cucumber/core/test/mapping'
 
 module Cucumber
   module Core
@@ -9,6 +10,7 @@ module Cucumber
 
         def initialize(source)
           raise ArgumentError if source.any?(&:nil?)
+          @mapping = nil
           super
         end
 
@@ -22,15 +24,15 @@ module Cucumber
           end
         end
 
-        def skip(mappings)
-          mappings.skip(step)
+        def skip
+          mapping.skip
           Result::Skipped.new(self)
         rescue UndefinedMapping => exception
           Result::Undefined.new(self, exception)
         end
 
-        def execute(mappings)
-          mappings.execute(step)
+        def execute
+          mapping.execute
           Result::Passed.new(self)
         rescue UndefinedMapping => exception
           Result::Undefined.new(self, exception)
@@ -38,8 +40,22 @@ module Cucumber
           Result::Failed.new(self, exception)
         end
 
+        def name
+          step.name
+        end
+
+        def define(&block)
+          @mapping = Test::Mapping.new(&block)
+        end
+
+        private
+
         def step
           source.last
+        end
+
+        def mapping
+          @mapping || Test::UndefinedMapping.new
         end
 
       end

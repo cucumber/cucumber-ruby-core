@@ -11,15 +11,14 @@ module Cucumber::Core::Test
 
     context "with test cases" do
       let(:source) { double }
-      let(:passing_ast_step) { double }
-      let(:failing_ast_step) { double }
-      let(:passing) { Step.new([passing_ast_step]) }
-      let(:failing) { Step.new([failing_ast_step]) }
+      let(:passing) { Step.new([double]) }
+      let(:failing) { Step.new([double]) }
+      let(:exception) { StandardError.new }
 
       before do
-        mappings.stub(:execute).with(passing_ast_step).and_return(mappings)
-        mappings.stub(:execute).with(failing_ast_step).and_raise
-        mappings.stub(:skip)
+        mappings.stub(:map)
+        passing.define {}
+        failing.define { raise exception }
       end
 
       context "with a single case" do
@@ -96,9 +95,9 @@ module Cucumber::Core::Test
               test_cases.describe_to(runner)
             end
 
-            it 'does not execute the second step' do
-              mappings.should_not_receive(:execute).with(passing_ast_step)
-
+            it 'skips, rather than executing the second step' do
+              passing.should_not_receive(:execute)
+              passing.should_receive(:skip)
               test_cases.describe_to(runner)
             end
           end

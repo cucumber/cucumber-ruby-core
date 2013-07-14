@@ -88,11 +88,11 @@ module Cucumber
         def map(step)
           case step.name
           when /fail/
-            Core::Test::Mapping.new { raise Failure }
+            step.define do
+              raise Failure
+            end
           when /pass/
-            Core::Test::Mapping.new {}
-          else
-            Core::Test::UndefinedMapping.new
+            step.define {}
           end
         end
       end
