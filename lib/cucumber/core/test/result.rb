@@ -9,7 +9,7 @@ module Cucumber
           end
 
           def execute(test_step, mappings, test_case_runner)
-            mappings.map(test_step)
+            mappings.map(test_step) # TODO: this line (and all others like it) need to move out into a Mapper
             result = test_step.execute
             test_case_runner.test_case_result = result
             result
