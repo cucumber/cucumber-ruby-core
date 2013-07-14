@@ -77,23 +77,10 @@ module Cucumber
       class FakeMappings
         Failure = Class.new(StandardError)
 
-        def execute(step)
-          map(step).execute
-        end
-
-        def skip(step)
-          map(step).skip
-        end
-
         def map(step)
-          case step.name
-          when /fail/
-            step.define do
-              raise Failure
-            end
-          when /pass/
-            step.define {}
-          end
+          step.define { raise Failure } if step.name =~ /fail/
+          step.define {}                if step.name =~ /pass/
+          self
         end
       end
 
