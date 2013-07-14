@@ -22,9 +22,18 @@ module Cucumber
           end
         end
 
+        def skip(mappings)
+          mappings.skip(step)
+          Result::Skipped.new(self)
+        rescue UndefinedMapping => exception
+          Result::Undefined.new(self, exception)
+        end
+
         def execute(mappings)
           mappings.execute(step)
           Result::Passed.new(self)
+        rescue UndefinedMapping => exception
+          Result::Undefined.new(self, exception)
         rescue Exception => exception
           Result::Failed.new(self, exception)
         end

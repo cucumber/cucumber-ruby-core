@@ -73,11 +73,27 @@ module Cucumber
         end
       end
 
+      require 'cucumber/core/test/mapping'
       class FakeMappings
         Failure = Class.new(StandardError)
 
         def execute(step)
-          raise Failure if step.name =~ /fail/
+          map(step).execute
+        end
+
+        def skip(step)
+          map(step).skip
+        end
+
+        def map(step)
+          case step.name
+          when /fail/
+            Core::Test::Mapping.new { raise Failure }
+          when /pass/
+            Core::Test::Mapping.new {}
+          else
+            Core::Test::UndefinedMapping.new
+          end
         end
       end
 
@@ -91,6 +107,8 @@ module Cucumber
               scenario 'The one that fails' do
                 step 'passing'
                 step 'failing'
+                step 'passing'
+                step 'undefined'
               end
             end
           end
@@ -99,12 +117,16 @@ module Cucumber
 
         execute [gherkin], mappings, report
 
+        #p report.test_cases.exceptions
+
         report.test_cases.total.should eq(2)
         report.test_cases.total_passed.should eq(1)
         report.test_cases.total_failed.should eq(1)
-        report.test_steps.total.should eq(3)
-        report.test_steps.total_passed.should eq(2)
+        report.test_steps.total.should eq(5)
         report.test_steps.total_failed.should eq(1)
+        report.test_steps.total_passed.should eq(2)
+        report.test_steps.total_skipped.should eq(1)
+        report.test_steps.total_undefined.should eq(1)
       end
     end
   end

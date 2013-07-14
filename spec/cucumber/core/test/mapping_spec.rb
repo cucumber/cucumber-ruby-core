@@ -3,6 +3,7 @@ require 'cucumber/core/test/mapping'
 module Cucumber
   module Core
     module Test
+
       describe Mapping do
 
         context "constructed without a block" do
@@ -18,6 +19,14 @@ module Cucumber
               executed = true
             end
             mapping.execute
+            executed.should be_true
+          end
+
+          it "raises an error when that's what the block does" do
+            mapping = Mapping.new do
+              raise StandardError
+            end
+            expect { mapping.execute }.to raise_error(StandardError)
           end
         end
 
@@ -28,6 +37,24 @@ module Cucumber
           end
         end
       end
+
+      describe UndefinedMapping do
+        let(:mapping) { UndefinedMapping.new }
+
+        context "executing" do
+          it "raises UndefinedMapping" do
+            expect { mapping.execute }.to raise_error(UndefinedMapping)
+          end
+        end
+
+        context "skipping" do
+          it "raises UndefinedMapping" do
+            expect { mapping.skip }.to raise_error(UndefinedMapping)
+          end
+        end
+
+      end
+
     end
   end
 end

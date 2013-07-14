@@ -40,7 +40,22 @@ module Cucumber
           end
 
           def execute(test_step, mappings, test_case_runner)
-            return Skipped.new(test_step)
+            test_step.skip(mappings)
+          end
+
+          def to_s
+            "✗"
+          end
+        end
+
+        Undefined = Struct.new(:subject, :exception) do
+          def describe_to(visitor, *args)
+            visitor.undefined(*args)
+            self
+          end
+
+          def execute(test_step, mappings, test_case_runner)
+            test_step.skip(mappings)
           end
 
           def to_s
@@ -60,10 +75,18 @@ module Cucumber
         end
 
         class Summary
-          attr_reader :total_failed, :total_passed
+          attr_reader :total_failed, 
+            :total_passed, 
+            :total_skipped,
+            :total_undefined,
+            :exceptions
 
           def initialize
-            @total_failed = @total_passed = 0
+            @total_failed =
+              @total_passed = 
+              @total_skipped = 
+              @total_undefined = 0
+            @exceptions = []
           end
 
           def failed(*args)
@@ -74,11 +97,20 @@ module Cucumber
             @total_passed += 1
           end
 
-          def exception(*)
+          def skipped(*args)
+            @total_skipped +=1
+          end
+
+          def undefined(*args)
+            @total_undefined += 1
+          end
+
+          def exception(exception)
+            @exceptions << exception
           end
 
           def total
-            total_passed + total_failed
+            total_passed + total_failed + total_skipped + total_undefined
           end
         end
       end

@@ -19,6 +19,7 @@ module Cucumber::Core::Test
       before do
         mappings.stub(:execute).with(passing_ast_step).and_return(mappings)
         mappings.stub(:execute).with(failing_ast_step).and_raise
+        mappings.stub(:skip)
       end
 
       context "with a single case" do
