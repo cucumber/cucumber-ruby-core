@@ -5,7 +5,6 @@ module Cucumber
     module Test
 
       describe Mapping do
-        let(:test_step) { double }
 
         context "constructed without a block" do
           it "raises an error" do
@@ -53,13 +52,13 @@ module Cucumber
         let(:test_step) { double }
 
         context "executing" do
-          it "returns and undefined result" do
+          it "returns an undefined result" do
             mapping.execute.should == Result::Undefined.new
           end
         end
 
         context "skipping" do
-          it "raises UndefinedMapping" do
+          it "returns an undefined result" do
             mapping.skip.should == Result::Undefined.new
           end
         end
