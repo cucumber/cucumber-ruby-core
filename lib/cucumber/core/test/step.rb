@@ -28,6 +28,10 @@ module Cucumber
           step.name
         end
 
+        def multiline_arg
+          step.multiline_arg
+        end
+
         def skip
           @mapping.skip
         end
