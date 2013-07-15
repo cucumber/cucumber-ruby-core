@@ -6,16 +6,27 @@ module Cucumber
         include Cucumber.initializer(:mappings, :runner)
 
         def test_case(test_case, &descend)
-          @steps = []
-          descend.call(self)
-          new_test_case = test_case.with_steps(@steps)
-          new_test_case.describe_to(runner)
+          mapper = CaseMapper.new(mappings)
+          descend.call(mapper)
+          test_case.with_steps(mapper.test_steps).describe_to(runner)
         end
 
-        def test_step(test_step)
-          mapper = StepMapper.new(test_step)
-          mappings.define(test_step, mapper)
-          @steps << mapper.mapped_test_step
+        class CaseMapper
+          include Cucumber.initializer(:mappings)
+
+          attr_reader :test_steps
+
+          def initialize(*)
+            super
+            @test_steps = []
+          end
+
+          def test_step(test_step)
+            mapper = StepMapper.new(test_step)
+            mappings.define(test_step, mapper)
+            test_steps << mapper.mapped_test_step
+          end
+
         end
 
         class StepMapper
