@@ -8,8 +8,7 @@ module Cucumber
             self
           end
 
-          def execute(test_step, mappings, test_case_runner)
-            mappings.map(test_step) # TODO: this line (and all others like it) need to move out into a Mapper
+          def execute(test_step, test_case_runner)
             result = test_step.execute
             test_case_runner.test_case_result = result
             result
@@ -22,8 +21,7 @@ module Cucumber
             self
           end
 
-          def execute(test_step, mappings, test_case_runner)
-            mappings.map(test_step)
+          def execute(test_step, test_case_runner)
             result = test_step.execute
             test_case_runner.test_case_result = result if result != self
             result
@@ -41,8 +39,7 @@ module Cucumber
             self
           end
 
-          def execute(test_step, mappings, test_case_runner)
-            mappings.map(test_step)
+          def execute(test_step, test_case_runner)
             test_step.skip
           end
 
@@ -57,8 +54,7 @@ module Cucumber
             self
           end
 
-          def execute(test_step, mappings, test_case_runner)
-            mappings.map(test_step)
+          def execute(test_step, test_case_runner)
             test_step.skip
           end
 

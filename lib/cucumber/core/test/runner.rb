@@ -22,7 +22,8 @@ module Cucumber
 
           def test_step(test_step)
             report.before_test_step(test_step)
-            test_step_result = test_case_result.execute(test_step, mappings, self)
+            mappings.map(test_step)
+            test_step_result = test_case_result.execute(test_step, self)
             report.after_test_step(test_step, test_step_result)
           end
 
