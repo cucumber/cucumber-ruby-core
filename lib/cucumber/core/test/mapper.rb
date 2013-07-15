@@ -32,17 +32,15 @@ module Cucumber
         class StepMapper
           include Cucumber.initializer(:test_step)
 
+          attr_reader :mapped_test_step
+
           def initialize(*)
             super
-            @mapped_test_step = nil
+            @mapped_test_step = test_step
           end
 
           def define(&block)
             @mapped_test_step = test_step.define(&block)
-          end
-
-          def mapped_test_step
-            @mapped_test_step || test_step
           end
         end
 
