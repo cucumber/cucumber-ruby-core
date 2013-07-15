@@ -1,6 +1,7 @@
 require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/compiler'
 require 'cucumber/core/test/runner'
+require 'cucumber/core/test/mapper'
 
 module Cucumber
   module Core
@@ -20,8 +21,9 @@ module Cucumber
     end
 
     def execute(gherkin_documents, mappings, report)
-      runner = Test::Runner.new(mappings, report)
-      compile(gherkin_documents, runner)
+      runner = Test::Runner.new(report)
+      mapper = Test::Mapper.new(mappings, runner)
+      compile(gherkin_documents, mapper)
       self
     end
 

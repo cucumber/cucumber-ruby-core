@@ -5,8 +5,7 @@ require 'cucumber/core/test/step'
 module Cucumber::Core::Test
   describe Runner do
 
-    let(:runner)   { Runner.new(mappings, report) }
-    let(:mappings) { double }
+    let(:runner)   { Runner.new(report) }
     let(:report)   { double.as_null_object }
 
     context "with test cases" do
@@ -16,7 +15,6 @@ module Cucumber::Core::Test
       let(:exception) { StandardError.new }
 
       before do
-        mappings.stub(:map)
         passing.define {}
         failing.define { raise exception }
       end

@@ -4,10 +4,10 @@ module Cucumber
   module Core
     module Test
       class Runner
-        include Cucumber.initializer(:mappings, :report)
+        include Cucumber.initializer(:report)
 
         def test_case(test_case, &descend)
-          case_runner = CaseRunner.new(mappings, report)
+          case_runner = CaseRunner.new(report)
           report.before_test_case(test_case)
           descend.call(case_runner)
           report.after_test_case(test_case, case_runner.test_case_result)
@@ -16,13 +16,12 @@ module Cucumber
         private
 
         class CaseRunner
-          include Cucumber.initializer(:mappings, :report)
+          include Cucumber.initializer(:report)
 
           attr_writer :test_case_result
 
           def test_step(test_step)
             report.before_test_step(test_step)
-            mappings.map(test_step)
             test_step_result = test_case_result.execute(test_step, self)
             report.after_test_step(test_step, test_step_result)
           end
