@@ -3,7 +3,7 @@ module Cucumber
   module Core
     module Test
       module Result
-        Unknown = Struct.new(:subject) do
+        Unknown = Class.new do
           def describe_to(visitor, *args)
             self
           end
@@ -15,7 +15,7 @@ module Cucumber
           end
         end
 
-        Passed = Struct.new(:subject) do
+        Passed = Class.new do
           def describe_to(visitor, *args)
             visitor.passed(*args)
             self
@@ -32,7 +32,7 @@ module Cucumber
           end
         end
 
-        Failed = Struct.new(:subject, :exception) do
+        Failed = Struct.new(:exception) do
           def describe_to(visitor, *args)
             visitor.failed(*args)
             visitor.exception(exception, *args)
@@ -48,7 +48,7 @@ module Cucumber
           end
         end
 
-        Undefined = Struct.new(:subject, :exception) do
+        Undefined = Struct.new(:exception) do
           def describe_to(visitor, *args)
             visitor.undefined(*args)
             self
@@ -63,7 +63,7 @@ module Cucumber
           end
         end
 
-        Skipped = Struct.new(:subject) do
+        Skipped = Class.new do
           def describe_to(visitor, *args)
             visitor.skipped(*args)
             self

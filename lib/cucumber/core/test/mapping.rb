@@ -5,30 +5,25 @@ module Cucumber
     module Test
 
       class Mapping
-        def initialize(test_step, &block)
+        def initialize(&block)
           raise ArgumentError, "Passing a block to execute the mapping is mandatory." unless block
           @block = block
-          @test_step = test_step
         end
 
         def skip
-          Result::Skipped.new(@test_step)
+          Result::Skipped.new
         end
 
         def execute
           @block.call
-          Result::Passed.new(@test_step)
+          Result::Passed.new
         rescue Exception => exception
-          Result::Failed.new(@test_step, exception)
+          Result::Failed.new(exception)
         end
 
       end
 
       class UndefinedMapping
-        def initialize(test_step)
-          @test_step = test_step
-        end
-
         def execute
           undefined
         end
@@ -40,7 +35,7 @@ module Cucumber
         private
 
         def undefined
-          Result::Undefined.new(@test_step)
+          Result::Undefined.new
         end
 
       end

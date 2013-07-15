@@ -8,10 +8,10 @@ module Cucumber
       class Step
         include Cucumber.initializer(:source)
 
-        def initialize(source)
+        def initialize(source, mapping = Test::UndefinedMapping.new)
           raise ArgumentError if source.any?(&:nil?)
-          @mapping = Test::UndefinedMapping.new(self)
-          super
+          @mapping = mapping
+          super(source)
         end
 
         def describe_to(visitor, *args)
@@ -37,7 +37,11 @@ module Cucumber
         end
 
         def define(&block)
-          @mapping = Test::Mapping.new(self, &block)
+          self.class.new(source, Test::Mapping.new(&block))
+        end
+
+        def inspect
+          "#{name}: #{@mapping.class}"
         end
 
         private

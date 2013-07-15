@@ -23,6 +23,10 @@ module Cucumber
           self
         end
 
+        def with_steps(test_steps)
+          self.class.new(test_steps, source)
+        end
+
       end
     end
   end

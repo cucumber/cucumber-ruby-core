@@ -10,14 +10,9 @@ module Cucumber::Core::Test
 
     context "with test cases" do
       let(:source) { double }
-      let(:passing) { Step.new([double]) }
-      let(:failing) { Step.new([double]) }
+      let(:passing) { Step.new([double]).define {} }
+      let(:failing) { Step.new([double]).define { raise execption } }
       let(:exception) { StandardError.new }
-
-      before do
-        passing.define {}
-        failing.define { raise exception }
-      end
 
       context "with a single case" do
         let(:test_cases) { [test_case].extend(TestCaseCollection) }

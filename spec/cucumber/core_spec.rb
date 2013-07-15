@@ -77,9 +77,9 @@ module Cucumber
       class FakeMappings
         Failure = Class.new(StandardError)
 
-        def map(step)
-          step.define { raise Failure } if step.name =~ /fail/
-          step.define {}                if step.name =~ /pass/
+        def define(step, mapper)
+          mapper.define { raise Failure } if step.name =~ /fail/
+          mapper.define {}                if step.name =~ /pass/
           self
         end
       end
@@ -103,8 +103,6 @@ module Cucumber
         mappings = FakeMappings.new
 
         execute [gherkin], mappings, report
-
-        #p report.test_cases.exceptions
 
         report.test_cases.total.should eq(2)
         report.test_cases.total_passed.should eq(1)
