@@ -34,7 +34,6 @@ module Cucumber
         end
 
         context "skipping" do
-
           it "does not execute the block" do
             executed = false
             mapping = Mapping.new { executed = true }
