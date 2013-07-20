@@ -29,7 +29,7 @@ module Cucumber::Core::Test
 
       context "when a passing mapping exists for the step" do
         it "returns a passing result" do
-          test_step = Step.new([ast_step]).define {}
+          test_step = Step.new([ast_step]).map {}
           test_step.execute.should be_a( Result::Passed )
         end
       end
@@ -38,7 +38,7 @@ module Cucumber::Core::Test
         let(:exception) { StandardError.new('oops') }
 
         it "returns a failing result" do
-          test_step = Step.new([ast_step]).define { raise exception }
+          test_step = Step.new([ast_step]).map { raise exception }
           test_step.execute.should == Result::Failed.new(exception)
         end
       end

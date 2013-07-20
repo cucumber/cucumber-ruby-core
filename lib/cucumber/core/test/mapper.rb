@@ -23,7 +23,7 @@ module Cucumber
 
           def test_step(test_step)
             mapper = StepMapper.new(test_step)
-            mappings.define(test_step, mapper)
+            test_step.describe_to(mappings, mapper)
             test_steps << mapper.mapped_test_step
           end
 
@@ -39,8 +39,8 @@ module Cucumber
             @mapped_test_step = test_step
           end
 
-          def define(&block)
-            @mapped_test_step = test_step.define(&block)
+          def map(&block)
+            @mapped_test_step = test_step.map(&block)
           end
         end
 

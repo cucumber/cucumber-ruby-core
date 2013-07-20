@@ -10,8 +10,8 @@ module Cucumber::Core::Test
 
     context "with test cases" do
       let(:source) { double }
-      let(:passing) { Step.new([double]).define {} }
-      let(:failing) { Step.new([double]).define { raise execption } }
+      let(:passing) { Step.new([double]).map {} }
+      let(:failing) { Step.new([double]).map { raise execption } }
       let(:exception) { StandardError.new }
 
       context "with a single case" do

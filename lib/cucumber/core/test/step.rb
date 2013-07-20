@@ -40,7 +40,7 @@ module Cucumber
           @mapping.execute
         end
 
-        def define(&block)
+        def map(&block)
           self.class.new(source, Test::Mapping.new(&block))
         end
 
