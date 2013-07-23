@@ -6,18 +6,18 @@ module Cucumber
   module Core
     module Test
       describe Mapper do
+
+        ExampleMappings = Struct.new(:app) do
+          def test_step(test_step, mapper)
+            mapper.map { app.do_something } if test_step.name == 'mapped'
+          end
+        end
+
         let(:mapper)   { Mapper.new(mappings, receiver) }
         let(:receiver) { double('receiver') }
         before         { receiver.stub(:test_case).and_yield }
-        let(:mappings) do
-          my_app = app
-          mappings = double
-          mappings.stub(:test_step) do |test_step, mapper|
-            mapper.map { my_app.do_something } if test_step.name == 'passing'
-          end
-          mappings
-        end
-        let(:app) { double('app') }
+        let(:mappings) { ExampleMappings.new(app) }
+        let(:app)      { double('app') }
 
         context "an unmapped step" do
           let(:test_step) { Test::Step.new([double(name: 'unmapped')]) }
@@ -33,12 +33,12 @@ module Cucumber
         end
 
         context "a mapped step" do
-          let(:test_step) { Test::Step.new([double(name: 'passing')]) }
+          let(:test_step) { Test::Step.new([double(name: 'mapped')]) }
           let(:test_case) { Test::Case.new([test_step], double) }
 
           it "maps to a step that executes the block" do
             receiver.should_receive(:test_step) do |test_step|
-              test_step.name.should eq('passing')
+              test_step.name.should eq('mapped')
               app.should_receive(:do_something)
               test_step.execute
             end.once.ordered
