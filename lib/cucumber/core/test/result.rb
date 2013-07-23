@@ -3,7 +3,19 @@ module Cucumber
   module Core
     module Test
       module Result
+        def self.status_queries(status)
+          Module.new do
+            [:passed, :failed, :undefined, :unknown, :skipped].each do |possible_status|
+              define_method("#{possible_status}?") do
+                possible_status == status
+              end
+            end
+          end
+        end
+
         Unknown = Class.new do
+          include Result.status_queries :unknown
+
           def describe_to(visitor, *args)
             self
           end
@@ -13,29 +25,11 @@ module Cucumber
             test_case_runner.test_case_result = result
             result
           end
-
-          def passed?
-            false
-          end
-
-          def failed?
-            false
-          end
-
-          def undefined?
-            false
-          end
-
-          def unknown?
-            true
-          end
-
-          def skipped?
-            false
-          end
         end
 
         Passed = Class.new do
+          include Result.status_queries :passed
+
           def describe_to(visitor, *args)
             visitor.passed(*args)
             self
@@ -50,28 +44,11 @@ module Cucumber
           def to_s
             "✓"
           end
-
-          def passed?
-            true
-          end
-
-          def failed?
-            false
-          end
-
-          def undefined?
-            false
-          end
-
-          def unknown?
-            false
-          end
-          def skipped?
-            false
-          end
         end
 
         Failed = Struct.new(:exception) do
+          include Result.status_queries :failed
+
           def describe_to(visitor, *args)
             visitor.failed(*args)
             visitor.exception(exception, *args)
@@ -86,28 +63,11 @@ module Cucumber
             "✗"
           end
 
-          def passed?
-            false
-          end
-
-          def failed?
-            true
-          end
-
-          def undefined?
-            false
-          end
-
-          def unknown?
-            false
-          end
-
-          def skipped?
-            false
-          end
         end
 
         Undefined = Struct.new(:exception) do
+          include Result.status_queries :undefined
+
           def describe_to(visitor, *args)
             visitor.undefined(*args)
             self
@@ -120,28 +80,11 @@ module Cucumber
           def to_s
             "✗"
           end
-
-          def passed?
-            false
-          end
-
-          def failed?
-            false
-          end
-
-          def undefined?
-            true
-          end
-
-          def unknown?
-            false
-          end
-          def skipped?
-            false
-          end
         end
 
         Skipped = Class.new do
+          include Result.status_queries :skipped
+
           def describe_to(visitor, *args)
             visitor.skipped(*args)
             self
@@ -149,26 +92,6 @@ module Cucumber
 
           def to_s
             "-"
-          end
-
-          def passed?
-            false
-          end
-
-          def failed?
-            false
-          end
-
-          def undefined?
-            false
-          end
-
-          def unknown?
-            false
-          end
-
-          def skipped?
-            true
           end
         end
 
