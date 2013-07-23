@@ -13,6 +13,22 @@ module Cucumber
             test_case_runner.test_case_result = result
             result
           end
+
+          def passed?
+            false
+          end
+
+          def undefined?
+            false
+          end
+
+          def unknown?
+            true
+          end
+
+          def skipped?
+            false
+          end
         end
 
         Passed = Class.new do
@@ -30,6 +46,21 @@ module Cucumber
           def to_s
             "✓"
           end
+
+          def passed?
+            true
+          end
+
+          def undefined?
+            false
+          end
+
+          def unknown?
+            false
+          end
+          def skipped?
+            false
+          end
         end
 
         Failed = Struct.new(:exception) do
@@ -46,6 +77,21 @@ module Cucumber
           def to_s
             "✗"
           end
+
+          def passed?
+            false
+          end
+
+          def undefined?
+            false
+          end
+
+          def unknown?
+            false
+          end
+          def skipped?
+            false
+          end
         end
 
         Undefined = Struct.new(:exception) do
@@ -61,6 +107,21 @@ module Cucumber
           def to_s
             "✗"
           end
+
+          def passed?
+            false
+          end
+
+          def undefined?
+            true
+          end
+
+          def unknown?
+            false
+          end
+          def skipped?
+            false
+          end
         end
 
         Skipped = Class.new do
@@ -71,6 +132,22 @@ module Cucumber
 
           def to_s
             "-"
+          end
+
+          def passed?
+            false
+          end
+
+          def undefined?
+            false
+          end
+
+          def unknown?
+            false
+          end
+
+          def skipped?
+            true
           end
         end
 

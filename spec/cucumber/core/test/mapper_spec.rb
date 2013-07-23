@@ -6,31 +6,60 @@ module Cucumber
   module Core
     module Test
       describe Mapper do
-        it "maps each of the test steps" do
-          defined = Test::Step.new([double(name: 'passing')])
-          undefined = Test::Step.new([double(name: 'undefined')])
-          source = double('source')
-          mappings = double('mappings')
-          run_defined_step = false
+        let(:mapper)   { Mapper.new(mappings, receiver) }
+        let(:receiver) { double('receiver') }
+        before         { receiver.stub(:test_case).and_yield }
+        let(:mappings) do
+          my_app = app
+          mappings = double
           mappings.stub(:test_step) do |test_step, mapper|
-            if test_step == defined
-              mapper.map { run_defined_step = true }
-            end
+            mapper.map { my_app.do_something } if test_step.name == 'passing'
           end
-          receiver = double('receiver')
-          receiver.should_receive(:test_case) do |test_case|
-            visitor = double('visitor')
-            visitor.stub(:test_case).and_yield
-            visitor.should_receive(:test_step) do |test_step|
+          mappings
+        end
+        let(:app) { double('app') }
+
+        context "an unmapped step" do
+          let(:test_step) { Test::Step.new([double(name: 'unmapped')]) }
+          let(:test_case) { Test::Case.new([test_step], double) }
+
+          it "maps to a step that executes to an undefined result" do
+            receiver.should_receive(:test_step) do |test_step|
+              test_step.name.should == 'unmapped'
+              test_step.execute.should be_undefined
+            end.once.ordered
+            test_case.describe_to mapper
+          end
+        end
+
+        context "a mapped step" do
+          let(:test_step) { Test::Step.new([double(name: 'passing')]) }
+          let(:test_case) { Test::Case.new([test_step], double) }
+
+          it "maps to a step that executes the block" do
+            receiver.should_receive(:test_step) do |test_step|
+              test_step.name.should == 'passing'
+              app.should_receive(:do_something)
+              test_step.execute
+            end.once.ordered
+            test_case.describe_to mapper
+          end
+        end
+
+        context "a combination" do
+          let(:mapped)   { Test::Step.new([double(name: 'passing')]) }
+          let(:unmapped) { Test::Step.new([double(name: 'unmapped')]) }
+          let(:test_case) { Test::Case.new([mapped, unmapped], double) }
+
+          it "maps each of the test steps" do
+            receiver.should_receive(:test_step) do |test_step|
               test_step.name.should == 'passing'
             end.once.ordered
-            visitor.should_receive(:test_step) do |test_step|
-              test_step.name.should == 'undefined'
+            receiver.should_receive(:test_step) do |test_step|
+              test_step.name.should == 'unmapped'
             end.once.ordered
-            test_case.describe_to(visitor)
+            test_case.describe_to mapper
           end
-          Test::Case.new([defined, undefined], source).
-            describe_to Mapper.new(mappings, receiver)
         end
       end
     end
