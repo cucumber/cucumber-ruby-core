@@ -19,6 +19,7 @@ module Cucumber::Core::Test
       end
 
       it { should     be_passed    }
+      it { should_not be_failed    }
       it { should_not be_undefined }
       it { should_not be_unknown   }
       it { should_not be_skipped   }
@@ -37,6 +38,7 @@ module Cucumber::Core::Test
       end
 
       it { should_not be_passed    }
+      it { should     be_failed    }
       it { should_not be_undefined }
       it { should_not be_unknown   }
       it { should_not be_skipped   }
@@ -52,6 +54,7 @@ module Cucumber::Core::Test
       end
 
       it { should_not be_passed    }
+      it { should_not be_failed    }
       it { should_not be_undefined }
       it { should     be_unknown   }
       it { should_not be_skipped   }
@@ -68,6 +71,7 @@ module Cucumber::Core::Test
       end
 
       it { should_not be_passed    }
+      it { should_not be_failed    }
       it { should     be_undefined }
       it { should_not be_unknown   }
       it { should_not be_skipped   }
@@ -84,6 +88,7 @@ module Cucumber::Core::Test
       end
 
       it { should_not be_passed    }
+      it { should_not be_failed    }
       it { should_not be_undefined }
       it { should_not be_unknown   }
       it { should     be_skipped   }

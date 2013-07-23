@@ -22,7 +22,7 @@ module Cucumber
 
           it "returns a passed result if the block doesn't fail" do
             mapping = Mapping.new {}
-            mapping.execute.should be_a( Result::Passed )
+            mapping.execute.should be_passed
           end
 
           it "returns a failed result when the block raises an error" do
@@ -42,7 +42,7 @@ module Cucumber
 
           it "returns a skipped result" do
             mapping = Mapping.new {}
-            mapping.skip.should be_a( Result::Skipped )
+            mapping.skip.should be_skipped
           end
         end
       end
@@ -53,13 +53,13 @@ module Cucumber
 
         context "executing" do
           it "returns an undefined result" do
-            mapping.execute.should == Result::Undefined.new
+            mapping.execute.should be_undefined
           end
         end
 
         context "skipping" do
           it "returns an undefined result" do
-            mapping.skip.should == Result::Undefined.new
+            mapping.skip.should be_undefined
           end
         end
 

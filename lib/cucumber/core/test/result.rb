@@ -18,6 +18,10 @@ module Cucumber
             false
           end
 
+          def failed?
+            false
+          end
+
           def undefined?
             false
           end
@@ -51,6 +55,10 @@ module Cucumber
             true
           end
 
+          def failed?
+            false
+          end
+
           def undefined?
             false
           end
@@ -82,6 +90,10 @@ module Cucumber
             false
           end
 
+          def failed?
+            true
+          end
+
           def undefined?
             false
           end
@@ -89,6 +101,7 @@ module Cucumber
           def unknown?
             false
           end
+
           def skipped?
             false
           end
@@ -109,6 +122,10 @@ module Cucumber
           end
 
           def passed?
+            false
+          end
+
+          def failed?
             false
           end
 
@@ -135,6 +152,10 @@ module Cucumber
           end
 
           def passed?
+            false
+          end
+
+          def failed?
             false
           end
 

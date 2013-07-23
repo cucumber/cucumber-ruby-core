@@ -22,15 +22,15 @@ module Cucumber::Core::Test
 
           it "calls the report before running the case" do
             report.should_receive(:before_test_case).with(test_case)
-            test_cases.describe_to(runner)
+            test_cases.describe_to runner
           end
 
           it "calls the report after running the case" do
             report.should_receive(:after_test_case) do |reported_test_case, result|
               reported_test_case.should eq(test_case)
-              result.should be_a(Result::Unknown)
+              result.should be_unknown
             end
-            test_cases.describe_to(runner)
+            test_cases.describe_to runner
           end
         end
 
@@ -42,10 +42,10 @@ module Cucumber::Core::Test
 
             it 'reports a passing test case' do
               report.should_receive(:after_test_case) do |test_case, result|
-                result.should be_a(Result::Passed)
+                result.should be_passed
               end
 
-              test_cases.describe_to(runner)
+              test_cases.describe_to runner
             end
           end
 
@@ -54,10 +54,10 @@ module Cucumber::Core::Test
 
             it 'reports a failing test case' do
               report.should_receive(:after_test_case) do |test_case, result|
-                result.should be_a(Result::Failed)
+                result.should be_failed
               end
 
-              test_cases.describe_to(runner)
+              test_cases.describe_to runner
             end
           end
 
@@ -66,32 +66,32 @@ module Cucumber::Core::Test
 
             it 'reports the first step as failed' do
               report.should_receive(:after_test_step).with(failing, anything) do |test_step, result|
-                result.should be_a(Result::Failed)
+                result.should be_failed
               end
 
-              test_cases.describe_to(runner)
+              test_cases.describe_to runner
             end
 
             it 'reports the second step as skipped' do
               report.should_receive(:after_test_step).with(passing, anything) do |test_step, result|
-                result.should be_a(Result::Skipped)
+                result.should be_skipped
               end
 
-              test_cases.describe_to(runner)
+              test_cases.describe_to runner
             end
 
             it 'reports the test case as failed' do
               report.should_receive(:after_test_case) do |test_case, result|
-                result.should be_a(Result::Failed)
+                result.should be_failed
               end
 
-              test_cases.describe_to(runner)
+              test_cases.describe_to runner
             end
 
             it 'skips, rather than executing the second step' do
               passing.should_not_receive(:execute)
               passing.should_receive(:skip)
-              test_cases.describe_to(runner)
+              test_cases.describe_to runner
             end
           end
 
@@ -106,10 +106,10 @@ module Cucumber::Core::Test
 
           it 'reports the results correctly for the following test case' do
             report.should_receive(:after_test_case).with(last_test_case, anything) do |reported_test_case, result|
-              result.should be_a(Result::Passed)
+              result.should be_passed
             end
 
-            test_cases.describe_to(runner)
+            test_cases.describe_to runner
           end
         end
       end

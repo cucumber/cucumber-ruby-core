@@ -25,7 +25,7 @@ module Cucumber
 
           it "maps to a step that executes to an undefined result" do
             receiver.should_receive(:test_step) do |test_step|
-              test_step.name.should == 'unmapped'
+              test_step.name.should eq('unmapped')
               test_step.execute.should be_undefined
             end.once.ordered
             test_case.describe_to mapper
@@ -38,7 +38,7 @@ module Cucumber
 
           it "maps to a step that executes the block" do
             receiver.should_receive(:test_step) do |test_step|
-              test_step.name.should == 'passing'
+              test_step.name.should eq('passing')
               app.should_receive(:do_something)
               test_step.execute
             end.once.ordered

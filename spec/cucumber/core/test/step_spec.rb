@@ -30,7 +30,7 @@ module Cucumber::Core::Test
       context "when a passing mapping exists for the step" do
         it "returns a passing result" do
           test_step = Step.new([ast_step]).map {}
-          test_step.execute.should be_a( Result::Passed )
+          test_step.execute.should be_passed
         end
       end
 
