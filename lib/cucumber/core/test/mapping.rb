@@ -8,26 +8,49 @@ module Cucumber
         def initialize(&block)
           raise ArgumentError, "Passing a block to execute the mapping is mandatory." unless block
           @block = block
+          @timer = Timer.new
         end
 
         def skip
-          Result::Skipped.new
+          skipped
         end
 
         def execute
-          start = time_in_nanoseconds
+          @timer.start
           @block.call
-          duration = time_in_nanoseconds - start
-          Result::Passed.new(duration)
+          passed
         rescue Exception => exception
-          duration = time_in_nanoseconds - start
-          Result::Failed.new(duration, exception)
+          failed(exception)
         end
 
         private
 
-        def time_in_nanoseconds
-          Time.now.nsec
+        def passed
+          Result::Passed.new(@timer.duration)
+        end
+
+        def failed(exception)
+          Result::Failed.new(@timer.duration, exception)
+        end
+
+        def skipped
+          Result::Skipped.new
+        end
+
+        class Timer
+          def start
+            @start_time = time_in_nanoseconds
+          end
+
+          def duration
+            time_in_nanoseconds - @start_time
+          end
+
+          private
+
+          def time_in_nanoseconds
+            Time.now.nsec
+          end
         end
       end
 
