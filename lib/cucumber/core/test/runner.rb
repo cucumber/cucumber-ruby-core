@@ -10,7 +10,7 @@ module Cucumber
           case_runner = CaseRunner.new(report)
           report.before_test_case(test_case)
           descend.call(case_runner)
-          report.after_test_case(test_case, case_runner.test_case_result)
+          report.after_test_case(test_case, case_runner.result)
         end
 
         private
@@ -18,16 +18,83 @@ module Cucumber
         class CaseRunner
           include Cucumber.initializer(:report)
 
-          attr_writer :test_case_result
-
           def test_step(test_step)
-            report.before_test_step(test_step)
-            test_step_result = test_case_result.execute(test_step, self)
-            report.after_test_step(test_step, test_step_result)
+            report.before_test_step test_step
+            result = status.execute(test_step)
+            report.after_test_step test_step, result
           end
 
-          def test_case_result
-            @test_case_result ||= Result::Unknown.new
+          def result
+            status.result
+          end
+
+          def status
+            @status ||= Status::Monitor.new
+          end
+
+          module Status
+            class Monitor
+              def execute(test_step)
+                status.execute(test_step, self)
+              end
+
+              def result
+                status.result
+              end
+
+              def failed
+                @status = Status::Failed.new
+              end
+
+              def exception(exception)
+              end
+
+              def undefined
+                failed
+              end
+
+              def passed
+                @status = Status::Passing.new
+              end
+
+              def skipped
+              end
+
+              def duration(*)
+              end
+
+              private
+
+              def status
+                @status ||= Status::Unknown.new
+              end
+            end
+
+            Unknown = Class.new do
+              def execute(test_step, monitor)
+                test_step.execute.describe_to(monitor)
+              end
+
+              def result
+                Result::Unknown.new
+              end
+            end
+
+            Passing = Class.new(Unknown) do
+              def result
+                Result::Passed.new
+              end
+            end
+
+            Failed = Class.new do
+              def execute(test_step, monitor)
+                test_step.skip
+              end
+
+              def result
+                Result::Failed.new
+              end
+            end
           end
 
         end

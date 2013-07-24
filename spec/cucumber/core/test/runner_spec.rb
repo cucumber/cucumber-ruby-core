@@ -8,6 +8,12 @@ module Cucumber::Core::Test
     let(:runner)   { Runner.new(report) }
     let(:report)   { double.as_null_object }
 
+    # TODO: Bugs I think I've discovered by refactoring:
+    it "records the duration of the test case execution"
+    it "marks a test case result as failed(undefined) when it has no steps"
+    it "marks a test case result as failed(undefined) when a step is undefined"
+    it "records the duration and exception on the result when a test case fails"
+
     context "with test cases" do
       let(:source) { double }
       let(:passing) { Step.new([double]).map {} }

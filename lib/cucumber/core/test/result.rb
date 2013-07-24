@@ -20,11 +20,6 @@ module Cucumber
             self
           end
 
-          def execute(test_step, test_case_runner)
-            result = test_step.execute
-            test_case_runner.test_case_result = result
-            result
-          end
         end
 
         Passed = Struct.new(:duration) do
@@ -57,10 +52,6 @@ module Cucumber
             self
           end
 
-          def execute(test_step, test_case_runner)
-            test_step.skip
-          end
-
           def to_s
             "✗"
           end
@@ -73,10 +64,6 @@ module Cucumber
           def describe_to(visitor, *args)
             visitor.undefined(*args)
             self
-          end
-
-          def execute(test_step, test_case_runner)
-            test_step.skip
           end
 
           def to_s
