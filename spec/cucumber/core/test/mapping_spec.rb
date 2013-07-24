@@ -28,8 +28,31 @@ module Cucumber
           it "returns a failed result when the block raises an error" do
             exception = StandardError.new
             mapping = Mapping.new { raise exception }
-            mapping.execute.should == Result::Failed.new(exception)
+            result = mapping.execute
+            result.should be_failed
+            result.exception.should == exception
           end
+
+          context "recording the duration" do
+            before do
+              time = double
+              Time.stub(now: time)
+              time.stub(:nsec).and_return(946752000, 946752001)
+            end
+
+            it "records the nanoseconds duration of the execution on the result" do
+              mapping = Mapping.new { }
+              duration = mapping.execute.duration
+              duration.should eq(1)
+            end
+
+            it "records the duration of a failed execution" do
+              mapping = Mapping.new { raise StandardError }
+              duration = mapping.execute.duration
+              duration.should eq(1)
+            end
+          end
+
         end
 
         context "skipping" do

@@ -27,11 +27,12 @@ module Cucumber
           end
         end
 
-        Passed = Class.new do
+        Passed = Struct.new(:duration) do
           include Result.status_queries :passed
 
           def describe_to(visitor, *args)
             visitor.passed(*args)
+            visitor.duration(duration, *args)
             self
           end
 
@@ -46,11 +47,12 @@ module Cucumber
           end
         end
 
-        Failed = Struct.new(:exception) do
+        Failed = Struct.new(:duration, :exception) do
           include Result.status_queries :failed
 
           def describe_to(visitor, *args)
             visitor.failed(*args)
+            visitor.duration(duration, *args)
             visitor.exception(exception, *args)
             self
           end
@@ -96,38 +98,50 @@ module Cucumber
         end
 
         class Summary
-          attr_reader :total_failed, 
-            :total_passed, 
+          attr_reader :total_failed,
+            :total_passed,
             :total_skipped,
             :total_undefined,
-            :exceptions
+            :exceptions,
+            :durations
 
           def initialize
             @total_failed =
-              @total_passed = 
-              @total_skipped = 
+              @total_passed =
+              @total_skipped =
               @total_undefined = 0
             @exceptions = []
+            @durations = []
           end
 
           def failed(*args)
             @total_failed += 1
+            self
           end
 
           def passed(*args)
             @total_passed += 1
+            self
           end
 
           def skipped(*args)
             @total_skipped +=1
+            self
           end
 
           def undefined(*args)
             @total_undefined += 1
+            self
           end
 
           def exception(exception)
             @exceptions << exception
+            self
+          end
+
+          def duration(duration)
+            @durations << duration
+            self
           end
 
           def total

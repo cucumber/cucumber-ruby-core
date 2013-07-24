@@ -39,7 +39,9 @@ module Cucumber::Core::Test
 
         it "returns a failing result" do
           test_step = Step.new([ast_step]).map { raise exception }
-          test_step.execute.should == Result::Failed.new(exception)
+          result = test_step.execute
+          result.should be_failed
+          result.exception.should == exception
         end
       end
     end
