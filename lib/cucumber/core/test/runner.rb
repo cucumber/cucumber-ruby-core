@@ -26,10 +26,10 @@ module Cucumber
         end
 
         def current_case_status
-          @current_case_status ||= CaseStatus::Monitor.new
+          @current_case_status ||= Status::Monitor.new
         end
 
-        module CaseStatus
+        module Status
           class Monitor
             def execute(test_step)
               status.execute(test_step, self)
@@ -64,7 +64,7 @@ module Cucumber
             end
           end
 
-          Unknown = Class.new do
+          class Unknown
             def execute(test_step, monitor)
               test_step.execute.describe_to(monitor)
             end
@@ -74,13 +74,13 @@ module Cucumber
             end
           end
 
-          Passing = Class.new(Unknown) do
+          class Passing < Unknown
             def result
               Result::Passed.new
             end
           end
 
-          Failing = Class.new do
+          class Failing
             def execute(test_step, monitor)
               test_step.skip
             end
