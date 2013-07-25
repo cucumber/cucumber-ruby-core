@@ -27,6 +27,11 @@ module Cucumber
           self.class.new(test_steps, source)
         end
 
+        # TODO: test
+        def name
+          source.last.name
+        end
+
       end
     end
   end

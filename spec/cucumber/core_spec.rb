@@ -73,45 +73,100 @@ module Cucumber
         end
       end
 
-      require 'cucumber/core/test/mapping'
-      class FakeMappings
-        Failure = Class.new(StandardError)
+      context "without hooks" do
+        class StepTestMappings
+          Failure = Class.new(StandardError)
 
-        def test_step(step, mapper)
-          mapper.map { raise Failure } if step.name =~ /fail/
-          mapper.map {}                if step.name =~ /pass/
-          self
+          def test_case(test_case, mapper)
+            self
+          end
+
+          def test_step(step, mapper)
+            mapper.map { raise Failure } if step.name =~ /fail/
+            mapper.map {}                if step.name =~ /pass/
+            self
+          end
+        end
+
+        it "executes the test cases in the suite" do
+          gherkin = gherkin do
+            feature 'Feature name' do
+              scenario 'The one that passes' do
+                step 'passing'
+              end
+
+              scenario 'The one that fails' do
+                step 'passing'
+                step 'failing'
+                step 'passing'
+                step 'undefined'
+              end
+            end
+          end
+          report = SummaryReport.new
+          mappings = StepTestMappings.new
+
+          execute [gherkin], mappings, report
+
+          report.test_cases.total.should eq(2)
+          report.test_cases.total_passed.should eq(1)
+          report.test_cases.total_failed.should eq(1)
+          report.test_steps.total.should eq(5)
+          report.test_steps.total_failed.should eq(1)
+          report.test_steps.total_passed.should eq(2)
+          report.test_steps.total_skipped.should eq(1)
+          report.test_steps.total_undefined.should eq(1)
         end
       end
 
-      it "executes the test cases in the suite" do
-        gherkin = gherkin do
-          feature 'Feature name' do
-            scenario 'The one that passes' do
-              step 'passing'
-            end
+      context "with hooks" do
+        class HookTestMappings
+          Failure = Class.new(StandardError)
 
-            scenario 'The one that fails' do
-              step 'passing'
-              step 'failing'
-              step 'passing'
-              step 'undefined'
+          def test_case(test_case, mapper)
+            case test_case.name
+            when 'fail before'
+              mapper.before { raise Failure }
+              mapper.after  { 'This hook will be skipped' }
+            when 'fail after'
+              mapper.after { raise Failure }
             end
+            self
+          end
+
+          def test_step(step, mapper)
+            mapper.map {} # all steps pass
+            self
           end
         end
-        report = SummaryReport.new
-        mappings = FakeMappings.new
 
-        execute [gherkin], mappings, report
+        it "executes the test cases in the suite" do
+          gherkin = gherkin do
+            feature do
+              scenario 'fail before' do
+                step 'passing'
+              end
 
-        report.test_cases.total.should eq(2)
-        report.test_cases.total_passed.should eq(1)
-        report.test_cases.total_failed.should eq(1)
-        report.test_steps.total.should eq(5)
-        report.test_steps.total_failed.should eq(1)
-        report.test_steps.total_passed.should eq(2)
-        report.test_steps.total_skipped.should eq(1)
-        report.test_steps.total_undefined.should eq(1)
+              scenario 'fail after' do
+                step 'passing'
+              end
+
+              scenario 'passing' do
+                step 'passing'
+              end
+            end
+          end
+          report = SummaryReport.new
+          mappings = HookTestMappings.new
+
+          execute [gherkin], mappings, report
+
+          report.test_cases.total.should eq(3)
+          report.test_cases.total_passed.should eq(1)
+          report.test_cases.total_failed.should eq(2)
+          report.test_steps.total.should eq(6)
+          report.test_steps.total_failed.should eq(2)
+        end
       end
     end
   end
