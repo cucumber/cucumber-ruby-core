@@ -27,9 +27,33 @@ module Cucumber
           self.class.new(test_steps, source)
         end
 
-        # TODO: test
         def name
-          source.last.name
+          name_builder = NameBuilder.new
+          describe_source_to name_builder
+          name_builder.result
+        end
+
+        class NameBuilder
+          attr_reader :result
+
+          def feature(*)
+          end
+
+          def scenario(scenario)
+            @result = scenario.name
+          end
+
+          def scenario_outline(outline)
+            @result = outline.name
+          end
+
+          def examples_table(table)
+            @result << ", #{table.name}"
+          end
+
+          def examples_table_row(row)
+            @result << " (row #{row.number})"
+          end
         end
 
       end

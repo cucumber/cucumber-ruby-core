@@ -144,12 +144,15 @@ module Cucumber
             visitor.stub(:outline_step)
             visitor.should_receive(:examples_table).exactly(2).times.and_yield
             visitor.should_receive(:examples_table_row) do |row|
+              row.number.should eq(1)
               row.values.should == ['1']
             end.once.ordered
             visitor.should_receive(:examples_table_row) do |row|
+              row.number.should eq(2)
               row.values.should == ['2']
             end.once.ordered
             visitor.should_receive(:examples_table_row) do |row|
+              row.number.should eq(1)
               row.values.should == ['a']
             end.once.ordered
             feature.describe_to(visitor)

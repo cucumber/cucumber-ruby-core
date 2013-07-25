@@ -17,7 +17,7 @@ module Cucumber
             let(:name) { 'a <color> cucumber' }
 
             it "replaces the argument" do
-              row = ExamplesTable::Row.new('color' => 'green')
+              row = ExamplesTable::Row.new({'color' => 'green'}, 1)
               outline_step.to_step(row).name.should == 'a green cucumber'
             end
 
@@ -34,7 +34,7 @@ module Cucumber
               visitor.should_receive(:table) do |data_table| # TODO: rename this message to :data_table
                 data_table.raw.should == [['x', 'y'], ['a', 'a replacement']]
               end
-              row = ExamplesTable::Row.new('arg' => 'replacement')
+              row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1)
               step = outline_step.to_step(row)
               step.describe_to(visitor)
             end
@@ -51,7 +51,7 @@ module Cucumber
               visitor.should_receive(:doc_string) do |doc_string|
                 doc_string.content.should == "a replacement that needs replacing"
               end
-              row = ExamplesTable::Row.new('arg' => 'replacement')
+              row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1)
               step = outline_step.to_step(row)
               step.describe_to(visitor)
             end

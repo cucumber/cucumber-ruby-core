@@ -1,9 +1,15 @@
+require 'cucumber/core'
+require 'cucumber/core/gherkin/writer'
+require 'cucumber/core/platform'
 require 'cucumber/core/test/case'
 
 module Cucumber
   module Core
     module Test
       describe Case do
+        include Core
+        include Core::Gherkin::Writer
+
         let(:test_case) { Test::Case.new(test_steps, [feature, scenario]) }
         let(:feature) { double }
         let(:scenario) { double }
@@ -32,6 +38,47 @@ module Cucumber
           feature.should_receive(:describe_to).with(visitor, args)
           scenario.should_receive(:describe_to).with(visitor, args)
           test_case.describe_source_to(visitor, args)
+        end
+
+        describe "name" do
+          context "created from a scenario" do
+            it "takes its name from the name of a scenario" do
+              gherkin = gherkin do
+                feature do
+                  scenario 'Scenario name' do
+                    step 'passing'
+                  end
+                end
+              end
+              receiver = double
+              receiver.should_receive(:test_case) do |test_case|
+                test_case.name.should == 'Scenario name'
+              end
+              compile([gherkin], receiver)
+            end
+          end
+
+          context "created from a scenario outline example" do
+            it "takes its name from the name of the scenario outline and examples table" do
+              gherkin = gherkin do
+                feature do
+                  scenario_outline 'outline name' do
+                    step 'passing with arg'
+
+                    examples 'examples name' do
+                      row 'arg'
+                      row 'x'
+                    end
+                  end
+                end
+              end
+              receiver = double
+              receiver.should_receive(:test_case) do |test_case|
+                test_case.name.should == 'outline name, examples name (row 1)'
+              end
+              compile [gherkin], receiver
+            end
+          end
         end
       end
     end

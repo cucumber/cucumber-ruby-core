@@ -33,17 +33,20 @@ module Cucumber
             other == @cells
           end
 
-          def build_row(row_cells)
-            Row.new(Hash[@cells.zip(row_cells)])
+          def build_row(row_cells, number)
+            Row.new(Hash[@cells.zip(row_cells)], number)
           end
         end
 
         class Row
           include DescribesItself
 
-          def initialize(data)
+          attr_reader :number
+
+          def initialize(data, number)
             raise ArgumentError, data.to_s unless data.is_a?(Hash)
             @data = data
+            @number = number
           end
 
           def ==(other)
