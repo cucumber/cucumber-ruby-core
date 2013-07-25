@@ -53,7 +53,7 @@ module Cucumber
     end
 
     describe "executing a test suite" do
-      class ReportSpy
+      class SummaryReport
         attr_reader :test_cases, :test_steps
 
         def initialize
@@ -99,7 +99,7 @@ module Cucumber
               end
             end
           end
-        report = ReportSpy.new
+        report = SummaryReport.new
         mappings = FakeMappings.new
 
         execute [gherkin], mappings, report
