@@ -86,19 +86,19 @@ module Cucumber
 
       it "executes the test cases in the suite" do
         gherkin = gherkin do
-            feature 'Feature name' do
-              scenario 'The one that passes' do
-                step 'passing'
-              end
+          feature 'Feature name' do
+            scenario 'The one that passes' do
+              step 'passing'
+            end
 
-              scenario 'The one that fails' do
-                step 'passing'
-                step 'failing'
-                step 'passing'
-                step 'undefined'
-              end
+            scenario 'The one that fails' do
+              step 'passing'
+              step 'failing'
+              step 'passing'
+              step 'undefined'
             end
           end
+        end
         report = SummaryReport.new
         mappings = FakeMappings.new
 
