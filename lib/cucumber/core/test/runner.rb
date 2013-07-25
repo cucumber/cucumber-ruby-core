@@ -40,7 +40,7 @@ module Cucumber
             end
 
             def failed
-              @status = Failed.new
+              @status = Failing.new
             end
 
             def passed
@@ -52,9 +52,6 @@ module Cucumber
             end
 
             def exception(exception)
-            end
-
-            def skipped
             end
 
             def duration(*)
@@ -83,7 +80,7 @@ module Cucumber
             end
           end
 
-          Failed = Class.new do
+          Failing = Class.new do
             def execute(test_step, monitor)
               test_step.skip
             end
