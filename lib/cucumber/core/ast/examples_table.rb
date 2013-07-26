@@ -8,10 +8,10 @@ module Cucumber
       class ExamplesTable
         include DescribesItself
 
-        attr_reader :header, :location, :keyword, :name
+        attr_reader :header, :location, :keyword, :name, :tags
 
         include Cucumber.initializer(
-          :location, :comment, :keyword, :name, :description, :header, :example_rows
+          :location, :comment, :tags, :keyword, :name, :description, :header, :example_rows
         )
 
         private

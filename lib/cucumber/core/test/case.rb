@@ -33,6 +33,12 @@ module Cucumber
           name_builder.result
         end
 
+        def tags
+          tag_collector = TagCollector.new
+          describe_source_to tag_collector
+          tag_collector.result
+        end
+
         class NameBuilder
           attr_reader :result
 
@@ -53,6 +59,29 @@ module Cucumber
 
           def examples_table_row(row)
             @result << " (row #{row.number})"
+          end
+        end
+
+        class TagCollector
+          attr_reader :result
+
+          def feature(node)
+            @result = node.tags.tags.map(&:name)
+          end
+
+          def scenario(node)
+            @result += node.tags.tags.map(&:name)
+          end
+
+          def scenario_outline(node)
+            @result += node.tags.tags.map(&:name)
+          end
+
+          def examples_table(node)
+            @result += node.tags.tags.map(&:name)
+          end
+
+          def examples_table_row(*)
           end
         end
 

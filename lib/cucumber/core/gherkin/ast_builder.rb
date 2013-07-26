@@ -262,6 +262,7 @@ module Cucumber
               Ast::ExamplesTable.new(
                 location,
                 comment,
+                tags,
                 node.keyword,
                 node.name,
                 node.description,

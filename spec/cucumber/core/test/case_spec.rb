@@ -80,6 +80,33 @@ module Cucumber
             end
           end
         end
+
+        describe "tags" do
+          it "includes all tags from the parent feature" do
+            gherkin = gherkin do
+              feature tags: ['@a', '@b'] do
+                scenario tags: ['@c'] do
+                  step
+                end
+                scenario_outline tags: ['@d'] do
+                  step 'passing with arg'
+                  examples tags: ['@e'] do
+                    row 'arg'
+                    row 'x'
+                  end
+                end
+              end
+            end
+            receiver = double
+            receiver.should_receive(:test_case) do |test_case|
+              test_case.tags.should == ['@a', '@b', '@c']
+            end.once.ordered
+            receiver.should_receive(:test_case) do |test_case|
+              test_case.tags.should == ['@a', '@b', '@d', '@e']
+            end.once.ordered
+            compile [gherkin], receiver
+          end
+        end
       end
     end
   end
