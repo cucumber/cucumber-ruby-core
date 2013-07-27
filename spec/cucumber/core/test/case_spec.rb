@@ -15,32 +15,34 @@ module Cucumber
         let(:scenario) { double }
         let(:test_steps) { [double, double] }
 
-        it "describes itself to a visitor" do
-          visitor = double
-          args = double
-          visitor.should_receive(:test_case).with(test_case, args)
-          test_case.describe_to(visitor, args)
-        end
-
-        it "asks each test_step to describe themselves to the visitor" do
-          visitor = double
-          args = double
-          test_steps.each do |test_step|
-            test_step.should_receive(:describe_to).with(visitor, args)
+        context 'describing itself' do
+          it "describes itself to a visitor" do
+            visitor = double
+            args = double
+            visitor.should_receive(:test_case).with(test_case, args)
+            test_case.describe_to(visitor, args)
           end
-          visitor.stub(:test_case).and_yield
-          test_case.describe_to(visitor, args)
+
+          it "asks each test_step to describe themselves to the visitor" do
+            visitor = double
+            args = double
+            test_steps.each do |test_step|
+              test_step.should_receive(:describe_to).with(visitor, args)
+            end
+            visitor.stub(:test_case).and_yield
+            test_case.describe_to(visitor, args)
+          end
+
+          it "describes its source to a visitor" do
+            visitor = double
+            args = double
+            feature.should_receive(:describe_to).with(visitor, args)
+            scenario.should_receive(:describe_to).with(visitor, args)
+            test_case.describe_source_to(visitor, args)
+          end
         end
 
-        it "describes its source to a visitor" do
-          visitor = double
-          args = double
-          feature.should_receive(:describe_to).with(visitor, args)
-          scenario.should_receive(:describe_to).with(visitor, args)
-          test_case.describe_source_to(visitor, args)
-        end
-
-        describe "name" do
+        describe "#name" do
           context "created from a scenario" do
             it "takes its name from the name of a scenario" do
               gherkin = gherkin do
@@ -81,7 +83,7 @@ module Cucumber
           end
         end
 
-        describe "tags" do
+        describe "#tags" do
           it "includes all tags from the parent feature" do
             gherkin = gherkin do
               feature tags: ['@a', '@b'] do
@@ -105,6 +107,21 @@ module Cucumber
               test_case.tags.should == ['@a', '@b', '@d', '@e']
             end.once.ordered
             compile [gherkin], receiver
+          end
+        end
+
+        describe "#language" do
+          it 'takes its language from the feature' do
+            gherkin = %{# language: en-pirate
+              Ahoy matey!: Treasure map
+                Heave to: Find the treasure
+                  Gangway!: a map
+            }
+            receiver = double
+            receiver.should_receive(:test_case) do |test_case|
+              test_case.language.iso_code.should == 'en-pirate'
+            end
+            compile([gherkin], receiver)
           end
         end
       end

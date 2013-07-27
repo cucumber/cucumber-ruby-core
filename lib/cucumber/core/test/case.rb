@@ -39,6 +39,16 @@ module Cucumber
           tag_collector.result
         end
 
+        def language
+          feature.language
+        end
+
+        private
+
+        def feature
+          source.first
+        end
+
         class NameBuilder
           attr_reader :result
 
