@@ -33,6 +33,18 @@ module Cucumber
           @content_type = content_type
         end
 
+        def encoding
+          @content.encoding
+        end
+
+        def to_str
+          @content
+        end
+
+        def gsub(*args)
+          @content.gsub(*args)
+        end
+
         def map(&block)
           raise ArgumentError unless block
           new_content = block.call(content)
@@ -48,7 +60,13 @@ module Cucumber
         end
 
         def ==(other)
-          content == other.content && content_type == other.content_type
+          if other.respond_to?(:content_type)
+            return false unless content_type == other.content_type
+          end
+          if other.respond_to?(:to_str)
+            return content == other.to_str
+          end
+          raise ArgumentError, "Can't compare a #{self.class.name} with a #{other.class.name}"
         end
 
         private
