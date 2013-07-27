@@ -64,7 +64,6 @@ module Cucumber
           it 'delegates #gsub to the content string' do
             doc_string.gsub(/n/, '_').should == 'co_te_t'
           end
-
         end
       end
     end
