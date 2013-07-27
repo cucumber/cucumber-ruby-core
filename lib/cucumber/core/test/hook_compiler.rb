@@ -12,6 +12,10 @@ module Cucumber
           visitor.test_step(self, *args)
         end
 
+        def describe_source_to(visitor, *args)
+          visitor.hook(*args)
+        end
+
         def execute
           @mapping.execute
         end
