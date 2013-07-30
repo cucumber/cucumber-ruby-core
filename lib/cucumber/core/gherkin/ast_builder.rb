@@ -9,7 +9,7 @@ module Cucumber
       # Gherkin parser.
       class AstBuilder
 
-        def initialize(path = 'UNKNOWN-FILE')
+        def initialize(path)
           @path = path
         end
 

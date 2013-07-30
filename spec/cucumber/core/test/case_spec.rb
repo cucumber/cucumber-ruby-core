@@ -69,7 +69,8 @@ module Cucumber
 
                     examples 'examples name' do
                       row 'arg'
-                      row 'x'
+                      row '1'
+                      row '2'
                     end
                   end
                 end
@@ -77,7 +78,10 @@ module Cucumber
               receiver = double
               receiver.should_receive(:test_case) do |test_case|
                 test_case.name.should == 'outline name, examples name (row 1)'
-              end
+              end.once.ordered
+              receiver.should_receive(:test_case) do |test_case|
+                test_case.name.should == 'outline name, examples name (row 2)'
+              end.once.ordered
               compile [gherkin], receiver
             end
           end
@@ -101,11 +105,28 @@ module Cucumber
             end
             receiver = double
             receiver.should_receive(:test_case) do |test_case|
-              test_case.tags.should == ['@a', '@b', '@c']
+              test_case.tags.map(&:name).should == ['@a', '@b', '@c']
             end.once.ordered
             receiver.should_receive(:test_case) do |test_case|
-              test_case.tags.should == ['@a', '@b', '@d', '@e']
+              test_case.tags.map(&:name).should == ['@a', '@b', '@d', '@e']
             end.once.ordered
+            compile [gherkin], receiver
+          end
+        end
+
+        describe "matching tags" do
+          it "matches boolean expressions of tags" do
+            gherkin = gherkin do
+              feature tags: ['@a', '@b'] do
+                scenario tags: ['@c'] do
+                  step
+                end
+              end
+            end
+            receiver = double
+            receiver.should_receive(:test_case) do |test_case|
+              test_case.match_tags?('@a').should be_true
+            end
             compile [gherkin], receiver
           end
         end

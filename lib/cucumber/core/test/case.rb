@@ -39,8 +39,17 @@ module Cucumber
           tag_collector.result
         end
 
+        require 'gherkin/tag_expression'
+        def match_tags?(expression)
+          ::Gherkin::TagExpression.new([expression]).evaluate(tags)
+        end
+
         def language
           feature.language
+        end
+
+        def location
+          source.last.location
         end
 
         private
@@ -53,22 +62,27 @@ module Cucumber
           attr_reader :result
 
           def feature(*)
+            self
           end
 
           def scenario(scenario)
             @result = scenario.name
+            self
           end
 
           def scenario_outline(outline)
-            @result = outline.name
+            @result = outline.name.dup
+            self
           end
 
           def examples_table(table)
             @result << ", #{table.name}"
+            self
           end
 
           def examples_table_row(row)
             @result << " (row #{row.number})"
+            self
           end
         end
 
@@ -76,19 +90,19 @@ module Cucumber
           attr_reader :result
 
           def feature(node)
-            @result = node.tags.tags.map(&:name)
+            @result = node.tags.tags
           end
 
           def scenario(node)
-            @result += node.tags.tags.map(&:name)
+            @result += node.tags.tags
           end
 
           def scenario_outline(node)
-            @result += node.tags.tags.map(&:name)
+            @result += node.tags.tags
           end
 
           def examples_table(node)
-            @result += node.tags.tags.map(&:name)
+            @result += node.tags.tags
           end
 
           def examples_table_row(*)
