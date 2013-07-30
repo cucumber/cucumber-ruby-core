@@ -21,14 +21,13 @@ module Cucumber::Core::Test
       let(:exception) { StandardError.new }
 
       context "with a single case" do
-        let(:test_cases) { [test_case].extend(TestCaseCollection) }
 
         context "without steps" do
           let(:test_case) { Case.new([], source) }
 
           it "calls the report before running the case" do
             report.should_receive(:before_test_case).with(test_case)
-            test_cases.describe_to runner
+            test_case.describe_to runner
           end
 
           it "calls the report after running the case" do
@@ -36,7 +35,7 @@ module Cucumber::Core::Test
               reported_test_case.should eq(test_case)
               result.should be_unknown
             end
-            test_cases.describe_to runner
+            test_case.describe_to runner
           end
         end
 
@@ -51,7 +50,7 @@ module Cucumber::Core::Test
                 result.should be_passed
               end
 
-              test_cases.describe_to runner
+              test_case.describe_to runner
             end
           end
 
@@ -63,7 +62,7 @@ module Cucumber::Core::Test
                 result.should be_failed
               end
 
-              test_cases.describe_to runner
+              test_case.describe_to runner
             end
           end
 
@@ -75,7 +74,7 @@ module Cucumber::Core::Test
                 result.should be_failed
               end
 
-              test_cases.describe_to runner
+              test_case.describe_to runner
             end
 
             it 'reports the second step as skipped' do
@@ -83,7 +82,7 @@ module Cucumber::Core::Test
                 result.should be_skipped
               end
 
-              test_cases.describe_to runner
+              test_case.describe_to runner
             end
 
             it 'reports the test case as failed' do
@@ -91,13 +90,13 @@ module Cucumber::Core::Test
                 result.should be_failed
               end
 
-              test_cases.describe_to runner
+              test_case.describe_to runner
             end
 
             it 'skips, rather than executing the second step' do
               passing.should_not_receive(:execute)
               passing.should_receive(:skip)
-              test_cases.describe_to runner
+              test_case.describe_to runner
             end
           end
 
@@ -108,14 +107,14 @@ module Cucumber::Core::Test
         context 'when the first test case fails' do
           let(:first_test_case) { Case.new([failing], source) }
           let(:last_test_case)  { Case.new([passing], source) }
-          let(:test_cases)      { [first_test_case, last_test_case].extend(TestCaseCollection) }
+          let(:test_cases)      { [first_test_case, last_test_case] }
 
           it 'reports the results correctly for the following test case' do
             report.should_receive(:after_test_case).with(last_test_case, anything) do |reported_test_case, result|
               result.should be_passed
             end
 
-            test_cases.describe_to runner
+            test_cases.each { |c| c.describe_to runner }
           end
         end
       end
@@ -123,12 +122,4 @@ module Cucumber::Core::Test
 
   end
 
-  module TestCaseCollection
-    def describe_to(visitor, *args)
-      each do |test_case|
-        test_case.describe_to(visitor, *args)
-      end
-      self
-    end
-  end
 end
