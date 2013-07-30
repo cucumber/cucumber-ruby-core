@@ -41,6 +41,10 @@ module Cucumber
           @content
         end
 
+        def to_s
+          to_str
+        end
+
         def gsub(*args)
           @content.gsub(*args)
         end

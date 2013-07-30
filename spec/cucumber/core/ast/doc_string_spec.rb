@@ -61,6 +61,10 @@ module Cucumber
             'expected content'.should include(doc_string)
           end
 
+          it 'allows explicit convertion to a String' do
+            doc_string.to_s.should == 'content'
+          end
+
           it 'delegates #gsub to the content string' do
             doc_string.gsub(/n/, '_').should == 'co_te_t'
           end
