@@ -1,4 +1,6 @@
 # encoding: UTF-8¬
+require 'cucumber/initializer'
+
 module Cucumber
   module Core
     module Test
@@ -22,8 +24,15 @@ module Cucumber
 
         end
 
-        Passed = Struct.new(:duration) do
+        class Passed
           include Result.status_queries :passed
+          include Cucumber.initializer(:duration)
+          attr_reader :duration
+
+          def initialize(duration)
+            raise ArgumentError unless duration
+            super
+          end
 
           def describe_to(visitor, *args)
             visitor.passed(*args)
@@ -42,13 +51,20 @@ module Cucumber
           end
         end
 
-        Failed = Struct.new(:duration, :exception) do
+        class Failed
           include Result.status_queries :failed
+          include Cucumber.initializer(:duration, :exception)
+          attr_reader :duration, :exception
+
+          def initialize(duration, exception)
+            raise ArgumentError unless duration && exception
+            super
+          end
 
           def describe_to(visitor, *args)
             visitor.failed(*args)
             visitor.duration(duration, *args)
-            visitor.exception(exception, *args)
+            visitor.exception(exception, *args) if exception
             self
           end
 

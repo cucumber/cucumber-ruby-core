@@ -25,6 +25,10 @@ module Cucumber::Core::Test
         result.duration.should == duration
       end
 
+      it "requires the constructor argument" do
+        expect { Result::Passed.new }.to raise_error(ArgumentError)
+      end
+
       it { should     be_passed    }
       it { should_not be_failed    }
       it { should_not be_undefined }
@@ -46,6 +50,11 @@ module Cucumber::Core::Test
 
       it "has a duration" do
         result.duration.should == duration
+      end
+
+      it "requires both constructor arguments" do
+        expect { Result::Failed.new }.to raise_error(ArgumentError)
+        expect { Result::Failed.new(duration) }.to raise_error(ArgumentError)
       end
 
       it { should_not be_passed    }

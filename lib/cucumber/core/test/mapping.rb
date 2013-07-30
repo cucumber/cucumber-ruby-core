@@ -1,4 +1,5 @@
 require 'cucumber/core/test/result'
+require 'cucumber/core/test/timer'
 
 module Cucumber
   module Core
@@ -35,22 +36,6 @@ module Cucumber
 
         def skipped
           Result::Skipped.new
-        end
-
-        class Timer
-          def start
-            @start_time = time_in_nanoseconds
-          end
-
-          def duration
-            time_in_nanoseconds - @start_time
-          end
-
-          private
-
-          def time_in_nanoseconds
-            Time.now.nsec
-          end
         end
       end
 

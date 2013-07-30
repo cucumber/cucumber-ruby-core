@@ -1,4 +1,5 @@
 require 'cucumber/initializer'
+require 'cucumber/core/test/timer'
 
 module Cucumber
   module Core
@@ -31,6 +32,11 @@ module Cucumber
 
         module Status
           class Monitor
+            def initialize
+              @timer = Timer.new
+              @timer.start
+            end
+
             def execute(test_step)
               status.execute(test_step, self)
             end
@@ -39,19 +45,19 @@ module Cucumber
               status.result
             end
 
-            def failed
-              @status = Failing.new
+            def failed(result)
+              @status = Failing.new(@timer, result.exception)
             end
 
-            def passed
-              @status = Passing.new
+            def passed(result)
+              @status = Passing.new(@timer)
             end
 
-            def undefined
+            def undefined(result)
               failed
             end
 
-            def exception(exception)
+            def exception(exception, result)
             end
 
             def duration(*)
@@ -66,7 +72,8 @@ module Cucumber
 
           class Unknown
             def execute(test_step, monitor)
-              test_step.execute.describe_to(monitor)
+              result = test_step.execute
+              result.describe_to(monitor, result)
             end
 
             def result
@@ -75,18 +82,22 @@ module Cucumber
           end
 
           class Passing < Unknown
+            def initialize(timer)
+              @timer = timer
+            end
+
             def result
-              Result::Passed.new
+              Result::Passed.new(@timer.duration)
             end
           end
 
-          class Failing
+          Failing = Struct.new(:timer, :exception) do
             def execute(test_step, monitor)
               test_step.skip
             end
 
             def result
-              Result::Failed.new
+              Result::Failed.new(timer.duration, exception)
             end
           end
         end
