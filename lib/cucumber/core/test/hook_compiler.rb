@@ -23,6 +23,10 @@ module Cucumber
         def skip
           @mapping.skip
         end
+
+        def map
+          self
+        end
       end
 
       class HookCompiler
