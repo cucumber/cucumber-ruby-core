@@ -1,18 +1,21 @@
 require 'cucumber/core/gherkin/writer/helpers'
+require 'cucumber/core/gherkin/document'
 
 module Cucumber
   module Core
     module Gherkin
+
       module Writer
         NEW_LINE = ''
-        def gherkin(&source)
-          builder = Gherkin.new(&source)
+        def gherkin(uri = nil, &source)
+          uri ||= 'features/test.feature'
+          builder = Gherkin.new(uri, &source)
           builder.build
         end
 
         class Gherkin
-          def initialize(&source)
-            @source = source
+          def initialize(uri, &source)
+            @uri, @source = uri, source
           end
 
           def feature(*args, &source)
@@ -24,7 +27,7 @@ module Cucumber
 
           def build
             instance_exec(&@source)
-            @feature.build.join("\n")
+            Document.new(@uri, @feature.build.join("\n"))
           end
         end
 

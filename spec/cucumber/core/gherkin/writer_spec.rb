@@ -5,6 +5,18 @@ module Cucumber::Core::Gherkin
   describe Writer do
     include Writer
 
+    context 'specifying uri' do
+      it 'generates a uri by default' do
+        source = gherkin { feature }
+        source.uri.should == 'features/test.feature'
+      end
+
+      it 'allows you to specify a URI' do
+        source = gherkin('features/path/to/my.feature') { feature }
+        source.uri.should == 'features/path/to/my.feature'
+      end
+    end
+
     context 'a feature' do
 
       it 'generates the feature statement' do
@@ -68,7 +80,7 @@ module Cucumber::Core::Gherkin
             end
           end
 
-          source.should =~ /Scenario:/
+          source.to_s.should =~ /Scenario:/
         end
 
         context 'when a description is provided' do
@@ -104,7 +116,7 @@ module Cucumber::Core::Gherkin
               end
             end
 
-            source.should =~ /Given passing\Z/m
+            source.to_s.should =~ /Given passing\Z/m
           end
 
           context 'when a docstring is provided' do
@@ -180,7 +192,7 @@ module Cucumber::Core::Gherkin
               end
             end
 
-            source.should == <<-END.unindent
+            source.should eq <<-END.unindent
             Feature:
 
               Scenario Outline:

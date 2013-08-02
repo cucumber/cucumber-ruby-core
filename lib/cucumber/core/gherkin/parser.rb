@@ -9,16 +9,16 @@ module Cucumber
       class Parser
         include Cucumber.initializer(:receiver)
 
-        def document(source, path)
-          builder = AstBuilder.new(path)
+        def document(document)
+          builder = AstBuilder.new(document.uri)
           parser = ::Gherkin::Parser::Parser.new(builder, true, "root", false)
 
           begin
-            parser.parse(source, path, 0)
+            parser.parse(document.body, document.uri, 0)
             builder.language = parser.i18n_language
             receiver.feature builder.result
           rescue *PARSER_ERRORS => e
-            raise Core::Gherkin::ParseError.new("#{path}: #{e.message}")
+            raise Core::Gherkin::ParseError.new("#{document.uri}: #{e.message}")
           end
         end
 

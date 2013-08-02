@@ -9,22 +9,15 @@ module Cucumber
       describe Parser do
         let(:receiver) { double }
         let(:parser)   { Parser.new(receiver) }
-        let(:path)     { 'path_to/the.feature' }
         let(:visitor)  { double }
 
         def parse
-          parser.document(source, path)
-        end
-
-        def feature
-          result = nil
-          receiver.stub(:feature) { |feature| result = feature }
-          parse
-          result
+          parser.document(source)
         end
 
         context "for invalid gherkin" do
-          let(:source) { "not gherkin" }
+          let(:source) { Gherkin::Document.new(path, 'not gherkin') }
+          let(:path)   { 'path_to/the.feature' }
 
           it "raises an error" do
             expect { parse }.to raise_error(ParseError) do |error|
@@ -36,9 +29,14 @@ module Cucumber
 
         include Writer
         def self.source(&block)
-          let(:source) do
-            gherkin(&block)
-          end
+          let(:source) { gherkin(&block) }
+        end
+
+        def feature
+          result = nil
+          receiver.stub(:feature) { |feature| result = feature }
+          parse
+          result
         end
 
         context "when the Gherkin has a language header" do

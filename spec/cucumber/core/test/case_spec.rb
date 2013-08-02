@@ -133,11 +133,11 @@ module Cucumber
 
         describe "#language" do
           it 'takes its language from the feature' do
-            gherkin = %{# language: en-pirate
+            gherkin = Gherkin::Document.new('features/treasure.feature', %{# language: en-pirate
               Ahoy matey!: Treasure map
                 Heave to: Find the treasure
                   Gangway!: a map
-            }
+            })
             receiver = double
             receiver.should_receive(:test_case) do |test_case|
               test_case.language.iso_code.should == 'en-pirate'

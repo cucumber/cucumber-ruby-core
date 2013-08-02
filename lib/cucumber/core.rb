@@ -10,7 +10,7 @@ module Cucumber
     def parse(gherkin_documents, compiler)
       parser = Core::Gherkin::Parser.new(compiler)
       gherkin_documents.map do |document|
-        parser.document(document, 'UNKNOWN')
+        parser.document(document)
       end
       self
     end
