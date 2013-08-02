@@ -50,6 +50,34 @@ module Cucumber
         ], visitor)
       end
 
+      it "filters out test cases based on a tag expression" do
+        visitor = double.as_null_object
+        visitor.should_receive(:test_case).exactly(1).times
+
+        gherkin = gherkin do
+          feature do
+            scenario tags: '@a' do
+              step
+            end
+
+            scenario_outline do
+              step '<arg>'
+
+              examples do
+                row 'arg'
+                row 'x'
+              end
+
+              examples tags: '@a' do
+                row 'arg'
+                row 'y'
+              end
+            end
+          end
+        end
+
+        compile [gherkin], visitor, filter: '~@a'
+      end
     end
 
     describe "executing a test suite" do
@@ -167,6 +195,30 @@ module Cucumber
           report.test_steps.total.should eq(6)
           report.test_steps.total_failed.should eq(2)
         end
+      end
+
+      it "filters test cases by tag" do
+        gherkin = gherkin do
+          feature do
+            scenario do
+              step
+            end
+
+            scenario tags: '@a @b' do
+              step
+            end
+
+            scenario tags: '@a' do
+              step
+            end
+          end
+        end
+        report = SummaryReport.new
+        mappings = HookTestMappings.new
+
+        execute [gherkin], mappings, report, filter: '@a'
+
+        report.test_cases.total.should eq(2)
       end
     end
   end
