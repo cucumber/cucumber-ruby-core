@@ -283,7 +283,7 @@ module Cucumber
               number = 0
               raw_examples.map do |row|
                 number += 1
-                header.build_row(row.cells, number)
+                header.build_row(row.cells, number, location.on_line(row.line))
               end
             end
 

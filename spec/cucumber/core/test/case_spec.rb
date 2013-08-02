@@ -87,6 +87,51 @@ module Cucumber
           end
         end
 
+        describe "#location" do
+          context "created from a scenario" do
+            it "takes its location from the location of the scenario" do
+              gherkin = gherkin('features/foo.feature') do
+                feature do
+                  scenario do
+                    step
+                  end
+                end
+              end
+              receiver = double
+              receiver.should_receive(:test_case) do |test_case|
+                test_case.location.to_s.should == 'features/foo.feature:3'
+              end
+              compile([gherkin], receiver)
+            end
+          end
+
+          context "created from a scenario outline example" do
+            it "takes its location from the location of the scenario outline example row" do
+              gherkin = gherkin('features/foo.feature') do
+                feature do
+                  scenario_outline do
+                    step 'passing with arg'
+
+                    examples do
+                      row 'arg'
+                      row '1'
+                      row '2'
+                    end
+                  end
+                end
+              end
+              receiver = double
+              receiver.should_receive(:test_case) do |test_case|
+                test_case.location.to_s.should == 'features/foo.feature:8'
+              end.once.ordered
+              receiver.should_receive(:test_case) do |test_case|
+                test_case.location.to_s.should == 'features/foo.feature:9'
+              end.once.ordered
+              compile [gherkin], receiver
+            end
+          end
+        end
+
         describe "#tags" do
           it "includes all tags from the parent feature" do
             gherkin = gherkin do
