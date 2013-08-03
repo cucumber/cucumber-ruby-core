@@ -5,13 +5,11 @@ require 'cucumber/core/test/step'
 module Cucumber
   module Core
     class Compiler
-      def initialize(receiver)
-        case_builder = TestCaseBuilder.new(receiver)
-        @compiler = FeatureCompiler.new(case_builder)
-      end
+      include Cucumber.initializer(:receiver)
 
       def feature(feature)
-        feature.describe_to(@compiler)
+        compiler = FeatureCompiler.new(TestCaseBuilder.new(receiver))
+        feature.describe_to(compiler)
         self
       end
 

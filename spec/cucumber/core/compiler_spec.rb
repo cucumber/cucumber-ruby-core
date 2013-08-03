@@ -53,6 +53,9 @@ module Cucumber::Core
       gherkin_documents = [
         gherkin do
           feature do
+            background do
+              step 'passing'
+            end
             scenario do
               step 'passing'
             end
@@ -60,6 +63,9 @@ module Cucumber::Core
         end,
         gherkin do
           feature do
+            background do
+              step 'passing'
+            end
             scenario do
               step 'passing'
             end
@@ -68,7 +74,7 @@ module Cucumber::Core
       ]
       compile(gherkin_documents) do |visitor|
         visitor.should_receive(:test_case).exactly(2).times.and_yield
-        visitor.should_receive(:test_step).exactly(2).times
+        visitor.should_receive(:test_step).exactly(4).times
       end
     end
 
