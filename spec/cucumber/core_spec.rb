@@ -76,7 +76,7 @@ module Cucumber
           end
         end
 
-        compile [gherkin], visitor, filter: '~@a'
+        compile [gherkin], visitor, [[Cucumber::Core::Test::TagFilter, ['~@a']]]
       end
     end
 
@@ -197,6 +197,7 @@ module Cucumber
         end
       end
 
+require 'cucumber/core/test/tag_filter'
       it "filters test cases by tag" do
         gherkin = gherkin do
           feature do
@@ -216,7 +217,7 @@ module Cucumber
         report = SummaryReport.new
         mappings = HookTestMappings.new
 
-        execute [gherkin], mappings, report, filter: '@a'
+        execute [gherkin], mappings, report, [[Cucumber::Core::Test::TagFilter, ['@a']]]
 
         report.test_cases.total.should eq(2)
       end

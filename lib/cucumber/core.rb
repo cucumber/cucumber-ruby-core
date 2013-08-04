@@ -3,7 +3,6 @@ require 'cucumber/core/compiler'
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/mapper'
 require 'cucumber/core/test/hook_compiler'
-require 'cucumber/core/test/tag_filter'
 
 module Cucumber
   module Core
@@ -16,20 +15,20 @@ module Cucumber
       self
     end
 
-    def compile(gherkin_documents, receiver, options = {})
-      if options.key?(:filter)
-        receiver = Test::TagFilter.new(options[:filter], receiver)
+    def compile(gherkin_documents, receiver, filters = [])
+      filters.each do |filter_type, args|
+        receiver = filter_type.new(*args + [receiver])
       end
       compiler = Compiler.new(receiver)
       parse gherkin_documents, compiler
       self
     end
 
-    def execute(gherkin_documents, mappings, report, options = {})
-      runner = Test::Runner.new(report)
-      hook_compiler = Test::HookCompiler.new(mappings, runner)
-      mapper = Test::Mapper.new(mappings, hook_compiler)
-      compile gherkin_documents, mapper, options
+    def execute(gherkin_documents, mappings, report, filters = [])
+      receiver = Test::Runner.new(report)
+      filters << [Test::HookCompiler, [mappings]]
+      filters << [Test::Mapper, [mappings]]
+      compile gherkin_documents, receiver, filters
       self
     end
 
