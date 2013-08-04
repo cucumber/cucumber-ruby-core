@@ -45,22 +45,27 @@ module Cucumber
               status.result
             end
 
-            def failed(result)
-              @status = Failing.new(@timer, result.exception)
+            def failed(step_result)
+              @status = Failing.new(@timer, step_result)
+              self
             end
 
-            def passed(result)
+            def passed(step_result)
               @status = Passing.new(@timer)
+              self
             end
 
-            def undefined(result)
-              failed
+            def undefined(step_result)
+              failed(step_result)
+              self
             end
 
-            def exception(exception, result)
+            def exception(step_exception, step_result)
+              self
             end
 
-            def duration(*)
+            def duration(step_duration, step_result)
+              self
             end
 
             private
@@ -91,13 +96,13 @@ module Cucumber
             end
           end
 
-          Failing = Struct.new(:timer, :exception) do
+          Failing = Struct.new(:timer, :step_result) do
             def execute(test_step, monitor)
               test_step.skip
             end
 
             def result
-              Result::Failed.new(timer.duration, exception)
+              step_result.with_duration(timer.duration)
             end
           end
         end

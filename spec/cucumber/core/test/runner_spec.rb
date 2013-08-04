@@ -11,11 +11,8 @@ module Cucumber::Core::Test
     let(:report)    { double.as_null_object }
     let(:passing)   { Step.new([double]).map {} }
     let(:failing)   { Step.new([double]).map { raise exception } }
+    let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
-
-    # TODO: Bugs I think I've discovered by refactoring:
-    it "marks a test case result as failed(undefined) when it has no steps"
-    it "marks a test case result as failed(undefined) when a step is undefined"
 
     context "reporting the duration of a test case" do
       before do
@@ -82,6 +79,17 @@ module Cucumber::Core::Test
           it 'reports a passing test case' do
             report.should_receive(:after_test_case) do |test_case, result|
               result.should be_passed
+            end
+            test_case.describe_to runner
+          end
+        end
+
+        context 'an undefined step' do
+          let(:test_steps) { [ undefined ]  }
+
+          it 'reports an undefined test case' do
+            report.should_receive(:after_test_case) do |test_case, result|
+              result.should be_undefined
             end
             test_case.describe_to runner
           end

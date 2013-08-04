@@ -91,10 +91,6 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
-      it "has no duration" do
-        expect { result.duration }.to raise_error NoMethodError
-      end
-
       it { should_not be_passed    }
       it { should_not be_failed    }
       it { should     be_undefined }
