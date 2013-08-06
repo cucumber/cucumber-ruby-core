@@ -27,6 +27,10 @@ module Cucumber
         def map
           self
         end
+
+        def inspect
+          "#{self.class}"
+        end
       end
 
       class HookCompiler

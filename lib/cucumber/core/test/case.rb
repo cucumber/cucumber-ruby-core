@@ -52,6 +52,10 @@ module Cucumber
           source.last.location
         end
 
+        def inspect
+          "#{self.class}: #{location}"
+        end
+
         private
 
         def feature

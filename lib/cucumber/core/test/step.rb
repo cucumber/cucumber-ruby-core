@@ -44,8 +44,12 @@ module Cucumber
           self.class.new(source, Test::Mapping.new(&block))
         end
 
+        def location
+          step.location
+        end
+
         def inspect
-          "#{name}: #{@mapping.class}"
+          "#{self.class}: #{location}"
         end
 
         private
