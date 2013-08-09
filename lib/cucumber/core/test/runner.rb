@@ -42,16 +42,16 @@ module Cucumber
             end
 
             def result
-              status.result
+              status.result(@timer.duration)
             end
 
             def failed(step_result)
-              @status = Failing.new(@timer, step_result)
+              @status = Failing.new(step_result)
               self
             end
 
             def passed(step_result)
-              @status = Passing.new(@timer)
+              @status = Passing.new
               self
             end
 
@@ -81,28 +81,24 @@ module Cucumber
               result.describe_to(monitor, result)
             end
 
-            def result
+            def result(duration)
               Result::Unknown.new
             end
           end
 
           class Passing < Unknown
-            def initialize(timer)
-              @timer = timer
-            end
-
-            def result
-              Result::Passed.new(@timer.duration)
+            def result(duration)
+              Result::Passed.new(duration)
             end
           end
 
-          Failing = Struct.new(:timer, :step_result) do
+          Failing = Struct.new(:step_result) do
             def execute(test_step, monitor)
               test_step.skip
             end
 
-            def result
-              step_result.with_duration(timer.duration)
+            def result(duration)
+              step_result.with_duration(duration)
             end
           end
         end

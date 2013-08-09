@@ -197,7 +197,7 @@ module Cucumber
         end
       end
 
-require 'cucumber/core/test/tag_filter'
+      require 'cucumber/core/test/tag_filter'
       it "filters test cases by tag" do
         gherkin = gherkin do
           feature do
