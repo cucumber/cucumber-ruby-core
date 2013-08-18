@@ -251,8 +251,6 @@ module Cucumber
         TO_S_PREFIXES[:comment]   = '(+) '
         TO_S_PREFIXES[:undefined] = '(-) '
 
-        protected
-
         def build_hashes
           cells_rows[1..-1].map do |row|
             row.to_hash

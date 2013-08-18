@@ -29,6 +29,10 @@ module Cucumber
             @cells = cells
           end
 
+          def values
+            @cells
+          end
+
           def ==(other)
             other == @cells
           end

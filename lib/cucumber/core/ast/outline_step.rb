@@ -30,7 +30,11 @@ module Cucumber
         end
 
         def children
-          []
+          # TODO use a null object
+          # TODO remove duplication with Step
+          # TODO spec
+          return [] unless @multiline_arg
+          [@multiline_arg]
         end
 
         def replace_multiline_arg(example_row)
