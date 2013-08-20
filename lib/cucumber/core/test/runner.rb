@@ -33,8 +33,7 @@ module Cucumber
         module Status
           class Monitor
             def initialize
-              @timer = Timer.new
-              @timer.start
+              @timer = Timer.new.start
             end
 
             def execute(test_step)

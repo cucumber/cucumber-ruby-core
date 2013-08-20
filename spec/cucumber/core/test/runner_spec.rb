@@ -19,6 +19,7 @@ module Cucumber::Core::Test
         time = double
         Time.stub(now: time)
         time.stub(:nsec).and_return(946752000, 946752001)
+        time.stub(:to_i).and_return(1377009235, 1377009235)
       end
 
       context "for a passing test case" do
