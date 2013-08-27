@@ -25,6 +25,10 @@ module Cucumber
           end
         end
 
+        def to_s
+          value
+        end
+
         def to_sexp
           (value.nil? || value == '') ? nil : [:comment, value]
         end
