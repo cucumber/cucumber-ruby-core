@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.email       = 'cukes@googlegroups.com'
   s.homepage    = "http://cukes.info"
   s.platform    = Gem::Platform::RUBY
+  s.license     = "MIT"
   s.required_ruby_version = ">= 1.9.3"
 
   s.add_dependency 'gherkin', '~> 2.12.0'
