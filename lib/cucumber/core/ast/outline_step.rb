@@ -1,3 +1,4 @@
+require 'cucumber/core/ast/location'
 require 'cucumber/core/ast/describes_itself'
 require 'cucumber/core/ast/step'
 
@@ -6,6 +7,7 @@ module Cucumber
     module Ast
 
       class OutlineStep
+        include HasLocation
         include DescribesItself
 
         attr_reader :language, :location, :keyword, :name, :multiline_arg
