@@ -2,18 +2,32 @@ require 'cucumber/core/ast/examples_table'
 
 module Cucumber::Core::Ast
   describe ExamplesTable do
-    let(:location) { double }
+    let(:location) { double(:to_s => 'file.feature:8') }
 
     describe ExamplesTable::Header do
+      let(:header) { ExamplesTable::Header.new(%w{foo bar baz}, location) }
+
+      describe 'location' do
+        it 'knows the file and line number' do
+          header.file_colon_line.should == 'file.feature:8'
+        end
+      end
+
       context 'building a row' do
         it 'includes the header values as keys' do
-          header = ExamplesTable::Header.new(%w{foo bar baz})
           header.build_row(%w{1 2 3}, 1, location).should ==
             ExamplesTable::Row.new({'foo' => '1', 'bar' => '2', 'baz' => '3'}, 1, location)
         end
       end
     end
     describe ExamplesTable::Row do
+
+      describe 'location' do
+        it 'knows the file and line number' do
+          row = ExamplesTable::Row.new({}, 1, location)
+          row.file_colon_line.should == 'file.feature:8'
+        end
+      end
 
       describe "expanding a string" do
         context "when an argument matches" do
