@@ -22,6 +22,13 @@ module Cucumber::Core::Ast
     end
     describe ExamplesTable::Row do
 
+      describe 'location' do
+        it 'knows the file and line number' do
+          row = ExamplesTable::Row.new({}, 1, location)
+          row.file_colon_line.should == 'file.feature:8'
+        end
+      end
+
       describe "expanding a string" do
         context "when an argument matches" do
           it "replaces the argument with the value from the row" do

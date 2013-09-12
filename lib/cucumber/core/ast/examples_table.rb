@@ -50,6 +50,7 @@ module Cucumber
 
         class Row
           include DescribesItself
+          include HasLocation
 
           attr_reader :number, :location
 
