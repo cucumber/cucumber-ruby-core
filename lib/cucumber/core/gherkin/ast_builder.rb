@@ -275,7 +275,7 @@ module Cucumber
 
             def header
               row = node.rows[0]
-              Ast::ExamplesTable::Header.new(row.cells)
+              Ast::ExamplesTable::Header.new(row.cells, location)
             end
 
             def example_rows

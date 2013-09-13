@@ -1,5 +1,6 @@
 require 'cucumber/initializer'
 require 'cucumber/core/ast/describes_itself'
+require 'cucumber/core/ast/location'
 
 module Cucumber
   module Core
@@ -25,8 +26,13 @@ module Cucumber
         end
 
         class Header
-          def initialize(cells)
+          include HasLocation
+
+          attr_reader :location
+
+          def initialize(cells, location)
             @cells = cells
+            @location = location
           end
 
           def values
@@ -44,6 +50,7 @@ module Cucumber
 
         class Row
           include DescribesItself
+          include HasLocation
 
           attr_reader :number, :location
 

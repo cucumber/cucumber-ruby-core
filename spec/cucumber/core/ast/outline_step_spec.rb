@@ -7,12 +7,24 @@ module Cucumber
   module Core
     module Ast
       describe OutlineStep do
-        describe "converting to a Step" do
-          let(:outline_step) { OutlineStep.new(language, location, keyword, name) }
-          let(:language) { double }
-          let(:location) { double }
-          let(:keyword)  { double }
+        let(:outline_step) { OutlineStep.new(language, location, keyword, name) }
+        let(:language) { double }
+        let(:location) { double }
+        let(:keyword)  { double }
+        let(:name)     { 'anything' }
 
+        describe 'location' do
+          it "has a location" do
+            outline_step.should respond_to(:location)
+          end
+
+          it 'knows the file and line' do
+            location.stub(:to_s) { 'file_name:8' }
+            outline_step.file_colon_line.should == 'file_name:8'
+          end
+        end
+
+        describe "converting to a Step" do
           context "a single argument in the name" do
             let(:name) { 'a <color> cucumber' }
 
