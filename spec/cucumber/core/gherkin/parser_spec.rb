@@ -98,6 +98,23 @@ module Cucumber
           end
         end
 
+        context "a Scenario with a Comment" do
+          source do
+            feature do
+              scenario(comment: 'wow')
+            end
+          end
+
+          it "parses the comment into the AST" do
+            visitor = double
+            visitor.stub(:feature).and_yield
+            visitor.should_receive(:scenario) do |scenario|
+              scenario.comment.to_s.should == "# wow"
+            end
+            feature.describe_to(visitor)
+          end
+        end
+
         context "a Scenario Outline" do
           source do
             feature do

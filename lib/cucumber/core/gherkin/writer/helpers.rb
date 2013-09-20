@@ -31,8 +31,16 @@ module Cucumber
             tags
           end
 
+          def comment_statement
+            "# #{comment}" if comment
+          end
+
           def tags
             options[:tags]
+          end
+
+          def comment
+            options[:comment]
           end
 
           module HasDefaultKeyword

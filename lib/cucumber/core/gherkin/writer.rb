@@ -53,6 +53,7 @@ module Cucumber
           def statements
             prepare_statements language_statement,
               tag_statement,
+              comment_statement,
               name_statement,
               description_statement,
               NEW_LINE
@@ -91,7 +92,10 @@ module Cucumber
 
           private
           def statements
-            prepare_statements tag_statement, name_statement, description_statement
+            prepare_statements tag_statement,
+              comment_statement,
+              name_statement,
+              description_statement
           end
         end
 

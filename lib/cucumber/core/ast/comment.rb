@@ -9,7 +9,7 @@ module Cucumber
       #
       # This gets parsed into a Comment with value <tt>"# Lorem ipsum\n# dolor sit amet\n"</tt>
       #
-      class Comment #:nodoc:
+      class Comment
         include Cucumber.initializer(:value)
 
         def empty?

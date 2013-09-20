@@ -72,6 +72,16 @@ module Cucumber::Core::Gherkin
         end
       end
 
+      context 'when a comment is supplied' do
+        it 'inserts a comment' do
+          source = gherkin do
+            feature comment: 'wow'
+          end
+
+          source.to_s.should == "# wow\nFeature:\n"
+        end
+      end
+
       context 'with a scenario' do
         it 'includes the scenario statement' do
           source = gherkin do
@@ -81,6 +91,22 @@ module Cucumber::Core::Gherkin
           end
 
           source.to_s.should =~ /Scenario:/
+        end
+
+        context 'when a comment is provided' do
+          it 'includes the comment in the scenario statement' do
+            source = gherkin do
+              feature do
+                scenario comment: 'wow'
+              end
+            end
+            source.to_s.should == <<-END.unindent
+            Feature:
+
+              # wow
+              Scenario:
+            END
+          end
         end
 
         context 'when a description is provided' do
