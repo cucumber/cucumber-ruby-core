@@ -61,6 +61,24 @@ module Cucumber::Core::Ast
           row.values.should == ['1', '2']
         end
       end
+
+      describe 'equality' do
+        let(:data) { {} }
+        let(:number) { double }
+        let(:location) { double }
+        let(:original) { ExamplesTable::Row.new(data, number, location) }
+
+        it 'is equal to another instance with the same data, number and location' do
+          original.should eq ExamplesTable::Row.new(data, number, location)
+        end
+
+        it 'is not equal to another instance with different data, number or location' do
+          original.should_not eq ExamplesTable::Row.new({'x' => 'y'}, number, location)
+          original.should_not eq ExamplesTable::Row.new(data, double, location)
+          original.should_not eq ExamplesTable::Row.new(data, number, double)
+        end
+
+      end
     end
   end
 end

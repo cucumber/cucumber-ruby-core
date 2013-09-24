@@ -62,7 +62,9 @@ module Cucumber
           end
 
           def ==(other)
-            other == @data
+            other.number == number &&
+              other.location == location &&
+              other.data == data
           end
 
           def values
@@ -80,6 +82,10 @@ module Cucumber
           def inspect
             @data.inspect
           end
+
+          protected
+
+          attr_reader :data
 
           private
 
