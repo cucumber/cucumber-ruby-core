@@ -101,7 +101,8 @@ module Cucumber
         context "a Scenario with a Comment" do
           source do
             feature do
-              scenario(comment: 'wow')
+              comment 'wow'
+              scenario
             end
           end
 
