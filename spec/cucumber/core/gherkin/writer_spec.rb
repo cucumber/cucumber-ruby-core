@@ -75,10 +75,12 @@ module Cucumber::Core::Gherkin
       context 'when a comment is supplied' do
         it 'inserts a comment' do
           source = gherkin do
-            feature comment: 'wow'
+            comment 'wow'
+            comment 'great'
+            feature
           end
 
-          source.to_s.should == "# wow\nFeature:\n"
+          source.to_s.should == "# wow\n# great\nFeature:\n"
         end
       end
 
@@ -97,7 +99,8 @@ module Cucumber::Core::Gherkin
           it 'includes the comment in the scenario statement' do
             source = gherkin do
               feature do
-                scenario comment: 'wow'
+                comment 'wow'
+                scenario
               end
             end
             source.to_s.should == <<-END.unindent
@@ -233,7 +236,9 @@ module Cucumber::Core::Gherkin
 
     it 'generates a complex feature' do
       source = gherkin do
+        comment 'wow'
         feature 'Fully featured', language: 'en', tags: '@always' do
+          comment 'cool'
           background do
             step 'passing'
           end
@@ -242,7 +247,9 @@ module Cucumber::Core::Gherkin
             step 'passing'
           end
 
+          comment 'here'
           scenario 'with doc string', tags: '@first @second' do
+            comment 'and here'
             step 'passing'
             step 'failing', keyword: 'When' do
               doc_string <<-END
@@ -261,11 +268,13 @@ module Cucumber::Core::Gherkin
             end
           end
 
+          comment 'yay'
           scenario_outline 'eating' do
             step 'there are <start> cucumbers'
             step 'I eat <eat> cucumbers', keyword: 'When'
             step 'I should have <left> cucumbers', keyword: 'Then'
 
+            comment 'hmmm'
             examples do
               row 'start', 'eat', 'left'
               row '12',    '5',   '7'
@@ -275,19 +284,23 @@ module Cucumber::Core::Gherkin
         end
       end
 
-      expected = <<-END
+      source.to_s.should eq <<-END.unindent
       # language: en
+      # wow
       @always
       Feature: Fully featured
 
+        # cool
         Background:
           Given passing
 
         Scenario:
           Given passing
 
+        # here
         @first @second
         Scenario: with doc string
+          # and here
           Given passing
           When failing
             """
@@ -300,18 +313,19 @@ module Cucumber::Core::Gherkin
             | name   | age | location   |
             | Janine | 43  | Antarctica |
 
+        # yay
         Scenario Outline: eating
           Given there are <start> cucumbers
           When I eat <eat> cucumbers
           Then I should have <left> cucumbers
 
+          # hmmm
           Examples:
             | start | eat | left |
             | 12    | 5   | 7    |
             | 20    | 5   | 15   |
       END
 
-      source.should == expected.unindent
     end
   end
 end

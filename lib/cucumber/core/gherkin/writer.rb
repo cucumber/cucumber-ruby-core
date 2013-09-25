@@ -18,8 +18,16 @@ module Cucumber
             @uri, @source = uri, source
           end
 
+          def comment(line)
+            comment_lines << "# #{line}"
+          end
+
+          def comment_lines
+            @comment_lines ||= []
+          end
+
           def feature(*args, &source)
-            @feature = Feature.new(*args).tap do |builder|
+            @feature = Feature.new(comment_lines, *args).tap do |builder|
               builder.instance_exec(&source) if source
             end
             self
@@ -52,8 +60,8 @@ module Cucumber
 
           def statements
             prepare_statements language_statement,
+              comments_statement,
               tag_statement,
-              comment_statement,
               name_statement,
               description_statement,
               NEW_LINE
@@ -76,7 +84,7 @@ module Cucumber
 
           private
           def statements
-            prepare_statements tag_statement, name_statement, description_statement
+            prepare_statements comments_statement, tag_statement, name_statement, description_statement
           end
         end
 
@@ -92,8 +100,8 @@ module Cucumber
 
           private
           def statements
-            prepare_statements tag_statement,
-              comment_statement,
+            prepare_statements comments_statement,
+              tag_statement,
               name_statement,
               description_statement
           end
@@ -111,7 +119,7 @@ module Cucumber
 
           private
           def statements
-            prepare_statements tag_statement, name_statement, description_statement
+            prepare_statements comments_statement, tag_statement, name_statement, description_statement
           end
         end
 
@@ -130,7 +138,7 @@ module Cucumber
 
           private
           def statements
-            prepare_statements name_statement
+            prepare_statements comments_statement, name_statement
           end
 
           def name_statement
@@ -141,6 +149,9 @@ module Cucumber
         class Table
           include Indentation.level(6)
           include HasRows
+
+          def initialize(*)
+          end
 
           def build(source)
             source + statements
@@ -196,6 +207,7 @@ module Cucumber
           private
           def statements
             prepare_statements NEW_LINE,
+              comments_statement,
               tag_statement,
               name_statement,
               description_statement,

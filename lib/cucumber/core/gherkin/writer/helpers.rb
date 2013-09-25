@@ -12,12 +12,18 @@ module Cucumber
           private :name, :options
 
           def initialize(*args)
+            @comments = args.shift if args.first.is_a?(Array)
+            @comments ||= []
             @options = args.pop if args.last.is_a?(Hash)
             @options ||= {}
             @name = args.first
           end
 
           private
+
+          def comments_statement
+            @comments
+          end
 
           def keyword
             options.fetch(:keyword) { self.class.keyword }
@@ -31,16 +37,8 @@ module Cucumber
             tags
           end
 
-          def comment_statement
-            "# #{comment}" if comment
-          end
-
           def tags
             options[:tags]
-          end
-
-          def comment
-            options[:comment]
           end
 
           module HasDefaultKeyword
@@ -54,7 +52,28 @@ module Cucumber
           end
         end
 
+        module AcceptsComments
+          def comment(line)
+            comment_lines << "# #{line}"
+          end
+
+          def comment_lines
+            @comment_lines ||= []
+          end
+
+          def slurp_comments
+            # TODO: I can't think of another way to handle this?
+            # When we use the comments, we need to reset the collection
+            # for the next element...
+            slurped_comments = comment_lines.dup
+            @comment_lines = nil
+            slurped_comments
+          end
+        end
+
         module HasElements
+          include AcceptsComments
+
           def self.included(base)
             base.extend HasElementBuilders
           end
@@ -76,13 +95,13 @@ module Cucumber
             private
             def element(name)
               define_method name do |*args, &source|
-              factory_name = String(name).split("_").map(&:capitalize).join
-              factory = Writer.const_get(factory_name)
-              factory.new(*args).tap do |builder|
-                builder.instance_exec(&source) if source
-                elements << builder
-              end
-              self
+                factory_name = String(name).split("_").map(&:capitalize).join
+                factory = Writer.const_get(factory_name)
+                factory.new(slurp_comments, *args).tap do |builder|
+                  builder.instance_exec(&source) if source
+                  elements << builder
+                end
+                self
               end
             end
           end
