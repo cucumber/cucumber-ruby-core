@@ -62,6 +62,7 @@ module Cucumber
           end
 
           def ==(other)
+            return false unless other.class == self.class
             other.number == number &&
               other.location == location &&
               other.data == data
@@ -80,7 +81,7 @@ module Cucumber
           end
 
           def inspect
-            @data.inspect
+            "#{self.class}: #{@data.inspect}"
           end
 
           protected

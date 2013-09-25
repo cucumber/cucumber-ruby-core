@@ -78,6 +78,10 @@ module Cucumber::Core::Ast
           original.should_not eq ExamplesTable::Row.new(data, number, double)
         end
 
+        it 'is not equal to another type of object' do
+          original.should_not eq double(data: data, number: number, location: location)
+        end
+
       end
     end
   end
