@@ -37,8 +37,21 @@ module Cucumber
 
         def location
           raise('Please set @location in the constructor') unless @location
-          raise("@location must be an Ast::Location but is a #{@location.class}") unless @location.is_a?(Location)
           @location
+        end
+
+        def match_location?(queried_location)
+          return true if (tags + comments).any? { |node| node.match_location? queried_location }
+          location == queried_location
+        end
+
+        def tags
+          # will be overriden by nodes that actually have tags
+          []
+        end
+
+        def comments
+          []
         end
       end
     end

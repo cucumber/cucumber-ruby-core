@@ -110,7 +110,7 @@ module Cucumber
             visitor = double
             visitor.stub(:feature).and_yield
             visitor.should_receive(:scenario) do |scenario|
-              scenario.comment.to_s.should == "# wow"
+              scenario.comments.join.should == "# wow"
             end
             feature.describe_to(visitor)
           end

@@ -7,12 +7,13 @@ module Cucumber
     module Ast
 
       class ExamplesTable
+        include HasLocation
         include DescribesItself
 
-        attr_reader :header, :location, :keyword, :name, :tags
+        attr_reader :header, :keyword, :name, :tags, :comments
 
         include Cucumber.initializer(
-          :location, :comment, :tags, :keyword, :name, :description, :header, :example_rows
+          :location, :comments, :tags, :keyword, :name, :description, :header, :example_rows
         )
 
         private
@@ -27,8 +28,6 @@ module Cucumber
 
         class Header
           include HasLocation
-
-          attr_reader :location
 
           def initialize(cells, location)
             @cells = cells
@@ -52,7 +51,7 @@ module Cucumber
           include DescribesItself
           include HasLocation
 
-          attr_reader :number, :location
+          attr_reader :number
 
           def initialize(data, number, location)
             raise ArgumentError, data.to_s unless data.is_a?(Hash)

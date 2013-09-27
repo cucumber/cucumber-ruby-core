@@ -3,9 +3,11 @@ module Cucumber
   module Core
     module Ast
       class Tag
+        include HasLocation
+
         include Cucumber.initializer(:location, :name)
 
-        attr_reader :name, :location
+        attr_reader :name
       end
     end
   end

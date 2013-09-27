@@ -94,8 +94,13 @@ module Cucumber
             Ast::Location.new(file, node.line)
           end
 
-          def comment
-            Ast::Comment.new(node.comments.map{ |comment| comment.value }.join("\n"))
+          def comments
+            node.comments.map do |comment|
+              Ast::Comment.new(
+                Ast::Location.new(file, comment.line), 
+                comment.value
+              )
+            end
           end
         end
 
@@ -113,7 +118,7 @@ module Cucumber
             feature = Ast::Feature.new(
               location,
               background,
-              comment,
+              comments,
               tags,
               node.keyword,
               node.name.lstrip,
@@ -146,7 +151,7 @@ module Cucumber
             background = Ast::Background.new(
               language,
               location,
-              comment,
+              comments,
               node.keyword,
               node.name,
               node.description,
@@ -178,7 +183,7 @@ module Cucumber
               language,
               location,
               background,
-              comment,
+              comments,
               tags,
               feature_tags,
               node.keyword,
@@ -225,7 +230,7 @@ module Cucumber
               language,
               location,
               background,
-              comment,
+              comments,
               tags,
               feature_tags,
               node.keyword,
@@ -265,7 +270,7 @@ module Cucumber
             def result
               Ast::ExamplesTable.new(
                 location,
-                comment,
+                comments,
                 tags,
                 node.keyword,
                 node.name,

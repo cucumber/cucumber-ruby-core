@@ -236,13 +236,11 @@ module Cucumber
             end
 
             it "matches a location on the scenario's comment" do
-              pending("need to add location to Ast::Comment")
               location = Ast::Location.new(file, 6)
               test_case.match_location?(location).should be_true
             end
 
             it "matches a location on the scenario's tags" do
-              pending("need to add location to Ast::Tags")
               location = Ast::Location.new(file, 7)
               test_case.match_location?(location).should be_true
             end
@@ -302,13 +300,11 @@ module Cucumber
             end
 
             it "matches a location on the scenario outline's comment" do
-              pending("need to add location to Ast::Comment")
               location = Ast::Location.new(file, 6)
               test_case.match_location?(location).should be_true
             end
 
             it "matches a location on the scenario outline's tags" do
-              pending("need to add location to Ast::Tags")
               location = Ast::Location.new(file, 7)
               test_case.match_location?(location).should be_true
             end

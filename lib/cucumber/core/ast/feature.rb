@@ -14,9 +14,9 @@ module Cucumber
 
         attr_accessor :language
         attr_reader :feature_elements
-        attr_reader :comment, :background, :tags, :keyword, :location, :title
+        attr_reader :comments, :background, :tags, :keyword, :location, :title
 
-        include Cucumber.initializer(:location, :background, :comment, :tags, :keyword, :title, :description, :feature_elements)
+        include Cucumber.initializer(:location, :background, :comments, :tags, :keyword, :title, :description, :feature_elements)
         def initialize(*)
           super
           feature_elements.each { |e| e.feature = self }

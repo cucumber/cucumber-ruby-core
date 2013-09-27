@@ -15,14 +15,13 @@ module Cucumber
 
         attr_accessor :feature
         attr_reader :feature_tags
-        attr_reader :comment, :tags, :keyword, :background
 
         attr_reader :line
         private :line
 
-        def initialize(language, location, background, comment, tags, feature_tags, keyword, title, description, steps, examples_tables)
-          @language, @location, @background, @comment, @tags, @feature_tags, @keyword, @title, @description, @steps, @examples_tables = language, location, background, comment, tags, feature_tags, keyword, title, description, steps, examples_tables
-        end
+        include Cucumber.initializer(:language, :location, :background, :comments, :tags, :feature_tags, :keyword, :title, :description, :steps, :examples_tables)
+
+        attr_reader :comments, :tags, :keyword, :background, :location
 
         def gherkin_statement(node)
           @gherkin_statement = node

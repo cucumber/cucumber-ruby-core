@@ -49,11 +49,7 @@ module Cucumber
         end
 
         def match_location?(queried_location)
-          all_locations = (
-            [self.location] +
-            test_steps.map(&:location)
-          )
-          all_locations.include? queried_location
+          (test_steps + source).any? { |node| node.match_location? queried_location }
         end
 
         def inspect

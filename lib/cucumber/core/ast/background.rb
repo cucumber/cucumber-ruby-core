@@ -10,10 +10,11 @@ module Cucumber
         include Names
         include HasLocation
         include DescribesItself
-        include Cucumber.initializer(:language, :location, :comment, :keyword, :title, :description, :raw_steps)
+
+        include Cucumber.initializer(:language, :location, :comments, :keyword, :title, :description, :raw_steps)
 
         attr_accessor :feature
-        attr_accessor :comment, :keyword, :location
+        attr_accessor :comments, :keyword, :location
 
         def gherkin_statement(node)
           @gherkin_statement = node

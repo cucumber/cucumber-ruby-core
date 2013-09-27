@@ -48,6 +48,10 @@ module Cucumber
           step.location
         end
 
+        def match_location?(queried_location)
+          location == queried_location
+        end
+
         def inspect
           "#{self.class}: #{location}"
         end
