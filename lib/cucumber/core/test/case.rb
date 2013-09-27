@@ -102,23 +102,24 @@ module Cucumber
           attr_reader :result
 
           def initialize(test_case)
+            @result = []
             test_case.describe_source_to self
           end
 
           def feature(node)
-            @result = node.tags.tags
+            @result += node.tags
           end
 
           def scenario(node)
-            @result += node.tags.tags
+            @result += node.tags
           end
 
           def scenario_outline(node)
-            @result += node.tags.tags
+            @result += node.tags
           end
 
           def examples_table(node)
-            @result += node.tags.tags
+            @result += node.tags
           end
 
           def examples_table_row(*)

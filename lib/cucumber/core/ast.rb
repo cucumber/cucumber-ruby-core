@@ -1,5 +1,5 @@
 require 'cucumber/core/ast/comment'
-require 'cucumber/core/ast/tags'
+require 'cucumber/core/ast/tag'
 require 'cucumber/core/ast/feature'
 require 'cucumber/core/ast/empty_background'
 require 'cucumber/core/ast/background'

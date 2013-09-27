@@ -83,7 +83,11 @@ module Cucumber
           private
 
           def tags
-            Ast::Tags.new(nil, node.tags)
+            node.tags.map do |tag|
+              Ast::Tag.new(
+                Ast::Location.new(file, tag.line),
+                tag.name)
+            end
           end
 
           def location
