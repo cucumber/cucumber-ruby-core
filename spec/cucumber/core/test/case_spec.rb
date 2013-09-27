@@ -194,11 +194,18 @@ module Cucumber
 
         describe "#matching location" do
           let(:file) { 'features/path/to/the.feature' }
+          let(:test_cases) do
+            receiver = double
+            result = []
+            receiver.stub(:test_case) { |test_case| result << test_case }
+            compile [source], receiver
+            result
+          end
 
           context "for a scenario" do
             let(:source) do
               Gherkin::Document.new(file, <<-END.unindent)
-                Feature: test
+                Feature:
 
                   Scenario: one
                     Given one a
@@ -215,12 +222,6 @@ module Cucumber
             end
 
             let(:test_case) do
-              receiver = double
-              test_cases = []
-              receiver.stub(:test_case) do |test_case|
-                test_cases << test_case
-              end
-              compile([source], receiver)
               test_cases.find { |c| c.name == 'two' }
             end
 
@@ -287,12 +288,6 @@ module Cucumber
             end
 
             let(:test_case) do
-              receiver = double
-              test_cases = []
-              receiver.stub(:test_case) do |test_case|
-                test_cases << test_case
-              end
-              compile([source], receiver)
               test_cases.find { |c| c.name == "two, x1 (row 1)" }
             end
 
