@@ -2,6 +2,7 @@ require 'cucumber/core'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
 require 'cucumber/core/test/case'
+require 'unindent'
 
 module Cucumber
   module Core
@@ -188,6 +189,144 @@ module Cucumber
               test_case.language.iso_code.should == 'en-pirate'
             end
             compile([gherkin], receiver)
+          end
+        end
+
+        describe "#matching location" do
+          let(:file) { 'features/path/to/the.feature' }
+
+          context "for a scenario" do
+            let(:source) do
+              Gherkin::Document.new(file, <<-END.unindent)
+                Feature: test
+
+                  Scenario: one
+                    Given one a
+
+                  # comment
+                  @tags
+                  Scenario: two
+                    Given two a
+                    And two b
+
+                  Scenario: three
+                    Given three b
+              END
+            end
+
+            let(:test_case) do
+              receiver = double
+              test_cases = []
+              receiver.stub(:test_case) do |test_case|
+                test_cases << test_case
+              end
+              compile([source], receiver)
+              test_cases.find { |c| c.name == 'two' }
+            end
+
+            it 'matches the precise location of the scenario' do
+              location = Ast::Location.new(file, 8)
+              test_case.match_location?(location).should be_true
+            end
+
+            it 'matches a location on the last step of the scenario' do
+              location = Ast::Location.new(file, 10)
+              test_case.match_location?(location).should be_true
+            end
+
+            it "matches a location on the scenario's comment" do
+              pending("need to add location to Ast::Comment")
+              location = Ast::Location.new(file, 6)
+              test_case.match_location?(location).should be_true
+            end
+
+            it "matches a location on the scenario's tags" do
+              pending("need to add location to Ast::Tags")
+              location = Ast::Location.new(file, 7)
+              test_case.match_location?(location).should be_true
+            end
+
+            it "doesn't match a location after the last step of the scenario" do
+              location = Ast::Location.new(file, 11)
+              test_case.match_location?(location).should be_false
+            end
+
+            it "doesn't match a location before the scenario" do
+              location = Ast::Location.new(file, 5)
+              test_case.match_location?(location).should be_false
+            end
+          end
+
+          context "for a scenario outline" do
+            let(:source) do
+              Gherkin::Document.new(file, <<-END.unindent)
+                Feature: 
+
+                  Scenario: one
+                    Given one a
+
+                  # comment on line 6
+                  @tags-on-line-7
+                  Scenario Outline: two
+                    Given two a
+                    And two <arg>
+
+                    # comment on line 12
+                    @tags-on-line-13
+                    Examples: x1
+                      | arg |
+                      | b   |
+
+                    Examples: x2
+                      | arg |
+                      | c   |
+
+                  Scenario: three
+                    Given three b
+              END
+            end
+
+            let(:test_case) do
+              receiver = double
+              test_cases = []
+              receiver.stub(:test_case) do |test_case|
+                test_cases << test_case
+              end
+              compile([source], receiver)
+              test_cases.find { |c| c.name == "two, x1 (row 1)" }
+            end
+
+            it 'matches the precise location of the scenario outline examples table row' do
+              location = Ast::Location.new(file, 16)
+              test_case.match_location?(location).should be_true
+            end
+
+            it 'matches a location on a step of the scenario outline' do
+              location = Ast::Location.new(file, 10)
+              test_case.match_location?(location).should be_true
+            end
+
+            it "matches a location on the scenario outline's comment" do
+              pending("need to add location to Ast::Comment")
+              location = Ast::Location.new(file, 6)
+              test_case.match_location?(location).should be_true
+            end
+
+            it "matches a location on the scenario outline's tags" do
+              pending("need to add location to Ast::Tags")
+              location = Ast::Location.new(file, 7)
+              test_case.match_location?(location).should be_true
+            end
+
+            it "doesn't match a location after the last row of the examples table" do
+              location = Ast::Location.new(file, 17)
+              test_case.match_location?(location).should be_false
+            end
+
+            it "doesn't match a location before the scenario outline" do
+              location = Ast::Location.new(file, 5)
+              test_case.match_location?(location).should be_false
+            end
           end
         end
       end

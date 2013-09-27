@@ -48,6 +48,14 @@ module Cucumber
           source.last.location
         end
 
+        def match_location?(queried_location)
+          all_locations = (
+            [self.location] +
+            test_steps.map(&:location)
+          )
+          all_locations.include? queried_location
+        end
+
         def inspect
           "<#{self.class}: #{location}>"
         end

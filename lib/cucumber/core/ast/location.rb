@@ -2,12 +2,11 @@ module Cucumber
   module Core
     module Ast
 
-      class Location
-        attr_reader :file, :line
-
+      class Location < Struct.new(:file, :line)
         def initialize(file, line)
-          @file = file || raise(ArgumentError, "file is mandatory")
-          @line = line || raise(ArgumentError, "line is mandatory")
+          file || raise(ArgumentError, "file is mandatory")
+          line || raise(ArgumentError, "line is mandatory")
+          super
         end
 
         def to_s
@@ -16,6 +15,10 @@ module Cucumber
 
         def on_line(new_line)
           Location.new(file, new_line)
+        end
+
+        def inspect
+          "<#{self.class}: #{to_s}>"
         end
       end
 
