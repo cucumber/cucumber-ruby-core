@@ -28,15 +28,11 @@ module Cucumber
         end
 
         def name
-          name_builder = NameBuilder.new
-          describe_source_to name_builder
-          name_builder.result
+          @name ||= NameBuilder.new(self).result
         end
 
         def tags
-          tag_collector = TagCollector.new
-          describe_source_to tag_collector
-          tag_collector.result
+          @tags ||= TagCollector.new(self).result
         end
 
         require 'gherkin/tag_expression'
@@ -53,7 +49,7 @@ module Cucumber
         end
 
         def inspect
-          "#{self.class}: #{location}"
+          "<#{self.class}: #{location}>"
         end
 
         private
@@ -64,6 +60,10 @@ module Cucumber
 
         class NameBuilder
           attr_reader :result
+
+          def initialize(test_case)
+            test_case.describe_source_to self
+          end
 
           def feature(*)
             self
@@ -92,6 +92,10 @@ module Cucumber
 
         class TagCollector
           attr_reader :result
+
+          def initialize(test_case)
+            test_case.describe_source_to self
+          end
 
           def feature(node)
             @result = node.tags.tags
