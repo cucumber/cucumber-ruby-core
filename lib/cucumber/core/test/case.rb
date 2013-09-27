@@ -106,20 +106,11 @@ module Cucumber
             test_case.describe_source_to self
           end
 
-          def feature(node)
-            @result += node.tags
-          end
-
-          def scenario(node)
-            @result += node.tags
-          end
-
-          def scenario_outline(node)
-            @result += node.tags
-          end
-
-          def examples_table(node)
-            @result += node.tags
+          [:feature, :scenario, :scenario_outline, :examples_table].each do |node_name|
+            define_method(node_name) do |node|
+              @result += node.tags
+              self
+            end
           end
 
           def examples_table_row(*)
