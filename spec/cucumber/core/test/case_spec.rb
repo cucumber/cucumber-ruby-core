@@ -227,32 +227,32 @@ module Cucumber
 
             it 'matches the precise location of the scenario' do
               location = Ast::Location.new(file, 8)
-              test_case.match_location?(location).should be_true
+              test_case.match_locations?([location]).should be_true
             end
 
             it 'matches a location on the last step of the scenario' do
               location = Ast::Location.new(file, 10)
-              test_case.match_location?(location).should be_true
+              test_case.match_locations?([location]).should be_true
             end
 
             it "matches a location on the scenario's comment" do
               location = Ast::Location.new(file, 6)
-              test_case.match_location?(location).should be_true
+              test_case.match_locations?([location]).should be_true
             end
 
             it "matches a location on the scenario's tags" do
               location = Ast::Location.new(file, 7)
-              test_case.match_location?(location).should be_true
+              test_case.match_locations?([location]).should be_true
             end
 
             it "doesn't match a location after the last step of the scenario" do
               location = Ast::Location.new(file, 11)
-              test_case.match_location?(location).should be_false
+              test_case.match_locations?([location]).should be_false
             end
 
             it "doesn't match a location before the scenario" do
               location = Ast::Location.new(file, 5)
-              test_case.match_location?(location).should be_false
+              test_case.match_locations?([location]).should be_false
             end
           end
 
@@ -291,32 +291,32 @@ module Cucumber
 
             it 'matches the precise location of the scenario outline examples table row' do
               location = Ast::Location.new(file, 16)
-              test_case.match_location?(location).should be_true
+              test_case.match_locations?([location]).should be_true
             end
 
             it 'matches a location on a step of the scenario outline' do
               location = Ast::Location.new(file, 10)
-              test_case.match_location?(location).should be_true
+              test_case.match_locations?([location]).should be_true
             end
 
             it "matches a location on the scenario outline's comment" do
               location = Ast::Location.new(file, 6)
-              test_case.match_location?(location).should be_true
+              test_case.match_locations?([location]).should be_true
             end
 
             it "matches a location on the scenario outline's tags" do
               location = Ast::Location.new(file, 7)
-              test_case.match_location?(location).should be_true
+              test_case.match_locations?([location]).should be_true
             end
 
             it "doesn't match a location after the last row of the examples table" do
               location = Ast::Location.new(file, 17)
-              test_case.match_location?(location).should be_false
+              test_case.match_locations?([location]).should be_false
             end
 
             it "doesn't match a location before the scenario outline" do
               location = Ast::Location.new(file, 5)
-              test_case.match_location?(location).should be_false
+              test_case.match_locations?([location]).should be_false
             end
           end
         end

@@ -48,8 +48,8 @@ module Cucumber
           source.last.location
         end
 
-        def match_location?(queried_location)
-          (test_steps + source).any? { |node| node.match_location? queried_location }
+        def match_locations?(queried_locations)
+          (test_steps + source).any? { |node| node.match_locations? queried_locations }
         end
 
         def inspect

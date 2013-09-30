@@ -40,9 +40,9 @@ module Cucumber
           @location
         end
 
-        def match_location?(queried_location)
-          return true if (tags + comments).any? { |node| node.match_location? queried_location }
-          location == queried_location
+        def match_locations?(queried_locations)
+          return true if (tags + comments).any? { |node| node.match_locations? queried_locations }
+          queried_locations.include? location
         end
 
         def tags
