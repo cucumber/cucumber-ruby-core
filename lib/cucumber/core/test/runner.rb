@@ -4,7 +4,7 @@ require 'cucumber/core/test/timer'
 module Cucumber
   module Core
     module Test
-      class Runner
+      class DefaultRunner
         include Cucumber.initializer(:report)
 
         def test_case(test_case, &descend)
@@ -101,8 +101,22 @@ module Cucumber
             end
           end
         end
-
       end
+
+      class DryRunRunner
+      end
+
+      class Runner
+        KNOWN_TEST_RUNNERS = {
+          default: DefaultRunner,
+          dry_run: DryRunRunner
+        }
+
+        def self.runner_from(run_mode, report)
+          KNOWN_TEST_RUNNERS.fetch(run_mode).new(report)
+        end
+      end
+
     end
   end
 end
