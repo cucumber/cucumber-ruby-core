@@ -192,7 +192,7 @@ module Cucumber
           end
         end
 
-        describe "#matching location" do
+        describe "matching location" do
           let(:file) { 'features/path/to/the.feature' }
           let(:test_cases) do
             receiver = double
@@ -228,6 +228,12 @@ module Cucumber
             it 'matches the precise location of the scenario' do
               location = Ast::Location.new(file, 8)
               test_case.match_locations?([location]).should be_true
+            end
+
+            it 'matches multiple locations' do
+              good_location = Ast::Location.new(file, 8)
+              bad_location = Ast::Location.new(file, 5)
+              test_case.match_locations?([good_location, bad_location]).should be_true
             end
 
             it 'matches a location on the last step of the scenario' do
