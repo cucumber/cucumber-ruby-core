@@ -104,6 +104,20 @@ module Cucumber
       end
 
       class DryRunRunner
+        include Cucumber.initializer(:report)
+
+        def test_case(test_case, &descend)
+          report.before_test_case(test_case)
+          descend.call
+          report.after_test_case(test_case, Result::Skipped.new)
+        end
+
+        def test_step(test_step)
+          report.before_test_step(test_step)
+          result = test_step.skip
+          report.after_test_step(test_step, result)
+        end
+
       end
 
       class Runner

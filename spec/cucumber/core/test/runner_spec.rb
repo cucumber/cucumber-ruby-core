@@ -162,4 +162,44 @@ module Cucumber::Core::Test
 
   end
 
+  describe DryRunRunner do
+
+    let(:report) { double(:report).as_null_object }
+    let(:source) { double(:source) }
+    let(:runner) { DryRunRunner.new(report) }
+    let(:passing) { Step.new([double]).map {} }
+    let(:undefined) { Step.new([double]) }
+    let(:test_case) { Case.new(test_steps, source) }
+
+    context 'with a passing step' do
+      let(:test_steps) { [passing] }
+
+      it 'reports the test case as skipped' do
+        report.should_receive(:after_test_case) do |test_case, result|
+          result.should be_skipped
+        end
+        test_case.describe_to runner
+      end
+
+      it 'skips the step' do
+        passing.should_receive(:skip)
+        test_case.describe_to runner
+      end
+
+      it 'reports the test step has been skipped' do
+        report.should_receive(:after_test_step) do |test_step, result|
+          result.should be_skipped
+        end
+        test_case.describe_to runner
+      end
+    end
+
+    context 'with a undefined step' do
+      let(:test_steps) { [undefined] }
+
+      it 'reports the test case a undefined' do
+        pending
+      end
+    end
+  end
 end
