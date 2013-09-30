@@ -3,11 +3,11 @@ require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
 
 module Cucumber::Core::Test
-  describe Runner do
+  describe DefaultRunner do
 
     let(:test_case) { Case.new(test_steps, source) }
     let(:source)    { double }
-    let(:runner)    { Runner.new(report) }
+    let(:runner)    { DefaultRunner.new(report) }
     let(:report)    { double.as_null_object }
     let(:passing)   { Step.new([double]).map {} }
     let(:failing)   { Step.new([double]).map { raise exception } }
