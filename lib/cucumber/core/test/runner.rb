@@ -126,13 +126,16 @@ module Cucumber
       end
 
       class Runner
-        KNOWN_TEST_RUNNERS = {
+        TEST_RUNNER_LIST = {
           default: DefaultRunner,
           dry_run: DryRunRunner
         }
 
         def self.runner_from(run_mode, report)
-          KNOWN_TEST_RUNNERS.fetch(run_mode).new(report)
+          test_runner_class = TEST_RUNNER_LIST.fetch(run_mode) do
+            raise ArgumentError, "No known Test Runner for run_mode: #{run_mode.inspect}."
+          end
+          test_runner_class.new(report)
         end
       end
 
