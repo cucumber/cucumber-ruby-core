@@ -233,4 +233,28 @@ module Cucumber::Core::Test
       end
     end
   end
+
+  describe Runner do
+    describe 'retriving a test runner for a given run mode' do
+      def runner_for(run_mode)
+        Runner.runner_from(run_mode, double(:report))
+      end
+
+      context 'when the run mode is known' do
+        it 'gives back a test runner' do
+          test_runner = runner_for(:default)
+          test_runner.should respond_to(:test_case)
+          test_runner.should respond_to(:test_step)
+        end
+      end
+
+      context 'when the run mode is not known' do
+        it 'raises an error stating that the given run mode is not known' do
+          expect {
+            runner_for(:unknown_run_mode)
+          }.to raise_error(ArgumentError, /run_mode: :unknown_run_mode/)
+        end
+      end
+    end
+  end
 end
