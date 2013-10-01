@@ -181,11 +181,6 @@ module Cucumber::Core::Test
         test_case.describe_to runner
       end
 
-      it 'skips the step' do
-        passing.should_receive(:skip)
-        test_case.describe_to runner
-      end
-
       it 'reports the test step has been skipped' do
         report.should_receive(:after_test_step) do |test_step, result|
           result.should be_skipped
@@ -197,8 +192,44 @@ module Cucumber::Core::Test
     context 'with a undefined step' do
       let(:test_steps) { [undefined] }
 
-      it 'reports the test case a undefined' do
-        pending
+      it 'reports the test case as undefined' do
+        report.should_receive(:after_test_case) do |test_case, result|
+          result.should be_undefined
+        end
+        test_case.describe_to runner
+      end
+
+
+      it 'reports the test step as undefined' do
+        report.should_receive(:after_test_step) do |test_step, result|
+          result.should be_undefined
+        end
+        test_case.describe_to runner
+      end
+    end
+
+    context 'with passing and undefined steps' do
+      let(:test_steps) { [passing, undefined] }
+
+      it 'reports the test case as undefined' do
+        report.should_receive(:after_test_case) do |test_case, result|
+          result.should be_undefined
+        end
+        test_case.describe_to runner
+      end
+
+      it 'reports the passing step as skipped' do
+        report.should_receive(:after_test_step).with(passing, anything) do |test_case, result|
+          result.should be_skipped
+        end
+        test_case.describe_to runner
+      end
+
+      it 'reports the undefined step as undefined' do
+        report.should_receive(:after_test_step).with(undefined, anything) do |test_case, result|
+          result.should be_undefined
+        end
+        test_case.describe_to runner
       end
     end
   end

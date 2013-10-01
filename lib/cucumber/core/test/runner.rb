@@ -109,13 +109,18 @@ module Cucumber
         def test_case(test_case, &descend)
           report.before_test_case(test_case)
           descend.call
-          report.after_test_case(test_case, Result::Skipped.new)
+          report.after_test_case(test_case, test_case_status)
         end
 
         def test_step(test_step)
           report.before_test_step(test_step)
           result = test_step.skip
+          @test_case_status = Result::Undefined.new if result.undefined?
           report.after_test_step(test_step, result)
+        end
+
+        def test_case_status
+          @test_case_status ||= Result::Skipped.new
         end
 
       end
