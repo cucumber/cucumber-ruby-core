@@ -15,11 +15,11 @@ module Cucumber
       self
     end
 
-    def compile(gherkin_documents, receiver, filters = [])
-      filters.each do |filter_type, args|
-        receiver = filter_type.new(*args + [receiver])
+    def compile(gherkin_documents, last_receiver, filters = [])
+      first_receiver = filters.reduce(last_receiver) do |receiver, (filter_type, args)|
+        filter_type.new(*args + [receiver])
       end
-      compiler = Compiler.new(receiver)
+      compiler = Compiler.new(first_receiver)
       parse gherkin_documents, compiler
       self
     end
