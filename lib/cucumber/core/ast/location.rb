@@ -3,18 +3,28 @@ module Cucumber
     module Ast
 
       class Location < Struct.new(:file, :line)
-        def initialize(file, line)
+        def initialize(file, line_number=:wildcard)
           file || raise(ArgumentError, "file is mandatory")
-          line || raise(ArgumentError, "line is mandatory")
+          line_number || raise(ArgumentError, "line is mandatory")
           super
         end
 
         def to_s
-          "#{file}:#{line}"
+          [file, line].reject { |v| v == :wildcard }.join(":")
+        end
+
+        def to_str
+          to_s
         end
 
         def on_line(new_line)
           Location.new(file, new_line)
+        end
+
+        def match?(other)
+          file == other.file && (
+            line == other.line || [line, other.line].include?(:wildcard)
+          )
         end
 
         def inspect
@@ -42,7 +52,7 @@ module Cucumber
 
         def match_locations?(queried_locations)
           return true if (tags + comments).any? { |node| node.match_locations? queried_locations }
-          queried_locations.include? location
+          queried_locations.any? { |queried_location| queried_location.match? location }
         end
 
         def tags
@@ -53,6 +63,7 @@ module Cucumber
         def comments
           []
         end
+
       end
     end
   end

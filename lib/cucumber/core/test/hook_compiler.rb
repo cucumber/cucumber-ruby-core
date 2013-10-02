@@ -28,6 +28,10 @@ module Cucumber
           self
         end
 
+        def match_locations?(locations)
+          false
+        end
+
         def inspect
           "#{self.class}"
         end
