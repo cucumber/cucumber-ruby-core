@@ -218,6 +218,12 @@ module Cucumber
 
                   Scenario: three
                     Given three b
+
+                  Scenario: with docstring
+                    Given a docstring
+                      """
+                      this is a docstring
+                      """
               END
             end
 
@@ -259,6 +265,11 @@ module Cucumber
             it "doesn't match a location before the scenario" do
               location = Ast::Location.new(file, 5)
               test_case.match_locations?([location]).should be_false
+            end
+
+            it "matches a location in the docstring" do
+              location = Ast::Location.new(file, 18)
+              test_case.match_locations?([location]).should be_true
             end
           end
 

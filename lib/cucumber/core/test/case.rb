@@ -49,7 +49,7 @@ module Cucumber
         end
 
         def match_locations?(queried_locations)
-          (test_steps + source).any? { |node| node.match_locations? queried_locations }
+          test_steps.any? { |node| node.match_locations? queried_locations }
         end
 
         def inspect
