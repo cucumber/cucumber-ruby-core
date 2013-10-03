@@ -11,6 +11,7 @@ module Cucumber::Core::Test
     let(:report)    { double.as_null_object }
     let(:passing)   { Step.new([double]).map {} }
     let(:failing)   { Step.new([double]).map { raise exception } }
+    let(:pending)   { Step.new([double]).map { raise Cucumber::Core::Pending } }
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
@@ -91,6 +92,17 @@ module Cucumber::Core::Test
           it 'reports an undefined test case' do
             report.should_receive(:after_test_case) do |test_case, result|
               result.should be_undefined
+            end
+            test_case.describe_to runner
+          end
+        end
+
+        context 'a pending step' do
+          let(:test_steps) { [ pending ] }
+
+          it 'reports a pending test case' do
+            report.should_receive(:after_test_case) do |test_case, result|
+              result.should be_pending
             end
             test_case.describe_to runner
           end
