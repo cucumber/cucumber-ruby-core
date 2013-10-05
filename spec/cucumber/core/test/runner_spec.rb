@@ -11,7 +11,7 @@ module Cucumber::Core::Test
     let(:report)    { double.as_null_object }
     let(:passing)   { Step.new([double]).map {} }
     let(:failing)   { Step.new([double]).map { raise exception } }
-    let(:pending)   { Step.new([double]).map { raise Cucumber::Core::Pending } }
+    let(:pending)   { Step.new([double]).map { raise Result::Pending.new("TODO") } }
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
