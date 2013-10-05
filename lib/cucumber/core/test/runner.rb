@@ -54,6 +54,11 @@ module Cucumber
               self
             end
 
+            def pending(message, step_result)
+              @status = Pending.new(step_result)
+              self
+            end
+
             def undefined(step_result)
               failed(step_result)
               self
@@ -100,6 +105,8 @@ module Cucumber
               step_result.with_duration(duration)
             end
           end
+
+          Pending = Class.new(Failing)
         end
 
       end
