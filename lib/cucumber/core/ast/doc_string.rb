@@ -19,6 +19,7 @@ module Cucumber
       # Note how the indentation from the source is stripped away.
       #
       class DocString
+        include HasLocation
         include DescribesItself
         attr_accessor :file
 
@@ -28,9 +29,10 @@ module Cucumber
 
         attr_reader :content_type, :content
 
-        def initialize(string, content_type)
+        def initialize(string, content_type, location)
           @content = string
           @content_type = content_type
+          @location = location
         end
 
         def encoding
@@ -52,7 +54,7 @@ module Cucumber
         def map(&block)
           raise ArgumentError unless block
           new_content = block.call(content)
-          self.class.new(new_content, content_type)
+          self.class.new(new_content, content_type, location)
         end
 
         def to_step_definition_arg

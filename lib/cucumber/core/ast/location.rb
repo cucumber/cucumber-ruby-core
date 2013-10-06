@@ -46,13 +46,17 @@ module Cucumber
         end
 
         def location
-          raise('Please set @location in the constructor') unless @location
+          raise('Please set @location in the constructor') unless defined?(@location)
           @location
         end
 
         def match_locations?(queried_locations)
-          return true if (tags + comments).any? { |node| node.match_locations? queried_locations }
+          return true if attributes.any? { |node| node.match_locations? queried_locations }
           queried_locations.any? { |queried_location| queried_location.match? location }
+        end
+
+        def attributes
+          [tags, comments, multiline_arg].flatten.compact
         end
 
         def tags
@@ -62,6 +66,9 @@ module Cucumber
 
         def comments
           []
+        end
+
+        def multiline_arg
         end
 
       end

@@ -65,7 +65,8 @@ module Cucumber
             visitor.stub(:scenario).and_yield
             visitor.stub(:step).and_yield
 
-            expected = Ast::DocString.new("content", "")
+            location = double
+            expected = Ast::DocString.new("content", "", location)
             visitor.should_receive(:doc_string).with(expected)
             feature.describe_to(visitor)
           end

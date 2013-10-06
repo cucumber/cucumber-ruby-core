@@ -216,7 +216,7 @@ module Cucumber
                 location,
                 node.keyword,
                 node.name,
-                Ast::MultilineArgument.from(node.doc_string || node.rows)
+                Ast::MultilineArgument.from(node.doc_string || node.rows, location)
               )
               step.gherkin_statement(node)
               step
@@ -305,7 +305,7 @@ module Cucumber
                 location,
                 node.keyword,
                 node.name,
-                Ast::MultilineArgument.from(node.doc_string || node.rows)
+                Ast::MultilineArgument.from(node.doc_string || node.rows, location)
               )
               step.gherkin_statement(node)
               step

@@ -8,16 +8,13 @@ module Cucumber
         class << self
           include Gherkin::Rubify
 
-          def from(argument)
+          def from(argument, parent_location)
             return unless argument
             return argument if argument.respond_to?(:to_step_definition_arg)
 
             case(rubify(argument))
-            when String
-              # TODO: this duplicates work that gherkin does. We should really pass the string to gherkin and let it parse it.
-              Ast::DocString.new(argument, '')
             when ::Gherkin::Formatter::Model::DocString
-              Ast::DocString.new(argument.value, argument.content_type)
+              Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line))
             when Array
               Ast::DataTable.new(argument.map{|row| row.cells})
             else

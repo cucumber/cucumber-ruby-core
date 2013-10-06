@@ -267,9 +267,15 @@ module Cucumber
               test_case.match_locations?([location]).should be_false
             end
 
-            it "matches a location in the docstring" do
-              location = Ast::Location.new(file, 18)
-              test_case.match_locations?([location]).should be_true
+            context "with a docstring" do
+              let(:test_case) do
+                test_cases.find { |c| c.name == 'with docstring' }
+              end
+
+              it "matches a location in the docstring" do
+                location = Ast::Location.new(file, 17)
+                test_case.match_locations?([location]).should be_true
+              end
             end
           end
 

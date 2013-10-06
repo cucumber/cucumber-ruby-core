@@ -53,8 +53,9 @@ module Cucumber
           end
 
           context "when the step has a DocString" do
+            let(:location) { double }
             let(:outline_step) { OutlineStep.new(language, location, keyword, name, doc_string) }
-            let(:doc_string) { DocString.new('a <arg> that needs replacing', '') }
+            let(:doc_string) { DocString.new('a <arg> that needs replacing', '', location) }
             let(:name) { 'anything' }
 
             it "replaces the arguments in the DocString" do

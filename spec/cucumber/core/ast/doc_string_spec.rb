@@ -1,10 +1,12 @@
+require 'cucumber/core/ast/location'
 require 'cucumber/core/ast/doc_string'
 
 module Cucumber
   module Core
     module Ast
       describe DocString do
-        let(:doc_string) { DocString.new(content, content_type) }
+        let(:location) { double }
+        let(:doc_string) { DocString.new(content, content_type, location) }
 
         context '#map' do
           let(:content) { 'original content' }
@@ -28,15 +30,15 @@ module Cucumber
           let(:content_type) { 'text/plain' }
 
           it 'is equal to another DocString with the same content and content_type' do
-            doc_string.should == DocString.new(content, content_type)
+            doc_string.should == DocString.new(content, content_type, location)
           end
 
           it 'is not equal to another DocString with different content' do
-            doc_string.should_not == DocString.new('bar', content_type)
+            doc_string.should_not == DocString.new('bar', content_type, location)
           end
 
           it 'is not equal to another DocString with different content_type' do
-            doc_string.should_not == DocString.new(content, 'text/html')
+            doc_string.should_not == DocString.new(content, 'text/html', location)
           end
 
           it 'is equal to a string with the same content' do
