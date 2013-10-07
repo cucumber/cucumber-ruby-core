@@ -4,34 +4,9 @@ require 'cucumber/core/test/timer'
 module Cucumber
   module Core
     module Test
-      class DefaultRunner
-        include Cucumber.initializer(:report)
-
-        def test_case(test_case, &descend)
-          report.before_test_case(test_case)
-          descend.call
-          report.after_test_case(test_case, current_case_result)
-          @current_case_status = nil
-        end
-
-        def test_step(test_step)
-          report.before_test_step test_step
-          step_result = current_case_status.execute(test_step)
-          report.after_test_step test_step, step_result
-        end
-
-        private
-
-        def current_case_result
-          current_case_status.result
-        end
-
-        def current_case_status
-          @current_case_status ||= Status::Monitor.new
-        end
-
+      class Runner
         module Status
-          class Monitor
+          class DefaultMonitor
             def initialize
               @timer = Timer.new.start
             end
@@ -74,6 +49,18 @@ module Cucumber
             end
           end
 
+          class DryRunMonitor
+            def execute(test_step)
+              step_result = test_step.skip
+              @case_result = Result::Undefined.new if step_result.undefined?
+              step_result
+            end
+
+            def result
+              @case_result ||= Result::Skipped.new
+            end
+          end
+
           class Unknown
             def execute(test_step, monitor)
               result = test_step.execute
@@ -101,31 +88,51 @@ module Cucumber
             end
           end
         end
-      end
 
-      class DryRunRunner
-        include Cucumber.initializer(:report)
+        def self.new(status_monitor)
+          Class.new do
 
-        def test_case(test_case, &descend)
-          report.before_test_case(test_case)
-          descend.call
-          report.after_test_case(test_case, test_case_status)
+            class << self
+              attr_accessor :status_monitor_class
+              private :status_monitor_class=
+            end
+
+            self.status_monitor_class = status_monitor
+
+            include Cucumber.initializer(:report)
+
+            def test_case(test_case, &descend)
+              report.before_test_case(test_case)
+              descend.call
+              report.after_test_case(test_case, current_case_result)
+              @current_case_status = nil
+            end
+
+            def test_step(test_step)
+              report.before_test_step test_step
+              step_result = current_case_status.execute(test_step)
+              report.after_test_step test_step, step_result
+            end
+
+            private
+
+            def current_case_result
+              current_case_status.result
+            end
+
+            def current_case_status
+              @current_case_status ||= new_status_monitor
+            end
+
+            def new_status_monitor
+              self.class.status_monitor_class.new
+            end
+          end
         end
 
-        def test_step(test_step)
-          report.before_test_step(test_step)
-          result = test_step.skip
-          @test_case_status = Result::Undefined.new if result.undefined?
-          report.after_test_step(test_step, result)
-        end
+        Test::DefaultRunner = new(Status::DefaultMonitor)
+        Test::DryRunRunner = new(Status::DryRunMonitor)
 
-        def test_case_status
-          @test_case_status ||= Result::Skipped.new
-        end
-
-      end
-
-      class Runner
         TEST_RUNNER_LIST = {
           default: DefaultRunner,
           dry_run: DryRunRunner
@@ -137,6 +144,7 @@ module Cucumber
           end
           test_runner_class.new(report)
         end
+
       end
 
     end
