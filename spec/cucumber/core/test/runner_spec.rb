@@ -232,6 +232,24 @@ module Cucumber::Core::Test
         test_case.describe_to runner
       end
     end
+
+    context 'with multiple test cases' do
+      context 'when the first test case is undefined' do
+        let(:first_test_case) { Case.new([undefined], source) }
+        let(:last_test_case)  { Case.new([passing], source) }
+        let(:test_cases)      { [first_test_case, last_test_case] }
+
+        it 'reports the results correctly for the following test case' do
+          report.
+            should_receive(:after_test_case).
+            with(last_test_case, anything) do |reported_test_case, result|
+            result.should be_skipped
+            end
+
+          test_cases.each { |c| c.describe_to runner }
+        end
+      end
+    end
   end
 
   describe Runner do
