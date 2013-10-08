@@ -5,33 +5,8 @@ module Cucumber
   module Core
     module Test
       class Runner
-        include Cucumber.initializer(:report)
-
-        def test_case(test_case, &descend)
-          report.before_test_case(test_case)
-          descend.call
-          report.after_test_case(test_case, current_case_result)
-          @current_case_status = nil
-        end
-
-        def test_step(test_step)
-          report.before_test_step test_step
-          step_result = current_case_status.execute(test_step)
-          report.after_test_step test_step, step_result
-        end
-
-        private
-
-        def current_case_result
-          current_case_status.result
-        end
-
-        def current_case_status
-          @current_case_status ||= Status::Monitor.new
-        end
-
         module Status
-          class Monitor
+          class DefaultMonitor
             def initialize
               @timer = Timer.new.start
             end
@@ -79,6 +54,18 @@ module Cucumber
             end
           end
 
+          class DryRunMonitor
+            def execute(test_step)
+              step_result = test_step.skip
+              @case_result = Result::Undefined.new if step_result.undefined?
+              step_result
+            end
+
+            def result
+              @case_result ||= Result::Skipped.new
+            end
+          end
+
           class Unknown
             def execute(test_step, monitor)
               result = test_step.execute
@@ -109,7 +96,45 @@ module Cucumber
           Pending = Class.new(Failing)
         end
 
+        STATUS_STRATEGY = {
+          default: Status::DefaultMonitor,
+          dry_run: Status::DryRunMonitor
+        }
+
+        def self.runner_from(run_mode, report)
+          status_monitor_class = STATUS_STRATEGY.fetch(run_mode) do
+            raise ArgumentError, "No known Test Runner for run_mode: #{run_mode.inspect}."
+          end
+          new(report, status_monitor_class)
+        end
+
+        include Cucumber.initializer(:report, :status_monitor_class)
+
+        def test_case(test_case, &descend)
+          report.before_test_case(test_case)
+          descend.call
+          report.after_test_case(test_case, current_case_result)
+          @current_case_status = nil
+        end
+
+        def test_step(test_step)
+          report.before_test_step test_step
+          step_result = current_case_status.execute(test_step)
+          report.after_test_step test_step, step_result
+        end
+
+        private
+
+        def current_case_result
+          current_case_status.result
+        end
+
+        def current_case_status
+          @current_case_status ||= status_monitor_class.new
+        end
+
       end
+
     end
   end
 end

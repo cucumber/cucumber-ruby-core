@@ -50,7 +50,7 @@ module Cucumber::Core::Test
       [:before, :step, :after].each do |message|
         log.should_receive(message).ordered
       end
-      runner = Runner.new(double.as_null_object)
+      runner = Runner.runner_from(:default, double.as_null_object)
       mapper = Mapper.new(mappings, runner)
       hook_compiler = HookCompiler.new(mappings, mapper)
       test_case.describe_to hook_compiler
