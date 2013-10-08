@@ -7,7 +7,7 @@ module Cucumber
       module Result
         def self.status_queries(status)
           Module.new do
-            [:passed, :failed, :undefined, :unknown, :skipped].each do |possible_status|
+            [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_status|
               define_method("#{possible_status}?") do
                 possible_status == status
               end
@@ -105,6 +105,31 @@ module Cucumber
 
           def to_s
             "-"
+          end
+        end
+
+        class Pending < StandardError
+          include Result.status_queries :pending
+          attr_reader :message, :duration
+
+          def initialize(message, duration = :unknown)
+            raise ArgumentError unless message
+            @message, @duration = message, duration
+            super(message)
+          end
+
+          def describe_to(visitor, *args)
+            visitor.pending(message, *args)
+            visitor.duration(duration, *args) unless duration == :unknown
+            self
+          end
+
+          def to_s
+            "P"
+          end
+
+          def with_duration(new_duration)
+            self.class.new(message, new_duration)
           end
         end
 

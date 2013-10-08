@@ -33,6 +33,14 @@ module Cucumber
             result.exception.should == exception
           end
 
+          it "returns a pending result if a pending error is raised" do
+            exception = Result::Pending.new("TODO")
+            mapping = Mapping.new { raise exception }
+            result = mapping.execute
+            result.should be_pending
+            result.message.should == "TODO"
+          end
+
           context "recording the duration" do
             before do
               time = double
