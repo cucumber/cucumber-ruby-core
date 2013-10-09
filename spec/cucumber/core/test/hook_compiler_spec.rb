@@ -61,7 +61,7 @@ module Cucumber::Core::Test
 
     it "sets the source on the hook to be the same as the source of the test case" do
       test_case = Case.new([], source)
-      mappings.stub(:test_case) do |test_case, mapper|
+      mappings.stub(:test_case) do |test_case_to_be_mapped, mapper|
         mapper.before {}
       end
       receiver.stub(:test_case).and_yield
