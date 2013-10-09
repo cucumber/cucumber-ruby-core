@@ -4,8 +4,9 @@ module Cucumber
   module Core
     module Test
       class HookStep
-        def initialize(&block)
+        def initialize(source, &block)
           @mapping = Test::Mapping.new(&block)
+          @source = source
         end
 
         def describe_to(visitor, *args)
@@ -13,6 +14,9 @@ module Cucumber
         end
 
         def describe_source_to(visitor, *args)
+          @source.each do |node|
+            node.describe_to visitor
+          end
           visitor.hook(*args)
         end
 
@@ -42,7 +46,7 @@ module Cucumber
 
         def test_case(test_case, &descend)
           @before_hooks, @after_hooks, @steps = [], [], []
-          mapper = HookMapper.new(self)
+          mapper = HookMapper.new(self, test_case.source)
           test_case.describe_to mappings, mapper
           descend.call
           test_case.
@@ -63,14 +67,14 @@ module Cucumber
         end
 
         class HookMapper
-          include Cucumber.initializer(:compiler)
+          include Cucumber.initializer(:compiler, :source)
 
           def before(&block)
-            compiler.before_hook HookStep.new(&block)
+            compiler.before_hook HookStep.new(source, &block)
           end
 
           def after(&block)
-            compiler.after_hook HookStep.new(&block)
+            compiler.after_hook HookStep.new(source, &block)
           end
         end
       end

@@ -6,6 +6,7 @@ module Cucumber
     module Test
       class Case
         include Cucumber.initializer(:test_steps, :source)
+        attr_reader :source
 
         def describe_to(visitor, *args)
           visitor.test_case(self, *args) do |child_visitor=visitor|
