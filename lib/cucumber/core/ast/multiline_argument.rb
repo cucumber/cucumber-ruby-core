@@ -14,7 +14,7 @@ module Cucumber
 
             case(rubify(argument))
             when ::Gherkin::Formatter::Model::DocString
-              Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line))
+              Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line_range))
             when Array
               Ast::DataTable.new(argument.map{|row| row.cells})
             else

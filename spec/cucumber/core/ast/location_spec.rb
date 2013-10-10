@@ -19,11 +19,15 @@ module Cucumber::Core::Ast
 
     describe "to_s" do
       it "is file:line for a precise location" do
-        Location.new("foo.feature", "12").to_s.should == "foo.feature:12"
+        Location.new("foo.feature", 12).to_s.should == "foo.feature:12"
       end
 
       it "is file for a wildcard location" do
         Location.new("foo.feature").to_s.should == "foo.feature"
+      end
+
+      it "is file:first_line for a ranged location" do
+        Location.new("foo.feature", 13..19).to_s.should == "foo.feature:13"
       end
     end
 
@@ -59,6 +63,39 @@ module Cucumber::Core::Ast
 
         it "does not match a location in a different file" do
           wildcard.should_not be_match(not_matching)
+        end
+      end
+
+      context 'a range wildcard' do
+        let(:range) { Location.new("foo.feature", 13..17) }
+        it "matches the first line in the same file" do
+          other = Location.new("foo.feature", 13)
+          range.should be_match(other)
+        end
+
+        it "matches a line within the docstring in the same file" do
+          other = Location.new("foo.feature", 15)
+          range.should be_match(other)
+        end
+
+        it "is matched by a line within the docstring in the same file" do
+          other = Location.new("foo.feature", 15)
+          other.should be_match(range)
+        end
+
+        it "matches a wildcard in the same file" do
+          wildcard = Location.new("foo.feature")
+          range.should be_match(wildcard)
+        end
+
+        it "does not match a location outside of the range" do
+          other = Location.new("foo.feature", 18)
+          range.should_not be_match(other)
+        end
+
+        it "does not match a location in another file" do
+          other = Location.new("bar.feature", 13)
+          range.should_not be_match(other)
         end
       end
     end

@@ -1,12 +1,19 @@
 module Cucumber
   module Core
     module Ast
-
-      class Location < Struct.new(:file, :line)
-        def initialize(file, line_number=:wildcard)
+      module Location
+        def self.new(file, line_number=:wildcard)
           file || raise(ArgumentError, "file is mandatory")
           line_number || raise(ArgumentError, "line is mandatory")
-          super
+
+          case line_number
+          when :wildcard
+            Wildcard.new(file)
+          when Range
+            Ranged.new(file, line_number)
+          else
+            Precise.new(file, line_number)
+          end
         end
 
         def to_s
@@ -21,14 +28,52 @@ module Cucumber
           Location.new(file, new_line)
         end
 
-        def match?(other)
-          file == other.file && (
-            line == other.line || [line, other.line].include?(:wildcard)
-          )
-        end
-
         def inspect
           "<#{self.class}: #{to_s}>"
+        end
+
+        class Precise < Struct.new(:file, :line)
+          include Location
+
+          def match?(other)
+            file == other.file && other.match_line?(line)
+          end
+
+          def match_line?(queried_line)
+            queried_line == line || queried_line == :wildcard
+          end
+        end
+
+        class Wildcard < Struct.new(:file)
+          include Location
+          def match?(other)
+            file == other.file
+          end
+
+          def line
+            :wildcard
+          end
+
+          def match_line?(queried_line)
+            true
+          end
+        end
+
+        class Ranged < Struct.new(:file, :lines)
+          include Location
+          def match?(other)
+            file == other.file && (
+              lines.include?(other.line) || [line, other.line].include?(:wildcard)
+            )
+          end
+
+          def line
+            lines.first
+          end
+
+          def match_line?(queried_line)
+            lines.include?(queried_line) || queried_line == :wildcard
+          end
         end
       end
 
@@ -56,6 +101,7 @@ module Cucumber
         end
 
         def attributes
+          # TODO: Remove compact when we have a null multiline arg object
           [tags, comments, multiline_arg].flatten.compact
         end
 
