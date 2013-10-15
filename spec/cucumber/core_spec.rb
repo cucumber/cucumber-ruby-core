@@ -197,6 +197,53 @@ module Cucumber
         end
       end
 
+      context "with around hooks" do
+        class AroundHookTestMappings
+          attr_reader :logger
+
+          def initialize
+            @logger = []
+          end
+
+          def test_case(test_case, mapper)
+            logger = @logger
+            mapper.around do |continue|
+              logger << :before
+              continue.call
+              logger << :after
+            end
+            self
+          end
+
+          def test_step(step, mapper)
+            logger = @logger
+            mapper.map do
+              logger << :during
+            end
+            self
+          end
+        end
+
+        it "executes the test cases in the suite" do
+          gherkin = gherkin do
+            feature do
+              scenario do
+                step
+              end
+            end
+          end
+          report = SummaryReport.new
+          mappings = AroundHookTestMappings.new
+
+          execute [gherkin], mappings, report
+
+          report.test_cases.total.should eq(1)
+          report.test_cases.total_passed.should eq(1)
+          report.test_cases.total_failed.should eq(0)
+          mappings.logger.should == [:before, :during, :after]
+        end
+      end
+
       require 'cucumber/core/test/tag_filter'
       it "filters test cases by tag" do
         gherkin = gherkin do

@@ -5,8 +5,12 @@ module Cucumber
   module Core
     module Test
       class Case
-        include Cucumber.initializer(:test_steps, :source)
+        include Cucumber.initializer(:test_steps, :source, :around_hooks)
         attr_reader :source
+
+        def initialize(test_steps, source, around_hooks = [])
+          super(test_steps, source, around_hooks)
+        end
 
         def describe_to(visitor, *args)
           visitor.test_case(self, *args) do |child_visitor=visitor|
@@ -24,8 +28,18 @@ module Cucumber
           self
         end
 
+        def surround(&block)
+          around_hooks.reduce(block) do |continue, hook|
+            hook.call(continue)
+          end.call
+        end
+
         def with_steps(test_steps)
-          self.class.new(test_steps, source)
+          self.class.new(test_steps, source, around_hooks)
+        end
+
+        def with_around_hooks(around_hooks)
+          self.class.new(test_steps, source, around_hooks)
         end
 
         def name

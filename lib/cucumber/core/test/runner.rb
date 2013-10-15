@@ -9,7 +9,7 @@ module Cucumber
 
         def test_case(test_case, &descend)
           report.before_test_case(test_case)
-          descend.call
+          test_case.surround { descend.call }
           report.after_test_case(test_case, current_case_result)
           @current_case_status = nil
         end
