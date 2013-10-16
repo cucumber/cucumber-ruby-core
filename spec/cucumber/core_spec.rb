@@ -52,23 +52,25 @@ module Cucumber
 
       it "filters out test cases based on a tag expression" do
         visitor = double.as_null_object
-        visitor.should_receive(:test_case).exactly(1).times
+        visitor.should_receive(:test_case) do |test_case|
+          test_case.name.should eq 'foo, bar (row 1)'
+        end.exactly(1).times
 
         gherkin = gherkin do
           feature do
-            scenario tags: '@a' do
+            scenario tags: '@b' do
               step
             end
 
-            scenario_outline do
+            scenario_outline 'foo' do
               step '<arg>'
 
-              examples do
+              examples tags: '@a'do
                 row 'arg'
                 row 'x'
               end
 
-              examples tags: '@a' do
+              examples 'bar', tags: '@a @b' do
                 row 'arg'
                 row 'y'
               end
@@ -76,7 +78,7 @@ module Cucumber
           end
         end
 
-        compile [gherkin], visitor, [[Cucumber::Core::Test::TagFilter, ['~@a']]]
+        compile [gherkin], visitor, [[Cucumber::Core::Test::TagFilter, [['@a', '@b']]]]
       end
     end
 

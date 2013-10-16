@@ -3,10 +3,10 @@ module Cucumber
     module Test
 
       class TagFilter
-        include Cucumber.initializer(:filter_expression, :receiver)
+        include Cucumber.initializer(:filter_expressions, :receiver)
 
         def test_case(test_case)
-          if test_case.match_tags?(filter_expression)
+          if test_case.match_tags?(filter_expressions)
             test_case.describe_to(receiver)
           end
           self

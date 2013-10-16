@@ -37,8 +37,8 @@ module Cucumber
         end
 
         require 'gherkin/tag_expression'
-        def match_tags?(expression)
-          ::Gherkin::TagExpression.new([expression]).evaluate(tags)
+        def match_tags?(*expressions)
+          ::Gherkin::TagExpression.new(expressions.flatten).evaluate(tags)
         end
 
         def language
