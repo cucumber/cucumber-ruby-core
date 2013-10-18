@@ -20,6 +20,10 @@ module Cucumber
           report.after_test_step test_step, step_result
         end
 
+        def around_hook(hook, &continue)
+          hook.call(continue)
+        end
+
         private
 
         def current_case_result
