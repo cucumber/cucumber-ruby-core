@@ -14,8 +14,10 @@ module Cucumber
 
         def describe_to(visitor, *args)
           visitor.test_case(self, *args) do |child_visitor=visitor|
-            test_steps.each do |test_step|
-              test_step.describe_to(child_visitor, *args)
+            compose_around_hooks(child_visitor, *args) do
+              test_steps.each do |test_step|
+                test_step.describe_to(child_visitor, *args)
+              end
             end
           end
           self
@@ -26,12 +28,6 @@ module Cucumber
             node.describe_to(visitor, *args)
           end
           self
-        end
-
-        def surround(&block)
-          around_hooks.reduce(block) do |continue, hook|
-            hook.call(continue)
-          end.call
         end
 
         def with_steps(test_steps)
@@ -72,6 +68,12 @@ module Cucumber
         end
 
         private
+
+        def compose_around_hooks(visitor, *args, &block)
+          around_hooks.reduce(block) do |continue, hook|
+            -> { hook.describe_to(visitor, *args, &continue) }
+          end.call
+        end
 
         def feature
           source.first

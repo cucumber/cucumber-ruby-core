@@ -207,9 +207,11 @@ module Cucumber
 
           def test_case(test_case, mapper)
             logger = @logger
-            mapper.around do |continue|
+            mapper.around do |run_scenario|
               logger << :before
-              continue.call
+              run_scenario.call
+              logger << :middle
+              run_scenario.call
               logger << :after
             end
             self
@@ -240,7 +242,7 @@ module Cucumber
           report.test_cases.total.should eq(1)
           report.test_cases.total_passed.should eq(1)
           report.test_cases.total_failed.should eq(0)
-          mappings.logger.should == [:before, :during, :after]
+          mappings.logger.should == [:before, :during, :middle, :during, :after]
         end
       end
 

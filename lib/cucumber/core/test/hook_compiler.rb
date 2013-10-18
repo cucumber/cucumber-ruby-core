@@ -93,7 +93,11 @@ module Cucumber
             end
 
             def call(continue)
-              -> { @block.call(continue) }
+              @block.call(continue)
+            end
+
+            def describe_to(visitor, *args, &continue)
+              visitor.around_hook(self, *args, &continue)
             end
           end
         end
