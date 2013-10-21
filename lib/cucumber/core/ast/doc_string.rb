@@ -49,9 +49,9 @@ module Cucumber
           @content.gsub(*args)
         end
 
-        def map(&block)
-          raise ArgumentError unless block
-          new_content = block.call(content)
+        def map
+          raise ArgumentError, "No block given" unless block_given?
+          new_content = yield content
           self.class.new(new_content, content_type)
         end
 
