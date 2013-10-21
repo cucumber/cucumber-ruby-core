@@ -111,9 +111,9 @@ module Cucumber
           def self.level(number)
             Module.new do
               define_method :indent do |string, amount=nil|
-              amount ||= number
-              return string if string.nil? || string.empty?
-              (' ' * amount) + string
+                amount ||= number
+                return string if string.nil? || string.empty?
+                (' ' * amount) + string
               end
 
               define_method :indent_level do
