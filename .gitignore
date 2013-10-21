@@ -4,3 +4,4 @@
 /tmp/
 /coverage
 *.swo
+.ruby-version
