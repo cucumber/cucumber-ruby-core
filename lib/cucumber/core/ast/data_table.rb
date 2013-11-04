@@ -2,6 +2,7 @@ require 'gherkin/rubify'
 require 'gherkin/lexer/i18n_lexer'
 require 'gherkin/formatter/escaping'
 require 'cucumber/core/ast/describes_itself'
+require 'cucumber/core/ast/location'
 
 module Cucumber
   module Core
@@ -27,6 +28,7 @@ module Cucumber
       #
       class DataTable
         include DescribesItself
+        include HasLocation
 
         class Different < StandardError
           attr_reader :table
@@ -74,13 +76,14 @@ module Cucumber
         # You don't typically create your own DataTable objects - Cucumber will do
         # it internally and pass them to your Step Definitions.
         #
-        def initialize(raw)
+        def initialize(raw, location)
           @cells_class = Cells
           @cell_class = Cell
           raw = ensure_array_of_array(rubify(raw))
           # Verify that it's square
           raw.transpose
           create_cell_matrix(raw)
+          @location = location
         end
 
         def to_step_definition_arg
@@ -90,7 +93,7 @@ module Cucumber
         # Creates a copy of this table
         #
         def dup
-          self.class.new(raw.dup)
+          self.class.new(raw.dup, location)
         end
 
         # Returns a new, transposed table. Example:
@@ -105,7 +108,7 @@ module Cucumber
         #   | 4 | 2 |
         #
         def transpose
-          self.class.new(raw.transpose)
+          self.class.new(raw.transpose, location)
         end
 
         def map(&block)
@@ -113,7 +116,7 @@ module Cucumber
             row.map(&block)
           end
 
-          self.class.new(new_raw)
+          self.class.new(new_raw, location)
         end
 
         # Converts this table into an Array of Hash where the keys of each

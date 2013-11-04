@@ -225,6 +225,11 @@ module Cucumber
                       """
                       this is a docstring
                       """
+
+                  Scenario: with a table
+                    Given a table
+                      | a | b |
+                      | 1 | 2 |
               END
             end
 
@@ -280,6 +285,17 @@ module Cucumber
 
               it "matches a location in the middle of the docstring" do
                 location = Ast::Location.new(file, 18)
+                test_case.match_locations?([location]).should be_true
+              end
+            end
+
+            context "with a table" do
+              let(:test_case) do
+                test_cases.find { |c| c.name == 'with a table' }
+              end
+
+              it "matches a location on the first table row" do
+                location = Ast::Location.new(file, 23)
                 test_case.match_locations?([location]).should be_true
               end
             end

@@ -38,7 +38,7 @@ module Cucumber
           context "when the step has a DataTable" do
             let(:outline_step) { OutlineStep.new(language, location, keyword, name, table) }
             let(:name)  { "anything" }
-            let(:table) { DataTable.new([['x', 'y'],['a', 'a <arg>']]) }
+            let(:table) { DataTable.new([['x', 'y'],['a', 'a <arg>']], Location.new('foo.feature', 23)) }
 
             it "replaces the arguments in the DataTable" do
               visitor = double

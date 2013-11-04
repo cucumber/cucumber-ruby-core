@@ -5,11 +5,13 @@ module Cucumber
   module Core
     module Ast
       describe DataTable do
+        let(:location) { Location.new('foo.feature', 9..12) }
+
         before do
           @table = DataTable.new([
             %w{one four seven},
             %w{4444 55555 666666}
-          ])
+          ], location)
           def @table.cells_rows; super; end
           def @table.columns; super; end
         end
@@ -51,20 +53,20 @@ module Cucumber
 
         describe "equality" do
           it "is equal to another table with the same data" do
-            DataTable.new([[1,2],[3,4]]).should == DataTable.new([[1,2],[3,4]])
+            DataTable.new([[1,2],[3,4]], location).should == DataTable.new([[1,2],[3,4]], location)
           end
 
           it "is not equal to another table with different data" do
-            DataTable.new([[1,2],[3,4]]).should_not == DataTable.new([[1,2]])
+            DataTable.new([[1,2],[3,4]], location).should_not == DataTable.new([[1,2]], location)
           end
 
           it "is not equal to a non table" do
-            DataTable.new([[1,2],[3,4]]).should_not == Object.new
+            DataTable.new([[1,2],[3,4]], location).should_not == Object.new
           end
         end
 
         describe "#map" do
-          let(:table) { DataTable.new([ %w{foo bar}, %w{1 2} ]) }
+          let(:table) { DataTable.new([ %w{foo bar}, %w{1 2} ], location) }
 
           it 'yields the contents of each cell to the block' do
 
@@ -72,7 +74,7 @@ module Cucumber
           end
 
           it 'returns a new table with the cells modified by the block' do
-            table.map { |cell| "*#{cell}*" }.should ==  DataTable.new([%w{*foo* *bar*}, %w{*1* *2*}])
+            table.map { |cell| "*#{cell}*" }.should ==  DataTable.new([%w{*foo* *bar*}, %w{*1* *2*}], location)
           end
         end
 
@@ -81,7 +83,7 @@ module Cucumber
             @table = DataTable.new([
               %w{one 1111},
               %w{two 22222}
-            ])
+            ], location)
           end
 
           it "should be convertible in to an array where each row is a hash" do
@@ -95,7 +97,7 @@ module Cucumber
             table = DataTable.new([
               %w{one 1111},
               %w{two 22222}
-            ])
+            ], location)
             table.rows_hash.should == {'one' => '1111', 'two' => '22222'}
           end
 
@@ -103,7 +105,7 @@ module Cucumber
             faulty_table = DataTable.new([
               %w{one 1111 abc},
               %w{two 22222 def}
-            ])
+            ], location)
             lambda {
               faulty_table.rows_hash
             }.should raise_error('The table must have exactly 2 columns')
@@ -112,7 +114,7 @@ module Cucumber
 
         describe "#new" do
           it "should allow Array of Hash" do
-            t1 = DataTable.new([{'name' => 'aslak', 'male' => 'true'}])
+            t1 = DataTable.new([{'name' => 'aslak', 'male' => 'true'}], location)
             t1.hashes.should == [{'name' => 'aslak', 'male' => 'true'}]
           end
         end
