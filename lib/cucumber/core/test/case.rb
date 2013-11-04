@@ -5,12 +5,19 @@ module Cucumber
   module Core
     module Test
       class Case
-        include Cucumber.initializer(:test_steps, :source)
+        include Cucumber.initializer(:test_steps, :source, :around_hooks)
+        attr_reader :source
+
+        def initialize(test_steps, source, around_hooks = [])
+          super(test_steps, source, around_hooks)
+        end
 
         def describe_to(visitor, *args)
           visitor.test_case(self, *args) do |child_visitor=visitor|
-            test_steps.each do |test_step|
-              test_step.describe_to(child_visitor, *args)
+            compose_around_hooks(child_visitor, *args) do
+              test_steps.each do |test_step|
+                test_step.describe_to(child_visitor, *args)
+              end
             end
           end
           self
@@ -24,7 +31,11 @@ module Cucumber
         end
 
         def with_steps(test_steps)
-          self.class.new(test_steps, source)
+          self.class.new(test_steps, source, around_hooks)
+        end
+
+        def with_around_hooks(around_hooks)
+          self.class.new(test_steps, source, around_hooks)
         end
 
         def name
@@ -36,8 +47,8 @@ module Cucumber
         end
 
         require 'gherkin/tag_expression'
-        def match_tags?(expression)
-          ::Gherkin::TagExpression.new([expression]).evaluate(tags)
+        def match_tags?(*expressions)
+          ::Gherkin::TagExpression.new(expressions.flatten).evaluate(tags.map {|t| ::Gherkin::Formatter::Model::Tag.new(t.name, t.line) })
         end
 
         def language
@@ -57,6 +68,12 @@ module Cucumber
         end
 
         private
+
+        def compose_around_hooks(visitor, *args, &block)
+          around_hooks.reduce(block) do |continue, hook|
+            -> { hook.describe_to(visitor, *args, &continue) }
+          end.call
+        end
 
         def feature
           source.first

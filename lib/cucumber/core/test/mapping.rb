@@ -1,5 +1,6 @@
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/timer'
+require 'cucumber/core/test/result'
 
 module Cucumber
   module Core
@@ -20,6 +21,8 @@ module Cucumber
           @timer.start
           @block.call
           passed
+        rescue Result::Pending => exception
+          pending(exception)
         rescue Exception => exception
           failed(exception)
         end
@@ -36,6 +39,10 @@ module Cucumber
 
         def skipped
           Result::Skipped.new
+        end
+
+        def pending(exception)
+          exception.with_duration(@timer.duration)
         end
       end
 

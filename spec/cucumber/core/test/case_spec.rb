@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'cucumber/core'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'

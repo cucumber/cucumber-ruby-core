@@ -52,23 +52,25 @@ module Cucumber
 
       it "filters out test cases based on a tag expression" do
         visitor = double.as_null_object
-        visitor.should_receive(:test_case).exactly(1).times
+        visitor.should_receive(:test_case) do |test_case|
+          test_case.name.should eq 'foo, bar (row 1)'
+        end.exactly(1).times
 
         gherkin = gherkin do
           feature do
-            scenario tags: '@a' do
+            scenario tags: '@b' do
               step
             end
 
-            scenario_outline do
+            scenario_outline 'foo' do
               step '<arg>'
 
-              examples do
+              examples tags: '@a'do
                 row 'arg'
                 row 'x'
               end
 
-              examples tags: '@a' do
+              examples 'bar', tags: '@a @b' do
                 row 'arg'
                 row 'y'
               end
@@ -76,7 +78,7 @@ module Cucumber
           end
         end
 
-        compile [gherkin], visitor, [[Cucumber::Core::Test::TagFilter, ['~@a']]]
+        compile [gherkin], visitor, [[Cucumber::Core::Test::TagFilter, [['@a', '@b']]]]
       end
     end
 
@@ -194,6 +196,55 @@ module Cucumber
           report.test_cases.total_failed.should eq(2)
           report.test_steps.total.should eq(6)
           report.test_steps.total_failed.should eq(2)
+        end
+      end
+
+      context "with around hooks" do
+        class AroundHookTestMappings
+          attr_reader :logger
+
+          def initialize
+            @logger = []
+          end
+
+          def test_case(test_case, mapper)
+            logger = @logger
+            mapper.around do |run_scenario|
+              logger << :before
+              run_scenario.call
+              logger << :middle
+              run_scenario.call
+              logger << :after
+            end
+            self
+          end
+
+          def test_step(step, mapper)
+            logger = @logger
+            mapper.map do
+              logger << :during
+            end
+            self
+          end
+        end
+
+        it "executes the test cases in the suite" do
+          gherkin = gherkin do
+            feature do
+              scenario do
+                step
+              end
+            end
+          end
+          report = SummaryReport.new
+          mappings = AroundHookTestMappings.new
+
+          execute [gherkin], mappings, report
+
+          report.test_cases.total.should eq(1)
+          report.test_cases.total_passed.should eq(1)
+          report.test_cases.total_failed.should eq(0)
+          mappings.logger.should == [:before, :during, :middle, :during, :after]
         end
       end
 

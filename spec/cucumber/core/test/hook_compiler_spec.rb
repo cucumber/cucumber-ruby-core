@@ -1,6 +1,8 @@
 require 'cucumber/core/test/hook_compiler'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
+require 'cucumber/core/test/runner'
+require 'cucumber/core/test/mapper'
 
 module Cucumber::Core::Test
   describe HookCompiler do
@@ -8,8 +10,11 @@ module Cucumber::Core::Test
     subject(:hook_compiler) { HookCompiler.new(mappings, receiver) }
     let(:mappings)   { double('mappings', test_case: nil) }
     let(:receiver)   { double('receiver', test_case: nil) }
-    let(:test_case)  { Case.new([test_step], [double('scenario')]) }
+    let(:test_case)  { Case.new([test_step], source) }
     let(:test_step)  { Step.new([double('step', name: 'passing')]) }
+    let(:source)     { [feature, scenario] }
+    let(:feature)    { double('feature') }
+    let(:scenario)   { double('scenario') }
 
     before do
       receiver.should_receive(:test_case) do |test_case|
@@ -54,6 +59,19 @@ module Cucumber::Core::Test
       mapper = Mapper.new(mappings, runner)
       hook_compiler = HookCompiler.new(mappings, mapper)
       test_case.describe_to hook_compiler
+    end
+
+    it "sets the source on the hook step to be just the hook" do
+      test_case = Case.new([], source)
+      mappings.stub(:test_case) do |test_case_to_be_mapped, mapper|
+        mapper.before {}
+      end
+      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_step) do |test_step|
+        receiver.should_receive(:hook)
+        test_step.describe_source_to(receiver)
+      end
+      test_case.describe_to(hook_compiler)
     end
 
   end

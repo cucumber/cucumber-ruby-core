@@ -289,10 +289,8 @@ module Cucumber
 
             def example_rows
               _, *raw_examples = *node.rows
-              number = 0
-              raw_examples.map do |row|
-                number += 1
-                header.build_row(row.cells, number, location.on_line(row.line))
+              raw_examples.each_with_index.map do |row, index|
+                header.build_row(row.cells, index + 1, location.on_line(row.line))
               end
             end
 
