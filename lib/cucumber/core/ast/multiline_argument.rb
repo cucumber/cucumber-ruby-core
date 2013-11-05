@@ -14,9 +14,13 @@ module Cucumber
 
             case(rubify(argument))
             when ::Gherkin::Formatter::Model::DocString
-              Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line_range))
+              # TODO: clean this up - can it be moved down to gherkin/rubify?
+              line_range = argument.line_range.first..argument.line_range.last
+              Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(line_range))
             when Array
-              location = parent_location.on_line(argument.first.line..argument.last.line)
+              # TODO: clean this up - can it be moved down to gherkin/rubify?
+              lines = argument.map(&:line)
+              location = parent_location.on_line(lines.first..lines.last)
               Ast::DataTable.new(argument.map{|row| row.cells}, location)
             else
               raise ArgumentError, "Don't know how to convert #{argument} into a MultilineArgument"
