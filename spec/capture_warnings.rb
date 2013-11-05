@@ -21,6 +21,8 @@ module CaptureWarnings
       print_warnings('cucumber-core', project_warnings)
       fail "Please remove all cucumber-core warnings."
     end
+
+    ensure_system_exit_if_required
   end
 
   def capture_error(&block)
@@ -53,5 +55,9 @@ module CaptureWarnings
     puts
     puts "-" * 75
     puts
+  end
+
+  def ensure_system_exit_if_required
+    raise $! if $!
   end
 end
