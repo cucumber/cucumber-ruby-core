@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'yard',     '~> 0.8.0'
 
   # For coverage reports
-  s.add_development_dependency 'coveralls', '~> 0.6.7'
+  s.add_development_dependency 'coveralls', '~> 0.7'
 
   s.rubygems_version = ">= 1.6.1"
   s.files            = `git ls-files`.split("\n").reject {|path| path =~ /\.gitignore$/ }
