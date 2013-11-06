@@ -12,7 +12,8 @@ module Cucumber
             return unless argument
             return argument if argument.respond_to?(:to_step_definition_arg)
 
-            case(rubify(argument))
+            argument = rubify(argument)
+            case argument
             when ::Gherkin::Formatter::Model::DocString
               Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line_range))
             when Array

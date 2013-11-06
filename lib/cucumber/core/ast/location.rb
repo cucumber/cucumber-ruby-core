@@ -9,7 +9,7 @@ module Cucumber
           case line_number
           when :wildcard
             Wildcard.new(file)
-          when Range
+          when Range, Java::GherkinFormatterModel::Range
             Ranged.new(file, line_number)
           else
             Precise.new(file, line_number)
