@@ -180,13 +180,6 @@ module Cucumber
           end
         end
 
-        def accept(visitor) #:nodoc:
-          cells_rows.each do |row|
-            row.accept(visitor)
-          end
-          nil
-        end
-
         # For testing only
         def to_sexp #:nodoc:
           [:table, *cells_rows.map{|row| row.to_sexp}]
@@ -322,15 +315,6 @@ module Cucumber
             @table, @cells = table, cells
           end
 
-          def accept(visitor)
-            visitor.visit_table_row(self) do
-              each do |cell|
-                cell.accept(visitor)
-              end
-            end
-            nil
-          end
-
           # For testing only
           def to_sexp #:nodoc:
             [:row, line, *@cells.map{|cell| cell.to_sexp}]
@@ -377,12 +361,6 @@ module Cucumber
 
           def initialize(value, table, line)
             @value, @table, @line = value, table, line
-          end
-
-          def accept(visitor)
-            visitor.visit_table_cell(self) do
-              visitor.visit_table_cell_value(value, status)
-            end
           end
 
           def inspect!
