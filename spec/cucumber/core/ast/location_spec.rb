@@ -2,8 +2,8 @@ require 'cucumber/core/ast/location'
 
 module Cucumber::Core::Ast
   describe Location do
-    let(:line) { double }
-    let(:file) { double }
+    let(:line) { 12 }
+    let(:file) { "foo.feature" }
 
     describe "equality" do
       it "is equal to another Location on the same line of the same file" do
@@ -26,8 +26,8 @@ module Cucumber::Core::Ast
         Location.new("foo.feature").to_s.should == "foo.feature"
       end
 
-      it "is file:first_line for a ranged location" do
-        Location.new("foo.feature", 13..19).to_s.should == "foo.feature:13"
+      it "is file:first_line..last_line for a ranged location" do
+        Location.new("foo.feature", 13..19).to_s.should == "foo.feature:13..19"
       end
     end
 

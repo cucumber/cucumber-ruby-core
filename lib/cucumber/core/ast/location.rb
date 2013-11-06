@@ -1,23 +1,29 @@
+require 'forwardable'
 module Cucumber
   module Core
     module Ast
-      module Location
-        def self.new(file, line_number=:wildcard)
-          file || raise(ArgumentError, "file is mandatory")
-          line_number || raise(ArgumentError, "line is mandatory")
+      class Location < Struct.new(:filepath, :lines)
+        WILDCARD = :*
 
-          case line_number
-          when :wildcard
-            Wildcard.new(file)
-          when Range, Java::GherkinFormatterModel::Range
-            Ranged.new(file, line_number)
-          else
-            Precise.new(file, line_number)
-          end
+        extend Forwardable
+
+        def_delegator :lines,    :include?
+        def_delegator :lines,    :line
+        def_delegator :filepath, :same_as?
+        def_delegator :filepath, :filename, :file
+
+        def initialize(filepath, lines=WILDCARD)
+          filepath || raise(ArgumentError, "file is mandatory")
+          lines || raise(ArgumentError, "line is mandatory")
+          super(FilePath.new(filepath), Lines.new(lines))
+        end
+
+        def match?(other)
+          other.same_as?(filepath) && other.include?(lines)
         end
 
         def to_s
-          [file, line].reject { |v| v == :wildcard }.join(":")
+          [filepath.to_s, lines.to_s].reject { |v| v == WILDCARD.to_s }.join(":")
         end
 
         def to_str
@@ -25,56 +31,72 @@ module Cucumber
         end
 
         def on_line(new_line)
-          Location.new(file, new_line)
+          Location.new(filepath.filename, new_line)
         end
 
         def inspect
           "<#{self.class}: #{to_s}>"
         end
 
-        class Precise < Struct.new(:file, :line)
-          include Location
-
-          def match?(other)
-            file == other.file && other.match_line?(line)
+        class FilePath < Struct.new(:filename)
+          def same_as?(other)
+            filename == other.filename
           end
 
-          def match_line?(queried_line)
-            queried_line == line || queried_line == :wildcard
+          def to_s
+            filename
           end
         end
 
-        class Wildcard < Struct.new(:file)
-          include Location
-          def match?(other)
-            file == other.file
+        require 'set'
+        class Lines
+          attr_reader :line
+          def initialize(line)
+            if Cucumber::JRUBY && line.is_a?(::Java::GherkinFormatterModel::Range)
+              line = Range.new(line.first, line.last)
+            end
+            @line = line
+            @data = Array(line).to_set
           end
 
-          def line
-            :wildcard
+          def include?(other)
+            return true if (data|other.data).include?(WILDCARD)
+            other.data.subset?(data) || data.subset?(other.data)
           end
 
-          def match_line?(queried_line)
-            true
+          def to_s
+            boundary.join('..')
+          end
+
+          def ==(other)
+            other.data == data
+          end
+
+          protected
+
+          attr_reader :data
+
+          def boundary
+            first_and_last(value).uniq
+          end
+
+          def at_index(idx)
+            data.to_a[idx]
+          end
+
+          def value
+            method :at_index
+          end
+
+          def first_and_last(something)
+            [0, -1].map(&something)
+          end
+
+          def as_ruby(line)
+
           end
         end
 
-        class Ranged < Struct.new(:file, :lines)
-          include Location
-          def match?(other)
-            file == other.file && (
-              lines.include?(other.line) || [line, other.line].include?(:wildcard)
-            )
-          end
-
-          def line
-            lines.first
-          end
-
-          def match_line?(queried_line)
-            lines.include?(queried_line) || queried_line == :wildcard
-          end
-        end
       end
 
       module HasLocation
