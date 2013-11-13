@@ -54,7 +54,7 @@ module Cucumber
           end
         end
 
-        include Gherkin::Rubify
+        include ::Gherkin::Rubify
 
         NULL_CONVERSIONS = Hash.new({ :strict => false, :proc => lambda{ |cell_value| cell_value } }).freeze
 
@@ -64,11 +64,11 @@ module Cucumber
           "table"
         end
 
-        def self.parse(text, uri, offset)
+        def self.parse(text, uri, location)
           builder = Builder.new
-          lexer = Gherkin::Lexer::I18nLexer.new(builder)
+          lexer = ::Gherkin::Lexer::I18nLexer.new(builder)
           lexer.scan(text)
-          new(builder.rows)
+          new(builder.rows, location)
         end
 
         # Creates a new instance. +raw+ should be an Array of Array of String

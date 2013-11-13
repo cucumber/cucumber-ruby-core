@@ -14,13 +14,15 @@ module Cucumber
 
             argument = rubify(argument)
             case argument
+            when String
+              Ast::DocString.new(argument, 'text/plain', parent_location)
             when ::Gherkin::Formatter::Model::DocString
               Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line_range))
             when Array
               location = parent_location.on_line(argument.first.line..argument.last.line)
               Ast::DataTable.new(argument.map{|row| row.cells}, location)
             else
-              raise ArgumentError, "Don't know how to convert #{argument} into a MultilineArgument"
+              raise ArgumentError, "Don't know how to convert #{argument.inspect} into a MultilineArgument"
             end
           end
 
