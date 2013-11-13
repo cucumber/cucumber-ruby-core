@@ -22,7 +22,7 @@ module Cucumber
         end
 
         def skip
-          @mapping.skip
+          execute
         end
 
         def map
