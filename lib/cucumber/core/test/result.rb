@@ -112,14 +112,15 @@ module Cucumber
           include Result.status_queries :pending
           attr_reader :message, :duration
 
-          def initialize(message, duration = :unknown)
+          def initialize(message, duration = :unknown, backtrace=nil)
             raise ArgumentError unless message
             @message, @duration = message, duration
             super(message)
+            set_backtrace(backtrace) if backtrace
           end
 
           def describe_to(visitor, *args)
-            visitor.pending(message, *args)
+            visitor.pending(self, *args)
             visitor.duration(duration, *args) unless duration == :unknown
             self
           end
@@ -129,7 +130,7 @@ module Cucumber
           end
 
           def with_duration(new_duration)
-            self.class.new(message, new_duration)
+            self.class.new(message, new_duration, backtrace)
           end
         end
 
