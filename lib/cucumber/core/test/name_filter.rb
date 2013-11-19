@@ -7,7 +7,6 @@ module Cucumber
 
         def test_case(test_case)
           if accept?(test_case)
-            $stderr.puts "accepted test_case = #{test_case.name}"
             test_case.describe_to(receiver)
           end
           self
