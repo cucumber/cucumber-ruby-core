@@ -178,6 +178,23 @@ module Cucumber
           end
         end
 
+        describe "matching names" do
+          it "matches names against regexp" do
+            gherkin = gherkin do
+              feature 'first feature' do
+                scenario 'scenario' do
+                  step 'missing'
+                end
+              end
+            end
+            receiver = double
+            receiver.should_receive(:test_case) do |test_case|
+              test_case.match_name?(/feature/).should be_true
+            end
+            compile [gherkin], receiver
+          end
+        end
+
         describe "#language" do
           it 'takes its language from the feature' do
             gherkin = Gherkin::Document.new('features/treasure.feature', %{# language: en-pirate

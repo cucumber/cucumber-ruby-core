@@ -272,6 +272,26 @@ module Cucumber
 
         report.test_cases.total.should eq(2)
       end
+
+      require 'cucumber/core/test/name_filter'
+      it "filters test cases by name" do
+        gherkin = gherkin do
+          feature 'first feature' do
+            scenario 'first scenario' do
+              step 'missing'
+            end
+            scenario 'second' do
+              step 'missing'
+            end
+          end
+        end
+        report = SummaryReport.new
+        mappings = HookTestMappings.new
+
+        execute [gherkin], mappings, report, [[Cucumber::Core::Test::NameFilter, [[/scenario/]]]]
+
+        report.test_cases.total.should eq(1)
+      end
     end
   end
 end

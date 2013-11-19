@@ -51,6 +51,10 @@ module Cucumber
           ::Gherkin::TagExpression.new(expressions.flatten).evaluate(tags.map {|t| ::Gherkin::Formatter::Model::Tag.new(t.name, t.line) })
         end
 
+        def match_name?(name_regexp)
+          source.any? { |node| node.respond_to?(:name) && node.name =~ name_regexp }
+        end
+
         def language
           feature.language
         end
