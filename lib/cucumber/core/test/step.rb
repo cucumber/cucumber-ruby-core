@@ -49,8 +49,8 @@ module Cucumber
         end
 
         def match_locations?(queried_locations)
-          return true if source.any? { |s| s.match_locations?(queried_locations) }
-          queried_locations.include? location
+          return true if queried_locations.include? location
+          source.any? { |s| s.match_locations?(queried_locations) }
         end
 
         def inspect
