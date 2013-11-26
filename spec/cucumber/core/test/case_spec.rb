@@ -264,7 +264,7 @@ module Cucumber
             it 'matches the precise location of an empty scenario' do
               empty_scenario_test_case = test_cases.find { |c| c.name == 'empty' }
               location = Ast::Location.new(file, 26)
-              empty_scenario_test_case.match_locations?([location]).should be_true
+              expect( empty_scenario_test_case.match_locations?([location]) ).to be_true
             end
 
             it 'matches multiple locations' do
