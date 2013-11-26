@@ -9,14 +9,13 @@ module Cucumber::Core::Ast
 
       describe 'location' do
         it 'knows the file and line number' do
-          header.file_colon_line.should == 'file.feature:8'
+          expect( header.file_colon_line ).to eq 'file.feature:8'
         end
       end
 
       context 'building a row' do
         it 'includes the header values as keys' do
-          header.build_row(%w{1 2 3}, 1, location).should ==
-            ExamplesTable::Row.new({'foo' => '1', 'bar' => '2', 'baz' => '3'}, 1, location)
+          expect( header.build_row(%w{1 2 3}, 1, location) ).to eq ExamplesTable::Row.new({'foo' => '1', 'bar' => '2', 'baz' => '3'}, 1, location)
         end
       end
     end
@@ -25,7 +24,7 @@ module Cucumber::Core::Ast
       describe 'location' do
         it 'knows the file and line number' do
           row = ExamplesTable::Row.new({}, 1, location)
-          row.file_colon_line.should == 'file.feature:8'
+          expect( row.file_colon_line ).to eq 'file.feature:8'
         end
       end
 
@@ -34,7 +33,7 @@ module Cucumber::Core::Ast
           it "replaces the argument with the value from the row" do
             row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1, location)
             text = 'this <arg> a test'
-            row.expand(text).should == 'this replacement a test'
+            expect( row.expand(text) ).to eq 'this replacement a test'
           end
         end
 
@@ -42,7 +41,7 @@ module Cucumber::Core::Ast
           it "uses an empty string for the replacement" do
             row = ExamplesTable::Row.new({'color' => nil}, 1, location)
             text = 'a <color> cucumber'
-            row.expand(text).should == 'a  cucumber'
+            expect( row.expand(text) ).to eq 'a  cucumber'
           end
         end
 
@@ -50,7 +49,7 @@ module Cucumber::Core::Ast
           it "ignores the arguments that do not match" do
             row = ExamplesTable::Row.new({'x' => '1', 'y' => '2'}, 1, location)
             text = 'foo <x> bar <z>'
-            row.expand(text).should == 'foo 1 bar <z>'
+            expect( row.expand(text) ).to eq 'foo 1 bar <z>'
           end
         end
       end
@@ -58,7 +57,7 @@ module Cucumber::Core::Ast
       describe 'accesing the values' do
         it 'returns the actual row values' do
           row = ExamplesTable::Row.new({'x' => '1', 'y' => '2'}, 1, location)
-          row.values.should == ['1', '2']
+          expect( row.values ).to eq ['1', '2']
         end
       end
 
@@ -69,17 +68,17 @@ module Cucumber::Core::Ast
         let(:original) { ExamplesTable::Row.new(data, number, location) }
 
         it 'is equal to another instance with the same data, number and location' do
-          original.should eq ExamplesTable::Row.new(data, number, location)
+          expect( original ).to eq ExamplesTable::Row.new(data, number, location)
         end
 
         it 'is not equal to another instance with different data, number or location' do
-          original.should_not eq ExamplesTable::Row.new({'x' => 'y'}, number, location)
-          original.should_not eq ExamplesTable::Row.new(data, double, location)
-          original.should_not eq ExamplesTable::Row.new(data, number, double)
+          expect( original ).not_to eq ExamplesTable::Row.new({'x' => 'y'}, number, location)
+          expect( original ).not_to eq ExamplesTable::Row.new(data, double, location)
+          expect( original ).not_to eq ExamplesTable::Row.new(data, number, double)
         end
 
         it 'is not equal to another type of object' do
-          original.should_not eq double(data: data, number: number, location: location)
+          expect( original ).not_to eq double(data: data, number: number, location: location)
         end
 
       end

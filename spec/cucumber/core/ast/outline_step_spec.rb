@@ -15,12 +15,12 @@ module Cucumber
 
         describe 'location' do
           it "has a location" do
-            outline_step.should respond_to(:location)
+            expect( outline_step ).to respond_to(:location)
           end
 
           it 'knows the file and line' do
             location.stub(:to_s) { 'file_name:8' }
-            outline_step.file_colon_line.should == 'file_name:8'
+            expect( outline_step.file_colon_line ).to eq 'file_name:8'
           end
         end
 
@@ -30,7 +30,7 @@ module Cucumber
 
             it "replaces the argument" do
               row = ExamplesTable::Row.new({'color' => 'green'}, 1, location)
-              outline_step.to_step(row).name.should == 'a green cucumber'
+              expect( outline_step.to_step(row).name ).to eq 'a green cucumber'
             end
 
           end
@@ -43,8 +43,8 @@ module Cucumber
             it "replaces the arguments in the DataTable" do
               visitor = double
               visitor.stub(:step).and_yield
-              visitor.should_receive(:table) do |data_table| # TODO: rename this message to :data_table
-                data_table.raw.should == [['x', 'y'], ['a', 'a replacement']]
+              expect( visitor ).to receive(:table) do |data_table| # TODO: rename this message to :data_table
+                expect( data_table.raw ).to eq [['x', 'y'], ['a', 'a replacement']]
               end
               row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1, location)
               step = outline_step.to_step(row)
@@ -61,8 +61,8 @@ module Cucumber
             it "replaces the arguments in the DocString" do
               visitor = double
               visitor.stub(:step).and_yield
-              visitor.should_receive(:doc_string) do |doc_string|
-                doc_string.content.should == "a replacement that needs replacing"
+              expect( visitor ).to receive(:doc_string) do |doc_string|
+                expect( doc_string.content ).to eq "a replacement that needs replacing"
               end
               row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1, location)
               step = outline_step.to_step(row)

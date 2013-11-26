@@ -27,12 +27,12 @@ module Cucumber
     end
 
     it 'creates readers for the attributes' do
-      cucumber_book.description.should == 'The Cucumber Book by Matt Wynne'
+      expect( cucumber_book.description ).to eq 'The Cucumber Book by Matt Wynne'
     end
 
     it 'creates instance variables for the attributes' do
       cucumber_book.upcase!
-      cucumber_book.description.should == 'THE CUCUMBER BOOK by MATT WYNNE'
+      expect( cucumber_book.description ).to eq 'THE CUCUMBER BOOK by MATT WYNNE'
     end
 
     context 'with an overridden reader' do
