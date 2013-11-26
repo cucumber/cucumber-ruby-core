@@ -92,7 +92,7 @@ module Cucumber::Core::Gherkin
             end
           end
 
-          expect( source.to_s ).to match /Scenario:/
+          expect( source.to_s ).to match(/Scenario:/)
         end
 
         context 'when a comment is provided' do
@@ -145,7 +145,7 @@ module Cucumber::Core::Gherkin
               end
             end
 
-            expect( source.to_s ).to match /Given passing\Z/m
+            expect( source.to_s ).to match(/Given passing\Z/m)
           end
 
           context 'when a docstring is provided' do

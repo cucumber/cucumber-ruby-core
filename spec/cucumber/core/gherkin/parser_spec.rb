@@ -21,8 +21,8 @@ module Cucumber
 
           it "raises an error" do
             expect { parse }.to raise_error(ParseError) do |error|
-              expect( error.message ).to match /not gherkin/
-              expect( error.message ).to match /#{path}/
+              expect( error.message ).to match(/not gherkin/)
+              expect( error.message ).to match(/#{path}/)
             end
           end
         end
