@@ -22,8 +22,8 @@ module Cucumber
     end
 
     it 'creates a private reader for the attributes' do
-      expect { cucumber_book.title }.to raise_error(NoMethodError)
-      expect { cucumber_book.author }.to raise_error(NoMethodError)
+      expect { cucumber_book.title  }.to raise_error NoMethodError
+      expect { cucumber_book.author }.to raise_error NoMethodError
     end
 
     it 'creates readers for the attributes' do

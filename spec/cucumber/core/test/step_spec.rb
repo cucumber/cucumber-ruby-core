@@ -16,9 +16,9 @@ module Cucumber::Core::Test
         feature, scenario, step = double, double, double
         visitor = double
         args = double
-        expect( feature ).to receive(:describe_to).with(visitor, args)
-        expect( scenario).to receive(:describe_to).with(visitor, args)
-        expect( step ).to receive(:describe_to).with(visitor, args)
+        expect( feature  ).to receive(:describe_to).with(visitor, args)
+        expect( scenario ).to receive(:describe_to).with(visitor, args)
+        expect( step     ).to receive(:describe_to).with(visitor, args)
         test_step = Step.new([feature, scenario, step])
         test_step.describe_source_to(visitor, args)
       end
@@ -40,7 +40,7 @@ module Cucumber::Core::Test
         it "returns a failing result" do
           test_step = Step.new([ast_step]).map { raise exception }
           result = test_step.execute
-          expect( result ).to be_failed
+          expect( result           ).to be_failed
           expect( result.exception ).to eq exception
         end
       end
@@ -50,7 +50,7 @@ module Cucumber::Core::Test
       name, multiline_arg = double, double
       ast_step = double(name: name, multiline_arg: multiline_arg)
       test_step = Step.new([ast_step])
-      expect( test_step.name ).to eq name
+      expect( test_step.name          ).to eq name
       expect( test_step.multiline_arg ).to eq multiline_arg
     end
 

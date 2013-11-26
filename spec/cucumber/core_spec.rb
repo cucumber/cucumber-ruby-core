@@ -138,13 +138,13 @@ module Cucumber
 
           execute [gherkin], mappings, report
 
-          expect( report.test_cases.total ).to eq 2
-          expect( report.test_cases.total_passed ).to eq 1
-          expect( report.test_cases.total_failed ).to eq 1
-          expect( report.test_steps.total ).to eq 5
-          expect( report.test_steps.total_failed ).to eq 1
-          expect( report.test_steps.total_passed ).to eq 2
-          expect( report.test_steps.total_skipped ).to eq 1
+          expect( report.test_cases.total           ).to eq 2
+          expect( report.test_cases.total_passed    ).to eq 1
+          expect( report.test_cases.total_failed    ).to eq 1
+          expect( report.test_steps.total           ).to eq 5
+          expect( report.test_steps.total_failed    ).to eq 1
+          expect( report.test_steps.total_passed    ).to eq 2
+          expect( report.test_steps.total_skipped   ).to eq 1
           expect( report.test_steps.total_undefined ).to eq 1
         end
       end
@@ -191,10 +191,10 @@ module Cucumber
 
           execute [gherkin], mappings, report
 
-          expect( report.test_cases.total ).to eq 3
+          expect( report.test_cases.total        ).to eq 3
           expect( report.test_cases.total_passed ).to eq 1
           expect( report.test_cases.total_failed ).to eq 2
-          expect( report.test_steps.total ).to eq 6
+          expect( report.test_steps.total        ).to eq 6
           expect( report.test_steps.total_failed ).to eq 2
         end
       end
@@ -241,7 +241,7 @@ module Cucumber
 
           execute [gherkin], mappings, report
 
-          expect( report.test_cases.total ).to eq 1
+          expect( report.test_cases.total        ).to eq 1
           expect( report.test_cases.total_passed ).to eq 1
           expect( report.test_cases.total_failed ).to eq 0
           expect( mappings.logger ).to eq [:before, :during, :middle, :during, :after]

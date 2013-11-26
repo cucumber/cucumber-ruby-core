@@ -129,25 +129,25 @@ module Cucumber::Core::Test
       it "counts failed results" do
         failed.describe_to summary
         expect( summary.total_failed ).to eq 1
-        expect( summary.total ).to eq 1
+        expect( summary.total        ).to eq 1
       end
 
       it "counts passed results" do
         passed.describe_to summary
         expect( summary.total_passed ).to eq 1
-        expect( summary.total ).to eq 1
+        expect( summary.total        ).to eq 1
       end
 
       it "counts skipped results" do
         skipped.describe_to summary
         expect( summary.total_skipped ).to eq 1
-        expect( summary.total ).to eq 1
+        expect( summary.total         ).to eq 1
       end
 
       it "counts undefined results" do
         undefined.describe_to summary
         expect( summary.total_undefined ).to eq 1
-        expect( summary.total ).to eq 1
+        expect( summary.total           ).to eq 1
       end
 
       it "doesn't count unknown results" do
@@ -157,10 +157,10 @@ module Cucumber::Core::Test
 
       it "counts combinations" do
         [passed, passed, failed, skipped, undefined].each { |r| r.describe_to summary }
-        expect( summary.total ).to eq 5
-        expect( summary.total_passed ).to eq 2
-        expect( summary.total_failed ).to eq 1
-        expect( summary.total_skipped ).to eq 1
+        expect( summary.total           ).to eq 5
+        expect( summary.total_passed    ).to eq 2
+        expect( summary.total_failed    ).to eq 1
+        expect( summary.total_skipped   ).to eq 1
         expect( summary.total_undefined ).to eq 1
       end
 
