@@ -17,28 +17,28 @@ module Cucumber
             executed = false
             mapping = Mapping.new { executed = true }
             mapping.execute
-            executed.should == true
+            expect( executed ).to be_true
           end
 
           it "returns a passed result if the block doesn't fail" do
             mapping = Mapping.new {}
-            mapping.execute.should be_passed
+            expect( mapping.execute ).to be_passed
           end
 
           it "returns a failed result when the block raises an error" do
             exception = StandardError.new
             mapping = Mapping.new { raise exception }
             result = mapping.execute
-            result.should be_failed
-            result.exception.should == exception
+            expect( result ).to be_failed
+            expect( result.exception ).to eq exception
           end
 
           it "returns a pending result if a pending error is raised" do
             exception = Result::Pending.new("TODO")
             mapping = Mapping.new { raise exception }
             result = mapping.execute
-            result.should be_pending
-            result.message.should == "TODO"
+            expect( result ).to be_pending
+            expect( result.message ).to eq "TODO"
           end
 
           context "recording the duration" do
@@ -52,13 +52,13 @@ module Cucumber
             it "records the nanoseconds duration of the execution on the result" do
               mapping = Mapping.new { }
               duration = mapping.execute.duration
-              duration.should eq(1)
+              expect( duration ).to eq 1
             end
 
             it "records the duration of a failed execution" do
               mapping = Mapping.new { raise StandardError }
               duration = mapping.execute.duration
-              duration.should eq(1)
+              expect( duration ).to eq 1
             end
           end
 
@@ -69,12 +69,12 @@ module Cucumber
             executed = false
             mapping = Mapping.new { executed = true }
             mapping.skip
-            executed.should == false
+            expect( executed ).to be_false
           end
 
           it "returns a skipped result" do
             mapping = Mapping.new {}
-            mapping.skip.should be_skipped
+            expect( mapping.skip ).to be_skipped
           end
         end
       end
@@ -85,13 +85,13 @@ module Cucumber
 
         context "executing" do
           it "returns an undefined result" do
-            mapping.execute.should be_undefined
+            expect( mapping.execute ).to be_undefined
           end
         end
 
         context "skipping" do
           it "returns an undefined result" do
-            mapping.skip.should be_undefined
+            expect( mapping.skip ).to be_undefined
           end
         end
 

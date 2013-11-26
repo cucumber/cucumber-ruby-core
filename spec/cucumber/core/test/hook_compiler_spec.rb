@@ -17,8 +17,8 @@ module Cucumber::Core::Test
     let(:scenario)   { double('scenario') }
 
     before do
-      receiver.should_receive(:test_case) do |test_case|
-        test_case.should have(1).test_steps
+      expect( receiver ).to receive(:test_case) do |test_case|
+        expect( test_case ).to have(1).test_steps
       end
       test_case.describe_to hook_compiler
     end
@@ -27,8 +27,8 @@ module Cucumber::Core::Test
       mappings.stub(:test_case) do |test_case, mapper|
         mapper.before {}
       end
-      receiver.should_receive(:test_case) do |test_case|
-        test_case.should have(2).test_steps
+      expect( receiver ).to receive(:test_case) do |test_case|
+        expect( test_case ).to have(2).test_steps
       end
       test_case.describe_to hook_compiler
     end
@@ -37,8 +37,8 @@ module Cucumber::Core::Test
       mappings.stub(:test_case) do |test_case, mapper|
         mapper.after {}
       end
-      receiver.should_receive(:test_case) do |test_case|
-        test_case.should have(2).test_steps
+      expect( receiver ).to receive(:test_case) do |test_case|
+        expect( test_case ).to have(2).test_steps
       end
       test_case.describe_to hook_compiler
     end
@@ -53,7 +53,7 @@ module Cucumber::Core::Test
         mapper.map { log.step }
       end
       [:before, :step, :after].each do |message|
-        log.should_receive(message).ordered
+        expect( log ).to receive(message).ordered
       end
       runner = Runner.new(double.as_null_object)
       mapper = Mapper.new(mappings, runner)
@@ -68,7 +68,7 @@ module Cucumber::Core::Test
       end
       receiver.stub(:test_case).and_yield
       receiver.stub(:test_step) do |test_step|
-        receiver.should_receive(:hook)
+        expect( receiver ).to receive(:hook)
         test_step.describe_source_to(receiver)
       end
       test_case.describe_to(hook_compiler)
