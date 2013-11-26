@@ -29,11 +29,11 @@ module Cucumber::Core::Test
         expect { Result::Passed.new }.to raise_error(ArgumentError)
       end
 
-      it { should     be_passed    }
-      it { should_not be_failed    }
-      it { should_not be_undefined }
-      it { should_not be_unknown   }
-      it { should_not be_skipped   }
+      it { expect( result ).to     be_passed    }
+      it { expect( result ).not_to be_failed    }
+      it { expect( result ).not_to be_undefined }
+      it { expect( result ).not_to be_unknown   }
+      it { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Failed do
@@ -57,11 +57,11 @@ module Cucumber::Core::Test
         expect { Result::Failed.new(duration) }.to raise_error(ArgumentError)
       end
 
-      it { should_not be_passed    }
-      it { should     be_failed    }
-      it { should_not be_undefined }
-      it { should_not be_unknown   }
-      it { should_not be_skipped   }
+      it { expect( result ).not_to be_passed    }
+      it { expect( result ).to     be_failed    }
+      it { expect( result ).not_to be_undefined }
+      it { expect( result ).not_to be_unknown   }
+      it { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Unknown do
@@ -76,11 +76,11 @@ module Cucumber::Core::Test
         expect { result.duration }.to raise_error NoMethodError
       end
 
-      it { should_not be_passed    }
-      it { should_not be_failed    }
-      it { should_not be_undefined }
-      it { should     be_unknown   }
-      it { should_not be_skipped   }
+      it { expect( result ).not_to be_passed    }
+      it { expect( result ).not_to be_failed    }
+      it { expect( result ).not_to be_undefined }
+      it { expect( result ).to     be_unknown   }
+      it { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Undefined do
@@ -91,11 +91,11 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
-      it { should_not be_passed    }
-      it { should_not be_failed    }
-      it { should     be_undefined }
-      it { should_not be_unknown   }
-      it { should_not be_skipped   }
+      it { expect( result ).not_to be_passed    }
+      it { expect( result ).not_to be_failed    }
+      it { expect( result ).to     be_undefined }
+      it { expect( result ).not_to be_unknown   }
+      it { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Skipped do
@@ -110,11 +110,11 @@ module Cucumber::Core::Test
         expect { result.duration }.to raise_error NoMethodError
       end
 
-      it { should_not be_passed    }
-      it { should_not be_failed    }
-      it { should_not be_undefined }
-      it { should_not be_unknown   }
-      it { should     be_skipped   }
+      it { expect( result ).not_to be_passed    }
+      it { expect( result ).not_to be_failed    }
+      it { expect( result ).not_to be_undefined }
+      it { expect( result ).not_to be_unknown   }
+      it { expect( result ).to     be_skipped   }
     end
 
     describe Result::Summary do
