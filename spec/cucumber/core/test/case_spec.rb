@@ -247,6 +247,8 @@ module Cucumber
                     Given a table
                       | a | b |
                       | 1 | 2 |
+
+                  Scenario: empty
               END
             end
 
@@ -257,6 +259,12 @@ module Cucumber
             it 'matches the precise location of the scenario' do
               location = Ast::Location.new(file, 8)
               test_case.match_locations?([location]).should be_true
+            end
+
+            it 'matches the precise location of an empty scenario' do
+              empty_scenario_test_case = test_cases.find { |c| c.name == 'empty' }
+              location = Ast::Location.new(file, 26)
+              empty_scenario_test_case.match_locations?([location]).should be_true
             end
 
             it 'matches multiple locations' do
