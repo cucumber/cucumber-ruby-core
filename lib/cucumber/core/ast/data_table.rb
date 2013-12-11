@@ -173,10 +173,6 @@ module Cucumber
 
         private
 
-        TO_S_PREFIXES = Hash.new('    ')
-        TO_S_PREFIXES[:comment]   = '(+) '
-        TO_S_PREFIXES[:undefined] = '(-) '
-
         def build_hashes
           cells_rows[1..-1].map do |row|
             row.to_hash
@@ -259,8 +255,8 @@ module Cucumber
         end
 
         class Cell #:nodoc:
-          attr_reader :line, :table
-          attr_accessor :status, :value
+          attr_reader :line
+          attr_accessor :value
 
           def initialize(value, table, line)
             @value, @table, @line = value, table, line
