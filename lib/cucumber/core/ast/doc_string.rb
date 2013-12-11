@@ -21,12 +21,7 @@ module Cucumber
       class DocString
         include HasLocation
         include DescribesItself
-        attr_accessor :file
-
-        def self.default_arg_name
-          "string"
-        end
-
+        
         attr_reader :content_type, :content
 
         def initialize(string, content_type, location)
@@ -55,14 +50,6 @@ module Cucumber
           raise ArgumentError, "No block given" unless block_given?
           new_content = yield content
           self.class.new(new_content, content_type, location)
-        end
-
-        def to_step_definition_arg
-          self
-        end
-
-        def has_text?(text)
-          index(text)
         end
 
         def ==(other)
