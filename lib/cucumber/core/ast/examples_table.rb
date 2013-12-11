@@ -10,7 +10,7 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :header, :keyword, :name, :tags, :comments
+        attr_reader :name, :tags
 
         include Cucumber.initializer(
           :location, :comments, :tags, :keyword, :name, :description, :header, :example_rows
@@ -32,14 +32,6 @@ module Cucumber
           def initialize(cells, location)
             @cells = cells
             @location = location
-          end
-
-          def values
-            @cells
-          end
-
-          def ==(other)
-            other == @cells
           end
 
           def build_row(row_cells, number, location)
