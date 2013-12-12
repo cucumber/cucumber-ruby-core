@@ -1,5 +1,4 @@
 require 'gherkin/rubify'
-require 'gherkin/lexer/i18n_lexer'
 require 'gherkin/formatter/escaping'
 require 'cucumber/core/ast/describes_itself'
 require 'cucumber/core/ast/location'
@@ -30,46 +29,7 @@ module Cucumber
         include DescribesItself
         include HasLocation
 
-        class Different < StandardError
-          attr_reader :table
-
-          def initialize(table)
-            super('Tables were not identical')
-            @table = table
-          end
-        end
-
-        class Builder
-          attr_reader :rows
-
-          def initialize
-            @rows = []
-          end
-
-          def row(row, line_number)
-            @rows << row
-          end
-
-          def eof
-          end
-        end
-
         include ::Gherkin::Rubify
-
-        NULL_CONVERSIONS = Hash.new({ :strict => false, :proc => lambda{ |cell_value| cell_value } }).freeze
-
-        attr_accessor :file
-
-        def self.default_arg_name #:nodoc:
-          "table"
-        end
-
-        def self.parse(text, uri, location)
-          builder = Builder.new
-          lexer = ::Gherkin::Lexer::I18nLexer.new(builder)
-          lexer.scan(text)
-          new(builder.rows, location)
-        end
 
         # Creates a new instance. +raw+ should be an Array of Array of String
         # or an Array of Hash
@@ -84,16 +44,6 @@ module Cucumber
           raw.transpose
           create_cell_matrix(raw)
           @location = location
-        end
-
-        def to_step_definition_arg
-          dup
-        end
-
-        # Creates a copy of this table
-        #
-        def dup
-          self.class.new(raw.dup, location)
         end
 
         # Returns a new, transposed table. Example:
@@ -180,13 +130,6 @@ module Cucumber
           end
         end
 
-        def accept(visitor) #:nodoc:
-          cells_rows.each do |row|
-            row.accept(visitor)
-          end
-          nil
-        end
-
         # For testing only
         def to_sexp #:nodoc:
           [:table, *cells_rows.map{|row| row.to_sexp}]
@@ -202,20 +145,8 @@ module Cucumber
           hash
         end
 
-        def index(cells) #:nodoc:
-          cells_rows.index(cells)
-        end
-
-        def verify_column(column_name) #:nodoc:
-          raise %{The column named "#{column_name}" does not exist} unless raw[0].include?(column_name)
-        end
-
         def verify_table_width(width) #:nodoc:
           raise %{The table must have exactly #{width} columns} unless raw[0].size == width
-        end
-
-        def has_text?(text) #:nodoc:
-          raw.flatten.compact.detect{|cell_value| cell_value.index(text)}
         end
 
         def cells_rows #:nodoc:
@@ -228,16 +159,8 @@ module Cucumber
           raw.first
         end
 
-        def header_cell(col) #:nodoc:
-          cells_rows[0][col]
-        end
-
         def cell_matrix #:nodoc:
           @cell_matrix
-        end
-
-        def col_width(col) #:nodoc:
-          columns[col].__send__(:width)
         end
 
         def ==(other)
@@ -249,10 +172,6 @@ module Cucumber
         end
 
         private
-
-        TO_S_PREFIXES = Hash.new('    ')
-        TO_S_PREFIXES[:comment]   = '(+) '
-        TO_S_PREFIXES[:undefined] = '(-) '
 
         def build_hashes
           cells_rows[1..-1].map do |row|
@@ -279,11 +198,6 @@ module Cucumber
           @cell_class.new(raw_cell, self, line)
         end
 
-        def ensure_table(table_or_array) #:nodoc:
-          return table_or_array if DataTable === table_or_array
-          DataTable.new(table_or_array)
-        end
-
         def ensure_array_of_array(array)
           Hash === array[0] ? hashes_to_array(array) : array
         end
@@ -291,20 +205,6 @@ module Cucumber
         def hashes_to_array(hashes) #:nodoc:
           header = hashes[0].keys.sort
           [header] + hashes.map{|hash| header.map{|key| hash[key]}}
-        end
-
-        def ensure_green! #:nodoc:
-          each_cell{|cell| cell.status = :passed}
-        end
-
-        def each_cell(&proc) #:nodoc:
-          cell_matrix.each{|row| row.each(&proc)}
-        end
-
-        def mark_as_missing(col) #:nodoc:
-          col.each do |cell|
-            cell.status = :undefined
-          end
         end
 
         def description_for_visitors
@@ -320,15 +220,6 @@ module Cucumber
 
           def initialize(table, cells)
             @table, @cells = table, cells
-          end
-
-          def accept(visitor)
-            visitor.visit_table_row(self) do
-              each do |cell|
-                cell.accept(visitor)
-              end
-            end
-            nil
           end
 
           # For testing only
@@ -352,15 +243,7 @@ module Cucumber
             @cells[0].line
           end
 
-          def dom_id
-            "row_#{line}"
-          end
-
           private
-
-          def index
-            @table.index(self)
-          end
 
           def width
             map{|cell| cell.value ? escape_cell(cell.value.to_s).unpack('U*').length : 0}.max
@@ -372,52 +255,20 @@ module Cucumber
         end
 
         class Cell #:nodoc:
-          attr_reader :line, :table
-          attr_accessor :status, :value
+          attr_reader :line
+          attr_accessor :value
 
           def initialize(value, table, line)
             @value, @table, @line = value, table, line
-          end
-
-          def accept(visitor)
-            visitor.visit_table_cell(self) do
-              visitor.visit_table_cell_value(value, status)
-            end
           end
 
           def inspect!
             @value = "(i) #{value.inspect}"
           end
 
-          def ==(o)
-            SurplusCell === o || value == o.value
-          end
-
-          def eql?(o)
-            self == o
-          end
-
-          def hash
-            0
-          end
-
           # For testing only
           def to_sexp #:nodoc:
             [:cell, @value]
-          end
-        end
-
-        class SurplusCell < Cell #:nodoc:
-          def status
-            :comment
-          end
-
-          def ==(o)
-            true
-          end
-
-          def hash
-            0
           end
         end
       end
