@@ -96,17 +96,19 @@ module Cucumber
           end
 
           def scenario(scenario)
-            @result = scenario.name
+            @result = "#{scenario.keyword}: #{scenario.name}"
             self
           end
 
           def scenario_outline(outline)
-            @result = outline.name.dup
+            @result = "#{outline.keyword}: #{outline.name}"
             self
           end
 
           def examples_table(table)
-            @result << ", #{table.name}"
+            name = table.name.strip
+            name = table.keyword if name.length == 0
+            @result << ", #{name}"
             self
           end
 
