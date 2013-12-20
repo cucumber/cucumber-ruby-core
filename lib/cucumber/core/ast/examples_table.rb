@@ -38,10 +38,6 @@ module Cucumber
             @cells
           end
 
-          def ==(other)
-            other == @cells
-          end
-
           def build_row(row_cells, number, location)
             Row.new(Hash[@cells.zip(row_cells)], number, location)
           end
@@ -92,14 +88,8 @@ module Cucumber
           def description_for_visitors
             :examples_table_row
           end
-
-          def children
-            []
-          end
         end
-
       end
-
     end
   end
 end
