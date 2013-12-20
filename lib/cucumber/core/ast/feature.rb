@@ -26,48 +26,8 @@ module Cucumber
           @gherkin_statement ||= statement
         end
 
-        def step_count
-          units.inject(0) { |total, unit| total += unit.step_count }
-        end
-
         def children
           [background] + @feature_elements
-        end
-
-        def accept(visitor)
-          visitor.visit_feature(self) do
-            comment.accept(visitor)
-            tags.accept(visitor)
-            visitor.visit_feature_name(keyword, indented_name)
-            @feature_elements.each do |feature_element|
-              feature_element.accept(visitor)
-            end
-          end
-        end
-
-        def indented_name
-          indent = ""
-          name.split("\n").map do |l|
-            s = "#{indent}#{l}"
-            indent = "  "
-            s
-          end.join("\n")
-        end
-
-        def source_tags
-          @tags.tags
-        end
-
-        def source_tag_names
-          source_tags.map { |tag| tag.name }
-        end
-
-        def accept_hook?(hook)
-          @tags.accept_hook?(hook)
-        end
-
-        def backtrace_line(step_name, line)
-          "#{location.on_line(line)}:in `#{step_name}'"
         end
 
         def short_name
