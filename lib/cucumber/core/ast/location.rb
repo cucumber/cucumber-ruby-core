@@ -52,9 +52,9 @@ module Cucumber
         class Lines
           attr_reader :line
           def initialize(line)
-            # if Cucumber::JRUBY && line.is_a?(::Java::GherkinFormatterModel::Range)
-            #   line = Range.new(line.first, line.last)
-            # end
+            if Cucumber::JRUBY && line.is_a?(::Java::GherkinFormatterModel::Range)
+              line = Range.new(line.first, line.last)
+            end
             @line = line
             @data = Array(line).to_set
           end
