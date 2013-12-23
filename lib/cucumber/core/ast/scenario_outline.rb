@@ -27,15 +27,6 @@ module Cucumber
           @gherkin_statement = node
         end
 
-        def visit_scenario_name(visitor, row)
-          visitor.visit_scenario_name(
-            language.keywords('scenario')[0],
-            row.name,
-            Location.new(file, row.line).to_s,
-            source_indent(first_line_length)
-          )
-        end
-
         private
 
         def children
