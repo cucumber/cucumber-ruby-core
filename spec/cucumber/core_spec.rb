@@ -53,7 +53,7 @@ module Cucumber
       it "filters out test cases based on a tag expression" do
         visitor = double.as_null_object
         visitor.should_receive(:test_case) do |test_case|
-          test_case.name.should eq 'foo, bar (row 1)'
+          test_case.name.should eq 'Scenario Outline: foo, bar (row 1)'
         end.exactly(1).times
 
         gherkin = gherkin do
@@ -155,10 +155,10 @@ module Cucumber
 
           def test_case(test_case, mapper)
             case test_case.name
-            when 'fail before'
+            when /fail before/
               mapper.before { raise Failure }
               mapper.after  { 'This hook will be skipped' }
-            when 'fail after'
+            when /fail after/
               mapper.after { raise Failure }
             end
             self
@@ -191,11 +191,11 @@ module Cucumber
 
           execute [gherkin], mappings, report
 
+          report.test_steps.total.should eq(6)
+          report.test_steps.total_failed.should eq(2)
           report.test_cases.total.should eq(3)
           report.test_cases.total_passed.should eq(1)
           report.test_cases.total_failed.should eq(2)
-          report.test_steps.total.should eq(6)
-          report.test_steps.total_failed.should eq(2)
         end
       end
 
