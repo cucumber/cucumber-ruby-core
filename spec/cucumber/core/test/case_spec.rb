@@ -35,6 +35,16 @@ module Cucumber
             test_case.describe_to(visitor, args)
           end
 
+          it "describes around hooks in order" do
+            visitor = double
+            visitor.stub(:test_case).and_yield
+            first_hook, second_hook = double, double
+            first_hook.should_receive(:describe_to).ordered.and_yield
+            second_hook.should_receive(:describe_to).ordered.and_yield
+            around_hooks = [first_hook, second_hook]
+            Test::Case.new([], [], around_hooks).describe_to(visitor, double)
+          end
+
           it "describes its source to a visitor" do
             visitor = double
             args = double
@@ -42,6 +52,7 @@ module Cucumber
             scenario.should_receive(:describe_to).with(visitor, args)
             test_case.describe_source_to(visitor, args)
           end
+
         end
 
         describe "#name" do

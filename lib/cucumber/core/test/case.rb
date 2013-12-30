@@ -75,7 +75,7 @@ module Cucumber
         private
 
         def compose_around_hooks(visitor, *args, &block)
-          around_hooks.reduce(block) do |continue, hook|
+          around_hooks.reverse.reduce(block) do |continue, hook|
             -> { hook.describe_to(visitor, *args, &continue) }
           end.call
         end
