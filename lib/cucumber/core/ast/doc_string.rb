@@ -61,10 +61,6 @@ module Cucumber
           self
         end
 
-        def has_text?(text)
-          index(text)
-        end
-
         def ==(other)
           if other.respond_to?(:content_type)
             return false unless content_type == other.content_type

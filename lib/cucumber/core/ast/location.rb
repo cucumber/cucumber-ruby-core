@@ -91,12 +91,7 @@ module Cucumber
           def first_and_last(something)
             [0, -1].map(&something)
           end
-
-          def as_ruby(line)
-
-          end
         end
-
       end
 
       module HasLocation
