@@ -8,8 +8,7 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :keyword, :name, :language
-        attr_accessor :exception, :multiline_arg
+        attr_reader :keyword, :name, :language, :exception, :multiline_arg
 
         def initialize(language, location, keyword, name, multiline_arg=nil)
           @location, @keyword, @name, @multiline_arg = location, keyword, name, multiline_arg
