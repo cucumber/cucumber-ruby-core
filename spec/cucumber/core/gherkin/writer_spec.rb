@@ -8,12 +8,12 @@ module Cucumber::Core::Gherkin
     context 'specifying uri' do
       it 'generates a uri by default' do
         source = gherkin { feature }
-        source.uri.should == 'features/test.feature'
+        expect( source.uri ).to eq 'features/test.feature'
       end
 
       it 'allows you to specify a URI' do
         source = gherkin('features/path/to/my.feature') { feature }
-        source.uri.should == 'features/path/to/my.feature'
+        expect( source.uri ).to eq 'features/path/to/my.feature'
       end
     end
 
@@ -21,7 +21,7 @@ module Cucumber::Core::Gherkin
 
       it 'generates the feature statement' do
         source = gherkin { feature }
-        source.should == "Feature:\n"
+        expect( source ).to eq "Feature:\n"
       end
 
       context 'when a name is provided' do
@@ -29,7 +29,7 @@ module Cucumber::Core::Gherkin
           source = gherkin do
             feature "A Feature\n"
           end
-          source.should == "Feature: A Feature\n"
+          expect( source ).to eq "Feature: A Feature\n"
         end
       end
 
@@ -49,7 +49,7 @@ module Cucumber::Core::Gherkin
             multiple lines.
           END
 
-          source.should == expected.unindent
+          expect( source ).to eq expected.unindent
         end
       end
 
@@ -58,7 +58,7 @@ module Cucumber::Core::Gherkin
           source = gherkin do
             feature "A Feature", keyword: "Business Need"
           end
-          source.should == "Business Need: A Feature\n"
+          expect( source ).to eq "Business Need: A Feature\n"
         end
       end
 
@@ -68,7 +68,7 @@ module Cucumber::Core::Gherkin
             feature language: 'ru'
           end
 
-          source.should == "# language: ru\nFeature:\n"
+          expect( source ).to eq "# language: ru\nFeature:\n"
         end
       end
 
@@ -80,7 +80,7 @@ module Cucumber::Core::Gherkin
             feature
           end
 
-          source.to_s.should == "# wow\n# great\nFeature:\n"
+          expect( source.to_s ).to eq "# wow\n# great\nFeature:\n"
         end
       end
 
@@ -92,7 +92,7 @@ module Cucumber::Core::Gherkin
             end
           end
 
-          source.to_s.should =~ /Scenario:/
+          expect( source.to_s ).to match(/Scenario:/)
         end
 
         context 'when a comment is provided' do
@@ -103,7 +103,7 @@ module Cucumber::Core::Gherkin
                 scenario
               end
             end
-            source.to_s.should == <<-END.unindent
+            expect( source.to_s ).to eq <<-END.unindent
             Feature:
 
               # wow
@@ -124,7 +124,7 @@ module Cucumber::Core::Gherkin
               end
             end
 
-            source.should == <<-END.unindent
+            expect( source ).to eq <<-END.unindent
             Feature:
 
               Scenario:
@@ -145,7 +145,7 @@ module Cucumber::Core::Gherkin
               end
             end
 
-            source.to_s.should =~ /Given passing\Z/m
+            expect( source.to_s ).to match(/Given passing\Z/m)
           end
 
           context 'when a docstring is provided' do
@@ -161,7 +161,7 @@ module Cucumber::Core::Gherkin
 
               end
 
-              source.should == <<-END.unindent
+              expect( source ).to eq <<-END.unindent
               Feature:
 
                 Scenario:
@@ -183,7 +183,7 @@ module Cucumber::Core::Gherkin
             end
           end
 
-          source.should == <<-END.unindent
+          expect( source ).to eq <<-END.unindent
           Feature:
 
             Background:
@@ -201,7 +201,7 @@ module Cucumber::Core::Gherkin
             end
           end
 
-          source.should == <<-END.unindent
+          expect( source ).to eq <<-END.unindent
           Feature:
 
             Scenario Outline:
@@ -221,7 +221,7 @@ module Cucumber::Core::Gherkin
               end
             end
 
-            source.should eq <<-END.unindent
+            expect( source ).to eq <<-END.unindent
             Feature:
 
               Scenario Outline:
@@ -284,7 +284,7 @@ module Cucumber::Core::Gherkin
         end
       end
 
-      source.to_s.should eq <<-END.unindent
+      expect( source.to_s ).to eq <<-END.unindent
       # language: en
       # wow
       @always

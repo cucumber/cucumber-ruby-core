@@ -21,8 +21,8 @@ module Cucumber
 
           it "raises an error" do
             expect { parse }.to raise_error(ParseError) do |error|
-              error.message.should =~ /not gherkin/
-              error.message.should =~ /#{path}/
+              expect( error.message ).to match(/not gherkin/)
+              expect( error.message ).to match(/#{path}/)
             end
           end
         end
@@ -67,7 +67,7 @@ module Cucumber
 
             location = double
             expected = Ast::DocString.new("content", "", location)
-            visitor.should_receive(:doc_string).with(expected)
+            expect( visitor ).to receive(:doc_string).with(expected)
             feature.describe_to(visitor)
           end
 
@@ -94,7 +94,7 @@ module Cucumber
             visitor.stub(:step).and_yield
 
             expected = Ast::DataTable.new([['name', 'surname'], ['rob', 'westgeest']], Ast::Location.new('foo.feature', 23))
-            visitor.should_receive(:table).with(expected)
+            expect( visitor ).to receive(:table).with(expected)
             feature.describe_to(visitor)
           end
         end
@@ -110,8 +110,8 @@ module Cucumber
           it "parses the comment into the AST" do
             visitor = double
             visitor.stub(:feature).and_yield
-            visitor.should_receive(:scenario) do |scenario|
-              scenario.comments.join.should == "# wow"
+            expect( visitor ).to receive(:scenario) do |scenario|
+              expect( scenario.comments.join ).to eq "# wow"
             end
             feature.describe_to(visitor)
           end
@@ -139,8 +139,8 @@ module Cucumber
 
           it "creates a scenario outline node" do
             visitor.stub(:feature).and_yield
-            visitor.should_receive(:scenario_outline) do |outline|
-              outline.name.should == 'outline name'
+            expect( visitor ).to receive(:scenario_outline) do |outline|
+              expect( outline.name ).to eq 'outline name'
             end
             feature.describe_to(visitor)
           end
@@ -149,8 +149,8 @@ module Cucumber
             visitor.stub(:feature).and_yield
             visitor.stub(:scenario_outline).and_yield
             visitor.stub(:examples_table)
-            visitor.should_receive(:outline_step) do |step|
-              step.name.should == 'passing <arg>'
+            expect( visitor ).to receive(:outline_step) do |step|
+              expect( step.name ).to eq 'passing <arg>'
             end
             feature.describe_to(visitor)
           end
@@ -159,18 +159,18 @@ module Cucumber
             visitor.stub(:feature).and_yield
             visitor.stub(:scenario_outline).and_yield
             visitor.stub(:outline_step)
-            visitor.should_receive(:examples_table).exactly(2).times.and_yield
-            visitor.should_receive(:examples_table_row) do |row|
-              row.number.should eq(1)
-              row.values.should == ['1']
+            expect( visitor ).to receive(:examples_table).exactly(2).times.and_yield
+            expect( visitor ).to receive(:examples_table_row) do |row|
+              expect( row.number ).to eq 1
+              expect( row.values ).to eq ['1']
             end.once.ordered
-            visitor.should_receive(:examples_table_row) do |row|
-              row.number.should eq(2)
-              row.values.should == ['2']
+            expect( visitor ).to receive(:examples_table_row) do |row|
+              expect( row.number ).to eq 2
+              expect( row.values ).to eq ['2']
             end.once.ordered
-            visitor.should_receive(:examples_table_row) do |row|
-              row.number.should eq(1)
-              row.values.should == ['a']
+            expect( visitor ).to receive(:examples_table_row) do |row|
+              expect( row.number ).to eq 1
+              expect( row.values ).to eq ['a']
             end.once.ordered
             feature.describe_to(visitor)
           end

@@ -24,9 +24,9 @@ module Cucumber
           let(:test_case) { Test::Case.new([test_step], double) }
 
           it "maps to a step that executes to an undefined result" do
-            receiver.should_receive(:test_step) do |test_step|
-              test_step.name.should eq('unmapped')
-              test_step.execute.should be_undefined
+            expect( receiver ).to receive(:test_step) do |test_step|
+              expect( test_step.name ).to eq 'unmapped'
+              expect( test_step.execute ).to be_undefined
             end.once.ordered
             test_case.describe_to mapper
           end
@@ -37,9 +37,9 @@ module Cucumber
           let(:test_case) { Test::Case.new([test_step], double) }
 
           it "maps to a step that executes the block" do
-            receiver.should_receive(:test_step) do |test_step|
-              test_step.name.should eq('mapped')
-              app.should_receive(:do_something)
+            expect( receiver ).to receive(:test_step) do |test_step|
+              expect( test_step.name ).to eq 'mapped'
+              expect( app ).to receive(:do_something)
               test_step.execute
             end.once.ordered
             test_case.describe_to mapper
@@ -52,11 +52,11 @@ module Cucumber
           let(:test_case) { Test::Case.new([mapped, unmapped], double) }
 
           it "maps each of the test steps" do
-            receiver.should_receive(:test_step) do |test_step|
-              test_step.name.should == 'passing'
+            expect( receiver ).to receive(:test_step) do |test_step|
+              expect( test_step.name ).to eq 'passing'
             end.once.ordered
-            receiver.should_receive(:test_step) do |test_step|
-              test_step.name.should == 'unmapped'
+            expect( receiver ).to receive(:test_step) do |test_step|
+              expect( test_step.name ).to eq 'unmapped'
             end.once.ordered
             test_case.describe_to mapper
           end

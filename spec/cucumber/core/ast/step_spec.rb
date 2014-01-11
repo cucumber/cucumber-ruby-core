@@ -13,7 +13,7 @@ module Cucumber
           let(:visitor) { double }
 
           it "describes itself as a step" do
-            visitor.should_receive(:step).with(step)
+            expect( visitor ).to receive(:step).with(step)
             step.describe_to(visitor)
           end
 
@@ -30,7 +30,7 @@ module Cucumber
 
             it "tells its multiline argument to describe itself" do
               visitor.stub(:step).with(step).and_yield
-              multiline_arg.should_receive(:describe_to).with(visitor)
+              expect( multiline_arg ).to receive(:describe_to).with(visitor)
               step.describe_to(visitor)
             end
           end

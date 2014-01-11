@@ -12,28 +12,28 @@ module Cucumber::Core::Test
       let(:duration)   { 1 * 1000 * 1000 }
 
       it "describes itself to a visitor" do
-        visitor.should_receive(:passed).with(args)
-        visitor.should_receive(:duration).with(duration, args)
+        expect( visitor ).to receive(:passed).with(args)
+        expect( visitor ).to receive(:duration).with(duration, args)
         result.describe_to(visitor, args)
       end
 
       it "converts to a string" do
-        result.to_s.should == "✓"
+        expect( result.to_s ).to eq "✓"
       end
 
       it "has a duration" do
-        result.duration.should == duration
+        expect( result.duration ).to eq duration
       end
 
       it "requires the constructor argument" do
         expect { Result::Passed.new }.to raise_error(ArgumentError)
       end
 
-      it { should     be_passed    }
-      it { should_not be_failed    }
-      it { should_not be_undefined }
-      it { should_not be_unknown   }
-      it { should_not be_skipped   }
+      it { expect( result ).to     be_passed    }
+      it { expect( result ).not_to be_failed    }
+      it { expect( result ).not_to be_undefined }
+      it { expect( result ).not_to be_unknown   }
+      it { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Failed do
@@ -42,14 +42,14 @@ module Cucumber::Core::Test
       let(:exception)  { StandardError.new("error message") }
 
       it "describes itself to a visitor" do
-        visitor.should_receive(:failed).with(args)
-        visitor.should_receive(:duration).with(duration, args)
-        visitor.should_receive(:exception).with(exception, args)
+        expect( visitor ).to receive(:failed).with(args)
+        expect( visitor ).to receive(:duration).with(duration, args)
+        expect( visitor ).to receive(:exception).with(exception, args)
         result.describe_to(visitor, args)
       end
 
       it "has a duration" do
-        result.duration.should == duration
+        expect( result.duration ).to eq duration
       end
 
       it "requires both constructor arguments" do
@@ -57,11 +57,11 @@ module Cucumber::Core::Test
         expect { Result::Failed.new(duration) }.to raise_error(ArgumentError)
       end
 
-      it { should_not be_passed    }
-      it { should     be_failed    }
-      it { should_not be_undefined }
-      it { should_not be_unknown   }
-      it { should_not be_skipped   }
+      it { expect( result ).not_to be_passed    }
+      it { expect( result ).to     be_failed    }
+      it { expect( result ).not_to be_undefined }
+      it { expect( result ).not_to be_unknown   }
+      it { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Unknown do
@@ -76,33 +76,33 @@ module Cucumber::Core::Test
         expect { result.duration }.to raise_error NoMethodError
       end
 
-      it { should_not be_passed    }
-      it { should_not be_failed    }
-      it { should_not be_undefined }
-      it { should     be_unknown   }
-      it { should_not be_skipped   }
+      it { expect( result ).not_to be_passed    }
+      it { expect( result ).not_to be_failed    }
+      it { expect( result ).not_to be_undefined }
+      it { expect( result ).to     be_unknown   }
+      it { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Undefined do
       subject(:result) { Result::Undefined.new }
 
       it "describes itself to a visitor" do
-        visitor.should_receive(:undefined).with(args)
+        expect( visitor ).to receive(:undefined).with(args)
         result.describe_to(visitor, args)
       end
 
-      it { should_not be_passed    }
-      it { should_not be_failed    }
-      it { should     be_undefined }
-      it { should_not be_unknown   }
-      it { should_not be_skipped   }
+      it { expect( result ).not_to be_passed    }
+      it { expect( result ).not_to be_failed    }
+      it { expect( result ).to     be_undefined }
+      it { expect( result ).not_to be_unknown   }
+      it { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Skipped do
       subject(:result) { Result::Skipped.new }
 
       it "describes itself to a visitor" do
-        visitor.should_receive(:skipped).with(args)
+        expect( visitor ).to receive(:skipped).with(args)
         result.describe_to(visitor, args)
       end
 
@@ -110,11 +110,11 @@ module Cucumber::Core::Test
         expect { result.duration }.to raise_error NoMethodError
       end
 
-      it { should_not be_passed    }
-      it { should_not be_failed    }
-      it { should_not be_undefined }
-      it { should_not be_unknown   }
-      it { should     be_skipped   }
+      it { expect( result ).not_to be_passed    }
+      it { expect( result ).not_to be_failed    }
+      it { expect( result ).not_to be_undefined }
+      it { expect( result ).not_to be_unknown   }
+      it { expect( result ).to     be_skipped   }
     end
 
     describe Result::Summary do
@@ -128,50 +128,50 @@ module Cucumber::Core::Test
 
       it "counts failed results" do
         failed.describe_to summary
-        summary.total_failed.should eq(1)
-        summary.total.should eq(1)
+        expect( summary.total_failed ).to eq 1
+        expect( summary.total        ).to eq 1
       end
 
       it "counts passed results" do
         passed.describe_to summary
-        summary.total_passed.should eq(1)
-        summary.total.should eq(1)
+        expect( summary.total_passed ).to eq 1
+        expect( summary.total        ).to eq 1
       end
 
       it "counts skipped results" do
         skipped.describe_to summary
-        summary.total_skipped.should eq(1)
-        summary.total.should eq(1)
+        expect( summary.total_skipped ).to eq 1
+        expect( summary.total         ).to eq 1
       end
 
       it "counts undefined results" do
         undefined.describe_to summary
-        summary.total_undefined.should eq(1)
-        summary.total.should eq(1)
+        expect( summary.total_undefined ).to eq 1
+        expect( summary.total           ).to eq 1
       end
 
       it "doesn't count unknown results" do
         unknown.describe_to summary
-        summary.total.should eq(0)
+        expect( summary.total ).to eq 0
       end
 
       it "counts combinations" do
         [passed, passed, failed, skipped, undefined].each { |r| r.describe_to summary }
-        summary.total.should eq(5)
-        summary.total_passed.should eq(2)
-        summary.total_failed.should eq(1)
-        summary.total_skipped.should eq(1)
-        summary.total_undefined.should eq(1)
+        expect( summary.total           ).to eq 5
+        expect( summary.total_passed    ).to eq 2
+        expect( summary.total_failed    ).to eq 1
+        expect( summary.total_skipped   ).to eq 1
+        expect( summary.total_undefined ).to eq 1
       end
 
       it "records durations" do
         [passed, failed].each { |r| r.describe_to summary }
-        summary.durations.should == [11, 10]
+        expect( summary.durations ).to eq [11, 10]
       end
 
       it "records exceptions" do
         [passed, failed].each { |r| r.describe_to summary }
-        summary.exceptions.should == [exception]
+        expect( summary.exceptions ).to eq [exception]
       end
     end
   end

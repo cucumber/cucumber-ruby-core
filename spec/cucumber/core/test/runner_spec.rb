@@ -27,8 +27,8 @@ module Cucumber::Core::Test
         let(:test_steps) { [passing] }
 
         it "records the nanoseconds duration of the execution on the result" do
-          report.should_receive(:after_test_case) do |reported_test_case, result|
-            result.duration.should eq(1)
+          expect( report ).to receive(:after_test_case) do |reported_test_case, result|
+            expect( result.duration ).to eq 1
           end
           test_case.describe_to runner
         end
@@ -38,8 +38,8 @@ module Cucumber::Core::Test
         let(:test_steps) { [failing] }
 
         it "records the duration" do
-          report.should_receive(:after_test_case) do |reported_test_case, result|
-            result.duration.should eq(1)
+          expect( report ).to receive(:after_test_case) do |reported_test_case, result|
+            expect( result.duration ).to eq 1
           end
           test_case.describe_to runner
         end
@@ -49,8 +49,8 @@ module Cucumber::Core::Test
     context "reporting the exception that failed a test case" do
       let(:test_steps) { [failing] }
       it "sets the exception on the result" do
-        report.should_receive(:after_test_case) do |reported_test_case, result|
-          result.exception.should eq(exception)
+        expect( report ).to receive(:after_test_case) do |reported_test_case, result|
+          expect( result.exception ).to eq exception
         end
         test_case.describe_to runner
       end
@@ -61,14 +61,14 @@ module Cucumber::Core::Test
         let(:test_steps) { [] }
 
         it "calls the report before running the case" do
-          report.should_receive(:before_test_case).with(test_case)
+          expect( report ).to receive(:before_test_case).with(test_case)
           test_case.describe_to runner
         end
 
         it "calls the report after running the case" do
-          report.should_receive(:after_test_case) do |reported_test_case, result|
-            reported_test_case.should eq(test_case)
-            result.should be_unknown
+          expect( report ).to receive(:after_test_case) do |reported_test_case, result|
+            expect( reported_test_case ).to eq test_case
+            expect( result ).to be_unknown
           end
           test_case.describe_to runner
         end
@@ -79,8 +79,8 @@ module Cucumber::Core::Test
           let(:test_steps) { [ passing, passing ]  }
 
           it 'reports a passing test case' do
-            report.should_receive(:after_test_case) do |test_case, result|
-              result.should be_passed
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result ).to be_passed
             end
             test_case.describe_to runner
           end
@@ -90,8 +90,8 @@ module Cucumber::Core::Test
           let(:test_steps) { [ undefined ]  }
 
           it 'reports an undefined test case' do
-            report.should_receive(:after_test_case) do |test_case, result|
-              result.should be_undefined
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result ).to be_undefined
             end
             test_case.describe_to runner
           end
@@ -101,8 +101,8 @@ module Cucumber::Core::Test
           let(:test_steps) { [ pending ] }
 
           it 'reports a pending test case' do
-            report.should_receive(:after_test_case) do |test_case, result|
-              result.should be_pending
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result ).to be_pending
             end
             test_case.describe_to runner
           end
@@ -112,8 +112,8 @@ module Cucumber::Core::Test
           let(:test_steps) { [ failing ] }
 
           it 'reports a failing test case' do
-            report.should_receive(:after_test_case) do |test_case, result|
-              result.should be_failed
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result ).to be_failed
             end
             test_case.describe_to runner
           end
@@ -123,30 +123,30 @@ module Cucumber::Core::Test
           let(:test_steps) { [ failing, passing ] }
 
           it 'reports the first step as failed' do
-            report.should_receive(:after_test_step).with(failing, anything) do |test_step, result|
-              result.should be_failed
+            expect( report ).to receive(:after_test_step).with(failing, anything) do |test_step, result|
+              expect( result ).to be_failed
             end
             test_case.describe_to runner
           end
 
           it 'reports the second step as skipped' do
-            report.should_receive(:after_test_step).with(passing, anything) do |test_step, result|
-              result.should be_skipped
+            expect( report ).to receive(:after_test_step).with(passing, anything) do |test_step, result|
+              expect( result ).to be_skipped
             end
             test_case.describe_to runner
           end
 
           it 'reports the test case as failed' do
-            report.should_receive(:after_test_case) do |test_case, result|
-              result.should be_failed
-              result.exception.should eq(exception)
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result ).to be_failed
+              expect( result.exception ).to eq exception
             end
             test_case.describe_to runner
           end
 
           it 'skips, rather than executing the second step' do
-            passing.should_not_receive(:execute)
-            passing.should_receive(:skip)
+            expect( passing ).not_to receive(:execute)
+            expect( passing ).to receive(:skip)
             test_case.describe_to runner
           end
         end
@@ -161,11 +161,9 @@ module Cucumber::Core::Test
         let(:test_cases)      { [first_test_case, last_test_case] }
 
         it 'reports the results correctly for the following test case' do
-          report.
-            should_receive(:after_test_case).
-            with(last_test_case, anything) do |reported_test_case, result|
-            result.should be_passed
-            end
+          expect( report ).to receive(:after_test_case).with(last_test_case, anything) do |reported_test_case, result|
+            expect( result ).to be_passed
+          end
 
           test_cases.each { |c| c.describe_to runner }
         end

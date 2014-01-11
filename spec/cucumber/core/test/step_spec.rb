@@ -8,7 +8,7 @@ module Cucumber::Core::Test
         visitor = double
         args = double
         test_step = Step.new([double])
-        visitor.should_receive(:test_step).with(test_step, args)
+        expect( visitor ).to receive(:test_step).with(test_step, args)
         test_step.describe_to(visitor, args)
       end
 
@@ -16,9 +16,9 @@ module Cucumber::Core::Test
         feature, scenario, step = double, double, double
         visitor = double
         args = double
-        feature.should_receive(:describe_to).with(visitor, args)
-        scenario.should_receive(:describe_to).with(visitor, args)
-        step.should_receive(:describe_to).with(visitor, args)
+        expect( feature  ).to receive(:describe_to).with(visitor, args)
+        expect( scenario ).to receive(:describe_to).with(visitor, args)
+        expect( step     ).to receive(:describe_to).with(visitor, args)
         test_step = Step.new([feature, scenario, step])
         test_step.describe_source_to(visitor, args)
       end
@@ -30,7 +30,7 @@ module Cucumber::Core::Test
       context "when a passing mapping exists for the step" do
         it "returns a passing result" do
           test_step = Step.new([ast_step]).map {}
-          test_step.execute.should be_passed
+          expect( test_step.execute ).to be_passed
         end
       end
 
@@ -40,8 +40,8 @@ module Cucumber::Core::Test
         it "returns a failing result" do
           test_step = Step.new([ast_step]).map { raise exception }
           result = test_step.execute
-          result.should be_failed
-          result.exception.should == exception
+          expect( result           ).to be_failed
+          expect( result.exception ).to eq exception
         end
       end
     end
@@ -50,8 +50,8 @@ module Cucumber::Core::Test
       name, multiline_arg = double, double
       ast_step = double(name: name, multiline_arg: multiline_arg)
       test_step = Step.new([ast_step])
-      test_step.name.should eq(name)
-      test_step.multiline_arg.should eq(multiline_arg)
+      expect( test_step.name          ).to eq name
+      expect( test_step.multiline_arg ).to eq multiline_arg
     end
 
   end

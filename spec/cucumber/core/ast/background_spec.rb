@@ -12,7 +12,7 @@ module Cucumber::Core::Ast
     let(:steps) { double }
 
     it "has a location" do
-      background.should respond_to(:location)
+      expect( background ).to respond_to(:location)
     end
   end
 end

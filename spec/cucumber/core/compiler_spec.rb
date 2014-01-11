@@ -24,8 +24,8 @@ module Cucumber::Core
         end
       ]
       compile(gherkin_documents) do |visitor|
-        visitor.should_receive(:test_case).exactly(1).times.and_yield
-        visitor.should_receive(:test_step).exactly(1).times
+        expect( visitor ).to receive(:test_case).exactly(1).times.and_yield
+        expect( visitor ).to receive(:test_step).exactly(1).times
       end
     end
 
@@ -44,8 +44,8 @@ module Cucumber::Core
         end
       ]
       compile(gherkin_documents) do |visitor|
-        visitor.should_receive(:test_case).exactly(1).times.and_yield
-        visitor.should_receive(:test_step).exactly(2).times
+        expect( visitor ).to receive(:test_case).exactly(1).times.and_yield
+        expect( visitor ).to receive(:test_step).exactly(2).times
       end
     end
 
@@ -73,8 +73,8 @@ module Cucumber::Core
         end
       ]
       compile(gherkin_documents) do |visitor|
-        visitor.should_receive(:test_case).exactly(2).times.and_yield
-        visitor.should_receive(:test_step).exactly(4).times
+        expect( visitor ).to receive(:test_case).exactly(2).times.and_yield
+        expect( visitor ).to receive(:test_step).exactly(4).times
       end
     end
 
@@ -106,8 +106,8 @@ module Cucumber::Core
           end
         ]
         compile(gherkin_documents) do |visitor|
-          visitor.should_receive(:test_case).exactly(3).times.and_yield
-          visitor.should_receive(:test_step).exactly(9).times
+          expect( visitor ).to receive(:test_case).exactly(3).times.and_yield
+          expect( visitor ).to receive(:test_step).exactly(9).times
         end
       end
 
@@ -129,18 +129,18 @@ module Cucumber::Core
         ]
 
         compile(gherkin_documents) do |visitor|
-          visitor.should_receive(:test_step) do |test_step|
+          expect( visitor ).to receive(:test_step) do |test_step|
             visit_source(test_step) do |source_visitor|
-              source_visitor.should_receive(:step) do |step|
-                step.name.should == 'passing 1 with 2'
+              expect( source_visitor ).to receive(:step) do |step|
+                expect(step.name).to eq 'passing 1 with 2'
               end
             end
           end.once.ordered
 
-          visitor.should_receive(:test_step) do |test_step|
+          expect( visitor ).to receive(:test_step) do |test_step|
             visit_source(test_step) do |source_visitor|
-              source_visitor.should_receive(:step) do |step|
-                step.name.should == 'as well as 3'
+              expect( source_visitor ).to receive(:step) do |step|
+                expect(step.name).to eq 'as well as 3'
               end
             end
           end.once.ordered
@@ -160,13 +160,13 @@ module Cucumber::Core
                   :scenario_step)
 
         it "sets the source correctly on the test steps" do
-          receiver.should_receive(:on_background_step).with(
+          expect( receiver ).to receive(:on_background_step).with(
             [feature, background, background_step]
           )
-          receiver.should_receive(:on_step).with(
+          expect( receiver ).to receive(:on_step).with(
             [feature, scenario, scenario_step]
           )
-          receiver.should_receive(:on_test_case).with(
+          expect( receiver ).to receive(:on_test_case).with(
             [feature, scenario]
           )
           compiler.feature(feature) do |f|
@@ -195,16 +195,16 @@ module Cucumber::Core
 
         it "sets the source correctly on the test steps" do
           outline_step.stub(to_step: outline_ast_step)
-          receiver.should_receive(:on_step).with(
+          expect( receiver ).to receive(:on_step).with(
             [feature, scenario_outline, examples_table_1, examples_table_1_row_1, outline_ast_step]
           ).ordered
-          receiver.should_receive(:on_test_case).with(
+          expect( receiver ).to receive(:on_test_case).with(
             [feature, scenario_outline, examples_table_1, examples_table_1_row_1]
           ).ordered
-          receiver.should_receive(:on_step).with(
+          expect( receiver ).to receive(:on_step).with(
             [feature, scenario_outline, examples_table_2, examples_table_2_row_1, outline_ast_step]
           ).ordered
-          receiver.should_receive(:on_test_case).with(
+          expect( receiver ).to receive(:on_test_case).with(
             [feature, scenario_outline, examples_table_2, examples_table_2_row_1]
           ).ordered
           compiler.feature(feature) do |f|

@@ -17,7 +17,7 @@ module Cucumber
           end
 
           it 'returns a new docstring with new content' do
-            doc_string.map { 'foo' }.content.should == 'foo'
+            expect( doc_string.map { 'foo' }.content ).to eq 'foo'
           end
 
           it 'raises an error if no block is given' do
@@ -30,19 +30,19 @@ module Cucumber
           let(:content_type) { 'text/plain' }
 
           it 'is equal to another DocString with the same content and content_type' do
-            doc_string.should == DocString.new(content, content_type, location)
+            expect( doc_string ).to eq DocString.new(content, content_type, location)
           end
 
           it 'is not equal to another DocString with different content' do
-            doc_string.should_not == DocString.new('bar', content_type, location)
+            expect( doc_string ).not_to eq DocString.new('bar', content_type, location)
           end
 
           it 'is not equal to another DocString with different content_type' do
-            doc_string.should_not == DocString.new(content, 'text/html', location)
+            expect( doc_string ).not_to eq DocString.new(content, 'text/html', location)
           end
 
           it 'is equal to a string with the same content' do
-            doc_string.should == 'foo'
+            expect( doc_string ).to eq 'foo'
           end
 
           it 'raises an error when compared with something odd' do
@@ -56,19 +56,19 @@ module Cucumber
 
           it 'delegates #encoding to the content string' do
             content.force_encoding('us-ascii')
-            doc_string.encoding.should == Encoding.find('US-ASCII')
+            expect( doc_string.encoding ).to eq Encoding.find('US-ASCII')
           end
 
           it 'allows implicit convertion to a String' do
-            'expected content'.should include(doc_string)
+            expect( 'expected content' ).to include(doc_string)
           end
 
           it 'allows explicit convertion to a String' do
-            doc_string.to_s.should == 'content'
+            expect( doc_string.to_s ).to eq 'content'
           end
 
           it 'delegates #gsub to the content string' do
-            doc_string.gsub(/n/, '_').should == 'co_te_t'
+            expect( doc_string.gsub(/n/, '_') ).to eq 'co_te_t'
           end
         end
       end

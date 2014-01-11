@@ -21,7 +21,7 @@ module Cucumber
           it "describes itself to a visitor" do
             visitor = double
             args = double
-            visitor.should_receive(:test_case).with(test_case, args)
+            expect( visitor ).to receive(:test_case).with(test_case, args)
             test_case.describe_to(visitor, args)
           end
 
@@ -29,7 +29,7 @@ module Cucumber
             visitor = double
             args = double
             test_steps.each do |test_step|
-              test_step.should_receive(:describe_to).with(visitor, args)
+              expect( test_step ).to receive(:describe_to).with(visitor, args)
             end
             visitor.stub(:test_case).and_yield
             test_case.describe_to(visitor, args)
@@ -48,8 +48,8 @@ module Cucumber
           it "describes its source to a visitor" do
             visitor = double
             args = double
-            feature.should_receive(:describe_to).with(visitor, args)
-            scenario.should_receive(:describe_to).with(visitor, args)
+            expect( feature ).to receive(:describe_to).with(visitor, args)
+            expect( scenario ).to receive(:describe_to).with(visitor, args)
             test_case.describe_source_to(visitor, args)
           end
 
@@ -66,8 +66,9 @@ module Cucumber
                 end
               end
               receiver = double
-              receiver.should_receive(:test_case) do |test_case|
-                test_case.name.should == 'Scenario: Scenario name'
+
+              expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.name ).to eq 'Scenario: Scenario name'
               end
               compile([gherkin], receiver)
             end
@@ -94,14 +95,14 @@ module Cucumber
                 end
               end
               receiver = double
-              receiver.should_receive(:test_case) do |test_case|
-                test_case.name.should == 'Scenario Outline: outline name, examples name (row 1)'
+              expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 1)'
               end.once.ordered
-              receiver.should_receive(:test_case) do |test_case|
-                test_case.name.should == 'Scenario Outline: outline name, examples name (row 2)'
+              expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 2)'
               end.once.ordered
-              receiver.should_receive(:test_case) do |test_case|
-                test_case.name.should == 'Scenario Outline: outline name, Examples (row 1)'
+              expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.name ).to eq 'Scenario Outline: outline name, Examples (row 1)'
               end.once.ordered
               compile [gherkin], receiver
             end
@@ -119,8 +120,8 @@ module Cucumber
                 end
               end
               receiver = double
-              receiver.should_receive(:test_case) do |test_case|
-                test_case.location.to_s.should == 'features/foo.feature:3'
+              expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.location.to_s ).to eq 'features/foo.feature:3'
               end
               compile([gherkin], receiver)
             end
@@ -142,11 +143,11 @@ module Cucumber
                 end
               end
               receiver = double
-              receiver.should_receive(:test_case) do |test_case|
-                test_case.location.to_s.should == 'features/foo.feature:8'
+              expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.location.to_s ).to eq 'features/foo.feature:8'
               end.once.ordered
-              receiver.should_receive(:test_case) do |test_case|
-                test_case.location.to_s.should == 'features/foo.feature:9'
+              expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.location.to_s ).to eq 'features/foo.feature:9'
               end.once.ordered
               compile [gherkin], receiver
             end
@@ -170,11 +171,11 @@ module Cucumber
               end
             end
             receiver = double
-            receiver.should_receive(:test_case) do |test_case|
-              test_case.tags.map(&:name).should == ['@a', '@b', '@c']
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.tags.map(&:name) ).to eq ['@a', '@b', '@c']
             end.once.ordered
-            receiver.should_receive(:test_case) do |test_case|
-              test_case.tags.map(&:name).should == ['@a', '@b', '@d', '@e']
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.tags.map(&:name) ).to eq ['@a', '@b', '@d', '@e']
             end.once.ordered
             compile [gherkin], receiver
           end
@@ -190,8 +191,8 @@ module Cucumber
               end
             end
             receiver = double
-            receiver.should_receive(:test_case) do |test_case|
-              test_case.match_tags?('@a').should be_true
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.match_tags?('@a') ).to be_true
             end
             compile [gherkin], receiver
           end
@@ -207,8 +208,8 @@ module Cucumber
               end
             end
             receiver = double
-            receiver.should_receive(:test_case) do |test_case|
-              test_case.match_name?(/feature/).should be_true
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.match_name?(/feature/) ).to be_true
             end
             compile [gherkin], receiver
           end
@@ -222,8 +223,8 @@ module Cucumber
                   Gangway!: a map
             })
             receiver = double
-            receiver.should_receive(:test_case) do |test_case|
-              test_case.language.iso_code.should == 'en-pirate'
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.language.iso_code ).to eq 'en-pirate'
             end
             compile([gherkin], receiver)
           end
@@ -277,44 +278,44 @@ module Cucumber
 
             it 'matches the precise location of the scenario' do
               location = Ast::Location.new(file, 8)
-              test_case.match_locations?([location]).should be_true
+              expect( test_case.match_locations?([location]) ).to be_true
             end
 
             it 'matches the precise location of an empty scenario' do
               empty_scenario_test_case = test_cases.find { |c| c.name == 'Scenario: empty' }
               location = Ast::Location.new(file, 26)
-              empty_scenario_test_case.match_locations?([location]).should be_true
+              expect( empty_scenario_test_case.match_locations?([location]) ).to be_true
             end
 
             it 'matches multiple locations' do
               good_location = Ast::Location.new(file, 8)
               bad_location = Ast::Location.new(file, 5)
-              test_case.match_locations?([good_location, bad_location]).should be_true
+              expect( test_case.match_locations?([good_location, bad_location]) ).to be_true
             end
 
             it 'matches a location on the last step of the scenario' do
               location = Ast::Location.new(file, 10)
-              test_case.match_locations?([location]).should be_true
+              expect( test_case.match_locations?([location]) ).to be_true
             end
 
             it "matches a location on the scenario's comment" do
               location = Ast::Location.new(file, 6)
-              test_case.match_locations?([location]).should be_true
+              expect( test_case.match_locations?([location]) ).to be_true
             end
 
             it "matches a location on the scenario's tags" do
               location = Ast::Location.new(file, 7)
-              test_case.match_locations?([location]).should be_true
+              expect( test_case.match_locations?([location]) ).to be_true
             end
 
             it "doesn't match a location after the last step of the scenario" do
               location = Ast::Location.new(file, 11)
-              test_case.match_locations?([location]).should be_false
+              expect( test_case.match_locations?([location]) ).to be_false
             end
 
             it "doesn't match a location before the scenario" do
               location = Ast::Location.new(file, 5)
-              test_case.match_locations?([location]).should be_false
+              expect( test_case.match_locations?([location]) ).to be_false
             end
 
             context "with a docstring" do
@@ -324,12 +325,12 @@ module Cucumber
 
               it "matches a location at the start the docstring" do
                 location = Ast::Location.new(file, 17)
-                test_case.match_locations?([location]).should be_true
+                expect( test_case.match_locations?([location]) ).to be_true
               end
 
               it "matches a location in the middle of the docstring" do
                 location = Ast::Location.new(file, 18)
-                test_case.match_locations?([location]).should be_true
+                expect( test_case.match_locations?([location]) ).to be_true
               end
             end
 
@@ -340,7 +341,7 @@ module Cucumber
 
               it "matches a location on the first table row" do
                 location = Ast::Location.new(file, 23)
-                test_case.match_locations?([location]).should be_true
+                expect( test_case.match_locations?([location]) ).to be_true
               end
             end
           end
@@ -380,32 +381,32 @@ module Cucumber
 
             it 'matches the precise location of the scenario outline examples table row' do
               location = Ast::Location.new(file, 16)
-              test_case.match_locations?([location]).should be_true
+              expect( test_case.match_locations?([location]) ).to be_true
             end
 
             it 'matches a location on a step of the scenario outline' do
               location = Ast::Location.new(file, 10)
-              test_case.match_locations?([location]).should be_true
+              expect( test_case.match_locations?([location]) ).to be_true
             end
 
             it "matches a location on the scenario outline's comment" do
               location = Ast::Location.new(file, 6)
-              test_case.match_locations?([location]).should be_true
+              expect( test_case.match_locations?([location]) ).to be_true
             end
 
             it "matches a location on the scenario outline's tags" do
               location = Ast::Location.new(file, 7)
-              test_case.match_locations?([location]).should be_true
+              expect( test_case.match_locations?([location]) ).to be_true
             end
 
             it "doesn't match a location after the last row of the examples table" do
               location = Ast::Location.new(file, 17)
-              test_case.match_locations?([location]).should be_false
+              expect( test_case.match_locations?([location]) ).to be_false
             end
 
             it "doesn't match a location before the scenario outline" do
               location = Ast::Location.new(file, 5)
-              test_case.match_locations?([location]).should be_false
+              expect( test_case.match_locations?([location]) ).to be_false
             end
           end
         end

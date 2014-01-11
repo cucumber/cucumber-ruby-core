@@ -17,51 +17,51 @@ module Cucumber
         end
 
         it "should have rows" do
-          @table.cells_rows[0].map{|cell| cell.value}.should == %w{one four seven}
+          expect( @table.cells_rows[0].map{|cell| cell.value} ).to eq %w{one four seven}
         end
 
         it "should have columns" do
-          @table.columns[1].map{|cell| cell.value}.should == %w{four 55555}
+          expect( @table.columns[1].map{|cell| cell.value} ).to eq %w{four 55555}
         end
 
         it "should have headers" do
-          @table.headers.should == %w{one four seven}
+          expect( @table.headers ).to eq %w{one four seven}
         end
 
         it "should have same cell objects in rows and columns" do
           # 666666
-          @table.cells_rows[1].__send__(:[], 2).should equal(@table.columns[2].__send__(:[], 1))
+          expect( @table.cells_rows[1].__send__(:[], 2) ).to eq @table.columns[2].__send__(:[], 1)
         end
 
         it "should know about max width of a row" do
-          @table.columns[1].__send__(:width).should == 5
+          expect( @table.columns[1].__send__(:width) ).to eq 5
         end
 
         it "should be convertible to an array of hashes" do
-          @table.hashes.should == [
+          expect( @table.hashes ).to eq [
             {'one' => '4444', 'four' => '55555', 'seven' => '666666'}
           ]
         end
 
         it "should accept symbols as keys for the hashes" do
-          @table.hashes.first[:one].should == '4444'
+          expect( @table.hashes.first[:one] ).to eq '4444'
         end
 
         it "should return the row values in order" do
-          @table.rows.first.should == %w{4444 55555 666666}
+          expect( @table.rows.first ).to eq %w{4444 55555 666666}
         end
 
         describe "equality" do
           it "is equal to another table with the same data" do
-            DataTable.new([[1,2],[3,4]], location).should == DataTable.new([[1,2],[3,4]], location)
+            expect( DataTable.new([[1,2],[3,4]], location) ).to eq DataTable.new([[1,2],[3,4]], location)
           end
 
           it "is not equal to another table with different data" do
-            DataTable.new([[1,2],[3,4]], location).should_not == DataTable.new([[1,2]], location)
+            expect( DataTable.new([[1,2],[3,4]], location) ).not_to eq DataTable.new([[1,2]], location)
           end
 
           it "is not equal to a non table" do
-            DataTable.new([[1,2],[3,4]], location).should_not == Object.new
+            expect( DataTable.new([[1,2],[3,4]], location) ).not_to eq Object.new
           end
         end
 
@@ -74,7 +74,7 @@ module Cucumber
           end
 
           it 'returns a new table with the cells modified by the block' do
-            table.map { |cell| "*#{cell}*" }.should ==  DataTable.new([%w{*foo* *bar*}, %w{*1* *2*}], location)
+            expect( table.map { |cell| "*#{cell}*" } ).to eq  DataTable.new([%w{*foo* *bar*}, %w{*1* *2*}], location)
           end
         end
 
@@ -87,7 +87,7 @@ module Cucumber
           end
 
           it "should be convertible in to an array where each row is a hash" do
-            @table.transpose.hashes[0].should == {'one' => '1111', 'two' => '22222'}
+            expect( @table.transpose.hashes[0] ).to eq({'one' => '1111', 'two' => '22222'})
           end
         end
 
@@ -98,7 +98,7 @@ module Cucumber
               %w{one 1111},
               %w{two 22222}
             ], location)
-            table.rows_hash.should == {'one' => '1111', 'two' => '22222'}
+            expect( table.rows_hash ).to eq({'one' => '1111', 'two' => '22222'})
           end
 
           it "should fail if the table doesn't have two columns" do
@@ -106,31 +106,32 @@ module Cucumber
               %w{one 1111 abc},
               %w{two 22222 def}
             ], location)
-            lambda {
-              faulty_table.rows_hash
-            }.should raise_error('The table must have exactly 2 columns')
+            expect { faulty_table.rows_hash }.to raise_error('The table must have exactly 2 columns')
           end
         end
 
         describe "#new" do
           it "should allow Array of Hash" do
             t1 = DataTable.new([{'name' => 'aslak', 'male' => 'true'}], location)
-            t1.hashes.should == [{'name' => 'aslak', 'male' => 'true'}]
+            expect( t1.hashes ).to eq [{'name' => 'aslak', 'male' => 'true'}]
           end
         end
 
         it "should convert to sexp" do
-          @table.to_sexp.should ==
+          sexp_value =      
             [:table,
-             [:row, -1,
-              [:cell, "one"],
-              [:cell, "four"],
-              [:cell, "seven"]
-          ],
-          [:row, -1,
-           [:cell, "4444"],
-           [:cell, "55555"],
-           [:cell, "666666"]]]
+              [:row, -1,
+                [:cell, "one"],
+                [:cell, "four"],
+                [:cell, "seven"]
+              ],
+              [:row, -1,
+                [:cell, "4444"],
+                [:cell, "55555"],
+                [:cell, "666666"]
+              ]
+            ]
+          expect( @table.to_sexp ).to eq sexp_value
         end
       end
     end

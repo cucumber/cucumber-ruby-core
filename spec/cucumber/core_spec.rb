@@ -10,8 +10,8 @@ module Cucumber
     describe "parsing Gherkin" do
       it "calls the compiler with a valid AST" do
         compiler = double
-        compiler.should_receive(:feature) do |feature|
-          feature.should respond_to(:describe_to)
+        expect( compiler ).to receive(:feature) do |feature|
+          expect( feature ).to respond_to(:describe_to)
         end
 
         gherkin = gherkin do
@@ -29,8 +29,8 @@ module Cucumber
     describe "compiling features to a test suite" do
       it "compiles two scenarios into two test cases" do
         visitor = double
-        visitor.should_receive(:test_case).exactly(2).times.and_yield.ordered
-        visitor.should_receive(:test_step).exactly(5).times.ordered
+        expect( visitor ).to receive(:test_case).exactly(2).times.and_yield.ordered
+        expect( visitor ).to receive(:test_step).exactly(5).times.ordered
 
         compile([
           gherkin do
@@ -52,8 +52,8 @@ module Cucumber
 
       it "filters out test cases based on a tag expression" do
         visitor = double.as_null_object
-        visitor.should_receive(:test_case) do |test_case|
-          test_case.name.should eq 'Scenario Outline: foo, bar (row 1)'
+        expect( visitor ).to receive(:test_case) do |test_case|
+          expect( test_case.name ).to eq 'Scenario Outline: foo, bar (row 1)'
         end.exactly(1).times
 
         gherkin = gherkin do
@@ -138,14 +138,14 @@ module Cucumber
 
           execute [gherkin], mappings, report
 
-          report.test_cases.total.should eq(2)
-          report.test_cases.total_passed.should eq(1)
-          report.test_cases.total_failed.should eq(1)
-          report.test_steps.total.should eq(5)
-          report.test_steps.total_failed.should eq(1)
-          report.test_steps.total_passed.should eq(2)
-          report.test_steps.total_skipped.should eq(1)
-          report.test_steps.total_undefined.should eq(1)
+          expect( report.test_cases.total           ).to eq 2
+          expect( report.test_cases.total_passed    ).to eq 1
+          expect( report.test_cases.total_failed    ).to eq 1
+          expect( report.test_steps.total           ).to eq 5
+          expect( report.test_steps.total_failed    ).to eq 1
+          expect( report.test_steps.total_passed    ).to eq 2
+          expect( report.test_steps.total_skipped   ).to eq 1
+          expect( report.test_steps.total_undefined ).to eq 1
         end
       end
 
@@ -191,11 +191,11 @@ module Cucumber
 
           execute [gherkin], mappings, report
 
-          report.test_steps.total.should eq(6)
-          report.test_steps.total_failed.should eq(2)
-          report.test_cases.total.should eq(3)
-          report.test_cases.total_passed.should eq(1)
-          report.test_cases.total_failed.should eq(2)
+          expect( report.test_steps.total        ).to eq(6)
+          expect( report.test_steps.total_failed ).to eq(2)
+          expect( report.test_cases.total        ).to eq(3)
+          expect( report.test_cases.total_passed ).to eq(1)
+          expect( report.test_cases.total_failed ).to eq(2)
         end
       end
 
@@ -241,10 +241,10 @@ module Cucumber
 
           execute [gherkin], mappings, report
 
-          report.test_cases.total.should eq(1)
-          report.test_cases.total_passed.should eq(1)
-          report.test_cases.total_failed.should eq(0)
-          mappings.logger.should == [:before, :during, :middle, :during, :after]
+          expect( report.test_cases.total        ).to eq 1
+          expect( report.test_cases.total_passed ).to eq 1
+          expect( report.test_cases.total_failed ).to eq 0
+          expect( mappings.logger ).to eq [:before, :during, :middle, :during, :after]
         end
       end
 
@@ -270,7 +270,7 @@ module Cucumber
 
         execute [gherkin], mappings, report, [[Cucumber::Core::Test::TagFilter, ['@a']]]
 
-        report.test_cases.total.should eq(2)
+        expect( report.test_cases.total ).to eq 2
       end
 
       it "filters test cases by name" do
@@ -289,7 +289,7 @@ module Cucumber
 
         execute [gherkin], mappings, report, [[Cucumber::Core::Test::NameFilter, [[/scenario/]]]]
 
-        report.test_cases.total.should eq(1)
+        expect( report.test_cases.total ).to eq 1
       end
     end
   end
