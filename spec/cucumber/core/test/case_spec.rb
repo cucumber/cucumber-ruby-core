@@ -35,6 +35,16 @@ module Cucumber
             test_case.describe_to(visitor, args)
           end
 
+          it "describes around hooks in order" do
+            visitor = double
+            visitor.stub(:test_case).and_yield
+            first_hook, second_hook = double, double
+            first_hook.should_receive(:describe_to).ordered.and_yield
+            second_hook.should_receive(:describe_to).ordered.and_yield
+            around_hooks = [first_hook, second_hook]
+            Test::Case.new([], [], around_hooks).describe_to(visitor, double)
+          end
+
           it "describes its source to a visitor" do
             visitor = double
             args = double
@@ -42,6 +52,7 @@ module Cucumber
             expect( scenario ).to receive(:describe_to).with(visitor, args)
             test_case.describe_source_to(visitor, args)
           end
+
         end
 
         describe "#name" do
@@ -55,8 +66,9 @@ module Cucumber
                 end
               end
               receiver = double
+
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'Scenario name'
+                expect( test_case.name ).to eq 'Scenario: Scenario name'
               end
               compile([gherkin], receiver)
             end
@@ -71,18 +83,26 @@ module Cucumber
 
                     examples 'examples name' do
                       row 'arg'
-                      row '1'
-                      row '2'
+                      row 'a'
+                      row 'b'
+                    end
+
+                    examples '' do
+                      row 'arg'
+                      row 'c'
                     end
                   end
                 end
               end
               receiver = double
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'outline name, examples name (row 1)'
+                expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 1)'
               end.once.ordered
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'outline name, examples name (row 2)'
+                expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 2)'
+              end.once.ordered
+              expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.name ).to eq 'Scenario Outline: outline name, Examples (row 1)'
               end.once.ordered
               compile [gherkin], receiver
             end
@@ -253,7 +273,7 @@ module Cucumber
             end
 
             let(:test_case) do
-              test_cases.find { |c| c.name == 'two' }
+              test_cases.find { |c| c.name == 'Scenario: two' }
             end
 
             it 'matches the precise location of the scenario' do
@@ -262,7 +282,7 @@ module Cucumber
             end
 
             it 'matches the precise location of an empty scenario' do
-              empty_scenario_test_case = test_cases.find { |c| c.name == 'empty' }
+              empty_scenario_test_case = test_cases.find { |c| c.name == 'Scenario: empty' }
               location = Ast::Location.new(file, 26)
               expect( empty_scenario_test_case.match_locations?([location]) ).to be_true
             end
@@ -300,7 +320,7 @@ module Cucumber
 
             context "with a docstring" do
               let(:test_case) do
-                test_cases.find { |c| c.name == 'with docstring' }
+                test_cases.find { |c| c.name == 'Scenario: with docstring' }
               end
 
               it "matches a location at the start the docstring" do
@@ -316,7 +336,7 @@ module Cucumber
 
             context "with a table" do
               let(:test_case) do
-                test_cases.find { |c| c.name == 'with a table' }
+                test_cases.find { |c| c.name == 'Scenario: with a table' }
               end
 
               it "matches a location on the first table row" do
@@ -356,7 +376,7 @@ module Cucumber
             end
 
             let(:test_case) do
-              test_cases.find { |c| c.name == "two, x1 (row 1)" }
+              test_cases.find { |c| c.name == "Scenario Outline: two, x1 (row 1)" }
             end
 
             it 'matches the precise location of the scenario outline examples table row' do

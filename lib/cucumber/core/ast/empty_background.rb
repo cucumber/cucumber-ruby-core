@@ -5,10 +5,6 @@ module Cucumber
         def describe_to(*)
           self
         end
-
-        def steps
-          []
-        end
       end
     end
   end
