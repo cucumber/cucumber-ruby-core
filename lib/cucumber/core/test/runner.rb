@@ -5,8 +5,8 @@ module Cucumber
   module Core
     module Test
       class Runner
-        module Status
-          class DefaultMonitor
+        module StepRunner
+          class Default
             def initialize
               @timer = Timer.new.start
             end
@@ -54,7 +54,7 @@ module Cucumber
             end
           end
 
-          class DryRunMonitor
+          class DryRun
             def execute(test_step)
               step_result = test_step.skip
               @case_result = Result::Undefined.new if step_result.undefined?
@@ -96,18 +96,18 @@ module Cucumber
           Pending = Class.new(Failing)
         end
 
-        STATUS_STRATEGY = {
-          default: Status::DefaultMonitor,
-          dry_run: Status::DryRunMonitor
+        STEP_RUNNER_STRATEGY = {
+          default: StepRunner::Default,
+          dry_run: StepRunner::DryRun
         }
 
-        attr_reader :report, :status_monitor_class
-        private :report, :status_monitor_class
+        attr_reader :report, :step_runner_class
+        private :report, :step_runner_class
         def initialize(report, run_options = {})
           @report = report
 
           run_mode = run_options.fetch(:run_mode) { :default }
-          @status_monitor_class = STATUS_STRATEGY.fetch(run_mode) do
+          @step_runner_class = STEP_RUNNER_STRATEGY.fetch(run_mode) do
             raise ArgumentError, "No strategy for run mode: #{run_mode.inspect}"
           end
         end
@@ -116,12 +116,12 @@ module Cucumber
           report.before_test_case(test_case)
           descend.call
           report.after_test_case(test_case, current_case_result)
-          @current_case_status = nil
+          @current_step_runner = nil
         end
 
         def test_step(test_step)
           report.before_test_step test_step
-          step_result = current_case_status.execute(test_step)
+          step_result = current_step_runner.execute(test_step)
           report.after_test_step test_step, step_result
         end
 
@@ -132,14 +132,12 @@ module Cucumber
         private
 
         def current_case_result
-          current_case_status.result
+          current_step_runner.result
         end
 
-        def current_case_status
-          @current_case_status ||= status_monitor_class.new
+        def current_step_runner
+          @current_step_runner ||= step_runner_class.new
         end
-
-
       end
     end
   end
