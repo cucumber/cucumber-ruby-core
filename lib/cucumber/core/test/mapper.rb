@@ -9,6 +9,12 @@ module Cucumber
           mapper = CaseMapper.new(mappings)
           descend.call(mapper)
           test_case.with_steps(mapper.test_steps).describe_to(runner)
+          self
+        end
+
+        def done
+          runner.done
+          self
         end
 
         class CaseMapper

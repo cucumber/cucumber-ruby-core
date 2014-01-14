@@ -129,6 +129,11 @@ module Cucumber
           hook.call(continue)
         end
 
+        def done
+          report.done
+          self
+        end
+
         private
 
         def current_case_result

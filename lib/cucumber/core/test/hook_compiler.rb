@@ -41,6 +41,11 @@ module Cucumber
       class HookCompiler
         include Cucumber.initializer(:mappings, :receiver)
 
+        def done
+          receiver.done
+          self
+        end
+
         def test_case(test_case, &descend)
           @before_hooks, @after_hooks, @around_hooks, @steps = [], [], [], []
           mapper = HookMapper.new(self, test_case.source)

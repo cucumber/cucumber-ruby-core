@@ -13,6 +13,11 @@ module Cucumber
         self
       end
 
+      def done
+        receiver.done
+        self
+      end
+
       class TestCaseBuilder
         include Cucumber.initializer(:receiver)
 

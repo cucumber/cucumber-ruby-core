@@ -9,9 +9,10 @@ module Cucumber
 
     describe "parsing Gherkin" do
       it "calls the compiler with a valid AST" do
-        compiler = double
+        compiler = double(done: nil)
         expect( compiler ).to receive(:feature) do |feature|
           expect( feature ).to respond_to(:describe_to)
+          expect( feature ).to be_an_instance_of(Core::Ast::Feature)
         end
 
         gherkin = gherkin do
@@ -31,6 +32,7 @@ module Cucumber
         visitor = double
         expect( visitor ).to receive(:test_case).exactly(2).times.and_yield.ordered
         expect( visitor ).to receive(:test_step).exactly(5).times.ordered
+        expect( visitor ).to receive(:done).once.ordered
 
         compile([
           gherkin do

@@ -12,6 +12,7 @@ module Cucumber
       gherkin_documents.each do |document|
         parser.document document
       end
+      parser.done
       self
     end
 

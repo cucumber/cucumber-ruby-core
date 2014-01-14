@@ -65,7 +65,7 @@ module Cucumber
                   end
                 end
               end
-              receiver = double
+              receiver = double.as_null_object
 
               expect( receiver ).to receive(:test_case) do |test_case|
                 expect( test_case.name ).to eq 'Scenario: Scenario name'
@@ -94,7 +94,7 @@ module Cucumber
                   end
                 end
               end
-              receiver = double
+              receiver = double.as_null_object
               expect( receiver ).to receive(:test_case) do |test_case|
                 expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 1)'
               end.once.ordered
@@ -119,7 +119,7 @@ module Cucumber
                   end
                 end
               end
-              receiver = double
+              receiver = double.as_null_object
               expect( receiver ).to receive(:test_case) do |test_case|
                 expect( test_case.location.to_s ).to eq 'features/foo.feature:3'
               end
@@ -142,7 +142,7 @@ module Cucumber
                   end
                 end
               end
-              receiver = double
+              receiver = double.as_null_object
               expect( receiver ).to receive(:test_case) do |test_case|
                 expect( test_case.location.to_s ).to eq 'features/foo.feature:8'
               end.once.ordered
@@ -170,7 +170,7 @@ module Cucumber
                 end
               end
             end
-            receiver = double
+            receiver = double.as_null_object
             expect( receiver ).to receive(:test_case) do |test_case|
               expect( test_case.tags.map(&:name) ).to eq ['@a', '@b', '@c']
             end.once.ordered
@@ -190,7 +190,7 @@ module Cucumber
                 end
               end
             end
-            receiver = double
+            receiver = double.as_null_object
             expect( receiver ).to receive(:test_case) do |test_case|
               expect( test_case.match_tags?('@a') ).to be_true
             end
@@ -207,7 +207,7 @@ module Cucumber
                 end
               end
             end
-            receiver = double
+            receiver = double.as_null_object
             expect( receiver ).to receive(:test_case) do |test_case|
               expect( test_case.match_name?(/feature/) ).to be_true
             end
@@ -222,7 +222,7 @@ module Cucumber
                 Heave to: Find the treasure
                   Gangway!: a map
             })
-            receiver = double
+            receiver = double.as_null_object
             expect( receiver ).to receive(:test_case) do |test_case|
               expect( test_case.language.iso_code ).to eq 'en-pirate'
             end
@@ -233,7 +233,7 @@ module Cucumber
         describe "matching location" do
           let(:file) { 'features/path/to/the.feature' }
           let(:test_cases) do
-            receiver = double
+            receiver = double.as_null_object
             result = []
             receiver.stub(:test_case) { |test_case| result << test_case }
             compile [source], receiver

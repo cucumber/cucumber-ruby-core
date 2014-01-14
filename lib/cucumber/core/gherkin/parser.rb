@@ -22,6 +22,11 @@ module Cucumber
           end
         end
 
+        def done
+          receiver.done
+          self
+        end
+
         private
 
         PARSER_ERRORS = if Cucumber::JRUBY
