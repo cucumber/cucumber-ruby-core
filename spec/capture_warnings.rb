@@ -41,6 +41,7 @@ module CaptureWarnings
     STDERR.reopen(pipe_w)
     block.call
   ensure
+    capture_system_exit
     STDERR.reopen(old_stderr)
     pipe_w.close
     reader.join
@@ -58,6 +59,10 @@ module CaptureWarnings
   end
 
   def ensure_system_exit_if_required
-    raise $! if $!
+    raise @system_exit if @system_exit
+  end
+
+  def capture_system_exit
+    @system_exit = $!
   end
 end
