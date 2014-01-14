@@ -9,6 +9,7 @@ module Cucumber
 
     describe "parsing Gherkin" do
       it "calls the compiler with a valid AST" do
+        raise 'no'
         compiler = double
         expect( compiler ).to receive(:feature) do |feature|
           expect( feature ).to respond_to(:describe_to)
