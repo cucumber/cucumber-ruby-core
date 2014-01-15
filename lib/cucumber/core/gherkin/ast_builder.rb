@@ -148,7 +148,8 @@ module Cucumber
 
         class BackgroundBuilder < Builder
           def result(language)
-            background = Ast::Background.new(
+            Ast::Background.new(
+              node,
               language,
               location,
               comments,
@@ -157,8 +158,6 @@ module Cucumber
               node.description,
               steps(language)
             )
-            background.gherkin_statement(node)
-            background
           end
 
           def add_step(file, node)
@@ -179,7 +178,8 @@ module Cucumber
 
         class ScenarioBuilder < Builder
           def result(background, language, feature_tags)
-            scenario = Ast::Scenario.new(
+            Ast::Scenario.new(
+              node,
               language,
               location,
               background,
@@ -191,8 +191,6 @@ module Cucumber
               node.description,
               steps(language)
             )
-            scenario.gherkin_statement(node)
-            scenario
           end
 
           def add_step(file, node)

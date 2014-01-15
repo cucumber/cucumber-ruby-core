@@ -14,18 +14,9 @@ module Cucumber
 
         attr_reader   :feature_tags
         attr_accessor :feature
-        attr_reader   :comments, :tags, :keyword, :background, :title, :location
+        attr_reader   :comments, :tags, :keyword, :background, :title, :location, :gherkin_statement
 
-        include Cucumber.initializer(:language, :location, :background, :comments, :tags, :feature_tags, :keyword, :title, :description, :raw_steps)
-
-        def initialize(*)
-          super
-          @exception = @executed = nil
-        end
-
-        def gherkin_statement(node)
-          @gherkin_statement = node
-        end
+        include Cucumber.initializer(:gherkin_statement, :language, :location, :background, :comments, :tags, :feature_tags, :keyword, :title, :description, :raw_steps)
 
         def children
           raw_steps
