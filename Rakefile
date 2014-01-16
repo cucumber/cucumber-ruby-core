@@ -12,14 +12,22 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :integration do
-  cucumber_ruby_core_folder = Dir.pwd
+  desc "Equivalent to running rake inside cucumber/cucumber"
+  task :spec => [:bundle_update]  do
+    sh "bundle exec rake"
+  end
 
-  task :spec => [:pull_cucumber] do
-    sh "rake build"
+  task :bundle_update => [:pull_cucumber] do
+    cucumber_ruby_core_folder = Dir.pwd
     cd "_tmp"
     sh "bundle config local.cucumber-core #{cucumber_ruby_core_folder}"
-    sh "bundle install --path=vendor"
-    sh "bundle exec rake"
+    if File.exists?("Gemfile.lock")
+      puts "A Gemfile.lock exists. Update cucumber-ruby-core commit"
+      sh "bundle update cucumber-core"
+    else
+      puts "No Gemfile.lock found. Installing all gems"
+      sh "bundle install --path=vendor"
+    end
   end
 
   task :pull_cucumber => "_tmp" do
