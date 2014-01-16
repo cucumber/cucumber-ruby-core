@@ -19,7 +19,7 @@ namespace :integration do
     cd "_tmp"
     sh "bundle config local.cucumber-core #{cucumber_ruby_core_folder}"
     sh "bundle install --path=vendor"
-    sh "bundle exec rake spec"
+    sh "bundle exec rake"
   end
 
   task :pull_cucumber => "_tmp" do
