@@ -53,16 +53,22 @@ module Cucumber
         end
 
         class TagLimits
+          TAG_MATCHER = /^
+            (?:~)?                 #The tag negation symbol "~". This is optional and not captured.
+            (?<tag_name>\@[\w\d]+) #Captures the tag name including the "@" symbol.
+            \:                     #The seperator, ":", between the tag name and the limit.
+            (?<limit>\d+)          #Caputres the limit number.
+          $/x
+
           attr_reader :limit_list
           private :limit_list
           def initialize(filter_expressions)
-            @limit_list = Hash[
-              Array(filter_expressions).map{ |filter_expression|
-                if matchdata = filter_expression.match(/^(?:~)?(\@[\w\d]+)\:(\d+)$/)
-                  [matchdata[1], Integer(matchdata[2])]
-                end
-              }.compact
-            ]
+            @limit_list = Array(filter_expressions).map do |filter_expression|
+              TAG_MATCHER.match(filter_expression)
+            end.compact.reduce({}) do |limit_list, matchdata|
+              limit_list[matchdata[:tag_name]] = Integer(matchdata[:limit])
+              limit_list
+            end
           end
 
           def enforce(tag_counter)
@@ -92,7 +98,8 @@ module Cucumber
         ) do
 
           def message
-            "#{tag_name} occurred #{tag_count} times, but the limit was set to #{tag_limit}\n  " + tag_locations.map(&:to_s).join("\n  ")
+            "#{tag_name} occurred #{tag_count} times, but the limit was set to #{tag_limit}\n  " +
+              tag_locations.map(&:to_s).join("\n  ")
           end
           alias :to_s :message
         end
