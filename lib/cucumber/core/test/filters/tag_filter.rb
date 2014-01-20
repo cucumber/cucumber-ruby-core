@@ -5,7 +5,7 @@ module Cucumber
         include Cucumber.initializer(:filter_expressions, :receiver)
 
         def test_case(test_case)
-          tag_counter.count(test_case)
+          test_cases << test_case
           if test_case.match_tags?(filter_expressions)
             test_case.describe_to(receiver)
           end
@@ -13,42 +13,36 @@ module Cucumber
         end
 
         def done
-          tag_limits.enforce(tag_counter)
-          @receiver.done
+          tag_limits.enforce(test_cases)
+          receiver.done
           self
         end
 
         private
-        def tag_counter
-          @tag_counter ||= TagCounter.new
+        def test_cases
+          @test_cases ||= TestCases.new
         end
 
         def tag_limits
           @tag_limits ||= TagLimits.new(filter_expressions)
         end
 
-        class TagCounter
-          attr_reader :tag_name_locations, :tag_name_counts
-          private :tag_name_locations, :tag_name_counts
+        class TestCases
+          attr_reader :test_cases_by_tag_name
+          private :test_cases_by_tag_name
           def initialize
-            @tag_name_locations = Hash.new { [] }
-            @tag_name_counts = Hash.new { 0 }
+            @test_cases_by_tag_name = Hash.new { [] }
           end
 
-          def count(test_case)
+          def <<(test_case)
             test_case.tags.each do |tag|
-              tag_name_locations[tag.name] += [test_case.location]
-              tag_name_counts[tag.name] += 1
+              test_cases_by_tag_name[tag.name] += [test_case]
             end
             self
           end
 
-          def count_for(tag_name)
-            tag_name_counts[tag_name]
-          end
-
-          def locations_for(tag_name)
-            tag_name_locations[tag_name]
+          def with_tag_name(tag_name)
+            test_cases_by_tag_name[tag_name]
           end
         end
 
@@ -73,11 +67,11 @@ module Cucumber
             end
           end
 
-          def enforce(tag_counter)
+          def enforce(test_cases)
             limit_breaches = limit_list.reduce([]) do |breaches, (tag_name, limit)|
-              tag_count = tag_counter.count_for(tag_name)
+              tag_count = test_cases.with_tag_name(tag_name).count
               if tag_count > limit
-                tag_locations = tag_counter.locations_for(tag_name)
+                tag_locations = test_cases.with_tag_name(tag_name).map(&:location)
                 breaches << TagLimitBreach.new(
                   tag_count,
                   limit,
