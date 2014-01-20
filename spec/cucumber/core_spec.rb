@@ -179,6 +179,28 @@ module Cucumber
           end
         end
 
+        context 'whith multiple tag limits' do
+          let(:tag_filters) {
+            [[Cucumber::Core::Test::TagFilter, [['@one:1, @three:1', '~@feature:3']]]]
+          }
+
+          it 'raises a tag excess error with the location of the test cases' do
+            expect_tag_excess <<-STR
+              @one occurred 2 times, but the limit was set to 1
+                features/test.feature:5
+                features/test.feature:9
+              @three occurred 2 times, but the limit was set to 1
+                features/test.feature:5
+                features/test.feature:18
+              @feature occurred 4 times, but the limit was set to 3
+                features/test.feature:5
+                features/test.feature:9
+                features/test.feature:18
+                features/test.feature:21
+            STR
+          end
+        end
+
       end
 
     end

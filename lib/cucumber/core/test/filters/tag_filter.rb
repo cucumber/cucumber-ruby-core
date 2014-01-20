@@ -63,7 +63,9 @@ module Cucumber
           attr_reader :limit_list
           private :limit_list
           def initialize(filter_expressions)
-            @limit_list = Array(filter_expressions).map do |filter_expression|
+            @limit_list = Array(filter_expressions).flat_map do |raw_expression|
+              raw_expression.split(/\s*,\s*/)
+            end.map do |filter_expression|
               TAG_MATCHER.match(filter_expression)
             end.compact.reduce({}) do |limit_list, matchdata|
               limit_list[matchdata[:tag_name]] = Integer(matchdata[:limit])
@@ -85,7 +87,7 @@ module Cucumber
               end
               breaches
             end
-            raise TagExcess.new(limit_breaches) if !limit_breaches.empty?
+            raise TagExcess.new(limit_breaches) if limit_breaches.any?
             self
           end
         end
