@@ -61,9 +61,8 @@ module Cucumber
               raw_expression.split(/\s*,\s*/)
             end.map do |filter_expression|
               TAG_MATCHER.match(filter_expression)
-            end.compact.reduce({}) do |limit_list, matchdata|
+            end.compact.each_with_object({}) do |matchdata, limit_list|
               limit_list[matchdata[:tag_name]] = Integer(matchdata[:limit])
-              limit_list
             end
           end
 
