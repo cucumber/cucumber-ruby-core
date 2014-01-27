@@ -1,3 +1,4 @@
+require 'cucumber/core/test/filters/tag_filter'
 module Cucumber
   module Core
     module Test
@@ -42,23 +43,6 @@ module Cucumber
           name_regexps.empty? || name_regexps.any? { |name_regexp| test_case.match_name?(name_regexp) }
         end
       end
-
-      class TagFilter
-        include Cucumber.initializer(:filter_expressions, :receiver)
-
-        def test_case(test_case)
-          if test_case.match_tags?(filter_expressions)
-            test_case.describe_to(receiver)
-          end
-          self
-        end
-
-        def done
-          @receiver.done
-          self
-        end
-      end
-
     end
   end
 end
