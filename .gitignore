@@ -3,5 +3,6 @@
 /Gemfile.lock
 /tmp/
 /coverage
+/pkg
 *.swo
 .ruby-version
