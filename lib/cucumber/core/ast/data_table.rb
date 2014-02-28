@@ -51,10 +51,6 @@ module Cucumber
 
         attr_accessor :file
 
-        def self.default_arg_name #:nodoc:
-          "table"
-        end
-
         def self.parse(text, uri, location)
           builder = Builder.new
           lexer = ::Gherkin::Lexer::I18nLexer.new(builder)
@@ -257,7 +253,7 @@ module Cucumber
         end
 
         def description_for_visitors
-          :table
+          :data_table
         end
 
         # Represents a row of cells or columns of cells

@@ -10,7 +10,7 @@ module Cucumber
 
         attr_reader :keyword, :name, :language, :exception, :multiline_arg
 
-        def initialize(language, location, keyword, name, multiline_arg=nil)
+        def initialize(language, location, keyword, name, multiline_arg)
           @location, @keyword, @name, @multiline_arg = location, keyword, name, multiline_arg
         end
 
@@ -19,13 +19,12 @@ module Cucumber
         end
 
         def to_sexp
-          [:step, line, keyword, name, (@multiline_arg.nil? ? nil : @multiline_arg.to_sexp)].compact
+          [:step, line, keyword, name, @multiline_arg.to_sexp]
         end
 
         private
 
         def children
-          return [] unless @multiline_arg # TODO: use a null object
           [@multiline_arg]
         end
 

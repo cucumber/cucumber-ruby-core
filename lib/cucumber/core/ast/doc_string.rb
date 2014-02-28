@@ -23,10 +23,6 @@ module Cucumber
         include DescribesItself
         attr_accessor :file
 
-        def self.default_arg_name
-          "string"
-        end
-
         attr_reader :content_type, :content
 
         def initialize(string, content_type, location)

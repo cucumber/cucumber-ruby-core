@@ -5,8 +5,9 @@ module Cucumber
     module Ast
       describe Step do
         let(:step) do
-          language, location, keyword, name = double, double, double, double
-          Step.new(language, location, keyword, name)
+          language, location, keyword, name = *double
+          multiline_arg = EmptyMultilineArgument.new
+          Step.new(language, location, keyword, name, multiline_arg)
         end
 
         describe "describing itself" do

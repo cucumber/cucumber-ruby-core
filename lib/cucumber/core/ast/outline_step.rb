@@ -12,7 +12,7 @@ module Cucumber
 
         attr_reader :language, :location, :keyword, :name, :multiline_arg
 
-        def initialize(language, location, keyword, name, multiline_arg=nil)
+        def initialize(language, location, keyword, name, multiline_arg)
           @language, @location, @keyword, @name, @multiline_arg = language, location, keyword, name, multiline_arg
           @language || raise("Language is required!")
         end
@@ -32,10 +32,8 @@ module Cucumber
         end
 
         def children
-          # TODO use a null object
           # TODO remove duplication with Step
           # TODO spec
-          return [] unless @multiline_arg
           [@multiline_arg]
         end
 

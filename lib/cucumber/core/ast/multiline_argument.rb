@@ -8,8 +8,9 @@ module Cucumber
         class << self
           include Gherkin::Rubify
 
+          # TODO: move this up to the front-end
           def from(argument, parent_location)
-            return unless argument
+            return EmptyMultilineArgument.new unless argument
             return argument if argument.respond_to?(:to_step_definition_arg)
 
             argument = rubify(argument)

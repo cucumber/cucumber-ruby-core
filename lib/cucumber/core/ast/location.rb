@@ -118,8 +118,7 @@ module Cucumber
         end
 
         def attributes
-          # TODO: Remove compact when we have a null multiline arg object
-          [tags, comments, multiline_arg].flatten.compact
+          [tags, comments, multiline_arg].flatten
         end
 
         def tags
@@ -128,10 +127,13 @@ module Cucumber
         end
 
         def comments
+          # will be overriden by nodes that actually have comments
           []
         end
 
         def multiline_arg
+          # will be overriden by nodes that actually have a multiline_argument
+          EmptyMultilineArgument.new
         end
 
       end

@@ -7,11 +7,12 @@ module Cucumber
   module Core
     module Ast
       describe OutlineStep do
-        let(:outline_step) { OutlineStep.new(language, location, keyword, name) }
+        let(:outline_step) { OutlineStep.new(language, location, keyword, name, multiline_arg) }
         let(:language) { double }
         let(:location) { double }
         let(:keyword)  { double }
         let(:name)     { 'anything' }
+        let(:multiline_arg) { EmptyMultilineArgument.new }
 
         describe 'location' do
           it "has a location" do
