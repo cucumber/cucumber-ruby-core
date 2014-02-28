@@ -44,7 +44,7 @@ module Cucumber
             it "replaces the arguments in the DataTable" do
               visitor = double
               visitor.stub(:step).and_yield
-              expect( visitor ).to receive(:table) do |data_table| # TODO: rename this message to :data_table
+              expect( visitor ).to receive(:data_table) do |data_table|
                 expect( data_table.raw ).to eq [['x', 'y'], ['a', 'a replacement']]
               end
               row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1, location)

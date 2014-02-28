@@ -94,7 +94,7 @@ module Cucumber
             visitor.stub(:step).and_yield
 
             expected = Ast::DataTable.new([['name', 'surname'], ['rob', 'westgeest']], Ast::Location.new('foo.feature', 23))
-            expect( visitor ).to receive(:table).with(expected)
+            expect( visitor ).to receive(:data_table).with(expected)
             feature.describe_to(visitor)
           end
         end
