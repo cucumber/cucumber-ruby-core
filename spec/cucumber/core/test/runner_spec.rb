@@ -15,6 +15,10 @@ module Cucumber::Core::Test
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
+    before do
+      report.stub(:before_test_case).and_yield
+    end
+
     context "reporting the duration of a test case" do
       before do
         time = double
@@ -49,6 +53,7 @@ module Cucumber::Core::Test
     context "reporting the exception that failed a test case" do
       let(:test_steps) { [failing] }
       it "sets the exception on the result" do
+        report.stub(:before_test_case).and_yield
         expect( report ).to receive(:after_test_case) do |reported_test_case, result|
           expect( result.exception ).to eq exception
         end
@@ -180,6 +185,10 @@ module Cucumber::Core::Test
     let(:passing) { Step.new([double]).map {} }
     let(:undefined) { Step.new([double]) }
     let(:test_case) { Case.new(test_steps, source) }
+
+    before do
+      report.stub(:before_test_case).and_yield
+    end
 
     context 'with a passing step' do
       let(:test_steps) { [passing] }

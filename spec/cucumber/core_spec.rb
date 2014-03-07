@@ -214,6 +214,10 @@ module Cucumber
           @test_steps = Core::Test::Result::Summary.new
         end
 
+        def before_test_case(*)
+          yield if block_given?
+        end
+
         def after_test_case(test_case, result)
           result.describe_to test_cases
         end

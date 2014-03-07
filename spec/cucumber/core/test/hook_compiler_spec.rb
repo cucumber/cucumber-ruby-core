@@ -11,10 +11,10 @@ module Cucumber::Core::Test
     let(:mappings)   { double('mappings', test_case: nil) }
     let(:receiver)   { double('receiver', test_case: nil) }
     let(:test_case)  { Case.new([test_step], source) }
-    let(:test_step)  { Step.new([double('step', name: 'passing')]) }
+    let(:test_step)  { Step.new([double('step', name: 'passing', location: 'test')]) }
     let(:source)     { [feature, scenario] }
     let(:feature)    { double('feature') }
-    let(:scenario)   { double('scenario') }
+    let(:scenario)   { double('scenario', location: 'test') }
 
     before do
       expect( receiver ).to receive(:test_case) do |test_case|
@@ -49,15 +49,22 @@ module Cucumber::Core::Test
         mapper.before { log.before }
         mapper.after { log.after }
       end
-      mappings.stub(:test_step) do |test_step, mapper|
-        mapper.map { log.step }
+      mapped_step = test_step.map { log.step }
+      test_case = Case.new([mapped_step], source)
+
+      expect( log ).to receive(:before).ordered
+      expect( log ).to receive(:step).ordered
+      expect( log ).to receive(:after).ordered
+
+      receiver.stub(:test_case) do |*, &continue|
+        continue.call
       end
-      [:before, :step, :after].each do |message|
-        expect( log ).to receive(message).ordered
+
+      receiver.stub(:test_step) do |test_step|
+        test_step.execute
       end
-      runner = Runner.new(double.as_null_object)
-      mapper = Mapper.new(mappings, runner)
-      hook_compiler = HookCompiler.new(mappings, mapper)
+
+      hook_compiler = HookCompiler.new(mappings, receiver)
       test_case.describe_to hook_compiler
     end
 
