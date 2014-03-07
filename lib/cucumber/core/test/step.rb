@@ -54,7 +54,7 @@ module Cucumber
         end
 
         def inspect
-          "#{self.class}: #{location}"
+          "<#{self.class}: #{location}>"
         end
 
         private

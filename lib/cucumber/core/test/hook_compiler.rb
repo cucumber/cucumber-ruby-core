@@ -34,7 +34,7 @@ module Cucumber
         end
 
         def inspect
-          "#{self.class}"
+          "<#{self.class}: #{@mapping.location}>"
         end
       end
 

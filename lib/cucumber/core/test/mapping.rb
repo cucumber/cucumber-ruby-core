@@ -1,6 +1,7 @@
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/timer'
 require 'cucumber/core/test/result'
+require 'cucumber/core/ast/location'
 
 module Cucumber
   module Core
@@ -27,6 +28,14 @@ module Cucumber
           failed(exception)
         end
 
+        def location
+          Ast::Location.new(*@block.source_location)
+        end
+
+        def inspect
+          "<#{self.class}: #{location}>"
+        end
+
         private
 
         def passed
@@ -44,6 +53,7 @@ module Cucumber
         def pending(exception)
           exception.with_duration(@timer.duration)
         end
+
       end
 
       class UndefinedMapping
