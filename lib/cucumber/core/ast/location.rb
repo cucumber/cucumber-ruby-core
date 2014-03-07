@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'cucumber/core/platform'
 module Cucumber
   module Core
     module Ast
