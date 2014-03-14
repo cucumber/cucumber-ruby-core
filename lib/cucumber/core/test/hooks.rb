@@ -13,7 +13,7 @@ module Cucumber
         end
 
         def describe_source_to(visitor, *args)
-          visitor.hook(*args)
+          visitor.hook(@mapping.location, *args)
         end
 
         def execute
