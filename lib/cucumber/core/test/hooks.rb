@@ -36,6 +36,24 @@ module Cucumber
           "<#{self.class}: #{@mapping.location}>"
         end
       end
+
+      BeforeHook = Class.new(HookStep)
+      AfterHook = Class.new(HookStep)
+
+      class AroundHook
+        def initialize(source, &block)
+          @source = source
+          @block = block
+        end
+
+        def call(continue)
+          @block.call(continue)
+        end
+
+        def describe_to(visitor, *args, &continue)
+          visitor.around_hook(self, *args, &continue)
+        end
+      end
     end
   end
 end

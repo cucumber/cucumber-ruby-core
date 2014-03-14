@@ -1,10 +1,11 @@
 require 'cucumber/initializer'
-require 'cucumber/core/test/hook_step'
+require 'cucumber/core/test/hooks'
 
 module Cucumber
   module Core
     module Test
 
+      # Sits in the filter chain and adds hooks onto test cases
       class HookCompiler
         include Cucumber.initializer(:mappings, :receiver)
 
@@ -15,7 +16,7 @@ module Cucumber
 
         def test_case(test_case, &descend)
           @before_hooks, @after_hooks, @around_hooks, @steps = [], [], [], []
-          mapper = HookMapper.new(self, test_case.source)
+          mapper = HookMapperDSL.new(self, test_case.source)
           test_case.describe_to mappings, mapper
           descend.call
           test_case.
@@ -40,36 +41,23 @@ module Cucumber
           @steps << step
         end
 
-        class HookMapper
+        # This is the object yielded to users (in the mappings) when defining hooks
+        class HookMapperDSL
           include Cucumber.initializer(:compiler, :source)
 
           def before(&block)
-            compiler.before_hook HookStep.new(source, &block)
+            compiler.before_hook BeforeHook.new(source, &block)
           end
 
           def after(&block)
-            compiler.after_hook HookStep.new(source, &block)
+            compiler.after_hook AfterHook.new(source, &block)
           end
 
           def around(&block)
             compiler.around_hook AroundHook.new(source, &block)
           end
-
-          class AroundHook
-            def initialize(source, &block)
-              @source = source
-              @block = block
-            end
-
-            def call(continue)
-              @block.call(continue)
-            end
-
-            def describe_to(visitor, *args, &continue)
-              visitor.around_hook(self, *args, &continue)
-            end
-          end
         end
+
       end
     end
   end
