@@ -27,6 +27,10 @@ module Cucumber
           [filepath.to_s, lines.to_s].reject { |v| v == WILDCARD.to_s }.join(":")
         end
 
+        def hash
+          self.class.hash ^ to_s.hash
+        end
+
         def to_str
           to_s
         end
@@ -50,14 +54,16 @@ module Cucumber
         end
 
         require 'set'
-        class Lines
+        class Lines < Struct.new(:data)
+          protected :data
           attr_reader :line
+
           def initialize(line)
             if Cucumber::JRUBY && line.is_a?(::Java::GherkinFormatterModel::Range)
               line = Range.new(line.first, line.last)
             end
             @line = line
-            @data = Array(line).to_set
+            super Array(line).to_set
           end
 
           def include?(other)
@@ -69,13 +75,11 @@ module Cucumber
             boundary.join('..')
           end
 
-          def ==(other)
-            other.data == data
+          def inspect
+            "<#{self.class}: #{to_s}>"
           end
 
           protected
-
-          attr_reader :data
 
           def boundary
             first_and_last(value).uniq

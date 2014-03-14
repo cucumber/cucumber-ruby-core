@@ -15,6 +15,13 @@ module Cucumber::Core::Ast
        it "is not equal to a wild card of the same file" do
          expect( Location.new(file, line) ).not_to eq Location.new(file)
        end
+
+      context "collections of locations" do
+        it "behave as expected with uniq" do
+          unique_collection = [Location.new(file, line), Location.new(file, line)].uniq
+          expect( unique_collection ).to eq [Location.new(file, line)]
+        end
+      end
     end
 
     describe "to_s" do
@@ -68,7 +75,7 @@ module Cucumber::Core::Ast
 
       context 'a range wildcard' do
         let(:range) { Location.new("foo.feature", 13..17) }
-        
+
         it "matches the first line in the same file" do
           other = Location.new("foo.feature", 13)
           expect( range ).to be_match(other)
