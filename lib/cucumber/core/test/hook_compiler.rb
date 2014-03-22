@@ -1,5 +1,4 @@
 require 'cucumber/initializer'
-require 'cucumber/core/test/hooks'
 
 module Cucumber
   module Core
@@ -46,20 +45,23 @@ module Cucumber
           include Cucumber.initializer(:compiler, :source)
 
           def before(&block)
-            mapping = Test::Mapping.new(&block)
-            hook = HookStep.new(source + [BeforeHook.new(mapping.location)], mapping)
-            compiler.before_hook hook
+            compiler.before_hook build_hook_step(block, BeforeHook)
           end
 
           def after(&block)
-            mapping = Test::Mapping.new(&block)
-            hook = HookStep.new(source + [AfterHook.new(mapping.location)], mapping)
-
-            compiler.after_hook hook
+            compiler.after_hook build_hook_step(block, AfterHook)
           end
 
           def around(&block)
             compiler.around_hook AroundHook.new(source, &block)
+          end
+
+          private
+
+          def build_hook_step(block, type)
+            mapping = Test::Mapping.new(&block)
+            hook = type.new(mapping.location)
+            Step.new(source + [hook], mapping)
           end
         end
 
@@ -78,6 +80,21 @@ module Cucumber
 
           def describe_to(visitor, *args)
             visitor.after_hook(self, *args)
+          end
+        end
+
+        class AroundHook
+          def initialize(source, &block)
+            @source = source
+            @block = block
+          end
+
+          def describe_to(visitor, *args, &continue)
+            visitor.around_hook(self, *args, &continue)
+          end
+
+          def call(continue)
+            @block.call(continue)
           end
         end
 

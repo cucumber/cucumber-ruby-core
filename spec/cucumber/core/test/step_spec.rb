@@ -46,12 +46,12 @@ module Cucumber::Core::Test
       end
     end
 
-    it "exposes the name and multiline_arg of the ast step as attributes" do
-      name, multiline_arg = double, double
-      ast_step = double(name: name, multiline_arg: multiline_arg)
+    it "exposes the name and location of the last source node as attributes" do
+      name, location = double, double
+      ast_step = double(name: name, location: location)
       test_step = Step.new([ast_step])
-      expect( test_step.name          ).to eq name
-      expect( test_step.multiline_arg ).to eq multiline_arg
+      expect( test_step.name     ).to eq name
+      expect( test_step.location ).to eq location
     end
 
   end
