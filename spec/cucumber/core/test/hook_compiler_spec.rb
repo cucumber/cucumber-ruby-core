@@ -68,18 +68,44 @@ module Cucumber::Core::Test
       test_case.describe_to hook_compiler
     end
 
-    it "sets the source on the hook step to be just the hook" do
+    it "sets the source to include the before hook" do
       test_case = Case.new([], source)
       mappings.stub(:test_case) do |test_case_to_be_mapped, mapper|
         mapper.before {}
       end
       receiver.stub(:test_case).and_yield
       receiver.stub(:test_step) do |test_step|
-        expect( receiver ).to receive(:hook)
-        test_step.describe_source_to(receiver)
+        args = double('args')
+        visitor = double('visitor')
+        expect( visitor ).to receive(:before_hook) do |hook, args|
+          expect( args ).to eq(args)
+          expect( hook.location.to_s ).to eq("#{__FILE__}:74")
+        end
+        expect( feature ).to receive(:describe_to).with(visitor, args)
+        expect( scenario ).to receive(:describe_to).with(visitor, args)
+        test_step.describe_source_to(visitor, args)
       end
       test_case.describe_to(hook_compiler)
     end
 
+    it "sets the source to include the after hook" do
+      test_case = Case.new([], source)
+      mappings.stub(:test_case) do |test_case_to_be_mapped, mapper|
+        mapper.after {}
+      end
+      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_step) do |test_step|
+        args = double('args')
+        visitor = double('visitor')
+        expect( visitor ).to receive(:after_hook) do |hook, args|
+          expect( args ).to eq(args)
+          expect( hook.location.to_s ).to eq("#{__FILE__}:94")
+        end
+        expect( feature ).to receive(:describe_to).with(visitor, args)
+        expect( scenario ).to receive(:describe_to).with(visitor, args)
+        test_step.describe_source_to(visitor, args)
+      end
+      test_case.describe_to(hook_compiler)
+    end
   end
 end

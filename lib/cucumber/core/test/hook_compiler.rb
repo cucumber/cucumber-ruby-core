@@ -46,15 +46,38 @@ module Cucumber
           include Cucumber.initializer(:compiler, :source)
 
           def before(&block)
-            compiler.before_hook BeforeHook.new(source, &block)
+            mapping = Test::Mapping.new(&block)
+            hook = HookStep.new(source + [BeforeHook.new(mapping.location)], mapping)
+            compiler.before_hook hook
           end
 
           def after(&block)
-            compiler.after_hook AfterHook.new(source, &block)
+            mapping = Test::Mapping.new(&block)
+            hook = HookStep.new(source + [AfterHook.new(mapping.location)], mapping)
+
+            compiler.after_hook hook
           end
 
           def around(&block)
             compiler.around_hook AroundHook.new(source, &block)
+          end
+        end
+
+        class BeforeHook
+          include Cucumber.initializer(:location)
+          public :location
+
+          def describe_to(visitor, *args)
+            visitor.before_hook(self, *args)
+          end
+        end
+
+        class AfterHook
+          include Cucumber.initializer(:location)
+          public :location
+
+          def describe_to(visitor, *args)
+            visitor.after_hook(self, *args)
           end
         end
 

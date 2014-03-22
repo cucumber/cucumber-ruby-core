@@ -1,10 +1,14 @@
+require 'cucumber/initializer'
 require 'cucumber/core/test/mapping'
+
 module Cucumber
   module Core
     module Test
       class HookStep
-        def initialize(source, &block)
-          @mapping = Test::Mapping.new(&block)
+        include Cucumber.initializer(:source)
+
+        def initialize(source, mapping)
+          @mapping = mapping
           @source = source
         end
 
@@ -13,7 +17,9 @@ module Cucumber
         end
 
         def describe_source_to(visitor, *args)
-          visitor.hook(@mapping.location, *args)
+          @source.each do |node|
+            node.describe_to(visitor, *args)
+          end
         end
 
         def execute
@@ -33,21 +39,18 @@ module Cucumber
         end
       end
 
-      BeforeHook = Class.new(HookStep)
-      AfterHook = Class.new(HookStep)
-
       class AroundHook
         def initialize(source, &block)
           @source = source
           @block = block
         end
 
-        def call(continue)
-          @block.call(continue)
-        end
-
         def describe_to(visitor, *args, &continue)
           visitor.around_hook(self, *args, &continue)
+        end
+
+        def call(continue)
+          @block.call(continue)
         end
       end
     end
