@@ -24,10 +24,6 @@ module Cucumber
           execute
         end
 
-        def map
-          self
-        end
-
         def match_locations?(locations)
           false
         end

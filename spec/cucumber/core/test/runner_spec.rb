@@ -9,9 +9,9 @@ module Cucumber::Core::Test
     let(:source)    { double }
     let(:runner)    { Runner.new(report) }
     let(:report)    { double.as_null_object }
-    let(:passing)   { Step.new([double]).map {} }
-    let(:failing)   { Step.new([double]).map { raise exception } }
-    let(:pending)   { Step.new([double]).map { raise Result::Pending.new("TODO") } }
+    let(:passing)   { Step.new([double]).with_mapping {} }
+    let(:failing)   { Step.new([double]).with_mapping { raise exception } }
+    let(:pending)   { Step.new([double]).with_mapping { raise Result::Pending.new("TODO") } }
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
@@ -182,7 +182,7 @@ module Cucumber::Core::Test
     let(:report) { double(:report).as_null_object }
     let(:source) { double(:source) }
     let(:runner) { Runner.new(report, :run_mode => :dry_run) }
-    let(:passing) { Step.new([double]).map {} }
+    let(:passing) { Step.new([double]).with_mapping {} }
     let(:undefined) { Step.new([double]) }
     let(:test_case) { Case.new(test_steps, source) }
 

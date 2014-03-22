@@ -46,7 +46,7 @@ module Cucumber
           end
 
           def map(&block)
-            @mapped_test_step = test_step.map(&block)
+            @mapped_test_step = test_step.with_mapping(&block)
           end
         end
 

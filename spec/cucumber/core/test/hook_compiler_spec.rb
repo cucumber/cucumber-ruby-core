@@ -49,7 +49,7 @@ module Cucumber::Core::Test
         mapper.before { log.before }
         mapper.after { log.after }
       end
-      mapped_step = test_step.map { log.step }
+      mapped_step = test_step.with_mapping { log.step }
       test_case = Case.new([mapped_step], source)
 
       expect( log ).to receive(:before).ordered
