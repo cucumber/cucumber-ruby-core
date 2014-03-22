@@ -65,40 +65,41 @@ module Cucumber
           end
         end
 
-        class BeforeHook
-          include Cucumber.initializer(:location)
-          public :location
-
-          def describe_to(visitor, *args)
-            visitor.before_hook(self, *args)
-          end
-        end
-
-        class AfterHook
-          include Cucumber.initializer(:location)
-          public :location
-
-          def describe_to(visitor, *args)
-            visitor.after_hook(self, *args)
-          end
-        end
-
-        class AroundHook
-          def initialize(source, &block)
-            @source = source
-            @block = block
-          end
-
-          def describe_to(visitor, *args, &continue)
-            visitor.around_hook(self, *args, &continue)
-          end
-
-          def call(continue)
-            @block.call(continue)
-          end
-        end
-
       end
+
+      class BeforeHook
+        include Cucumber.initializer(:location)
+        public :location
+
+        def describe_to(visitor, *args)
+          visitor.before_hook(self, *args)
+        end
+      end
+
+      class AfterHook
+        include Cucumber.initializer(:location)
+        public :location
+
+        def describe_to(visitor, *args)
+          visitor.after_hook(self, *args)
+        end
+      end
+
+      class AroundHook
+        def initialize(source, &block)
+          @source = source
+          @block = block
+        end
+
+        def describe_to(visitor, *args, &continue)
+          visitor.around_hook(self, *args, &continue)
+        end
+
+        def call(continue)
+          @block.call(continue)
+        end
+      end
+
     end
   end
 end
