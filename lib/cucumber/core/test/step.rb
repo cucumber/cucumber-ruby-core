@@ -24,14 +24,6 @@ module Cucumber
           end
         end
 
-        def name
-          step.name
-        end
-
-        def multiline_arg
-          step.multiline_arg
-        end
-
         def skip
           @mapping.skip
         end
@@ -44,8 +36,12 @@ module Cucumber
           self.class.new(source, Test::Mapping.new(&block))
         end
 
+        def name
+          source.last.name
+        end
+
         def location
-          step.location
+          source.last.location
         end
 
         def match_locations?(queried_locations)
@@ -55,12 +51,6 @@ module Cucumber
 
         def inspect
           "<#{self.class}: #{location}>"
-        end
-
-        private
-
-        def step
-          source.last
         end
 
       end
