@@ -71,6 +71,14 @@ module Cucumber
         include Cucumber.initializer(:location)
         public :location
 
+        def name
+          "Before hook"
+        end
+
+        def match_locations?(queried_locations)
+          queried_locations.any? { |other_location| other_location.match?(location) }
+        end
+
         def describe_to(visitor, *args)
           visitor.before_hook(self, *args)
         end
@@ -79,6 +87,14 @@ module Cucumber
       class AfterHook
         include Cucumber.initializer(:location)
         public :location
+
+        def name
+          "After hook"
+        end
+
+        def match_locations?(queried_locations)
+          queried_locations.any? { |other_location| other_location.match?(location) }
+        end
 
         def describe_to(visitor, *args)
           visitor.after_hook(self, *args)
