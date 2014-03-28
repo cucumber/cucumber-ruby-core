@@ -24,7 +24,7 @@ module Cucumber
         end
 
         def describe_source_to(visitor, *args)
-          source.each do |node|
+          source.reverse.each do |node|
             node.describe_to(visitor, *args)
           end
           self
@@ -101,19 +101,19 @@ module Cucumber
           end
 
           def scenario_outline(outline)
-            @result = "#{outline.keyword}: #{outline.name}"
+            @result = "#{outline.keyword}: #{outline.name}" + @result
             self
           end
 
           def examples_table(table)
             name = table.name.strip
             name = table.keyword if name.length == 0
-            @result << ", #{name}"
+            @result = ", #{name}" + @result
             self
           end
 
           def examples_table_row(row)
-            @result << " (row #{row.number})"
+            @result = " (row #{row.number})"
             self
           end
         end
@@ -128,7 +128,7 @@ module Cucumber
 
           [:feature, :scenario, :scenario_outline, :examples_table].each do |node_name|
             define_method(node_name) do |node|
-              @result += node.tags
+              @result = node.tags + @result
               self
             end
           end

@@ -19,7 +19,7 @@ module Cucumber
         end
 
         def describe_source_to(visitor, *args)
-          source.each do |node|
+          source.reverse.each do |node|
             node.describe_to(visitor, *args)
           end
         end
