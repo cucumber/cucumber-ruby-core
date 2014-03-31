@@ -22,6 +22,7 @@ module Cucumber
           source.reverse.each do |node|
             node.describe_to(visitor, *args)
           end
+          self
         end
 
         def skip
