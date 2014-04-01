@@ -19,7 +19,6 @@ module Cucumber
         include Cucumber.initializer(:location, :background, :comments, :tags, :keyword, :title, :description, :feature_elements)
         def initialize(*)
           super
-          feature_elements.each { |e| e.feature = self }
         end
 
         def gherkin_statement(statement=nil)

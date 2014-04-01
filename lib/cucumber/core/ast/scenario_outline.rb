@@ -13,7 +13,6 @@ module Cucumber
 
         MissingExamples = Class.new(StandardError)
 
-        attr_accessor :feature
         attr_reader :feature_tags
 
         attr_reader :line

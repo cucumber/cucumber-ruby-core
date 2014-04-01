@@ -13,7 +13,6 @@ module Cucumber
         include DescribesItself
 
         attr_reader   :feature_tags
-        attr_accessor :feature
         attr_reader   :comments, :tags, :keyword, :background, :title, :location, :gherkin_statement
 
         include Cucumber.initializer(:gherkin_statement, :language, :location, :background, :comments, :tags, :feature_tags, :keyword, :title, :description, :raw_steps)
