@@ -81,8 +81,6 @@ module Cucumber::Core::Test
           expect( args ).to eq(args)
           expect( hook.location.to_s ).to eq("#{__FILE__}:74")
         end
-        expect( feature ).to receive(:describe_to).with(visitor, args)
-        expect( scenario ).to receive(:describe_to).with(visitor, args)
         test_step.describe_source_to(visitor, args)
       end
       test_case.describe_to(hook_compiler)
@@ -99,10 +97,8 @@ module Cucumber::Core::Test
         visitor = double('visitor')
         expect( visitor ).to receive(:after_hook) do |hook, args|
           expect( args ).to eq(args)
-          expect( hook.location.to_s ).to eq("#{__FILE__}:94")
+          expect( hook.location.to_s ).to eq("#{__FILE__}:92")
         end
-        expect( feature ).to receive(:describe_to).with(visitor, args)
-        expect( scenario ).to receive(:describe_to).with(visitor, args)
         test_step.describe_source_to(visitor, args)
       end
       test_case.describe_to(hook_compiler)
