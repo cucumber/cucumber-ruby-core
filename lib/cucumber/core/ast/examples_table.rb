@@ -10,7 +10,7 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :header, :keyword, :name, :tags, :comments
+        attr_reader :header, :keyword, :name, :tags, :comments, :location
 
         include Cucumber.initializer(
           :location, :comments, :tags, :keyword, :name, :description, :header, :example_rows
