@@ -3,15 +3,16 @@ require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/mapper'
+require 'cucumber/core/ast'
 
 module Cucumber::Core::Test
   describe HookCompiler do
 
     subject(:hook_compiler) { HookCompiler.new(mappings, receiver) }
-    let(:mappings)   { double('mappings', test_case: nil) }
+    let(:mappings)   { double('mappings', test_case: nil, test_step: nil) }
     let(:receiver)   { double('receiver', test_case: nil) }
     let(:test_case)  { Case.new([test_step], source) }
-    let(:test_step)  { Step.new([double('step', name: 'passing', location: 'test')]) }
+    let(:test_step)  { Step.new([Cucumber::Core::Ast::Step.new(:language, :location, :keyword, :name, :multiline_arg)]) }
     let(:source)     { [feature, scenario] }
     let(:feature)    { double('feature') }
     let(:scenario)   { double('scenario', location: 'test') }
@@ -79,7 +80,7 @@ module Cucumber::Core::Test
         visitor = double('visitor')
         expect( visitor ).to receive(:before_hook) do |hook, args|
           expect( args ).to eq(args)
-          expect( hook.location.to_s ).to eq("#{__FILE__}:74")
+          expect( hook.location.to_s ).to eq("#{__FILE__}:75")
         end
         test_step.describe_source_to(visitor, args)
       end
@@ -97,10 +98,28 @@ module Cucumber::Core::Test
         visitor = double('visitor')
         expect( visitor ).to receive(:after_hook) do |hook, args|
           expect( args ).to eq(args)
-          expect( hook.location.to_s ).to eq("#{__FILE__}:92")
+          expect( hook.location.to_s ).to eq("#{__FILE__}:93")
         end
         test_step.describe_source_to(visitor, args)
       end
+      test_case.describe_to(hook_compiler)
+    end
+
+    it "appends after_step hooks to the test step" do
+      mappings.stub(:test_step) do |test_step, mapper|
+        mapper.after {}
+      end
+      args = double('args')
+      visitor = double('visitor')
+      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_step) do |test_step|
+        test_step.describe_source_to(visitor, args)
+      end
+      expect( visitor ).to receive(:step).once.ordered
+      expect( visitor ).to receive(:after_step_hook) do |hook, args|
+        expect( args ).to eq(args)
+        expect( hook.location.to_s ).to eq("#{__FILE__}:110")
+      end.once.ordered
       test_case.describe_to(hook_compiler)
     end
   end

@@ -7,6 +7,7 @@ module Cucumber
     module Test
       class Step
         include Cucumber.initializer(:source)
+        attr_reader :source
 
         def initialize(source, mapping = Test::UndefinedMapping.new)
           raise ArgumentError if source.any?(&:nil?)
