@@ -15,7 +15,7 @@ module Cucumber
 
         def test_case(test_case, &descend)
           @before_hooks, @after_hooks, @around_hooks, @test_steps = [], [], [], []
-          mapper = CaseHookMapperDSL.new(self, test_case.source)
+          mapper = CaseHookMapperDSL.new(self)
           test_case.describe_to mappings, mapper
           descend.call
           test_case.
@@ -24,60 +24,59 @@ module Cucumber
             describe_to(receiver)
         end
 
-        def before_hook(hook)
-          @before_hooks << hook
+        def before_hook(block)
+          @before_hooks << build_hook_step(block, BeforeHook)
         end
 
-        def after_hook(hook)
-          @after_hooks << hook
+        def after_hook(block)
+          @after_hooks << build_hook_step(block, AfterHook)
         end
 
         def around_hook(hook)
           @around_hooks << hook
         end
 
+        def after_step_hook(block)
+          @test_steps << build_hook_step(block, AfterStepHook)
+        end
+
         def test_step(test_step)
           @test_steps << test_step
-          mapper = StepHookMapperDSL.new(self, test_step.source)
+          mapper = StepHookMapperDSL.new(self)
           test_step.describe_to mappings, mapper
         end
 
-        def after_step_hook(hook)
-          @test_steps << hook
-        end
+        private
 
-        class HookMapperDSL
-          include Cucumber.initializer(:compiler, :source)
-
-          private
-
-          def build_hook_step(block, type)
-            mapping = Test::Mapping.new(&block)
-            hook = type.new(mapping.location)
-            Step.new([hook], mapping)
-          end
+        def build_hook_step(block, type)
+          mapping = Test::Mapping.new(&block)
+          hook = type.new(mapping.location)
+          Step.new([hook], mapping)
         end
 
         # This is the object yielded to users (in the mappings) when defining hooks for a test case
-        class CaseHookMapperDSL < HookMapperDSL
+        class CaseHookMapperDSL
+          include Cucumber.initializer(:compiler)
 
           def before(&block)
-            compiler.before_hook build_hook_step(block, BeforeHook)
+            compiler.before_hook block
           end
 
           def after(&block)
-            compiler.after_hook build_hook_step(block, AfterHook)
+            compiler.after_hook block
           end
 
           def around(&block)
-            compiler.around_hook AroundHook.new(source, &block)
+            compiler.around_hook AroundHook.new(&block)
           end
 
         end
 
-        class StepHookMapperDSL < HookMapperDSL
+        class StepHookMapperDSL
+          include Cucumber.initializer(:compiler)
+
           def after(&block)
-            compiler.after_step_hook build_hook_step(block, AfterStepHook)
+            compiler.after_step_hook block
           end
         end
 
@@ -118,8 +117,7 @@ module Cucumber
       end
 
       class AroundHook
-        def initialize(source, &block)
-          @source = source
+        def initialize(&block)
           @block = block
         end
 
