@@ -291,8 +291,9 @@ module Cucumber
             self
           end
 
-          def test_step(step, mapper)
+          def test_step(test_step, mapper)
             mapper.map {} # all steps pass
+            mapper.after { raise Failure } if test_step.name == 'fail after'
             self
           end
         end
@@ -337,10 +338,16 @@ module Cucumber
           def test_case(test_case, mapper)
             logger = @logger
             mapper.around do |run_scenario|
-              logger << :before
+              logger << :before_all
               run_scenario.call
               logger << :middle
               run_scenario.call
+              logger << :after_all
+            end
+            mapper.before do
+              logger << :before
+            end
+            mapper.after do
               logger << :after
             end
             self
@@ -350,6 +357,9 @@ module Cucumber
             logger = @logger
             mapper.map do
               logger << :during
+            end
+            mapper.after do
+              logger << :after_step
             end
             self
           end
@@ -371,7 +381,19 @@ module Cucumber
           expect( report.test_cases.total        ).to eq 1
           expect( report.test_cases.total_passed ).to eq 1
           expect( report.test_cases.total_failed ).to eq 0
-          expect( mappings.logger ).to eq [:before, :during, :middle, :during, :after]
+          expect( mappings.logger ).to eq [
+            :before_all, 
+              :before, 
+                :during, 
+                :after_step, 
+              :after, 
+            :middle, 
+              :before,
+                :during, 
+                :after_step, 
+              :after,
+            :after_all
+          ]
         end
       end
 

@@ -8,6 +8,9 @@ module Cucumber
       describe Mapper do
 
         ExampleMappings = Struct.new(:app) do
+          def test_case(test_case, mapper)
+          end
+
           def test_step(test_step, mapper)
             mapper.map { app.do_something } if test_step.name == 'mapped'
           end
