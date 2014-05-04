@@ -6,7 +6,7 @@ module Cucumber
 
       # Sits in the filter chain and adds hooks onto test cases
       class HookCompiler
-        include Cucumber.initializer(:mappings, :receiver)
+        include Cucumber.initializer(:user_mappings, :receiver)
 
         def done
           receiver.done
@@ -16,34 +16,40 @@ module Cucumber
         def test_case(test_case, &descend)
           @before_hooks, @after_hooks, @around_hooks, @test_steps = [], [], [], []
           mapper = CaseHookMapperDSL.new(self)
-          test_case.describe_to mappings, mapper
+          test_case.describe_to user_mappings, mapper
           descend.call
           test_case.
             with_steps(@before_hooks + @test_steps + @after_hooks).
             with_around_hooks(@around_hooks).
             describe_to(receiver)
-        end
-
-        def before_hook(block)
-          @before_hooks << build_hook_step(block, BeforeHook)
-        end
-
-        def after_hook(block)
-          @after_hooks << build_hook_step(block, AfterHook)
-        end
-
-        def around_hook(hook)
-          @around_hooks << hook
-        end
-
-        def after_step_hook(block)
-          @test_steps << build_hook_step(block, AfterStepHook)
+          self
         end
 
         def test_step(test_step)
           @test_steps << test_step
           mapper = StepHookMapperDSL.new(self)
-          test_step.describe_to mappings, mapper
+          test_step.describe_to user_mappings, mapper
+          self
+        end
+
+        def before_hook(block)
+          @before_hooks << build_hook_step(block, BeforeHook)
+          self
+        end
+
+        def after_hook(block)
+          @after_hooks << build_hook_step(block, AfterHook)
+          self
+        end
+
+        def around_hook(hook)
+          @around_hooks << hook
+          self
+        end
+
+        def after_step_hook(block)
+          @test_steps << build_hook_step(block, AfterStepHook)
+          self
         end
 
         private
@@ -69,9 +75,9 @@ module Cucumber
           def around(&block)
             compiler.around_hook AroundHook.new(&block)
           end
-
         end
 
+        # Yielded to users in the mappings when defining hooks for a test step
         class StepHookMapperDSL
           include Cucumber.initializer(:compiler)
 
