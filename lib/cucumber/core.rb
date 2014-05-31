@@ -25,9 +25,9 @@ module Cucumber
       self
     end
 
-    def execute(gherkin_documents, mappings, report, filters = [], run_options = {})
+    def execute(gherkin_documents, mapping_definition, report, filters = [], run_options = {})
       receiver = Test::Runner.new(report, run_options)
-      filters << [Test::Mapper, [mappings]]
+      filters << [Test::Mapper, [mapping_definition]]
       compile gherkin_documents, receiver, filters
       self
     end
