@@ -12,6 +12,9 @@ module Cucumber::Core::Test
     let(:passing)   { Step.new([double]).with_mapping {} }
     let(:failing)   { Step.new([double]).with_mapping { raise exception } }
     let(:pending)   { Step.new([double]).with_mapping { raise Result::Pending.new("TODO") } }
+    let(:after_hook) {
+      Step.new([double(:after_hook)]).with_mapping {}
+    }
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
@@ -125,7 +128,7 @@ module Cucumber::Core::Test
         end
 
         context 'where the first step fails' do
-          let(:test_steps) { [ failing, passing ] }
+          let(:test_steps) { [ failing, passing, after_hook ] }
 
           it 'reports the first step as failed' do
             expect( report ).to receive(:after_test_step).with(failing, anything) do |test_step, result|
@@ -152,6 +155,12 @@ module Cucumber::Core::Test
           it 'skips, rather than executing the second step' do
             expect( passing ).not_to receive(:execute)
             expect( passing ).to receive(:skip)
+            test_case.describe_to runner
+          end
+
+          it 'executes the after hook at the end regardless of the failure' do
+            expect( after_hook ).to receive(:execute)
+            expect( after_hook ).not_to receive(:skip)
             test_case.describe_to runner
           end
         end
