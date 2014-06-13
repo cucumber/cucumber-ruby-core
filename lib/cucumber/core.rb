@@ -17,7 +17,7 @@ module Cucumber
     end
 
     def compile(gherkin_documents, last_receiver, filters = [])
-      first_receiver = filters.reduce(last_receiver) do |receiver, (filter_type, args)|
+      first_receiver = filters.reverse.reduce(last_receiver) do |receiver, (filter_type, args)|
         filter_type.new(*args + [receiver])
       end
       compiler = Compiler.new(first_receiver)
