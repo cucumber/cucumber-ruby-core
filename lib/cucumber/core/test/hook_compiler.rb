@@ -33,12 +33,12 @@ module Cucumber
         end
 
         def before_hook(block)
-          @before_hooks << build_hook_step(block, BeforeHook)
+          @before_hooks << hook_factory.before(block)
           self
         end
 
         def after_hook(block)
-          @after_hooks << build_hook_step(block, AfterHook)
+          @after_hooks << hook_factory.after(block)
           self
         end
 
@@ -48,16 +48,37 @@ module Cucumber
         end
 
         def after_step_hook(block)
-          @test_steps << build_hook_step(block, AfterStepHook)
+          @test_steps << hook_factory.after_step(block)
           self
         end
 
         private
 
-        def build_hook_step(block, type)
-          mapping = Test::Mapping.new(&block)
-          hook = type.new(mapping.location)
-          Step.new([hook], mapping)
+        def hook_factory
+          @hook_factory ||= HookFactory.new
+        end
+
+        class HookFactory
+          def after(block)
+            build_hook_step(block, AfterHook, Test::UnskippableMapping)
+          end
+
+          def before(block)
+            build_hook_step(block, BeforeHook, Test::UnskippableMapping)
+          end
+
+          def after_step(block)
+            build_hook_step(block, AfterStepHook, Test::Mapping)
+          end
+
+          private
+
+          def build_hook_step(block, hook_type, mapping_type)
+            mapping = mapping_type.new(&block)
+            hook = hook_type.new(mapping.location)
+            Step.new([hook], mapping)
+          end
+
         end
 
         # This is the object yielded to users (in the mappings) when defining hooks for a test case

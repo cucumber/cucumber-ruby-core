@@ -56,6 +56,12 @@ module Cucumber
 
       end
 
+      class UnskippableMapping < Mapping
+        def skip
+          execute
+        end
+      end
+
       class UndefinedMapping
         def execute
           undefined
