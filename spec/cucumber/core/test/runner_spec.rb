@@ -1,6 +1,7 @@
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
+require 'cucumber/core/test/hook_compiler'
 
 module Cucumber::Core::Test
   describe Runner do
@@ -12,9 +13,7 @@ module Cucumber::Core::Test
     let(:passing)   { Step.new([double]).with_mapping {} }
     let(:failing)   { Step.new([double]).with_mapping { raise exception } }
     let(:pending)   { Step.new([double]).with_mapping { raise Result::Pending.new("TODO") } }
-    let(:after_hook) {
-      Step.new([double(:after_hook)]).with_mapping {}
-    }
+    let(:after_hook) { HookCompiler::HookFactory.new.after -> { raise exception } }
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
@@ -159,8 +158,10 @@ module Cucumber::Core::Test
           end
 
           it 'executes the after hook at the end regardless of the failure' do
-            expect( after_hook ).to receive(:execute)
-            expect( after_hook ).not_to receive(:skip)
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result ).to be_failed
+              expect( result.exception ).to eq exception
+            end
             test_case.describe_to runner
           end
         end
