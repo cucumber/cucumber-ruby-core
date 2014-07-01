@@ -114,7 +114,7 @@ module Cucumber
 
         def test_case(test_case, &descend)
           report.before_test_case(test_case)
-          descend.call
+          descend.call(self)
           report.after_test_case(test_case, current_case_result)
           @current_step_runner = nil
         end

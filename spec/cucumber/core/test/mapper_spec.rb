@@ -18,7 +18,7 @@ module Cucumber
 
         let(:mapper)   { Mapper.new(mappings, receiver) }
         let(:receiver) { double('receiver') }
-        before         { receiver.stub(:test_case).and_yield }
+        before         { receiver.stub(:test_case).and_yield(receiver) }
         let(:mappings) { ExampleMappings.new(app) }
         let(:app)      { double('app') }
 

@@ -58,7 +58,7 @@ module Cucumber::Core::Test
       expect( log ).to receive(:after).ordered
 
       receiver.stub(:test_case) do |*, &continue|
-        continue.call
+        continue.call(receiver)
       end
 
       receiver.stub(:test_step) do |test_step|
@@ -74,7 +74,7 @@ module Cucumber::Core::Test
       mappings.stub(:test_case) do |test_case_to_be_mapped, mapper|
         mapper.before {}
       end
-      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_case).and_yield(receiver)
       receiver.stub(:test_step) do |test_step|
         args = double('args')
         visitor = double('visitor')
@@ -92,7 +92,7 @@ module Cucumber::Core::Test
       mappings.stub(:test_case) do |test_case_to_be_mapped, mapper|
         mapper.after {}
       end
-      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_case).and_yield(receiver)
       receiver.stub(:test_step) do |test_step|
         args = double('args')
         visitor = double('visitor')
@@ -111,7 +111,7 @@ module Cucumber::Core::Test
       end
       args = double('args')
       visitor = double('visitor')
-      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_case).and_yield(receiver)
       receiver.stub(:test_step) do |test_step|
         test_step.describe_source_to(visitor, args)
       end

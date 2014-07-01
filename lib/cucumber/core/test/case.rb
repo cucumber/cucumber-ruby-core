@@ -13,7 +13,7 @@ module Cucumber
         end
 
         def describe_to(visitor, *args)
-          visitor.test_case(self, *args) do |child_visitor=visitor|
+          visitor.test_case(self, *args) do |child_visitor|
             compose_around_hooks(child_visitor, *args) do
               test_steps.each do |test_step|
                 test_step.describe_to(child_visitor, *args)

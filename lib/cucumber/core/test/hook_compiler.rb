@@ -17,7 +17,7 @@ module Cucumber
           @before_hooks, @after_hooks, @around_hooks, @test_steps = [], [], [], []
           mapper = CaseHookMapperDSL.new(self)
           test_case.describe_to user_mappings, mapper
-          descend.call
+          descend.call(self)
           test_case.
             with_steps(@before_hooks + @test_steps + @after_hooks).
             with_around_hooks(@around_hooks).

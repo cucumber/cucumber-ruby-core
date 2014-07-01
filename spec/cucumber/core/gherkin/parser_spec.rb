@@ -61,9 +61,9 @@ module Cucumber
           end
 
           it "parses doc strings without error" do
-            visitor.stub(:feature).and_yield
-            visitor.stub(:scenario).and_yield
-            visitor.stub(:step).and_yield
+            visitor.stub(:feature).and_yield(visitor)
+            visitor.stub(:scenario).and_yield(visitor)
+            visitor.stub(:step).and_yield(visitor)
 
             location = double
             expected = Ast::DocString.new("content", "", location)
@@ -89,9 +89,9 @@ module Cucumber
 
           it "parses the DataTable" do
             visitor = double
-            visitor.stub(:feature).and_yield
-            visitor.stub(:scenario).and_yield
-            visitor.stub(:step).and_yield
+            visitor.stub(:feature).and_yield(visitor)
+            visitor.stub(:scenario).and_yield(visitor)
+            visitor.stub(:step).and_yield(visitor)
 
             expected = Ast::DataTable.new([['name', 'surname'], ['rob', 'westgeest']], Ast::Location.new('foo.feature', 23))
             expect( visitor ).to receive(:data_table).with(expected)
@@ -109,7 +109,7 @@ module Cucumber
 
           it "parses the comment into the AST" do
             visitor = double
-            visitor.stub(:feature).and_yield
+            visitor.stub(:feature).and_yield(visitor)
             expect( visitor ).to receive(:scenario) do |scenario|
               expect( scenario.comments.join ).to eq "# wow"
             end
@@ -138,7 +138,7 @@ module Cucumber
           end
 
           it "creates a scenario outline node" do
-            visitor.stub(:feature).and_yield
+            visitor.stub(:feature).and_yield(visitor)
             expect( visitor ).to receive(:scenario_outline) do |outline|
               expect( outline.name ).to eq 'outline name'
             end
@@ -146,8 +146,8 @@ module Cucumber
           end
 
           it "creates a step node for each step of the scenario outline" do
-            visitor.stub(:feature).and_yield
-            visitor.stub(:scenario_outline).and_yield
+            visitor.stub(:feature).and_yield(visitor)
+            visitor.stub(:scenario_outline).and_yield(visitor)
             visitor.stub(:examples_table)
             expect( visitor ).to receive(:outline_step) do |step|
               expect( step.name ).to eq 'passing <arg>'
@@ -156,10 +156,10 @@ module Cucumber
           end
 
           it "creates an examples table node for each examples table" do
-            visitor.stub(:feature).and_yield
-            visitor.stub(:scenario_outline).and_yield
+            visitor.stub(:feature).and_yield(visitor)
+            visitor.stub(:scenario_outline).and_yield(visitor)
             visitor.stub(:outline_step)
-            expect( visitor ).to receive(:examples_table).exactly(2).times.and_yield
+            expect( visitor ).to receive(:examples_table).exactly(2).times.and_yield(visitor)
             expect( visitor ).to receive(:examples_table_row) do |row|
               expect( row.number ).to eq 1
               expect( row.values ).to eq ['1']

@@ -20,7 +20,7 @@ module Cucumber
 
           context "with no multiline argument" do
             it "does not try to describe any children" do
-              visitor.stub(:step).with(step).and_yield
+              visitor.stub(:step).with(step).and_yield(visitor)
               step.describe_to(visitor)
             end
           end
@@ -30,7 +30,7 @@ module Cucumber
             let(:multiline_arg) { double }
 
             it "tells its multiline argument to describe itself" do
-              visitor.stub(:step).with(step).and_yield
+              visitor.stub(:step).with(step).and_yield(visitor)
               expect( multiline_arg ).to receive(:describe_to).with(visitor)
               step.describe_to(visitor)
             end
