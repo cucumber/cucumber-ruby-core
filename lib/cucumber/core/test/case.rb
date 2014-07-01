@@ -12,6 +12,10 @@ module Cucumber
           super(test_steps, source, around_hooks)
         end
 
+        def step_count
+          test_steps.count
+        end
+
         def describe_to(visitor, *args)
           visitor.test_case(self, *args) do |child_visitor|
             compose_around_hooks(child_visitor, *args) do

@@ -19,7 +19,7 @@ module Cucumber::Core::Test
 
     before do
       expect( receiver ).to receive(:test_case) do |test_case|
-        expect( test_case ).to have(1).test_steps
+        expect( test_case.step_count ).to eq 1
       end
       test_case.describe_to hook_compiler
     end
@@ -29,7 +29,7 @@ module Cucumber::Core::Test
         mapper.before {}
       end
       expect( receiver ).to receive(:test_case) do |test_case|
-        expect( test_case ).to have(2).test_steps
+        expect( test_case.step_count ).to eq 2
       end
       test_case.describe_to hook_compiler
     end
@@ -39,7 +39,7 @@ module Cucumber::Core::Test
         mapper.after {}
       end
       expect( receiver ).to receive(:test_case) do |test_case|
-        expect( test_case ).to have(2).test_steps
+        expect( test_case.step_count ).to eq 2
       end
       test_case.describe_to hook_compiler
     end
