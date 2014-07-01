@@ -78,8 +78,8 @@ module Cucumber::Core::Test
       receiver.stub(:test_step) do |test_step|
         args = double('args')
         visitor = double('visitor')
-        expect( visitor ).to receive(:before_hook) do |hook, args|
-          expect( args ).to eq(args)
+        expect( visitor ).to receive(:before_hook) do |hook, hook_args|
+          expect( args ).to eq(hook_args)
           expect( hook.location.to_s ).to eq("#{__FILE__}:75")
         end
         test_step.describe_source_to(visitor, args)
@@ -96,8 +96,8 @@ module Cucumber::Core::Test
       receiver.stub(:test_step) do |test_step|
         args = double('args')
         visitor = double('visitor')
-        expect( visitor ).to receive(:after_hook) do |hook, args|
-          expect( args ).to eq(args)
+        expect( visitor ).to receive(:after_hook) do |hook, hook_args|
+          expect( args ).to eq(hook_args)
           expect( hook.location.to_s ).to eq("#{__FILE__}:93")
         end
         test_step.describe_source_to(visitor, args)
@@ -116,8 +116,8 @@ module Cucumber::Core::Test
         test_step.describe_source_to(visitor, args)
       end
       expect( visitor ).to receive(:step).once.ordered
-      expect( visitor ).to receive(:after_step_hook) do |hook, args|
-        expect( args ).to eq(args)
+      expect( visitor ).to receive(:after_step_hook) do |hook, hook_args|
+        expect( args ).to eq(hook_args)
         expect( hook.location.to_s ).to eq("#{__FILE__}:110")
       end.once.ordered
       test_case.describe_to(hook_compiler)
