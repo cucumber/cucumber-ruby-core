@@ -17,7 +17,7 @@ module Cucumber
             executed = false
             mapping = Mapping.new { executed = true }
             mapping.execute
-            expect( executed ).to be_true
+            expect( executed ).to be_truthy
           end
 
           it "returns a passed result if the block doesn't fail" do
@@ -69,7 +69,7 @@ module Cucumber
             executed = false
             mapping = Mapping.new { executed = true }
             mapping.skip
-            expect( executed ).to be_false
+            expect( executed ).to be_falsey
           end
 
           it "returns a skipped result" do

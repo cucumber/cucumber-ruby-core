@@ -192,7 +192,7 @@ module Cucumber
             end
             receiver = double.as_null_object
             expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.match_tags?('@a') ).to be_true
+              expect( test_case.match_tags?('@a') ).to be_truthy
             end
             compile [gherkin], receiver
           end
@@ -209,7 +209,7 @@ module Cucumber
             end
             receiver = double.as_null_object
             expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.match_name?(/feature/) ).to be_true
+              expect( test_case.match_name?(/feature/) ).to be_truthy
             end
             compile [gherkin], receiver
           end
@@ -278,44 +278,44 @@ module Cucumber
 
             it 'matches the precise location of the scenario' do
               location = Ast::Location.new(file, 8)
-              expect( test_case.match_locations?([location]) ).to be_true
+              expect( test_case.match_locations?([location]) ).to be_truthy
             end
 
             it 'matches the precise location of an empty scenario' do
               empty_scenario_test_case = test_cases.find { |c| c.name == 'Scenario: empty' }
               location = Ast::Location.new(file, 26)
-              expect( empty_scenario_test_case.match_locations?([location]) ).to be_true
+              expect( empty_scenario_test_case.match_locations?([location]) ).to be_truthy
             end
 
             it 'matches multiple locations' do
               good_location = Ast::Location.new(file, 8)
               bad_location = Ast::Location.new(file, 5)
-              expect( test_case.match_locations?([good_location, bad_location]) ).to be_true
+              expect( test_case.match_locations?([good_location, bad_location]) ).to be_truthy
             end
 
             it 'matches a location on the last step of the scenario' do
               location = Ast::Location.new(file, 10)
-              expect( test_case.match_locations?([location]) ).to be_true
+              expect( test_case.match_locations?([location]) ).to be_truthy
             end
 
             it "matches a location on the scenario's comment" do
               location = Ast::Location.new(file, 6)
-              expect( test_case.match_locations?([location]) ).to be_true
+              expect( test_case.match_locations?([location]) ).to be_truthy
             end
 
             it "matches a location on the scenario's tags" do
               location = Ast::Location.new(file, 7)
-              expect( test_case.match_locations?([location]) ).to be_true
+              expect( test_case.match_locations?([location]) ).to be_truthy
             end
 
             it "doesn't match a location after the last step of the scenario" do
               location = Ast::Location.new(file, 11)
-              expect( test_case.match_locations?([location]) ).to be_false
+              expect( test_case.match_locations?([location]) ).to be_falsey
             end
 
             it "doesn't match a location before the scenario" do
               location = Ast::Location.new(file, 5)
-              expect( test_case.match_locations?([location]) ).to be_false
+              expect( test_case.match_locations?([location]) ).to be_falsey
             end
 
             context "with a docstring" do
@@ -325,12 +325,12 @@ module Cucumber
 
               it "matches a location at the start the docstring" do
                 location = Ast::Location.new(file, 17)
-                expect( test_case.match_locations?([location]) ).to be_true
+                expect( test_case.match_locations?([location]) ).to be_truthy
               end
 
               it "matches a location in the middle of the docstring" do
                 location = Ast::Location.new(file, 18)
-                expect( test_case.match_locations?([location]) ).to be_true
+                expect( test_case.match_locations?([location]) ).to be_truthy
               end
             end
 
@@ -341,7 +341,7 @@ module Cucumber
 
               it "matches a location on the first table row" do
                 location = Ast::Location.new(file, 23)
-                expect( test_case.match_locations?([location]) ).to be_true
+                expect( test_case.match_locations?([location]) ).to be_truthy
               end
             end
           end
@@ -381,32 +381,32 @@ module Cucumber
 
             it 'matches the precise location of the scenario outline examples table row' do
               location = Ast::Location.new(file, 16)
-              expect( test_case.match_locations?([location]) ).to be_true
+              expect( test_case.match_locations?([location]) ).to be_truthy
             end
 
             it 'matches a location on a step of the scenario outline' do
               location = Ast::Location.new(file, 10)
-              expect( test_case.match_locations?([location]) ).to be_true
+              expect( test_case.match_locations?([location]) ).to be_truthy
             end
 
             it "matches a location on the scenario outline's comment" do
               location = Ast::Location.new(file, 6)
-              expect( test_case.match_locations?([location]) ).to be_true
+              expect( test_case.match_locations?([location]) ).to be_truthy
             end
 
             it "matches a location on the scenario outline's tags" do
               location = Ast::Location.new(file, 7)
-              expect( test_case.match_locations?([location]) ).to be_true
+              expect( test_case.match_locations?([location]) ).to be_truthy
             end
 
             it "doesn't match a location after the last row of the examples table" do
               location = Ast::Location.new(file, 17)
-              expect( test_case.match_locations?([location]) ).to be_false
+              expect( test_case.match_locations?([location]) ).to be_falsey
             end
 
             it "doesn't match a location before the scenario outline" do
               location = Ast::Location.new(file, 5)
-              expect( test_case.match_locations?([location]) ).to be_false
+              expect( test_case.match_locations?([location]) ).to be_falsey
             end
           end
         end
