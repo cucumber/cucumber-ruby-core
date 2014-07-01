@@ -49,7 +49,7 @@ module Cucumber
         class TagLimits
           TAG_MATCHER = /^
             (?:~)?                 #The tag negation symbol "~". This is optional and not captured.
-            (?<tag_name>\@[\w\d]+) #Captures the tag name including the "@" symbol.
+            (?<tag_name>\@\w+)     #Captures the tag name including the "@" symbol.
             \:                     #The seperator, ":", between the tag name and the limit.
             (?<limit>\d+)          #Caputres the limit number.
           $/x
