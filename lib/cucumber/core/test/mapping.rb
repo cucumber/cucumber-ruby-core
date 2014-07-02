@@ -24,6 +24,8 @@ module Cucumber
           passed
         rescue Result::Pending => exception
           pending(exception)
+        rescue Result::Skipped => exception
+          return exception
         rescue Exception => exception
           failed(exception)
         end

@@ -95,8 +95,14 @@ module Cucumber
           end
         end
 
-        Skipped = Class.new do
+        class Skipped < StandardError
           include Result.status_queries :skipped
+          attr_reader :message
+
+          def initialize(message = "")
+            @message = message
+            super(message)
+          end
 
           def describe_to(visitor, *args)
             visitor.skipped(*args)

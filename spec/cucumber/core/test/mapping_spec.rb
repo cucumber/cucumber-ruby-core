@@ -41,6 +41,14 @@ module Cucumber
             expect( result.message ).to eq "TODO"
           end
 
+          it "returns a skipped result if a pending error is raised" do
+            exception = Result::Skipped.new("Not working right now")
+            mapping = Mapping.new { raise exception }
+            result = mapping.execute
+            expect( result ).to be_skipped
+            expect( result.message ).to eq "Not working right now"
+          end
+
           context "recording the duration" do
             before do
               time = double

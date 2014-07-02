@@ -34,6 +34,11 @@ module Cucumber
               self
             end
 
+            def skipped(step_result)
+              @status = Skipping.new
+              self
+            end
+
             def undefined(step_result)
               failed(step_result)
               self
@@ -80,6 +85,16 @@ module Cucumber
           class Passing < Unknown
             def result(duration)
               Result::Passed.new(duration)
+            end
+          end
+
+          class Skipping
+            def execute(test_step, monitor)
+              test_step.skip
+            end
+
+            def result(duration)
+              Result::Skipped.new
             end
           end
 

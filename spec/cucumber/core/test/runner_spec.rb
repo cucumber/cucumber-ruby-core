@@ -12,6 +12,7 @@ module Cucumber::Core::Test
     let(:passing)   { Step.new([double]).with_mapping {} }
     let(:failing)   { Step.new([double]).with_mapping { raise exception } }
     let(:pending)   { Step.new([double]).with_mapping { raise Result::Pending.new("TODO") } }
+    let(:skipping)  { Step.new([double]).with_mapping { raise Result::Skipped.new } }
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
@@ -108,6 +109,17 @@ module Cucumber::Core::Test
           it 'reports a pending test case' do
             expect( report ).to receive(:after_test_case) do |test_case, result|
               expect( result ).to be_pending
+            end
+            test_case.describe_to runner
+          end
+        end
+
+        context "a skipping step" do
+          let(:test_steps) { [skipping] }
+
+          it "reports a skipped test case" do
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result ).to be_skipped
             end
             test_case.describe_to runner
           end
