@@ -5,70 +5,56 @@ module Cucumber
   module Core
     module Test
       class Runner
-        module StepRunner
-          class Default
-            def initialize
-              @timer = Timer.new.start
-            end
-
-            def execute(test_step)
-              status.execute(test_step, self)
-            end
-
-            def result
-              status.result(@timer.duration)
-            end
-
-            def failed(step_result)
-              @status = Failing.new(step_result)
-              self
-            end
-
-            def passed(step_result)
-              @status = Passing.new
-              self
-            end
-
-            def pending(message, step_result)
-              @status = Pending.new(step_result)
-              self
-            end
-
-            def skipped(step_result)
-              @status = Skipping.new
-              self
-            end
-
-            def undefined(step_result)
-              failed(step_result)
-              self
-            end
-
-            def exception(step_exception, step_result)
-              self
-            end
-
-            def duration(step_duration, step_result)
-              self
-            end
-
-            private
-
-            def status
-              @status ||= Unknown.new
-            end
+        class StepRunner
+          def initialize
+            @timer = Timer.new.start
           end
 
-          class DryRun
-            def execute(test_step)
-              step_result = test_step.skip
-              @case_result = Result::Undefined.new if step_result.undefined?
-              step_result
-            end
+          def execute(test_step)
+            status.execute(test_step, self)
+          end
 
-            def result
-              @case_result ||= Result::Skipped.new
-            end
+          def result
+            status.result(@timer.duration)
+          end
+
+          def failed(step_result)
+            @status = Failing.new(step_result)
+            self
+          end
+
+          def passed(step_result)
+            @status = Passing.new
+            self
+          end
+
+          def pending(message, step_result)
+            @status = Pending.new(step_result)
+            self
+          end
+
+          def skipped(step_result)
+            @status = Skipping.new
+            self
+          end
+
+          def undefined(step_result)
+            failed(step_result)
+            self
+          end
+
+          def exception(step_exception, step_result)
+            self
+          end
+
+          def duration(step_duration, step_result)
+            self
+          end
+
+          private
+
+          def status
+            @status ||= Unknown.new
           end
 
           class Unknown
@@ -111,20 +97,10 @@ module Cucumber
           Pending = Class.new(Failing)
         end
 
-        STEP_RUNNER_STRATEGY = {
-          default: StepRunner::Default,
-          dry_run: StepRunner::DryRun
-        }
-
-        attr_reader :report, :step_runner_class
-        private :report, :step_runner_class
-        def initialize(report, run_options = {})
+        attr_reader :report
+        private :report
+        def initialize(report)
           @report = report
-
-          run_mode = run_options.fetch(:run_mode) { :default }
-          @step_runner_class = STEP_RUNNER_STRATEGY.fetch(run_mode) do
-            raise ArgumentError, "No strategy for run mode: #{run_mode.inspect}"
-          end
         end
 
         def test_case(test_case, &descend)
@@ -156,7 +132,7 @@ module Cucumber
         end
 
         def current_step_runner
-          @current_step_runner ||= step_runner_class.new
+          @current_step_runner ||= StepRunner.new
         end
       end
     end
