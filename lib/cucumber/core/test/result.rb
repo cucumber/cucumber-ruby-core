@@ -5,6 +5,9 @@ module Cucumber
   module Core
     module Test
       module Result
+
+        # Defines predicate methods on a result class with only the given one
+        # returning true
         def self.status_queries(status)
           Module.new do
             [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_status|
@@ -15,7 +18,8 @@ module Cucumber
           end
         end
 
-        Unknown = Class.new do
+        # Null object for results. Represents the state where we haven't run anything yet
+        class Unknown
           include Result.status_queries :unknown
 
           def describe_to(visitor, *args)
@@ -24,7 +28,7 @@ module Cucumber
         end
 
         class Passed
-          include Result.status_queries :passed
+          include Result.status_queries(:passed)
           include Cucumber.initializer(:duration)
           attr_reader :duration
 
@@ -45,7 +49,7 @@ module Cucumber
         end
 
         class Failed
-          include Result.status_queries :failed
+          include Result.status_queries(:failed)
           include Cucumber.initializer(:duration, :exception)
           attr_reader :duration, :exception
 
@@ -72,7 +76,7 @@ module Cucumber
 
         end
 
-        Undefined = Class.new do
+        class Undefined
           include Result.status_queries :undefined
           include Cucumber.initializer(:duration)
           attr_reader :duration
@@ -97,20 +101,26 @@ module Cucumber
 
         class Skipped < StandardError
           include Result.status_queries :skipped
-          attr_reader :message
+          attr_reader :message, :duration
 
-          def initialize(message = "")
-            @message = message
+          def initialize(message = "", duration = :unknown, backtrace = nil)
+            @message, @duration = message, duration
             super(message)
+            set_backtrace(backtrace) if backtrace
           end
 
           def describe_to(visitor, *args)
             visitor.skipped(*args)
+            visitor.duration(duration, *args) unless duration == :unknown
             self
           end
 
           def to_s
             "-"
+          end
+
+          def with_duration(new_duration)
+            self.class.new(message, new_duration, backtrace)
           end
         end
 
@@ -118,8 +128,7 @@ module Cucumber
           include Result.status_queries :pending
           attr_reader :message, :duration
 
-          def initialize(message, duration = :unknown, backtrace=nil)
-            raise ArgumentError unless message
+          def initialize(message, duration = :unknown, backtrace = nil)
             @message, @duration = message, duration
             super(message)
             set_backtrace(backtrace) if backtrace
@@ -140,6 +149,16 @@ module Cucumber
           end
         end
 
+        #
+        # An object that responds to the description protocol from the results
+        # and collects summary information.
+        #
+        # e.g. 
+        #     summary = Result::Summary.new
+        #     Result::Passed.new(0).describe_to(summary)
+        #     puts summary.total_passed
+        #     => 1
+        #
         class Summary
           attr_reader :total_failed,
             :total_passed,

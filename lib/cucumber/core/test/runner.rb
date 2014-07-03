@@ -8,6 +8,7 @@ module Cucumber
         class StepRunner
           def initialize
             @timer = Timer.new.start
+            @status = Status::Unknown.new(Result::Unknown.new)
           end
 
           def execute(test_step)
@@ -19,22 +20,22 @@ module Cucumber
           end
 
           def failed(step_result)
-            @status = Failing.new(step_result)
+            @status = Status::Failing.new(step_result)
             self
           end
 
           def passed(step_result)
-            @status = Passing.new
+            @status = Status::Passing.new(step_result)
             self
           end
 
           def pending(message, step_result)
-            @status = Pending.new(step_result)
+            @status = Status::Pending.new(step_result)
             self
           end
 
           def skipped(step_result)
-            @status = Skipping.new
+            @status = Status::Skipping.new(step_result)
             self
           end
 
@@ -51,50 +52,53 @@ module Cucumber
             self
           end
 
-          private
+          attr_reader :status
+          private :status
 
-          def status
-            @status ||= Unknown.new
+          module Status
+            class Base
+              include Cucumber.initializer(:step_result)
+
+              def execute(test_step, monitor)
+                result = test_step.execute
+                result.describe_to(monitor, result)
+              end
+
+              def result
+                raise NoMethodError, "Override me"
+              end
+            end
+
+            class Unknown < Base
+              def result(duration)
+                Result::Unknown.new
+              end
+            end
+
+            class Passing < Base
+              def result(duration)
+                Result::Passed.new(duration)
+              end
+            end
+
+            class Failing < Base
+              def execute(test_step, monitor)
+                test_step.skip
+              end
+
+              def result(duration)
+                step_result.with_duration(duration)
+              end
+            end
+
+            Pending = Class.new(Failing)
+
+            class Skipping < Failing
+              def result(duration)
+                step_result.with_duration(duration)
+              end
+            end
           end
-
-          class Unknown
-            def execute(test_step, monitor)
-              result = test_step.execute
-              result.describe_to(monitor, result)
-            end
-
-            def result(duration)
-              Result::Unknown.new
-            end
-          end
-
-          class Passing < Unknown
-            def result(duration)
-              Result::Passed.new(duration)
-            end
-          end
-
-          class Skipping
-            def execute(test_step, monitor)
-              test_step.skip
-            end
-
-            def result(duration)
-              Result::Skipped.new
-            end
-          end
-
-          Failing = Struct.new(:step_result) do
-            def execute(test_step, monitor)
-              test_step.skip
-            end
-
-            def result(duration)
-              step_result.with_duration(duration)
-            end
-          end
-
-          Pending = Class.new(Failing)
         end
 
         attr_reader :report
