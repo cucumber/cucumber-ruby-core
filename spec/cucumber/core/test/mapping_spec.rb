@@ -17,7 +17,7 @@ module Cucumber
             executed = false
             mapping = Mapping.new { executed = true }
             mapping.execute
-            expect( executed ).to be_true
+            expect( executed ).to be_truthy
           end
 
           it "returns a passed result if the block doesn't fail" do
@@ -39,6 +39,14 @@ module Cucumber
             result = mapping.execute
             expect( result ).to be_pending
             expect( result.message ).to eq "TODO"
+          end
+
+          it "returns a skipped result if a pending error is raised" do
+            exception = Result::Skipped.new("Not working right now")
+            mapping = Mapping.new { raise exception }
+            result = mapping.execute
+            expect( result ).to be_skipped
+            expect( result.message ).to eq "Not working right now"
           end
 
           context "recording the duration" do
@@ -69,7 +77,7 @@ module Cucumber
             executed = false
             mapping = Mapping.new { executed = true }
             mapping.skip
-            expect( executed ).to be_false
+            expect( executed ).to be_falsey
           end
 
           it "returns a skipped result" do

@@ -72,10 +72,6 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
-      it "has no duration" do
-        expect { result.duration }.to raise_error NoMethodError
-      end
-
       it { expect( result ).not_to be_passed    }
       it { expect( result ).not_to be_failed    }
       it { expect( result ).not_to be_undefined }
@@ -104,10 +100,6 @@ module Cucumber::Core::Test
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:skipped).with(args)
         result.describe_to(visitor, args)
-      end
-
-      it "has no duration" do
-        expect { result.duration }.to raise_error NoMethodError
       end
 
       it { expect( result ).not_to be_passed    }

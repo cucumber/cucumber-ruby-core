@@ -24,7 +24,7 @@ module Cucumber::Core
         end
       ]
       compile(gherkin_documents) do |visitor|
-        expect( visitor ).to receive(:test_case).once.ordered.and_yield
+        expect( visitor ).to receive(:test_case).once.ordered.and_yield(visitor)
         expect( visitor ).to receive(:test_step).once.ordered
         expect( visitor ).to receive(:done).once.ordered
       end
@@ -45,7 +45,7 @@ module Cucumber::Core
         end
       ]
       compile(gherkin_documents) do |visitor|
-        expect( visitor ).to receive(:test_case).once.ordered.and_yield
+        expect( visitor ).to receive(:test_case).once.ordered.and_yield(visitor)
         expect( visitor ).to receive(:test_step).exactly(2).times.ordered
         expect( visitor ).to receive(:done).once.ordered
       end
@@ -111,7 +111,7 @@ module Cucumber::Core
           end
         ]
         compile(gherkin_documents) do |visitor|
-          expect( visitor ).to receive(:test_case).exactly(3).times.and_yield
+          expect( visitor ).to receive(:test_case).exactly(3).times.and_yield(visitor)
           expect( visitor ).to receive(:test_step).exactly(9).times
           expect( visitor ).to receive(:done).once
         end
@@ -238,8 +238,8 @@ module Cucumber::Core
 
     def compile(gherkin_documents)
       visitor = double
-      visitor.stub(:test_suite).and_yield
-      visitor.stub(:test_case).and_yield
+      visitor.stub(:test_suite).and_yield(visitor)
+      visitor.stub(:test_case).and_yield(visitor)
       yield visitor
       super(gherkin_documents, visitor)
     end

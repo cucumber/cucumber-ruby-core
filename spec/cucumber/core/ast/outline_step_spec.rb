@@ -2,6 +2,7 @@ require 'cucumber/core/ast/outline_step'
 require 'cucumber/core/ast/examples_table'
 require 'cucumber/core/ast/data_table'
 require 'cucumber/core/ast/doc_string'
+require 'cucumber/core/ast/empty_multiline_argument'
 
 module Cucumber
   module Core
@@ -43,7 +44,7 @@ module Cucumber
 
             it "replaces the arguments in the DataTable" do
               visitor = double
-              visitor.stub(:step).and_yield
+              visitor.stub(:step).and_yield(visitor)
               expect( visitor ).to receive(:data_table) do |data_table|
                 expect( data_table.raw ).to eq [['x', 'y'], ['a', 'a replacement']]
               end
@@ -61,7 +62,7 @@ module Cucumber
 
             it "replaces the arguments in the DocString" do
               visitor = double
-              visitor.stub(:step).and_yield
+              visitor.stub(:step).and_yield(visitor)
               expect( visitor ).to receive(:doc_string) do |doc_string|
                 expect( doc_string.content ).to eq "a replacement that needs replacing"
               end

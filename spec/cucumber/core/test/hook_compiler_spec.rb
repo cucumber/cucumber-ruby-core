@@ -19,7 +19,7 @@ module Cucumber::Core::Test
 
     before do
       expect( receiver ).to receive(:test_case) do |test_case|
-        expect( test_case ).to have(1).test_steps
+        expect( test_case.step_count ).to eq 1
       end
       test_case.describe_to hook_compiler
     end
@@ -29,7 +29,7 @@ module Cucumber::Core::Test
         mapper.before {}
       end
       expect( receiver ).to receive(:test_case) do |test_case|
-        expect( test_case ).to have(2).test_steps
+        expect( test_case.step_count ).to eq 2
       end
       test_case.describe_to hook_compiler
     end
@@ -39,7 +39,7 @@ module Cucumber::Core::Test
         mapper.after {}
       end
       expect( receiver ).to receive(:test_case) do |test_case|
-        expect( test_case ).to have(2).test_steps
+        expect( test_case.step_count ).to eq 2
       end
       test_case.describe_to hook_compiler
     end
@@ -58,7 +58,7 @@ module Cucumber::Core::Test
       expect( log ).to receive(:after).ordered
 
       receiver.stub(:test_case) do |*, &continue|
-        continue.call
+        continue.call(receiver)
       end
 
       receiver.stub(:test_step) do |test_step|
@@ -74,12 +74,12 @@ module Cucumber::Core::Test
       mappings.stub(:test_case) do |test_case_to_be_mapped, mapper|
         mapper.before {}
       end
-      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_case).and_yield(receiver)
       receiver.stub(:test_step) do |test_step|
         args = double('args')
         visitor = double('visitor')
-        expect( visitor ).to receive(:before_hook) do |hook, args|
-          expect( args ).to eq(args)
+        expect( visitor ).to receive(:before_hook) do |hook, hook_args|
+          expect( args ).to eq(hook_args)
           expect( hook.location.to_s ).to eq("#{__FILE__}:75")
         end
         test_step.describe_source_to(visitor, args)
@@ -92,12 +92,12 @@ module Cucumber::Core::Test
       mappings.stub(:test_case) do |test_case_to_be_mapped, mapper|
         mapper.after {}
       end
-      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_case).and_yield(receiver)
       receiver.stub(:test_step) do |test_step|
         args = double('args')
         visitor = double('visitor')
-        expect( visitor ).to receive(:after_hook) do |hook, args|
-          expect( args ).to eq(args)
+        expect( visitor ).to receive(:after_hook) do |hook, hook_args|
+          expect( args ).to eq(hook_args)
           expect( hook.location.to_s ).to eq("#{__FILE__}:93")
         end
         test_step.describe_source_to(visitor, args)
@@ -111,13 +111,13 @@ module Cucumber::Core::Test
       end
       args = double('args')
       visitor = double('visitor')
-      receiver.stub(:test_case).and_yield
+      receiver.stub(:test_case).and_yield(receiver)
       receiver.stub(:test_step) do |test_step|
         test_step.describe_source_to(visitor, args)
       end
       expect( visitor ).to receive(:step).once.ordered
-      expect( visitor ).to receive(:after_step_hook) do |hook, args|
-        expect( args ).to eq(args)
+      expect( visitor ).to receive(:after_step_hook) do |hook, hook_args|
+        expect( args ).to eq(hook_args)
         expect( hook.location.to_s ).to eq("#{__FILE__}:110")
       end.once.ordered
       test_case.describe_to(hook_compiler)
@@ -134,8 +134,8 @@ module Cucumber::Core::Test
     end
 
     it "responds to match_locations?" do
-      expect( subject.match_locations? [location] ).to be_true
-      expect( subject.match_locations? [] ).to be_false
+      expect( subject.match_locations? [location] ).to be_truthy
+      expect( subject.match_locations? [] ).to be_falsey
     end
   end
 

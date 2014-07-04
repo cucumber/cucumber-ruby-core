@@ -30,7 +30,7 @@ module Cucumber
     describe "compiling features to a test suite" do
       it "compiles two scenarios into two test cases" do
         visitor = double
-        expect( visitor ).to receive(:test_case).exactly(2).times.and_yield.ordered
+        expect( visitor ).to receive(:test_case).exactly(2).times.and_yield(visitor).ordered
         expect( visitor ).to receive(:test_step).exactly(5).times.ordered
         expect( visitor ).to receive(:done).once.ordered
 
