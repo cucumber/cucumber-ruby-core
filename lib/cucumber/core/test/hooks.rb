@@ -1,3 +1,5 @@
+require 'cucumber/initializer'
+
 module Cucumber
   module Core
     module Test

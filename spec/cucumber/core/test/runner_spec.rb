@@ -1,7 +1,6 @@
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
-require 'cucumber/core/test/hook_compiler'
 
 module Cucumber::Core::Test
   describe Runner do
@@ -13,21 +12,20 @@ module Cucumber::Core::Test
     let(:passing)   { Step.new([double]).with_mapping {} }
     let(:failing)   { Step.new([double]).with_mapping { raise exception } }
     let(:pending)   { Step.new([double]).with_mapping { raise Result::Pending.new("TODO") } }
-    let(:after_hook) { HookCompiler::HookFactory.new.after -> { raise exception } }
     let(:skipping)  { Step.new([double]).with_mapping { raise Result::Skipped.new } }
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
     before do
-      report.stub(:before_test_case)
+      allow(report).to receive(:before_test_case)
     end
 
     context "reporting the duration of a test case" do
       before do
         time = double
-        Time.stub(now: time)
-        time.stub(:nsec).and_return(946752000, 946752001)
-        time.stub(:to_i).and_return(1377009235, 1377009235)
+        allow(Time).to receive(:now).and_return(time)
+        allow(time).to receive(:nsec).and_return(946752000, 946752001)
+        allow(time).to receive(:to_i).and_return(1377009235, 1377009235)
       end
 
       context "for a passing test case" do
@@ -56,7 +54,7 @@ module Cucumber::Core::Test
     context "reporting the exception that failed a test case" do
       let(:test_steps) { [failing] }
       it "sets the exception on the result" do
-        report.stub(:before_test_case)
+        allow(report).to receive(:before_test_case)
         expect( report ).to receive(:after_test_case) do |reported_test_case, result|
           expect( result.exception ).to eq exception
         end
@@ -139,7 +137,15 @@ module Cucumber::Core::Test
         end
 
         context 'where the first step fails' do
-          let(:test_steps) { [ failing, passing, after_hook ] }
+          let(:test_steps) { [ failing, passing ] }
+
+          it 'executes the after hook at the end regardless of the failure' do
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result ).to be_failed
+              expect( result.exception ).to eq exception
+            end
+            test_case.describe_to runner
+          end
 
           it 'reports the first step as failed' do
             expect( report ).to receive(:after_test_step).with(failing, anything) do |test_step, result|
@@ -168,14 +174,6 @@ module Cucumber::Core::Test
             expect( passing ).to receive(:skip)
             test_case.describe_to runner
           end
-
-          it 'executes the after hook at the end regardless of the failure' do
-            expect( report ).to receive(:after_test_case) do |test_case, result|
-              expect( result ).to be_failed
-              expect( result.exception ).to eq exception
-            end
-            test_case.describe_to runner
-          end
         end
 
       end
@@ -198,5 +196,4 @@ module Cucumber::Core::Test
     end
 
   end
-
 end

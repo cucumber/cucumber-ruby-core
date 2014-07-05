@@ -1,6 +1,7 @@
 require 'cucumber/core/test/mapper'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
+require 'cucumber/core/ast'
 
 module Cucumber
   module Core
@@ -18,7 +19,7 @@ module Cucumber
 
         let(:mapper)   { Mapper.new(mappings, receiver) }
         let(:receiver) { double('receiver') }
-        before         { receiver.stub(:test_case).and_yield(receiver) }
+        before         { allow(receiver).to receive(:test_case).and_yield(receiver) }
         let(:mappings) { ExampleMappings.new(app) }
         let(:app)      { double('app') }
 
@@ -64,7 +65,112 @@ module Cucumber
             test_case.describe_to mapper
           end
         end
+
+        context "mapping hooks" do
+          let(:test_case)  { Case.new([test_step], source) }
+          let(:test_step)  { Step.new([Ast::Step.new(:language, :location, :keyword, :name, :multiline_arg)]) }
+          let(:source)     { [feature, scenario] }
+          let(:feature)    { double('feature') }
+          let(:scenario)   { double('scenario', location: 'test') }
+
+          it "prepends before hooks to the test case" do
+            allow( mappings ).to receive(:test_case) do |test_case, mapper|
+              mapper.before {}
+            end
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.step_count ).to eq 2
+            end
+            test_case.describe_to mapper
+          end
+
+          it "appends after hooks to the test case" do
+            allow( mappings ).to receive(:test_case) do |test_case, mapper|
+              mapper.after {}
+            end
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.step_count ).to eq 2
+            end
+            test_case.describe_to mapper
+          end
+
+          it "adds hooks in the right order" do
+            log = double
+            allow(mappings).to receive(:test_case) do |test_case, mapper|
+              mapper.before { log.before }
+              mapper.after { log.after }
+            end
+            mapped_step = test_step.with_mapping { log.step }
+            test_case = Case.new([mapped_step], source)
+
+            expect( log ).to receive(:before).ordered
+            expect( log ).to receive(:step).ordered
+            expect( log ).to receive(:after).ordered
+
+            allow(receiver).to receive(:test_case).and_yield(receiver)
+            allow(receiver).to receive(:test_step) do |test_step|
+              test_step.execute
+            end
+
+            test_case.describe_to mapper
+          end
+
+          it "sets the source to include the before hook" do
+            test_case = Case.new([], source)
+            allow(mappings).to receive(:test_case) do |test_case_to_be_mapped, mapper|
+              mapper.before {}
+            end
+            allow(receiver).to receive(:test_case).and_yield(receiver)
+            allow(receiver).to receive(:test_step) do |test_step|
+              args = double('args')
+              visitor = double('visitor')
+              expect( visitor ).to receive(:before_hook) do |hook, hook_args|
+                expect( args ).to eq(hook_args)
+                expect( hook.location.to_s ).to eq("#{__FILE__}:120")
+              end
+              test_step.describe_source_to(visitor, args)
+            end
+            test_case.describe_to mapper
+          end
+
+          it "sets the source to include the after hook" do
+            test_case = Case.new([], source)
+            allow(mappings).to receive(:test_case) do |test_case_to_be_mapped, mapper|
+              mapper.after {}
+            end
+            allow(receiver).to receive(:test_case).and_yield(receiver)
+            allow(receiver).to receive(:test_step) do |test_step|
+              args = double('args')
+              visitor = double('visitor')
+              expect( visitor ).to receive(:after_hook) do |hook, hook_args|
+                expect( args ).to eq(hook_args)
+                expect( hook.location.to_s ).to eq("#{__FILE__}:138")
+              end
+              test_step.describe_source_to(visitor, args)
+            end
+            test_case.describe_to mapper
+          end
+
+          it "appends after_step hooks to the test step" do
+            allow(mappings).to receive(:test_step) do |test_step, mapper|
+              mapper.after {}
+            end
+            args = double('args')
+            visitor = double('visitor')
+            allow(receiver).to receive(:test_case).and_yield(receiver)
+            allow(receiver).to receive(:test_step) do |test_step|
+              test_step.describe_source_to(visitor, args)
+            end
+            expect( visitor ).to receive(:step).once.ordered
+            expect( visitor ).to receive(:after_step_hook) do |hook, hook_args|
+              expect( args ).to eq(hook_args)
+              expect( hook.location.to_s ).to eq("#{__FILE__}:155")
+            end.once.ordered
+            test_case.describe_to mapper
+          end
+
+        end
       end
+
     end
   end
 end
