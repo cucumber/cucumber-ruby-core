@@ -279,26 +279,61 @@ module Cucumber
       context "with hooks" do
         class HookTestMappings
           Failure = Class.new(StandardError)
+          attr_reader :logger
+
+          def initialize
+            @logger = []
+          end
 
           def test_case(test_case, mapper)
-            case test_case.name
-            when /fail before/
-              mapper.before { raise Failure }
-              mapper.after  { 'This hook will be skipped' }
-            when /fail after/
-              mapper.after { raise Failure }
+            mapper.before { @logger << ['--'] }
+            failing_before = -> do
+              @logger << [:failing_before, test_case.name]
+              raise Failure
             end
+            passing_after = -> do
+              @logger << [:passing_after, test_case.name]
+            end
+            passing_before = -> do 
+              @logger << [:passing_before, test_case.name]
+            end
+            failing_after = -> do
+              @logger << [:failing_after, test_case.name]
+              raise Failure
+            end
+
+            case test_case.name
+
+            when /fail before/
+              mapper.before &failing_before
+              mapper.after &passing_after
+
+            when /fail after/
+              mapper.before &passing_before
+              mapper.after &failing_after
+
+            else
+              mapper.before &passing_before
+              mapper.after &passing_after
+
+            end
+
             self
           end
 
           def test_step(test_step, mapper)
-            mapper.map {} # all steps pass
-            mapper.after { raise Failure } if test_step.name == 'fail after'
+            mapper.map { @logger << [:step, test_step.name] } # all steps pass
+            if test_step.name == 'fail after'
+              mapper.after do
+                @logger << :failing_after_step
+                raise Failure 
+              end
+            end
             self
           end
         end
 
-        it "executes the test cases in the suite" do
+        it "executes the steps and hooks in the right order" do
           gherkin = gherkin do
             feature do
               scenario 'fail before' do
@@ -307,6 +342,10 @@ module Cucumber
 
               scenario 'fail after' do
                 step 'passing'
+              end
+
+              scenario 'fail step' do
+                step 'fail after'
               end
 
               scenario 'passing' do
@@ -319,11 +358,29 @@ module Cucumber
 
           execute [gherkin], mappings, report
 
-          expect( report.test_steps.total        ).to eq(6)
-          expect( report.test_steps.total_failed ).to eq(2)
-          expect( report.test_cases.total        ).to eq(3)
+          expect( report.test_steps.total        ).to eq(17)
+          expect( report.test_steps.total_failed ).to eq(3)
+          expect( report.test_cases.total        ).to eq(4)
           expect( report.test_cases.total_passed ).to eq(1)
-          expect( report.test_cases.total_failed ).to eq(2)
+          expect( report.test_cases.total_failed ).to eq(3)
+          mappings.logger.should == [
+            ["--"], 
+            [:failing_before, "Scenario: fail before"], 
+            [:passing_after, "Scenario: fail before"],
+            ["--"], 
+            [:passing_before, "Scenario: fail after"], 
+            [:step, "passing"],
+            [:failing_after, "Scenario: fail after"],
+            ["--"],
+            [:passing_before, "Scenario: fail step"],
+            [:step, "fail after"],
+            :failing_after_step,
+            [:passing_after, "Scenario: fail step"],
+            ["--"],
+            [:passing_before, "Scenario: passing"],
+            [:step, "passing"],
+            [:passing_after, "Scenario: passing"]
+          ]
         end
       end
 
