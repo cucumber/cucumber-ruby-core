@@ -204,8 +204,8 @@ module Cucumber
           columns[col].__send__(:width)
         end
 
-        def each_cell(&proc) #:nodoc:
-          cell_matrix.each{|row| row.each(&proc)}
+        def each_cell(&proc)
+          cell_matrix.each{ |row| row.each(&proc) }
         end
 
         def ==(other)

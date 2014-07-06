@@ -133,6 +133,18 @@ module Cucumber
             ]
           expect( @table.to_sexp ).to eq sexp_value
         end
+
+        describe "#each_cell" do
+          it "runs the given block on each cell in the table" do
+            table = DataTable.new([[1,2],[3,4]], location)
+            values = []
+            table.each_cell do |cell|
+              values << cell.value
+            end
+            expect( values ).to eq [1,2,3,4]
+          end
+        end
+
       end
     end
   end
