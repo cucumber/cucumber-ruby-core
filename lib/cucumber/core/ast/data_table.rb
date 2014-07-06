@@ -204,6 +204,10 @@ module Cucumber
           columns[col].__send__(:width)
         end
 
+        def each_cell(&proc) #:nodoc:
+          cell_matrix.each{|row| row.each(&proc)}
+        end
+
         def ==(other)
           other.class == self.class && raw == other.raw
         end
@@ -310,6 +314,10 @@ module Cucumber
           def inspect!
             @value = "(i) #{value.inspect}"
           end
+
+          def ==(o)
+            value == o.value
+         end
 
           # For testing only
           def to_sexp #:nodoc:
