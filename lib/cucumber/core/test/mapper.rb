@@ -8,7 +8,8 @@ module Cucumber
         include Cucumber.initializer(:mapping_definition, :receiver)
 
         def test_case(test_case, &descend)
-          mapper = CaseMapper.new(mapping_definition, hook_factory)
+          hook_factory = HookFactory.new(test_case.source)
+          mapper = CaseMapper.new(mapping_definition)
           test_case.describe_to mapping_definition, CaseMapper::DSL.new(mapper, hook_factory)
           descend.call(mapper)
           test_case.
@@ -25,14 +26,11 @@ module Cucumber
 
         private
 
-        def hook_factory
-          @hook_factory ||= HookFactory.new
-        end
-
         class CaseMapper
-          include Cucumber.initializer(:mapping_definition, :hook_factory)
+          include Cucumber.initializer(:mapping_definition)
 
           def test_step(test_step)
+            hook_factory = HookFactory.new(test_step.source)
             mapper = StepMapper.new(test_step)
             test_step.describe_to mapping_definition, StepMapper::DSL.new(mapper, hook_factory)
             test_steps.push(*[mapper.test_step] + mapper.after_step_hooks)
@@ -109,6 +107,8 @@ module Cucumber
         end
 
         class HookFactory
+          include Cucumber.initializer(:source)
+
           def after(block)
             build_hook_step(block, Hooks::AfterHook, Test::UnskippableMapping)
           end
@@ -126,7 +126,7 @@ module Cucumber
           def build_hook_step(block, hook_type, mapping_type)
             mapping = mapping_type.new(&block)
             hook = hook_type.new(mapping.location)
-            Step.new([hook], mapping)
+            Step.new(source + [hook], mapping)
           end
 
         end

@@ -114,7 +114,7 @@ module Cucumber
             test_case.describe_to mapper
           end
 
-          it "sets the source to include the before hook" do
+          it "sets the source to include the before hook, scenario and feature" do
             test_case = Case.new([], source)
             allow(mappings).to receive(:test_case) do |test_case_to_be_mapped, mapper|
               mapper.before {}
@@ -123,6 +123,8 @@ module Cucumber
             allow(receiver).to receive(:test_step) do |test_step|
               args = double('args')
               visitor = double('visitor')
+              expect( feature ).to receive(:describe_to)
+              expect( scenario ).to receive(:describe_to)
               expect( visitor ).to receive(:before_hook) do |hook, hook_args|
                 expect( args ).to eq(hook_args)
                 expect( hook.location.to_s ).to eq("#{__FILE__}:120")
@@ -141,9 +143,11 @@ module Cucumber
             allow(receiver).to receive(:test_step) do |test_step|
               args = double('args')
               visitor = double('visitor')
+              expect( feature ).to receive(:describe_to)
+              expect( scenario ).to receive(:describe_to)
               expect( visitor ).to receive(:after_hook) do |hook, hook_args|
                 expect( args ).to eq(hook_args)
-                expect( hook.location.to_s ).to eq("#{__FILE__}:138")
+                expect( hook.location.to_s ).to eq("#{__FILE__}:140")
               end
               test_step.describe_source_to(visitor, args)
             end
@@ -160,10 +164,10 @@ module Cucumber
             allow(receiver).to receive(:test_step) do |test_step|
               test_step.describe_source_to(visitor, args)
             end
-            expect( visitor ).to receive(:step).once.ordered
+            expect( visitor ).to receive(:step).twice.ordered
             expect( visitor ).to receive(:after_step_hook) do |hook, hook_args|
               expect( args ).to eq(hook_args)
-              expect( hook.location.to_s ).to eq("#{__FILE__}:155")
+              expect( hook.location.to_s ).to eq("#{__FILE__}:159")
             end.once.ordered
             test_case.describe_to mapper
           end
