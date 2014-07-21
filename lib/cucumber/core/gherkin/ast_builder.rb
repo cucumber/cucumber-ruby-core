@@ -266,7 +266,7 @@ module Cucumber
           class ExamplesTableBuilder < Builder
 
             def result
-              Ast::ExamplesTable.new(
+              examples_table = Ast::ExamplesTable.new(
                 location,
                 comments,
                 tags,
@@ -276,6 +276,8 @@ module Cucumber
                 header,
                 example_rows
               )
+              examples_table.gherkin_statement(node)
+              examples_table
             end
 
             private

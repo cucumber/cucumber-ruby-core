@@ -16,6 +16,10 @@ module Cucumber
           :location, :comments, :tags, :keyword, :name, :description, :header, :example_rows
         )
 
+        def gherkin_statement(node=nil)
+          @gherkin_statement ||= node
+        end
+
         private
 
         def description_for_visitors
