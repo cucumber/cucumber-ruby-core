@@ -22,7 +22,7 @@ module Cucumber
 
         attr_reader :comments, :tags, :keyword, :background, :location
 
-        def gherkin_statement(node=nil)
+        def gherkin_statement(node = nil)
           @gherkin_statement ||= node
         end
 

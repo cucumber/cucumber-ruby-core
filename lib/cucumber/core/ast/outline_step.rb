@@ -17,8 +17,8 @@ module Cucumber
           @language || raise("Language is required!")
         end
 
-        def gherkin_statement(statement=nil)
-          @gherkin_statement ||= statement
+        def gherkin_statement(node = nil)
+          @gherkin_statement ||= node
         end
 
         def to_step(row)

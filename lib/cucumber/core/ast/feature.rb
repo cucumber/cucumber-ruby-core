@@ -21,8 +21,8 @@ module Cucumber
           super
         end
 
-        def gherkin_statement(statement=nil)
-          @gherkin_statement ||= statement
+        def gherkin_statement(node = nil)
+          @gherkin_statement ||= node
         end
 
         def children
