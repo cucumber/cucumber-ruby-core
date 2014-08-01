@@ -164,11 +164,12 @@ module Cucumber
             allow(receiver).to receive(:test_step) do |test_step|
               test_step.describe_source_to(visitor, args)
             end
-            expect( visitor ).to receive(:step).twice.ordered
+            expect( visitor ).to receive(:step).ordered
             expect( visitor ).to receive(:after_step_hook) do |hook, hook_args|
               expect( args ).to eq(hook_args)
               expect( hook.location.to_s ).to eq("#{__FILE__}:159")
             end.once.ordered
+            expect( visitor ).to receive(:step).ordered
             test_case.describe_to mapper
           end
 
