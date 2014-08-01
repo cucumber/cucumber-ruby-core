@@ -1,3 +1,4 @@
+require 'report_api_spy'
 require 'cucumber/core'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
@@ -28,13 +29,9 @@ module Cucumber
     end
 
     describe "compiling features to a test suite" do
+
       it "compiles two scenarios into two test cases" do
-        visitor = double
-        expect( visitor ).to receive(:test_case).once.times.and_yield(visitor).ordered
-        expect( visitor ).to receive(:test_step).exactly(2).times.ordered
-        expect( visitor ).to receive(:test_case).once.times.and_yield(visitor).ordered
-        expect( visitor ).to receive(:test_step).exactly(3).times.ordered
-        expect( visitor ).to receive(:done).once.ordered
+        visitor = ReportAPISpy.new
 
         compile([
           gherkin do
@@ -52,6 +49,17 @@ module Cucumber
             end
           end
         ], visitor)
+
+        expect( visitor.messages ).to eq [
+          :test_case,
+          :test_step,
+          :test_step,
+          :test_case,
+          :test_step,
+          :test_step,
+          :test_step,
+          :done,
+        ]
       end
 
       it "filters out test cases based on a tag expression" do
@@ -365,7 +373,7 @@ module Cucumber
           expect( report.test_cases.total        ).to eq(4)
           expect( report.test_cases.total_passed ).to eq(1)
           expect( report.test_cases.total_failed ).to eq(3)
-          mappings.logger.should == [
+          expect( mappings.logger ).to eq [
             ["--"], 
             [:failing_before, "Scenario: fail before"], 
             [:passing_after, "Scenario: fail before"],
