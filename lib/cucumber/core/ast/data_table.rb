@@ -317,7 +317,7 @@ module Cucumber
 
           def ==(o)
             value == o.value
-         end
+          end
 
           # For testing only
           def to_sexp #:nodoc:

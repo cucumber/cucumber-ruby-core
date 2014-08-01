@@ -31,16 +31,16 @@ module Cucumber
             test_steps.each do |test_step|
               expect( test_step ).to receive(:describe_to).with(visitor, args)
             end
-            visitor.stub(:test_case).and_yield(visitor)
+            allow( visitor ).to receive(:test_case).and_yield(visitor)
             test_case.describe_to(visitor, args)
           end
 
           it "describes around hooks in order" do
             visitor = double
-            visitor.stub(:test_case).and_yield(visitor)
+            allow( visitor ).to receive(:test_case).and_yield(visitor)
             first_hook, second_hook = double, double
-            first_hook.should_receive(:describe_to).ordered.and_yield
-            second_hook.should_receive(:describe_to).ordered.and_yield
+            expect( first_hook ).to receive(:describe_to).ordered.and_yield
+            expect( second_hook ).to receive(:describe_to).ordered.and_yield
             around_hooks = [first_hook, second_hook]
             Test::Case.new([], [], around_hooks).describe_to(visitor, double)
           end
@@ -235,7 +235,7 @@ module Cucumber
           let(:test_cases) do
             receiver = double.as_null_object
             result = []
-            receiver.stub(:test_case) { |test_case| result << test_case }
+            allow( receiver ).to receive(:test_case) { |test_case| result << test_case }
             compile [source], receiver
             result
           end

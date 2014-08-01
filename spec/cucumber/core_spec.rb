@@ -315,16 +315,16 @@ module Cucumber
             case test_case.name
 
             when /fail before/
-              mapper.before &failing_before
-              mapper.after &passing_after
+              mapper.before( &failing_before )
+              mapper.after( &passing_after )
 
             when /fail after/
-              mapper.before &passing_before
-              mapper.after &failing_after
+              mapper.before( &passing_before )
+              mapper.after( &failing_after )
 
             else
-              mapper.before &passing_before
-              mapper.after &passing_after
+              mapper.before( &passing_before )
+              mapper.after( &passing_after )
 
             end
 

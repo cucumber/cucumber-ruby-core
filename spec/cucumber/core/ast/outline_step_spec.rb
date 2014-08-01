@@ -21,7 +21,7 @@ module Cucumber
           end
 
           it 'knows the file and line' do
-            location.stub(:to_s) { 'file_name:8' }
+            allow( location ).to receive(:to_s) { 'file_name:8' }
             expect( outline_step.file_colon_line ).to eq 'file_name:8'
           end
         end
@@ -44,7 +44,7 @@ module Cucumber
 
             it "replaces the arguments in the DataTable" do
               visitor = double
-              visitor.stub(:step).and_yield(visitor)
+              allow( visitor ).to receive(:step).and_yield(visitor)
               expect( visitor ).to receive(:data_table) do |data_table|
                 expect( data_table.raw ).to eq [['x', 'y'], ['a', 'a replacement']]
               end
@@ -62,7 +62,7 @@ module Cucumber
 
             it "replaces the arguments in the DocString" do
               visitor = double
-              visitor.stub(:step).and_yield(visitor)
+              allow( visitor ).to receive(:step).and_yield(visitor)
               expect( visitor ).to receive(:doc_string) do |doc_string|
                 expect( doc_string.content ).to eq "a replacement that needs replacing"
               end

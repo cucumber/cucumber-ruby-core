@@ -202,7 +202,7 @@ module Cucumber::Core
              )
 
         it "sets the source correctly on the test steps" do
-          outline_step.stub(to_step: outline_ast_step)
+          allow( outline_step ).to receive(:to_step) { outline_ast_step }
           expect( receiver ).to receive(:on_step).with(
             [feature, scenario_outline, examples_table_1, examples_table_1_row_1, outline_ast_step]
           ).ordered
@@ -238,8 +238,8 @@ module Cucumber::Core
 
     def compile(gherkin_documents)
       visitor = double
-      visitor.stub(:test_suite).and_yield(visitor)
-      visitor.stub(:test_case).and_yield(visitor)
+      allow( visitor ).to receive(:test_suite).and_yield(visitor)
+      allow( visitor ).to receive(:test_case).and_yield(visitor)
       yield visitor
       super(gherkin_documents, visitor)
     end
