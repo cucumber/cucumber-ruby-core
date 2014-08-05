@@ -15,6 +15,7 @@ module Cucumber
         def initialize(language, location, keyword, name, multiline_arg)
           @language, @location, @keyword, @name, @multiline_arg = language, location, keyword, name, multiline_arg
           @language || raise("Language is required!")
+          @gherkin_statement = nil
         end
 
         def gherkin_statement(node = nil)
