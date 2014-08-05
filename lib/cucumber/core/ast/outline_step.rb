@@ -22,7 +22,9 @@ module Cucumber
         end
 
         def to_step(row)
-          Ast::Step.new(language, location, keyword, row.expand(name), replace_multiline_arg(row))
+          step = Ast::Step.new(language, location, keyword, row.expand(name), replace_multiline_arg(row))
+          step.gherkin_statement(@gherkin_statement)
+          step
         end
 
         private

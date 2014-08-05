@@ -35,6 +35,12 @@ module Cucumber
               expect( outline_step.to_step(row).name ).to eq 'a green cucumber'
             end
 
+            it "knows the name of the outline step" do
+              row = ExamplesTable::Row.new({'color' => 'green'}, 1, location)
+              outline_step.gherkin_statement(double(:name => name))
+              expect( outline_step.to_step(row).gherkin_statement.name ).to eq name
+            end
+
           end
 
           context "when the step has a DataTable" do
