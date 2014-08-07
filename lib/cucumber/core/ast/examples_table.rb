@@ -7,13 +7,14 @@ module Cucumber
     module Ast
 
       class ExamplesTable
+        include Names
         include HasLocation
         include DescribesItself
 
-        attr_reader :header, :keyword, :name, :tags, :comments, :location
+        attr_reader :header, :keyword, :tags, :comments, :location
 
         include Cucumber.initializer(
-          :location, :comments, :tags, :keyword, :name, :description, :header, :example_rows
+          :location, :comments, :tags, :keyword, :title, :description, :header, :example_rows
         )
 
         def gherkin_statement(node=nil)
