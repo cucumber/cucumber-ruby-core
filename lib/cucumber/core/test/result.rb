@@ -76,31 +76,9 @@ module Cucumber
 
         end
 
-        class Undefined
-          include Result.status_queries :undefined
-          include Cucumber.initializer(:duration)
-          attr_reader :duration
-
-          def initialize(duration = 0)
-            super
-          end
-
-          def describe_to(visitor, *args)
-            visitor.undefined(*args)
-            self
-          end
-
-          def to_s
-            "✗"
-          end
-
-          def with_duration(new_duration)
-            self.class.new(new_duration)
-          end
-        end
-
-        class Skipped < StandardError
-          include Result.status_queries :skipped
+        # Base class for exceptions that can be raised in a step defintion causing 
+        # the step to have that result.
+        class Raisable < StandardError
           attr_reader :message, :duration
 
           def initialize(message = "", duration = :unknown, backtrace = nil)
@@ -108,6 +86,29 @@ module Cucumber
             super(message)
             set_backtrace(backtrace) if backtrace
           end
+
+          def with_duration(new_duration)
+            self.class.new(message, new_duration, backtrace)
+          end
+        end
+
+        class Undefined < Raisable
+          include Result.status_queries :undefined
+
+          def describe_to(visitor, *args)
+            visitor.undefined(*args)
+            visitor.duration(duration, *args) unless duration == :unknown
+            self
+          end
+
+          def to_s
+            "?"
+          end
+
+        end
+
+        class Skipped < Raisable
+          include Result.status_queries :skipped
 
           def describe_to(visitor, *args)
             visitor.skipped(*args)
@@ -119,20 +120,10 @@ module Cucumber
             "-"
           end
 
-          def with_duration(new_duration)
-            self.class.new(message, new_duration, backtrace)
-          end
         end
 
-        class Pending < StandardError
+        class Pending < Raisable
           include Result.status_queries :pending
-          attr_reader :message, :duration
-
-          def initialize(message, duration = :unknown, backtrace = nil)
-            @message, @duration = message, duration
-            super(message)
-            set_backtrace(backtrace) if backtrace
-          end
 
           def describe_to(visitor, *args)
             visitor.pending(self, *args)
@@ -142,10 +133,6 @@ module Cucumber
 
           def to_s
             "P"
-          end
-
-          def with_duration(new_duration)
-            self.class.new(message, new_duration, backtrace)
           end
         end
 

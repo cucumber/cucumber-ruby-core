@@ -33,7 +33,7 @@ module Cucumber
             expect( result.exception ).to eq exception
           end
 
-          it "returns a pending result if a pending error is raised" do
+          it "returns a pending result if a Result::Pending error is raised" do
             exception = Result::Pending.new("TODO")
             mapping = Mapping.new { raise exception }
             result = mapping.execute
@@ -41,12 +41,20 @@ module Cucumber
             expect( result.message ).to eq "TODO"
           end
 
-          it "returns a skipped result if a pending error is raised" do
+          it "returns a skipped result if a Result::Skipped error is raised" do
             exception = Result::Skipped.new("Not working right now")
             mapping = Mapping.new { raise exception }
             result = mapping.execute
             expect( result ).to be_skipped
             expect( result.message ).to eq "Not working right now"
+          end
+
+          it "returns an undefined result if a Result::Undefined error is raised" do
+            exception = Result::Undefined.new("new step")
+            mapping = Mapping.new { raise exception }
+            result = mapping.execute
+            expect( result ).to be_undefined
+            expect( result.message ).to eq "new step"
           end
 
           context "recording the duration" do

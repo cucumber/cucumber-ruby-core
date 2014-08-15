@@ -22,10 +22,8 @@ module Cucumber
           @timer.start
           @block.call
           passed
-        rescue Result::Pending => exception
-          pending(exception)
-        rescue Result::Skipped => exception
-          return exception
+        rescue Result::Raisable => exception
+          exception.with_duration(@timer.duration)
         rescue Exception => exception
           failed(exception)
         end
@@ -51,11 +49,6 @@ module Cucumber
         def skipped
           Result::Skipped.new
         end
-
-        def pending(exception)
-          exception.with_duration(@timer.duration)
-        end
-
       end
 
       class UnskippableMapping < Mapping
