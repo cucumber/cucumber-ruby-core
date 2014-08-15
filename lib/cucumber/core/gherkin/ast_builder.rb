@@ -224,6 +224,7 @@ module Cucumber
 
         class ScenarioOutlineBuilder < Builder
           def result(background, language, feature_tags)
+            raise ParseError.new("Missing Examples section for Scenario Outline at #{location}") if examples_tables.empty?
             scenario_outline = Ast::ScenarioOutline.new(
               language,
               location,
