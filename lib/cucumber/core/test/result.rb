@@ -87,6 +87,10 @@ module Cucumber
             set_backtrace(backtrace) if backtrace
           end
 
+          def with_message(new_message)
+            self.class.new(new_message, duration, backtrace)
+          end
+
           def with_duration(new_duration)
             self.class.new(message, new_duration, backtrace)
           end
