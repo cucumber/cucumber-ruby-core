@@ -1,4 +1,5 @@
 require 'cucumber/core/ast/describes_itself'
+require 'delegate'
 module Cucumber
   module Core
     module Ast
@@ -18,7 +19,7 @@ module Cucumber
       #
       # Note how the indentation from the source is stripped away.
       #
-      class DocString
+      class DocString < SimpleDelegator
         include HasLocation
         include DescribesItself
         attr_accessor :file
@@ -29,22 +30,7 @@ module Cucumber
           @content = string
           @content_type = content_type
           @location = location
-        end
-
-        def encoding
-          @content.encoding
-        end
-
-        def to_str
-          @content
-        end
-
-        def to_s
-          to_str
-        end
-
-        def gsub(*args)
-          @content.gsub(*args)
+          super @content
         end
 
         def map
