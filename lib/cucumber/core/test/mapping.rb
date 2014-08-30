@@ -14,13 +14,13 @@ module Cucumber
           @timer = Timer.new
         end
 
-        def skip
+        def skip(status)
           skipped
         end
 
-        def execute
+        def execute(status)
           @timer.start
-          @block.call
+          @block.call(status)
           passed
         rescue Result::Raisable => exception
           exception.with_duration(@timer.duration)
@@ -52,13 +52,13 @@ module Cucumber
       end
 
       class UnskippableMapping < Mapping
-        def skip
-          execute
+        def skip(status)
+          execute(status)
         end
       end
 
       class UndefinedMapping
-        def execute
+        def execute(status)
           undefined
         end
 
