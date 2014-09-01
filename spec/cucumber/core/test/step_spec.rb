@@ -2,6 +2,7 @@ require 'cucumber/core/test/step'
 
 module Cucumber::Core::Test
   describe Step do
+    let(:status) { double('status') }
 
     describe "describing itself" do
       it "describes itself to a visitor" do
@@ -30,7 +31,7 @@ module Cucumber::Core::Test
       context "when a passing mapping exists" do
         it "returns a passing result" do
           test_step = Step.new([ast_step]).with_mapping {}
-          expect( test_step.execute ).to be_passed
+          expect( test_step.execute(status) ).to be_passed
         end
       end
 
@@ -39,7 +40,7 @@ module Cucumber::Core::Test
 
         it "returns a failing result" do
           test_step = Step.new([ast_step]).with_mapping { raise exception }
-          result = test_step.execute
+          result = test_step.execute(status)
           expect( result           ).to be_failed
           expect( result.exception ).to eq exception
         end
@@ -48,7 +49,7 @@ module Cucumber::Core::Test
       context "with no mapping" do
         it "returns an Undefined result" do
           test_step = Step.new([ast_step])
-          result = test_step.execute
+          result = test_step.execute(status)
           expect( result           ).to be_undefined
         end
       end

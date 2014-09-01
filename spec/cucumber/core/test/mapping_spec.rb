@@ -5,6 +5,7 @@ module Cucumber
     module Test
 
       describe Mapping do
+        let(:status) { double('status') }
 
         context "constructed without a block" do
           it "raises an error" do
@@ -16,27 +17,34 @@ module Cucumber
           it "executes the block passed to the constructor" do
             executed = false
             mapping = Mapping.new { executed = true }
-            mapping.execute
+            mapping.execute(status)
             expect( executed ).to be_truthy
           end
 
           it "returns a passed result if the block doesn't fail" do
             mapping = Mapping.new {}
-            expect( mapping.execute ).to be_passed
+            expect( mapping.execute(status) ).to be_passed
           end
 
           it "returns a failed result when the block raises an error" do
             exception = StandardError.new
             mapping = Mapping.new { raise exception }
-            result = mapping.execute
+            result = mapping.execute(status)
             expect( result ).to be_failed
             expect( result.exception ).to eq exception
+          end
+
+          it "yields the status to the block" do
+            status_spy = nil
+            mapping = Mapping.new { |status| status_spy = status }
+            mapping.execute(status)
+            expect(status_spy).to eq status
           end
 
           it "returns a pending result if a Result::Pending error is raised" do
             exception = Result::Pending.new("TODO")
             mapping = Mapping.new { raise exception }
-            result = mapping.execute
+            result = mapping.execute(status)
             expect( result ).to be_pending
             expect( result.message ).to eq "TODO"
           end
@@ -44,7 +52,7 @@ module Cucumber
           it "returns a skipped result if a Result::Skipped error is raised" do
             exception = Result::Skipped.new("Not working right now")
             mapping = Mapping.new { raise exception }
-            result = mapping.execute
+            result = mapping.execute(status)
             expect( result ).to be_skipped
             expect( result.message ).to eq "Not working right now"
           end
@@ -52,7 +60,7 @@ module Cucumber
           it "returns an undefined result if a Result::Undefined error is raised" do
             exception = Result::Undefined.new("new step")
             mapping = Mapping.new { raise exception }
-            result = mapping.execute
+            result = mapping.execute(status)
             expect( result ).to be_undefined
             expect( result.message ).to eq "new step"
           end
@@ -67,13 +75,13 @@ module Cucumber
 
             it "records the nanoseconds duration of the execution on the result" do
               mapping = Mapping.new { }
-              duration = mapping.execute.duration
+              duration = mapping.execute(status).duration
               expect( duration ).to eq 1
             end
 
             it "records the duration of a failed execution" do
               mapping = Mapping.new { raise StandardError }
-              duration = mapping.execute.duration
+              duration = mapping.execute(status).duration
               expect( duration ).to eq 1
             end
           end
@@ -84,13 +92,13 @@ module Cucumber
           it "does not execute the block" do
             executed = false
             mapping = Mapping.new { executed = true }
-            mapping.skip
+            mapping.skip(status)
             expect( executed ).to be_falsey
           end
 
           it "returns a skipped result" do
             mapping = Mapping.new {}
-            expect( mapping.skip ).to be_skipped
+            expect( mapping.skip(status) ).to be_skipped
           end
         end
       end
@@ -98,16 +106,17 @@ module Cucumber
       describe UndefinedMapping do
         let(:mapping) { UndefinedMapping.new }
         let(:test_step) { double }
+        let(:status) { double('status') }
 
         context "executing" do
           it "returns an undefined result" do
-            expect( mapping.execute ).to be_undefined
+            expect( mapping.execute(status) ).to be_undefined
           end
         end
 
         context "skipping" do
           it "returns an undefined result" do
-            expect( mapping.skip ).to be_undefined
+            expect( mapping.skip(status) ).to be_undefined
           end
         end
 

@@ -62,7 +62,7 @@ module Cucumber
           undefined
         end
 
-        def skip
+        def skip(status)
           undefined
         end
 

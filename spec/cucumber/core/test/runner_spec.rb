@@ -205,7 +205,7 @@ module Cucumber::Core::Test
         after_hook = Step.new([double], hook_mapping)
         test_case = Case.new([failing, after_hook], source)
         test_case.describe_to runner
-        expect(status_spy).to be_failing
+        expect(status_spy.result(0)).to be_failed
       end
     end
 

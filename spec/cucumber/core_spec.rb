@@ -297,17 +297,17 @@ module Cucumber
 
           def test_case(test_case, mapper)
             mapper.before { @logger << ['--'] }
-            failing_before = -> do
+            failing_before = proc do
               @logger << [:failing_before, test_case.name]
               raise Failure
             end
-            passing_after = -> do
+            passing_after = proc do
               @logger << [:passing_after, test_case.name]
             end
-            passing_before = -> do 
+            passing_before = proc do 
               @logger << [:passing_before, test_case.name]
             end
-            failing_after = -> do
+            failing_after = proc do
               @logger << [:failing_after, test_case.name]
               raise Failure
             end
