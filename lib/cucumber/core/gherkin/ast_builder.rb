@@ -116,6 +116,7 @@ module Cucumber
           def result(language)
             background = background(language)
             feature = Ast::Feature.new(
+              node,
               location,
               background,
               comments,
@@ -125,7 +126,6 @@ module Cucumber
               node.description.rstrip,
               children.map { |builder| builder.result(background, language, tags) }
             )
-            feature.gherkin_statement(node)
             feature.language = language
             feature
           end
@@ -210,14 +210,13 @@ module Cucumber
           class StepBuilder < Builder
             def result(language)
               step = Ast::Step.new(
+                node,
                 language,
                 location,
                 node.keyword,
                 node.name,
                 Ast::MultilineArgument.from(node.doc_string || node.rows, location)
               )
-              step.gherkin_statement(node)
-              step
             end
           end
         end
@@ -226,6 +225,7 @@ module Cucumber
           def result(background, language, feature_tags)
             raise ParseError.new("Missing Examples section for Scenario Outline at #{location}") if examples_tables.empty?
             scenario_outline = Ast::ScenarioOutline.new(
+              node,
               language,
               location,
               background,
@@ -238,8 +238,6 @@ module Cucumber
               steps(language),
               examples_tables
             )
-            scenario_outline.gherkin_statement(node)
-            scenario_outline
           end
 
           def add_examples(file, node)
@@ -268,6 +266,7 @@ module Cucumber
 
             def result
               examples_table = Ast::ExamplesTable.new(
+                node,
                 location,
                 comments,
                 tags,
@@ -277,8 +276,6 @@ module Cucumber
                 header,
                 example_rows
               )
-              examples_table.gherkin_statement(node)
-              examples_table
             end
 
             private
@@ -300,14 +297,13 @@ module Cucumber
           class StepBuilder < Builder
             def result(language)
               step = Ast::OutlineStep.new(
+                node,
                 language,
                 location,
                 node.keyword,
                 node.name,
                 Ast::MultilineArgument.from(node.doc_string || node.rows, location)
               )
-              step.gherkin_statement(node)
-              step
             end
           end
         end

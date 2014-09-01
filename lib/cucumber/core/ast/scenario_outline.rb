@@ -18,13 +18,9 @@ module Cucumber
         attr_reader :line
         private :line
 
-        include Cucumber.initializer(:language, :location, :background, :comments, :tags, :feature_tags, :keyword, :title, :description, :steps, :examples_tables)
+        include Cucumber.initializer(:gherkin_statement, :language, :location, :background, :comments, :tags, :feature_tags, :keyword, :title, :description, :steps, :examples_tables)
 
-        attr_reader :comments, :tags, :keyword, :background, :location
-
-        def gherkin_statement(node = nil)
-          @gherkin_statement ||= node
-        end
+        attr_reader :comments, :tags, :keyword, :background, :location, :gherkin_statement
 
         private
 

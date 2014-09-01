@@ -12,15 +12,11 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :header, :keyword, :tags, :comments, :location
+        attr_reader :header, :keyword, :tags, :comments, :location, :gherkin_statement
 
         include Cucumber.initializer(
-          :location, :comments, :tags, :keyword, :title, :description, :header, :example_rows
+          :gherkin_statement, :location, :comments, :tags, :keyword, :title, :description, :header, :example_rows
         )
-
-        def gherkin_statement(node=nil)
-          @gherkin_statement ||= node
-        end
 
         private
 

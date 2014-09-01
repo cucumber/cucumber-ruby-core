@@ -68,7 +68,7 @@ module Cucumber
 
         context "mapping hooks" do
           let(:test_case)  { Case.new([test_step], source) }
-          let(:test_step)  { Step.new([Ast::Step.new(:language, :location, :keyword, :name, :multiline_arg)]) }
+          let(:test_step)  { Step.new([Ast::Step.new(:node, :language, :location, :keyword, :name, :multiline_arg)]) }
           let(:source)     { [feature, scenario] }
           let(:feature)    { double('feature') }
           let(:scenario)   { double('scenario', location: 'test') }

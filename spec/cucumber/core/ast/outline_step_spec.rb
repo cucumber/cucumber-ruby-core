@@ -8,7 +8,8 @@ module Cucumber
   module Core
     module Ast
       describe OutlineStep do
-        let(:outline_step) { OutlineStep.new(language, location, keyword, name, multiline_arg) }
+        let(:outline_step) { OutlineStep.new(node, language, location, keyword, name, multiline_arg) }
+        let(:node) { double }
         let(:language) { double }
         let(:location) { double }
         let(:keyword)  { double }
@@ -29,6 +30,7 @@ module Cucumber
         describe "converting to a Step" do
           context "a single argument in the name" do
             let(:name) { 'a <color> cucumber' }
+            let(:node) { double(:name => name) }
 
             it "replaces the argument" do
               row = ExamplesTable::Row.new({'color' => 'green'}, 1, location)
@@ -37,14 +39,13 @@ module Cucumber
 
             it "knows the name of the outline step" do
               row = ExamplesTable::Row.new({'color' => 'green'}, 1, location)
-              outline_step.gherkin_statement(double(:name => name))
               expect( outline_step.to_step(row).gherkin_statement.name ).to eq name
             end
 
           end
 
           context "when the step has a DataTable" do
-            let(:outline_step) { OutlineStep.new(language, location, keyword, name, table) }
+            let(:outline_step) { OutlineStep.new(node, language, location, keyword, name, table) }
             let(:name)  { "anything" }
             let(:table) { DataTable.new([['x', 'y'],['a', 'a <arg>']], Location.new('foo.feature', 23)) }
 
@@ -62,7 +63,7 @@ module Cucumber
 
           context "when the step has a DocString" do
             let(:location) { double }
-            let(:outline_step) { OutlineStep.new(language, location, keyword, name, doc_string) }
+            let(:outline_step) { OutlineStep.new(node, language, location, keyword, name, doc_string) }
             let(:doc_string) { DocString.new('a <arg> that needs replacing', '', location) }
             let(:name) { 'anything' }
 

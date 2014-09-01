@@ -14,15 +14,11 @@ module Cucumber
 
         attr_accessor :language
         attr_reader :feature_elements
-        attr_reader :comments, :background, :tags, :keyword, :location, :title
+        attr_reader :comments, :background, :tags, :keyword, :location, :title, :gherkin_statement
 
-        include Cucumber.initializer(:location, :background, :comments, :tags, :keyword, :title, :description, :feature_elements)
+        include Cucumber.initializer(:gherkin_statement, :location, :background, :comments, :tags, :keyword, :title, :description, :feature_elements)
         def initialize(*)
           super
-        end
-
-        def gherkin_statement(node = nil)
-          @gherkin_statement ||= node
         end
 
         def children
