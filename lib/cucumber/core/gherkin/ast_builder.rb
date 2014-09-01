@@ -115,7 +115,7 @@ module Cucumber
 
           def result(language)
             background = background(language)
-            feature = Ast::Feature.new(
+            Ast::Feature.new(
               node,
               language,
               location,
@@ -208,7 +208,7 @@ module Cucumber
 
           class StepBuilder < Builder
             def result(language)
-              step = Ast::Step.new(
+              Ast::Step.new(
                 node,
                 language,
                 location,
@@ -223,7 +223,7 @@ module Cucumber
         class ScenarioOutlineBuilder < Builder
           def result(background, language, feature_tags)
             raise ParseError.new("Missing Examples section for Scenario Outline at #{location}") if examples_tables.empty?
-            scenario_outline = Ast::ScenarioOutline.new(
+            Ast::ScenarioOutline.new(
               node,
               language,
               location,
@@ -264,7 +264,7 @@ module Cucumber
           class ExamplesTableBuilder < Builder
 
             def result
-              examples_table = Ast::ExamplesTable.new(
+              Ast::ExamplesTable.new(
                 node,
                 location,
                 comments,
@@ -295,7 +295,7 @@ module Cucumber
 
           class StepBuilder < Builder
             def result(language)
-              step = Ast::OutlineStep.new(
+              Ast::OutlineStep.new(
                 node,
                 language,
                 location,
