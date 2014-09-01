@@ -82,11 +82,6 @@ module Cucumber
             end
 
             class Failing < Base
-              # TODO: add same set of predicate methods to all status classes as we do with results
-              def failing?
-                true
-              end
-
               def execute(test_step, monitor)
                 test_step.skip(self)
               end
