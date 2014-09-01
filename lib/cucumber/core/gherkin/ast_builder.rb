@@ -117,6 +117,7 @@ module Cucumber
             background = background(language)
             feature = Ast::Feature.new(
               node,
+              language,
               location,
               background,
               comments,
@@ -126,8 +127,6 @@ module Cucumber
               node.description.rstrip,
               children.map { |builder| builder.result(background, language, tags) }
             )
-            feature.language = language
-            feature
           end
 
           def add_child(child)

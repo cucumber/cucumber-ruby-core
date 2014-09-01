@@ -12,11 +12,10 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_accessor :language
-        attr_reader :feature_elements
+        attr_reader :feature_elements, :language
         attr_reader :comments, :background, :tags, :keyword, :location, :title, :gherkin_statement
 
-        include Cucumber.initializer(:gherkin_statement, :location, :background, :comments, :tags, :keyword, :title, :description, :feature_elements)
+        include Cucumber.initializer(:gherkin_statement, :language, :location, :background, :comments, :tags, :keyword, :title, :description, :feature_elements)
         def initialize(*)
           super
         end
