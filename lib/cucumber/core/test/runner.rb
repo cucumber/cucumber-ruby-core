@@ -60,7 +60,7 @@ module Cucumber
               include Cucumber.initializer(:step_result)
 
               def execute(test_step, monitor)
-                result = test_step.execute
+                result = test_step.execute(monitor.result)
                 result.describe_to(monitor, result)
               end
 
@@ -83,7 +83,7 @@ module Cucumber
 
             class Failing < Base
               def execute(test_step, monitor)
-                test_step.skip
+                test_step.skip(monitor.result)
               end
 
               def result(duration)

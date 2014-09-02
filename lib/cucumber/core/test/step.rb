@@ -26,12 +26,12 @@ module Cucumber
           self
         end
 
-        def skip
-          @mapping.skip
+        def skip(last_result)
+          @mapping.skip(last_result)
         end
 
-        def execute
-          @mapping.execute
+        def execute(last_result)
+          @mapping.execute(last_result)
         end
 
         def with_mapping(&block)

@@ -17,11 +17,12 @@ module Cucumber
           end
         end
 
-        let(:mapper)   { Mapper.new(mappings, receiver) }
-        let(:receiver) { double('receiver') }
-        before         { allow(receiver).to receive(:test_case).and_yield(receiver) }
-        let(:mappings) { ExampleMappings.new(app) }
-        let(:app)      { double('app') }
+        let(:mapper)      { Mapper.new(mappings, receiver) }
+        let(:receiver)    { double('receiver') }
+        before            { allow(receiver).to receive(:test_case).and_yield(receiver) }
+        let(:mappings)    { ExampleMappings.new(app) }
+        let(:app)         { double('app') }
+        let(:last_result) { double('last_result') }
 
         context "an unmapped step" do
           let(:test_step) { Test::Step.new([double(name: 'unmapped')]) }
@@ -30,7 +31,7 @@ module Cucumber
           it "maps to a step that executes to an undefined result" do
             expect( receiver ).to receive(:test_step) do |test_step|
               expect( test_step.name ).to eq 'unmapped'
-              expect( test_step.execute ).to be_undefined
+              expect( test_step.execute(last_result) ).to be_undefined
             end.once.ordered
             test_case.describe_to mapper
           end
@@ -44,7 +45,7 @@ module Cucumber
             expect( receiver ).to receive(:test_step) do |test_step|
               expect( test_step.name ).to eq 'mapped'
               expect( app ).to receive(:do_something)
-              test_step.execute
+              test_step.execute(last_result)
             end.once.ordered
             test_case.describe_to mapper
           end
@@ -108,7 +109,7 @@ module Cucumber
 
             allow(receiver).to receive(:test_case).and_yield(receiver)
             allow(receiver).to receive(:test_step) do |test_step|
-              test_step.execute
+              test_step.execute(last_result)
             end
 
             test_case.describe_to mapper
@@ -127,7 +128,7 @@ module Cucumber
               expect( scenario ).to receive(:describe_to)
               expect( visitor ).to receive(:before_hook) do |hook, hook_args|
                 expect( args ).to eq(hook_args)
-                expect( hook.location.to_s ).to eq("#{__FILE__}:120")
+                expect( hook.location.to_s ).to eq("#{__FILE__}:121")
               end
               test_step.describe_source_to(visitor, args)
             end
@@ -147,7 +148,7 @@ module Cucumber
               expect( scenario ).to receive(:describe_to)
               expect( visitor ).to receive(:after_hook) do |hook, hook_args|
                 expect( args ).to eq(hook_args)
-                expect( hook.location.to_s ).to eq("#{__FILE__}:140")
+                expect( hook.location.to_s ).to eq("#{__FILE__}:141")
               end
               test_step.describe_source_to(visitor, args)
             end
@@ -167,7 +168,7 @@ module Cucumber
             expect( visitor ).to receive(:step).ordered
             expect( visitor ).to receive(:after_step_hook) do |hook, hook_args|
               expect( args ).to eq(hook_args)
-              expect( hook.location.to_s ).to eq("#{__FILE__}:159")
+              expect( hook.location.to_s ).to eq("#{__FILE__}:160")
             end.once.ordered
             expect( visitor ).to receive(:step).ordered
             test_case.describe_to mapper
