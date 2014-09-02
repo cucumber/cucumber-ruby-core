@@ -197,15 +197,15 @@ module Cucumber::Core::Test
 
     context "passing status to a mapping" do
       it "passes a Failing status when the scenario is failing" do
-        status_spy = nil
+        result_spy = nil
         failing = Step.new([double]).with_mapping { raise exception }
-        hook_mapping = UnskippableMapping.new do |status|
-          status_spy = status
+        hook_mapping = UnskippableMapping.new do |last_result|
+          result_spy = last_result
         end
         after_hook = Step.new([double], hook_mapping)
         test_case = Case.new([failing, after_hook], source)
         test_case.describe_to runner
-        expect(status_spy.result(0)).to be_failed
+        expect(result_spy).to be_failed
       end
     end
 
