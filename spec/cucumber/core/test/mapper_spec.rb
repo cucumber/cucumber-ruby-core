@@ -17,12 +17,12 @@ module Cucumber
           end
         end
 
-        let(:mapper)   { Mapper.new(mappings, receiver) }
-        let(:receiver) { double('receiver') }
-        before         { allow(receiver).to receive(:test_case).and_yield(receiver) }
-        let(:mappings) { ExampleMappings.new(app) }
-        let(:app)      { double('app') }
-        let(:status)   { double('status') }
+        let(:mapper)      { Mapper.new(mappings, receiver) }
+        let(:receiver)    { double('receiver') }
+        before            { allow(receiver).to receive(:test_case).and_yield(receiver) }
+        let(:mappings)    { ExampleMappings.new(app) }
+        let(:app)         { double('app') }
+        let(:last_result) { double('last_result') }
 
         context "an unmapped step" do
           let(:test_step) { Test::Step.new([double(name: 'unmapped')]) }
@@ -31,7 +31,7 @@ module Cucumber
           it "maps to a step that executes to an undefined result" do
             expect( receiver ).to receive(:test_step) do |test_step|
               expect( test_step.name ).to eq 'unmapped'
-              expect( test_step.execute(status) ).to be_undefined
+              expect( test_step.execute(last_result) ).to be_undefined
             end.once.ordered
             test_case.describe_to mapper
           end
@@ -45,7 +45,7 @@ module Cucumber
             expect( receiver ).to receive(:test_step) do |test_step|
               expect( test_step.name ).to eq 'mapped'
               expect( app ).to receive(:do_something)
-              test_step.execute(status)
+              test_step.execute(last_result)
             end.once.ordered
             test_case.describe_to mapper
           end
@@ -109,7 +109,7 @@ module Cucumber
 
             allow(receiver).to receive(:test_case).and_yield(receiver)
             allow(receiver).to receive(:test_step) do |test_step|
-              test_step.execute(status)
+              test_step.execute(last_result)
             end
 
             test_case.describe_to mapper
