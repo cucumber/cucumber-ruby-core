@@ -8,10 +8,10 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :keyword, :name, :language, :exception, :multiline_arg, :gherkin_statement
+        attr_reader :keyword, :name, :language, :exception, :multiline_arg, :outline_step
 
-        def initialize(gherkin_statement, language, location, keyword, name, multiline_arg)
-          @gherkin_statement, @location, @keyword, @name, @multiline_arg = gherkin_statement, location, keyword, name, multiline_arg
+        def initialize(outline_step, language, location, keyword, name, multiline_arg)
+          @outline_step, @location, @keyword, @name, @multiline_arg = outline_step, location, keyword, name, multiline_arg
         end
 
         def to_sexp

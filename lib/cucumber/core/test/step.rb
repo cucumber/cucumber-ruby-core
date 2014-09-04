@@ -48,11 +48,19 @@ module Cucumber
 
         def match_locations?(queried_locations)
           return true if queried_locations.include? location
-          source.any? { |s| s.match_locations?(queried_locations) }
+          source.any? { |s| s.match_locations?(queried_locations) } or
+          outline_step_match_locations?(queried_locations)
         end
 
         def inspect
           "<#{self.class}: #{location}>"
+        end
+
+        private
+
+        def outline_step_match_locations?(queried_locations)
+          source.last.outline_step and 
+            source.last.outline_step.match_locations?(queried_locations)
         end
 
       end
