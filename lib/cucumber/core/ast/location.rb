@@ -13,6 +13,10 @@ module Cucumber
         def_delegator :filepath, :same_as?
         def_delegator :filepath, :filename, :file
 
+        def self.of_caller
+          new(*caller[1].split(':')[0..1])
+        end
+
         def initialize(filepath, lines=WILDCARD)
           filepath || raise(ArgumentError, "file is mandatory")
           lines || raise(ArgumentError, "line is mandatory")
