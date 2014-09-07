@@ -38,6 +38,15 @@ module Cucumber
 
         end
 
+        describe "backtrace line" do
+          let(:step) { Step.new(double, double, "path/file.feature:10", "Given ", "this step passes", double) }
+
+          it "knows how to form the backtrace line" do
+            expect( step.backtrace_line ).to eq("path/file.feature:10:in `Given this step passes'")
+          end
+
+        end
+
       end
 
       describe ExpandedOutlineStep do
@@ -86,6 +95,16 @@ module Cucumber
           end
         end
 
+        describe "backtrace line" do
+          let(:outline_step) { OutlineStep.new(double, double, "path/file.feature:5", "Given ", "this step <state>", double) }
+          let(:step) { ExpandedOutlineStep.new(outline_step, double, double, "path/file.feature:10", "Given ", "this step passes", double) }
+
+          it "includes the outline step in the backtrace line" do
+            expect( step.backtrace_line ).to eq("path/file.feature:10:in `Given this step passes'\n" +
+                                                "path/file.feature:5:in `Given this step <state>'")
+          end
+
+        end
       end
     end
   end
