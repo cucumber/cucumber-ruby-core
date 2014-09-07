@@ -209,7 +209,7 @@ module Cucumber
           class StepBuilder < Builder
             def result(language)
               Ast::Step.new(
-                nil,
+                node,
                 language,
                 location,
                 node.keyword,

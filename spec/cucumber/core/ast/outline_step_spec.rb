@@ -36,11 +36,6 @@ module Cucumber
               expect( outline_step.to_step(row).name ).to eq 'a green cucumber'
             end
 
-            it "knows the outline step it was create from" do
-              row = ExamplesTable::Row.new({'color' => 'green'}, 1, location)
-              expect( outline_step.to_step(row).outline_step ).to eq outline_step
-            end
-
           end
 
           context "when the step has a DataTable" do
