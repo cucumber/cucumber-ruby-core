@@ -6,8 +6,7 @@ require 'cucumber/core/ast/location'
 module Cucumber
   module Core
     module Test
-
-      class Mapping
+      class Action
         def initialize(&block)
           raise ArgumentError, "Passing a block to execute the mapping is mandatory." unless block
           @block = block
@@ -51,13 +50,13 @@ module Cucumber
         end
       end
 
-      class UnskippableMapping < Mapping
+      class UnskippableAction < Action
         def skip(last_result)
           execute(last_result)
         end
       end
 
-      class UndefinedMapping
+      class UndefinedAction
         def execute(last_result)
           undefined
         end
