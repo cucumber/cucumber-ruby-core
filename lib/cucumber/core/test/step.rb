@@ -1,6 +1,6 @@
 require 'cucumber/initializer'
 require 'cucumber/core/test/result'
-require 'cucumber/core/test/mapping'
+require 'cucumber/core/test/action'
 
 module Cucumber
   module Core
@@ -9,7 +9,7 @@ module Cucumber
         include Cucumber.initializer(:source)
         attr_reader :source
 
-        def initialize(source, mapping = Test::UndefinedMapping.new)
+        def initialize(source, mapping = Test::UndefinedAction.new)
           raise ArgumentError if source.any?(&:nil?)
           @mapping = mapping
           super(source)
@@ -35,7 +35,7 @@ module Cucumber
         end
 
         def with_mapping(&block)
-          self.class.new(source, Test::Mapping.new(&block))
+          self.class.new(source, Test::Action.new(&block))
         end
 
         def name
