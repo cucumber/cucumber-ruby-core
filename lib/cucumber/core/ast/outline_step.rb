@@ -18,7 +18,7 @@ module Cucumber
         end
 
         def to_step(row)
-          Ast::Step.new(gherkin_statement, language, location, keyword, row.expand(name), replace_multiline_arg(row))
+          Ast::ExpandedOutlineStep.new(self, gherkin_statement, language, row.location, keyword, row.expand(name), replace_multiline_arg(row))
         end
 
         private

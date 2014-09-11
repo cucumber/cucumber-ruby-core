@@ -30,16 +30,10 @@ module Cucumber
         describe "converting to a Step" do
           context "a single argument in the name" do
             let(:name) { 'a <color> cucumber' }
-            let(:node) { double(:name => name) }
 
             it "replaces the argument" do
               row = ExamplesTable::Row.new({'color' => 'green'}, 1, location)
               expect( outline_step.to_step(row).name ).to eq 'a green cucumber'
-            end
-
-            it "knows the name of the outline step" do
-              row = ExamplesTable::Row.new({'color' => 'green'}, 1, location)
-              expect( outline_step.to_step(row).gherkin_statement.name ).to eq name
             end
 
           end
