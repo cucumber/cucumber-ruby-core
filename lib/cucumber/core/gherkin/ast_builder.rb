@@ -1,6 +1,7 @@
 require 'cucumber/initializer'
 require 'cucumber/core/ast'
 require 'cucumber/core/platform'
+require 'gherkin/rubify'
 
 module Cucumber
   module Core
@@ -214,7 +215,8 @@ module Cucumber
                 location,
                 node.keyword,
                 node.name,
-                Ast::MultilineArgument.from(node.doc_string || node.rows, location)
+                
+                MultilineArgument.from(node.doc_string || node.rows, location)
               )
             end
           end
@@ -301,8 +303,28 @@ module Cucumber
                 location,
                 node.keyword,
                 node.name,
-                Ast::MultilineArgument.from(node.doc_string || node.rows, location)
+                MultilineArgument.from(node.doc_string || node.rows, location)
               )
+            end
+          end
+        end
+
+        module MultilineArgument
+          class << self
+            include ::Gherkin::Rubify
+
+            def from(argument, parent_location)
+              return Ast::EmptyMultilineArgument.new unless argument
+              argument = rubify(argument)
+              case argument
+              when ::Gherkin::Formatter::Model::DocString
+                Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line_range))
+              when Array
+                location = parent_location.on_line(argument.first.line..argument.last.line)
+                Ast::DataTable.new(argument.map{|row| row.cells}, location)
+              else
+                raise ArgumentError, "Don't know how to convert #{argument.inspect} into a MultilineArgument"
+              end
             end
           end
         end
