@@ -15,7 +15,6 @@ module Cucumber
 
         def initialize(filepath, lines=WILDCARD)
           filepath || raise(ArgumentError, "file is mandatory")
-          lines || raise(ArgumentError, "line is mandatory")
           super(FilePath.new(filepath), Lines.new(lines))
         end
 
