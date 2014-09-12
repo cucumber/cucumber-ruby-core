@@ -14,13 +14,13 @@ module Cucumber
         def_delegator :filepath, :filename, :file
 
         def self.of_caller
-          new(*caller[1].split(':')[0..1])
+          file, raw_line = *caller[1].split(':')[0..1]
+          new(file, raw_line.to_i)
         end
 
-        def initialize(filepath, lines=WILDCARD)
+        def initialize(filepath, raw_lines=WILDCARD)
           filepath || raise(ArgumentError, "file is mandatory")
-          lines || raise(ArgumentError, "line is mandatory")
-          super(FilePath.new(filepath), Lines.new(lines))
+          super(FilePath.new(filepath), Lines.new(raw_lines))
         end
 
         def match?(other)
@@ -62,12 +62,12 @@ module Cucumber
           protected :data
           attr_reader :line
 
-          def initialize(line)
-            if Cucumber::JRUBY && line.is_a?(::Java::GherkinFormatterModel::Range)
-              line = Range.new(line.first, line.last)
+          def initialize(raw_data)
+            if Cucumber::JRUBY && raw_data.is_a?(::Java::GherkinFormatterModel::Range)
+              raw_data = Range.new(raw_data.first, raw_data.last)
             end
-            @line = line
-            super Array(line).to_set
+            super Array(raw_data).to_set
+            @line = data.first
           end
 
           def include?(other)
