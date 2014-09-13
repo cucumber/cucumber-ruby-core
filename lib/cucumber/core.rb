@@ -2,7 +2,6 @@ require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/compiler'
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/mapper'
-require 'cucumber/core/test/filters/debug_filter'
 
 module Cucumber
   module Core

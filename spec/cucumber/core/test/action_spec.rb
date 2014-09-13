@@ -1,34 +1,34 @@
-require 'cucumber/core/test/mapping'
+require 'cucumber/core/test/action'
 
 module Cucumber
   module Core
     module Test
 
-      describe Mapping do
+      describe Action do
         let(:last_result) { double('last_result') }
 
         context "constructed without a block" do
           it "raises an error" do
-            expect { Mapping.new }.to raise_error(ArgumentError)
+            expect { Action.new }.to raise_error(ArgumentError)
           end
         end
 
         context "executing" do
           it "executes the block passed to the constructor" do
             executed = false
-            mapping = Mapping.new { executed = true }
+            mapping = Action.new { executed = true }
             mapping.execute(last_result)
             expect( executed ).to be_truthy
           end
 
           it "returns a passed result if the block doesn't fail" do
-            mapping = Mapping.new {}
+            mapping = Action.new {}
             expect( mapping.execute(last_result) ).to be_passed
           end
 
           it "returns a failed result when the block raises an error" do
             exception = StandardError.new
-            mapping = Mapping.new { raise exception }
+            mapping = Action.new { raise exception }
             result = mapping.execute(last_result)
             expect( result ).to be_failed
             expect( result.exception ).to eq exception
@@ -36,14 +36,14 @@ module Cucumber
 
           it "yields the last_result to the block" do
             last_result_spy = nil
-            mapping = Mapping.new { |last_result| last_result_spy = last_result }
+            mapping = Action.new { |last_result| last_result_spy = last_result }
             mapping.execute(last_result)
             expect(last_result_spy).to eq last_result
           end
 
           it "returns a pending result if a Result::Pending error is raised" do
             exception = Result::Pending.new("TODO")
-            mapping = Mapping.new { raise exception }
+            mapping = Action.new { raise exception }
             result = mapping.execute(last_result)
             expect( result ).to be_pending
             expect( result.message ).to eq "TODO"
@@ -51,7 +51,7 @@ module Cucumber
 
           it "returns a skipped result if a Result::Skipped error is raised" do
             exception = Result::Skipped.new("Not working right now")
-            mapping = Mapping.new { raise exception }
+            mapping = Action.new { raise exception }
             result = mapping.execute(last_result)
             expect( result ).to be_skipped
             expect( result.message ).to eq "Not working right now"
@@ -59,7 +59,7 @@ module Cucumber
 
           it "returns an undefined result if a Result::Undefined error is raised" do
             exception = Result::Undefined.new("new step")
-            mapping = Mapping.new { raise exception }
+            mapping = Action.new { raise exception }
             result = mapping.execute(last_result)
             expect( result ).to be_undefined
             expect( result.message ).to eq "new step"
@@ -74,13 +74,13 @@ module Cucumber
             end
 
             it "records the nanoseconds duration of the execution on the result" do
-              mapping = Mapping.new { }
+              mapping = Action.new { }
               duration = mapping.execute(last_result).duration
               expect( duration ).to eq 1
             end
 
             it "records the duration of a failed execution" do
-              mapping = Mapping.new { raise StandardError }
+              mapping = Action.new { raise StandardError }
               duration = mapping.execute(last_result).duration
               expect( duration ).to eq 1
             end
@@ -91,20 +91,20 @@ module Cucumber
         context "skipping" do
           it "does not execute the block" do
             executed = false
-            mapping = Mapping.new { executed = true }
+            mapping = Action.new { executed = true }
             mapping.skip(last_result)
             expect( executed ).to be_falsey
           end
 
           it "returns a skipped result" do
-            mapping = Mapping.new {}
+            mapping = Action.new {}
             expect( mapping.skip(last_result) ).to be_skipped
           end
         end
       end
 
-      describe UndefinedMapping do
-        let(:mapping) { UndefinedMapping.new }
+      describe UndefinedAction do
+        let(:mapping) { UndefinedAction.new }
         let(:test_step) { double }
         let(:last_result) { double('last_result') }
 

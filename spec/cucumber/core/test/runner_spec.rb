@@ -198,7 +198,7 @@ module Cucumber::Core::Test
     context "passing latest result to a mapping" do
       it "passes a Failed result when the scenario is failing" do
         result_spy = nil
-        hook_mapping = UnskippableMapping.new do |last_result|
+        hook_mapping = UnskippableAction.new do |last_result|
           result_spy = last_result
         end
         after_hook = Step.new([double], hook_mapping)

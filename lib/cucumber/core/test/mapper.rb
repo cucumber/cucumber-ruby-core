@@ -110,15 +110,15 @@ module Cucumber
           include Cucumber.initializer(:source)
 
           def after(block)
-            build_hook_step(block, Hooks::AfterHook, Test::UnskippableMapping)
+            build_hook_step(block, Hooks::AfterHook, Test::UnskippableAction)
           end
 
           def before(block)
-            build_hook_step(block, Hooks::BeforeHook, Test::UnskippableMapping)
+            build_hook_step(block, Hooks::BeforeHook, Test::UnskippableAction)
           end
 
           def after_step(block)
-            build_hook_step(block, Hooks::AfterStepHook, Test::Mapping)
+            build_hook_step(block, Hooks::AfterStepHook, Test::Action)
           end
 
           private
