@@ -65,7 +65,7 @@ module Cucumber
 
             # Run this block of code after the scenario
             def after(&block)
-              mapper.after_hooks << hook_factory.after(block)
+              mapper.after_hooks.unshift(hook_factory.after(block))
               self
             end
 
