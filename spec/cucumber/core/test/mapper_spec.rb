@@ -97,15 +97,17 @@ module Cucumber
           it "adds hooks in the right order" do
             log = double
             allow(mappings).to receive(:test_case) do |test_case, mapper|
-              mapper.before { log.before }
-              mapper.after { log.after }
+              mapper.before { log.before_hook }
+              mapper.after { log.after_hook_1 }
+              mapper.after { log.after_hook_2 }
             end
             mapped_step = test_step.with_mapping { log.step }
             test_case = Case.new([mapped_step], source)
 
-            expect( log ).to receive(:before).ordered
+            expect( log ).to receive(:before_hook).ordered
             expect( log ).to receive(:step).ordered
-            expect( log ).to receive(:after).ordered
+            expect( log ).to receive(:after_hook_2).ordered
+            expect( log ).to receive(:after_hook_1).ordered
 
             allow(receiver).to receive(:test_case).and_yield(receiver)
             allow(receiver).to receive(:test_step) do |test_step|
@@ -128,7 +130,7 @@ module Cucumber
               expect( scenario ).to receive(:describe_to)
               expect( visitor ).to receive(:before_hook) do |hook, hook_args|
                 expect( args ).to eq(hook_args)
-                expect( hook.location.to_s ).to eq("#{__FILE__}:121")
+                expect( hook.location.to_s ).to eq("#{__FILE__}:123")
               end
               test_step.describe_source_to(visitor, args)
             end
@@ -148,7 +150,7 @@ module Cucumber
               expect( scenario ).to receive(:describe_to)
               expect( visitor ).to receive(:after_hook) do |hook, hook_args|
                 expect( args ).to eq(hook_args)
-                expect( hook.location.to_s ).to eq("#{__FILE__}:141")
+                expect( hook.location.to_s ).to eq("#{__FILE__}:143")
               end
               test_step.describe_source_to(visitor, args)
             end
@@ -168,7 +170,7 @@ module Cucumber
             expect( visitor ).to receive(:step).ordered
             expect( visitor ).to receive(:after_step_hook) do |hook, hook_args|
               expect( args ).to eq(hook_args)
-              expect( hook.location.to_s ).to eq("#{__FILE__}:160")
+              expect( hook.location.to_s ).to eq("#{__FILE__}:162")
             end.once.ordered
             expect( visitor ).to receive(:step).ordered
             test_case.describe_to mapper
@@ -180,4 +182,3 @@ module Cucumber
     end
   end
 end
-
