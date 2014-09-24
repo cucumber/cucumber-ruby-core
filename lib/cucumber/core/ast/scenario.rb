@@ -7,7 +7,7 @@ require 'cucumber/core/ast/location'
 module Cucumber
   module Core
     module Ast
-      class Scenario #:nodoc:
+      class Scenario
         include Names
         include HasLocation
         include DescribesItself

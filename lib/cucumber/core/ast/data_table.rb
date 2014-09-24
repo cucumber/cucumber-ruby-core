@@ -100,7 +100,7 @@ module Cucumber
           Hash === array[0] ? hashes_to_array(array) : array
         end
 
-        def hashes_to_array(hashes) #:nodoc:
+        def hashes_to_array(hashes)
           header = hashes[0].keys.sort
           [header] + hashes.map{|hash| header.map{|key| hash[key]}}
         end

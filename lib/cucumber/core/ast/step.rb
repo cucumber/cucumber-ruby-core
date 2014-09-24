@@ -4,7 +4,7 @@ require 'cucumber/core/ast/location'
 module Cucumber
   module Core
     module Ast
-      class Step #:nodoc:
+      class Step
         include HasLocation
         include DescribesItself
 
@@ -33,7 +33,7 @@ module Cucumber
         end
       end
 
-      class ExpandedOutlineStep < Step #:nodoc:
+      class ExpandedOutlineStep < Step
 
         def initialize(outline_step, gherkin_statement, language, location, keyword, name, multiline_arg)
           @outline_step, @gherkin_statement, @location, @keyword, @name, @multiline_arg = outline_step, gherkin_statement, location, keyword, name, multiline_arg

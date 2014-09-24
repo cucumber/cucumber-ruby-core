@@ -7,7 +7,7 @@ module Cucumber
   module Core
     module Ast
       # Represents the root node of a parsed feature.
-      class Feature #:nodoc:
+      class Feature
         include Names
         include HasLocation
         include DescribesItself
