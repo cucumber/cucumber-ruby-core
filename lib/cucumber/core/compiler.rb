@@ -4,6 +4,8 @@ require 'cucumber/core/test/step'
 
 module Cucumber
   module Core
+
+    # Compiles the AST into test cases
     class Compiler
       include Cucumber.initializer(:receiver)
 
@@ -18,6 +20,7 @@ module Cucumber
         self
       end
 
+      # @private
       class TestCaseBuilder
         include Cucumber.initializer(:receiver)
 
@@ -48,6 +51,7 @@ module Cucumber
         end
       end
 
+      # @private
       class FeatureCompiler
         include Cucumber.initializer(:receiver)
 
@@ -80,6 +84,7 @@ module Cucumber
         end
       end
 
+      # @private
       class ScenarioOutlineCompiler
         include Cucumber.initializer(:source, :receiver)
 
@@ -113,6 +118,7 @@ module Cucumber
         end
       end
 
+      # @private
       class ScenarioCompiler
         include Cucumber.initializer(:source, :receiver)
 
@@ -122,6 +128,7 @@ module Cucumber
         end
       end
 
+      # @private
       class BackgroundCompiler
         include Cucumber.initializer(:source, :receiver)
 
