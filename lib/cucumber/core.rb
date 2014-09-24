@@ -1,4 +1,5 @@
 require 'cucumber/core/gherkin/parser'
+require 'cucumber/core/gherkin/document'
 require 'cucumber/core/compiler'
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/mapper'
@@ -6,12 +7,10 @@ require 'cucumber/core/test/mapper'
 module Cucumber
   module Core
 
-    def parse(gherkin_documents, compiler)
-      parser = Core::Gherkin::Parser.new(compiler)
-      gherkin_documents.each do |document|
-        parser.document document
-      end
-      parser.done
+    def execute(gherkin_documents, mapping_definition, report, filters = [])
+      receiver = Test::Runner.new(report)
+      filters << [Test::Mapper, [mapping_definition]]
+      compile gherkin_documents, receiver, filters
       self
     end
 
@@ -24,10 +23,12 @@ module Cucumber
       self
     end
 
-    def execute(gherkin_documents, mapping_definition, report, filters = [])
-      receiver = Test::Runner.new(report)
-      filters << [Test::Mapper, [mapping_definition]]
-      compile gherkin_documents, receiver, filters
+    def parse(gherkin_documents, compiler)
+      parser = Core::Gherkin::Parser.new(compiler)
+      gherkin_documents.each do |document|
+        parser.document document
+      end
+      parser.done
       self
     end
 

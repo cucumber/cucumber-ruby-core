@@ -6,3 +6,5 @@
 /pkg
 *.swo
 .ruby-version
+/doc
+.yardoc
