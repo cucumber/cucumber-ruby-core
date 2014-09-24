@@ -8,26 +8,6 @@ module Cucumber
     include Core
     include Core::Gherkin::Writer
 
-    describe "parsing Gherkin" do
-      it "calls the compiler with a valid AST" do
-        compiler = double(done: nil)
-        expect( compiler ).to receive(:feature) do |feature|
-          expect( feature ).to respond_to(:describe_to)
-          expect( feature ).to be_an_instance_of(Core::Ast::Feature)
-        end
-
-        gherkin = gherkin do
-          feature do
-            scenario do
-              step
-            end
-          end
-        end
-
-        parse([gherkin], compiler)
-      end
-    end
-
     describe "compiling features to a test suite" do
 
       it "compiles two scenarios into two test cases" do

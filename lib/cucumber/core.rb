@@ -21,6 +21,8 @@ module Cucumber
       self
     end
 
+    private
+
     def parse(gherkin_documents, compiler)
       parser = Core::Gherkin::Parser.new(compiler)
       gherkin_documents.each do |document|
@@ -29,8 +31,6 @@ module Cucumber
       parser.done
       self
     end
-
-    private
 
     def compose(filters, last_receiver)
       filters.reverse.reduce(last_receiver) do |receiver, (filter_type, args)|
