@@ -15,9 +15,7 @@ module Cucumber
     end
 
     def compile(gherkin_documents, last_receiver, filters = [])
-      first_receiver = filters.reverse.reduce(last_receiver) do |receiver, (filter_type, args)|
-        filter_type.new(*args + [receiver])
-      end
+      first_receiver = compose(filters, last_receiver)
       compiler = Compiler.new(first_receiver)
       parse gherkin_documents, compiler
       self
@@ -30,6 +28,14 @@ module Cucumber
       end
       parser.done
       self
+    end
+
+    private
+
+    def compose(filters, last_receiver)
+      filters.reverse.reduce(last_receiver) do |receiver, (filter_type, args)|
+        filter_type.new(*args + [receiver])
+      end
     end
 
   end
