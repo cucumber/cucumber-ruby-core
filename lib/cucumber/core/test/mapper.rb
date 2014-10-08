@@ -33,7 +33,7 @@ module Cucumber
             hook_factory = HookFactory.new(test_step.source)
             mapper = StepMapper.new(test_step)
             test_step.describe_to mapping_definition, StepMapper::DSL.new(mapper, hook_factory)
-            test_steps.push(*[mapper.test_step] + mapper.after_step_hooks)
+            test_steps.push(*(mapper.before_step_hooks + [mapper.test_step] + mapper.after_step_hooks))
             self
           end
 
