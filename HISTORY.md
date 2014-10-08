@@ -6,7 +6,7 @@
 
 ### Bugfixes
 
-  * Run after hooks in reverse order (#[69](https://github.com/cucumber/cucumber-ruby-core/pull/69) @erran)
+  * Run after hooks in reverse order (#[69](https://github.com/cucumber/cucumber-ruby-core/pull/69) [@erran](https://github.com/erran))
 
 ## [v1.0.0.beta.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.2...v1.0.0.beta.3)
 
