@@ -83,6 +83,10 @@ module Cucumber
 
           attr_accessor :test_step
 
+          def before_step_hooks
+            @before_step_hooks ||= []
+          end
+
           def after_step_hooks
             @after_step_hooks ||= []
           end
@@ -90,6 +94,10 @@ module Cucumber
           # Passed to users in the mappings to define and add hooks to a step
           class DSL
             include Cucumber.initializer(:mapper, :hook_factory)
+
+            def before(&block)
+              mapper.before_step_hooks << hook_factory.before_step(block)
+            end
 
             # Define the step with a block of code to be executed
             def map(&block)
@@ -115,6 +123,10 @@ module Cucumber
 
           def before(block)
             build_hook_step(block, Hooks::BeforeHook, Test::UnskippableAction)
+          end
+
+          def before_step(block)
+            build_hook_step(block, Hooks::BeforeStepHook, Test::UnskippableAction)
           end
 
           def after_step(block)
