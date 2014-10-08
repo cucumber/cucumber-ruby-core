@@ -53,6 +53,23 @@ module Cucumber
           end
         end
 
+        class BeforeStepHook
+          include Cucumber.initializer(:location)
+          public :location
+
+          def name
+            "BeforeStep hook"
+          end
+
+          def match_locations?(queried_locations)
+            queried_locations.any? { |other_location| other_location.match?(location) }
+          end
+
+          def describe_to(visitor, *args)
+            visitor.before_step_hook(self, *args)
+          end
+        end
+
         class AfterStepHook
           include Cucumber.initializer(:location)
           public :location
