@@ -178,6 +178,25 @@ module Cucumber
             test_case.describe_to mapper
           end
 
+          it "prepends before_step hooks to the test step" do
+            allow(mappings).to receive(:test_step) do |test_step, mapper|
+              mapper.before {}
+            end
+            args = double('args')
+            visitor = double('visitor')
+            allow(receiver).to receive(:test_case).and_yield(receiver)
+            allow(receiver).to receive(:test_step) do |test_step|
+              test_step.describe_source_to(visitor, args)
+            end
+            expect( visitor ).to receive(:before_step_hook) do |hook, hook_args|
+              expect( args ).to eq(hook_args)
+              expect( hook.location.to_s ).to eq("#{__FILE__}:183")
+            end.once.ordered
+            expect( visitor ).to receive(:step).ordered
+            expect( visitor ).to receive(:step).ordered
+            test_case.describe_to mapper
+          end
+
         end
       end
 
