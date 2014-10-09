@@ -1,4 +1,5 @@
 require 'cucumber/core/test/action'
+require 'cucumber/core/test/duration_matcher'
 
 module Cucumber
   module Core
@@ -76,13 +77,13 @@ module Cucumber
             it "records the nanoseconds duration of the execution on the result" do
               mapping = Action.new { }
               duration = mapping.execute(last_result).duration
-              expect( duration ).to eq 1
+              expect( duration ).to be_duration 1
             end
 
             it "records the duration of a failed execution" do
               mapping = Action.new { raise StandardError }
               duration = mapping.execute(last_result).duration
-              expect( duration ).to eq 1
+              expect( duration ).to be_duration 1
             end
           end
 

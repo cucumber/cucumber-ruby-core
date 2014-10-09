@@ -34,7 +34,7 @@ module Cucumber
 
           def initialize(duration)
             raise ArgumentError unless duration
-            super
+            super(Duration.new(duration))
           end
 
           def describe_to(visitor, *args)
@@ -56,7 +56,7 @@ module Cucumber
           def initialize(duration, exception)
             raise ArgumentError unless duration 
             raise ArgumentError unless exception
-            super
+            super(Duration.new(duration), exception)
           end
 
           def describe_to(visitor, *args)
@@ -81,8 +81,8 @@ module Cucumber
         class Raisable < StandardError
           attr_reader :message, :duration
 
-          def initialize(message = "", duration = :unknown, backtrace = nil)
-            @message, @duration = message, duration
+          def initialize(message = "", duration = nil, backtrace = nil)
+            @message, @duration = message, duration ? Duration.new(duration) : UnknownDuration.new
             super(message)
             set_backtrace(backtrace) if backtrace
           end
@@ -101,7 +101,7 @@ module Cucumber
 
           def describe_to(visitor, *args)
             visitor.undefined(*args)
-            visitor.duration(duration, *args) unless duration == :unknown
+            visitor.duration(duration, *args)
             self
           end
 
@@ -116,7 +116,7 @@ module Cucumber
 
           def describe_to(visitor, *args)
             visitor.skipped(*args)
-            visitor.duration(duration, *args) unless duration == :unknown
+            visitor.duration(duration, *args)
             self
           end
 
@@ -131,7 +131,7 @@ module Cucumber
 
           def describe_to(visitor, *args)
             visitor.pending(self, *args)
-            visitor.duration(duration, *args) unless duration == :unknown
+            visitor.duration(duration, *args)
             self
           end
 
@@ -199,6 +199,28 @@ module Cucumber
 
           def total
             total_passed + total_failed + total_skipped + total_undefined
+          end
+        end
+
+        class Duration
+          attr_reader :duration
+
+          def initialize(duration)
+            @duration = duration
+          end
+
+          def exist?
+            true
+          end
+        end
+
+        class UnknownDuration
+          def exist?
+            false
+          end
+
+          def duration
+            0
           end
         end
       end
