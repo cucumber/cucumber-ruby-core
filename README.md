@@ -66,34 +66,41 @@ Here's an example of how you might use [`Cucumber::Core#execute`](http://rubydoc
 ```ruby
 require 'cucumber/core'
 
-include Cucumber::Core
+class MyRunner
+  include Cucumber::Core
 
-class Mappings
-  def test_case(test_case, mapper)
+  def run(features)
+    execute features, Mappings.new, Report.new
   end
 
-  def test_step(test_step, mapper)
-    mapper.map { fail } if test_step.name =~ /fail/
-    mapper.map { } if test_step.name =~ /pass/
-  end
-end
+  class Mappings
+    def test_case(test_case, mapper)
+    end
 
-class Report
-  def before_test_step(test_step)
-  end
-
-  def after_test_step(test_step, result)
-    puts "#{test_step.name} #{result}"
+    def test_step(test_step, mapper)
+      mapper.map { fail } if test_step.name =~ /fail/
+      mapper.map { } if test_step.name =~ /pass/
+    end
   end
 
-  def before_test_case(test_case)
+  class Report
+    def before_test_step(test_step)
+    end
+
+    def after_test_step(test_step, result)
+      puts "#{test_step.name} #{result}"
+    end
+
+    def before_test_case(test_case)
+    end
+
+    def after_test_case(test_case, result)
+    end
+
+    def done
+    end
   end
 
-  def after_test_case(test_case, result)
-  end
-
-  def done
-  end
 end
 
 feature = Cucumber::Core::Gherkin::Document.new(__FILE__, <<-GHERKIN)
@@ -104,7 +111,7 @@ Feature:
     And undefined
 GHERKIN
 
-execute [feature], Mappings.new, Report.new
+MyRunner.new.run([feature])
 ```
 
 If you run this little Ruby script, you should see the following output:

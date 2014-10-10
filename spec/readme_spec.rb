@@ -14,7 +14,7 @@ describe "README.md code snippet" do
 
   def execute_ruby(code)
     capture_stdout do
-      eval code, TOPLEVEL_BINDING
+      eval code, binding
     end
   end
 
