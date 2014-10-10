@@ -185,7 +185,7 @@ module Cucumber
 
           def get_total(method_name)
             status = method_name.to_s.gsub('total_', '').to_sym
-            return @totals.fetch(status)
+            return @totals.fetch(status) { 0 }
           end
 
           def increment_total(status)

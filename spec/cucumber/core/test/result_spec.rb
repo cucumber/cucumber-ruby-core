@@ -154,6 +154,11 @@ module Cucumber::Core::Test
         expect( summary.total           ).to eq 1
       end
 
+      it "returns zero for a status where no messges have been received" do
+        expect( summary.total_passed ).to eq 0
+        expect( summary.total_ponies ).to eq 0
+      end
+
       it "doesn't count unknown results" do
         unknown.describe_to summary
         expect( summary.total ).to eq 0
