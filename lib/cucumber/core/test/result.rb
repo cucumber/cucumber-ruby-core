@@ -151,40 +151,20 @@ module Cucumber
         #     => 1
         #
         class Summary
-          attr_reader :total_failed,
-            :total_passed,
-            :total_skipped,
-            :total_undefined,
-            :exceptions,
-            :durations
+          attr_reader :exceptions, :durations
 
           def initialize
-            @total_failed =
-              @total_passed =
-              @total_skipped =
-              @total_undefined = 0
+            @totals = Hash.new { 0 }
             @exceptions = []
             @durations = []
           end
 
-          def failed(*args)
-            @total_failed += 1
-            self
-          end
-
-          def passed(*args)
-            @total_passed += 1
-            self
-          end
-
-          def skipped(*args)
-            @total_skipped +=1
-            self
-          end
-
-          def undefined(*args)
-            @total_undefined += 1
-            self
+          def method_missing(name, *args)
+            if name =~ /^total_/
+              get_total(name)
+            else
+              increment_total(name)
+            end
           end
 
           def exception(exception)
@@ -198,10 +178,22 @@ module Cucumber
           end
 
           def total
-            total_passed + total_failed + total_skipped + total_undefined
+            @totals.reduce(0) { |total, status| total += status[1] }
           end
-        end
+
+          private
+
+          def get_total(method_name)
+            status = method_name.to_s.gsub('total_', '').to_sym
+            return @totals.fetch(status)
+          end
+
+          def increment_total(status)
+            @totals[status] += 1
+            self
+          end
       end
     end
   end
+end
 end

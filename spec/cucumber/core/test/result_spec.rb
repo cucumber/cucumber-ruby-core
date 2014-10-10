@@ -142,6 +142,18 @@ module Cucumber::Core::Test
         expect( summary.total           ).to eq 1
       end
 
+      it "counts abitrary raisable results" do
+        flickering = Class.new(Result::Raisable) do
+          def describe_to(visitor, *args)
+            visitor.flickering(*args)
+          end
+        end
+
+        flickering.new.describe_to summary
+        expect( summary.total_flickering ).to eq 1
+        expect( summary.total           ).to eq 1
+      end
+
       it "doesn't count unknown results" do
         unknown.describe_to summary
         expect( summary.total ).to eq 0
