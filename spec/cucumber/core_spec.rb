@@ -2,6 +2,7 @@ require 'report_api_spy'
 require 'cucumber/core'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
+require 'cucumber/core/report/summary'
 
 module Cucumber
   describe Core do
@@ -196,30 +197,6 @@ module Cucumber
     end
 
     describe "executing a test suite" do
-      class SummaryReport
-        attr_reader :test_cases, :test_steps
-
-        def initialize
-          @test_cases = Core::Test::Result::Summary.new
-          @test_steps = Core::Test::Result::Summary.new
-        end
-
-        def before_test_case(*)
-          yield if block_given?
-        end
-
-        def after_test_case(test_case, result)
-          result.describe_to test_cases
-        end
-
-        def after_test_step(test_step, result)
-          result.describe_to test_steps
-        end
-
-        def method_missing(*)
-        end
-      end
-
       context "without hooks" do
         class StepTestMappings
           Failure = Class.new(StandardError)
@@ -250,7 +227,7 @@ module Cucumber
               end
             end
           end
-          report = SummaryReport.new
+          report = Core::Report::Summary.new
           mappings = StepTestMappings.new
 
           execute [gherkin], mappings, report
@@ -343,7 +320,7 @@ module Cucumber
               end
             end
           end
-          report = SummaryReport.new
+          report = Core::Report::Summary.new
           mappings = HookTestMappings.new
 
           execute [gherkin], mappings, report
@@ -420,7 +397,7 @@ module Cucumber
               end
             end
           end
-          report = SummaryReport.new
+          report = Core::Report::Summary.new
           mappings = AroundHookTestMappings.new
 
           execute [gherkin], mappings, report
@@ -461,7 +438,7 @@ module Cucumber
             end
           end
         end
-        report = SummaryReport.new
+        report = Core::Report::Summary.new
         mappings = HookTestMappings.new
 
         execute [gherkin], mappings, report, [[Cucumber::Core::Test::TagFilter, ['@a']]]
@@ -480,7 +457,7 @@ module Cucumber
             end
           end
         end
-        report = SummaryReport.new
+        report = Core::Report::Summary.new
         mappings = HookTestMappings.new
 
         execute [gherkin], mappings, report, [[Cucumber::Core::Test::NameFilter, [[/scenario/]]]]
