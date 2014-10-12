@@ -7,13 +7,11 @@ module Cucumber::Core::Test
     match do |actual|
       actual.exist? and actual.duration == expected
     end
-  end  
-
-  RSpec::Matchers.alias_matcher :a_duration_of, :be_duration
+  end
 
   RSpec::Matchers.define :an_unknown_duration do
     match do |actual|
       not actual.exist? and expect(actual).to respond_to(:duration)
     end
-  end  
+  end
 end

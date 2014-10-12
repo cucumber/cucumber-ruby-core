@@ -34,7 +34,7 @@ module Cucumber
 
           def initialize(duration)
             raise ArgumentError unless duration
-            super(Duration.new(duration))
+            super
           end
 
           def describe_to(visitor, *args)
@@ -56,7 +56,7 @@ module Cucumber
           def initialize(duration, exception)
             raise ArgumentError unless duration 
             raise ArgumentError unless exception
-            super(Duration.new(duration), exception)
+            super
           end
 
           def describe_to(visitor, *args)
@@ -81,8 +81,8 @@ module Cucumber
         class Raisable < StandardError
           attr_reader :message, :duration
 
-          def initialize(message = "", duration = nil, backtrace = nil)
-            @message, @duration = message, duration ? Duration.new(duration) : UnknownDuration.new
+          def initialize(message = "", duration = UnknownDuration.new, backtrace = nil)
+            @message, @duration = message, duration
             super(message)
             set_backtrace(backtrace) if backtrace
           end

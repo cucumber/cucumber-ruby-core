@@ -10,11 +10,11 @@ module Cucumber::Core::Test
 
     describe Result::Passed do
       subject(:result) { Result::Passed.new(duration) }
-      let(:duration)   { 1 * 1000 * 1000 }
+      let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
 
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:passed).with(args)
-        expect( visitor ).to receive(:duration).with(a_duration_of(duration), args)
+        expect( visitor ).to receive(:duration).with(duration, args)
         result.describe_to(visitor, args)
       end
 
@@ -23,7 +23,7 @@ module Cucumber::Core::Test
       end
 
       it "has a duration" do
-        expect( result.duration ).to be_duration duration
+        expect( result.duration ).to eq duration
       end
 
       it "requires the constructor argument" do
@@ -39,18 +39,18 @@ module Cucumber::Core::Test
 
     describe Result::Failed do
       subject(:result) { Result::Failed.new(duration, exception) }
-      let(:duration)   { 1 * 1000 * 1000 }
+      let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
       let(:exception)  { StandardError.new("error message") }
 
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:failed).with(args)
-        expect( visitor ).to receive(:duration).with(a_duration_of(duration), args)
+        expect( visitor ).to receive(:duration).with(duration, args)
         expect( visitor ).to receive(:exception).with(exception, args)
         result.describe_to(visitor, args)
       end
 
       it "has a duration" do
-        expect( result.duration ).to be_duration duration
+        expect( result.duration ).to eq duration
       end
 
       it "requires both constructor arguments" do
@@ -114,8 +114,8 @@ module Cucumber::Core::Test
 
     describe Result::Summary do
       let(:summary)   { Result::Summary.new }
-      let(:failed)    { Result::Failed.new(10, exception) }
-      let(:passed)    { Result::Passed.new(11) }
+      let(:failed)    { Result::Failed.new(Result::Duration.new(10), exception) }
+      let(:passed)    { Result::Passed.new(Result::Duration.new(11)) }
       let(:skipped)   { Result::Skipped.new }
       let(:unknown)   { Result::Unknown.new }
       let(:undefined) { Result::Undefined.new }

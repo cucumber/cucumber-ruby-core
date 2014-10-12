@@ -1,3 +1,5 @@
+require 'cucumber/core/test/result'
+
 module Cucumber
   module Core
     module Test
@@ -8,7 +10,7 @@ module Cucumber
         end
 
         def duration
-          nsec
+          Result::Duration.new(nsec)
         end
 
         def nsec
