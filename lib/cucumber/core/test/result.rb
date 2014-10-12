@@ -81,7 +81,7 @@ module Cucumber
         class Raisable < StandardError
           attr_reader :message, :duration
 
-          def initialize(message = "", duration = :unknown, backtrace = nil)
+          def initialize(message = "", duration = UnknownDuration.new, backtrace = nil)
             @message, @duration = message, duration
             super(message)
             set_backtrace(backtrace) if backtrace
@@ -101,7 +101,7 @@ module Cucumber
 
           def describe_to(visitor, *args)
             visitor.undefined(*args)
-            visitor.duration(duration, *args) unless duration == :unknown
+            visitor.duration(duration, *args)
             self
           end
 
@@ -116,7 +116,7 @@ module Cucumber
 
           def describe_to(visitor, *args)
             visitor.skipped(*args)
-            visitor.duration(duration, *args) unless duration == :unknown
+            visitor.duration(duration, *args)
             self
           end
 
@@ -131,7 +131,7 @@ module Cucumber
 
           def describe_to(visitor, *args)
             visitor.pending(self, *args)
-            visitor.duration(duration, *args) unless duration == :unknown
+            visitor.duration(duration, *args)
             self
           end
 
@@ -191,6 +191,28 @@ module Cucumber
           def increment_total(status)
             @totals[status] += 1
             self
+          end
+        end
+
+        class Duration
+          attr_reader :duration
+
+          def initialize(duration)
+            @duration = duration
+          end
+
+          def exist?
+            true
+          end
+        end
+
+        class UnknownDuration
+          def exist?
+            false
+          end
+
+          def duration
+            0
           end
         end
       end

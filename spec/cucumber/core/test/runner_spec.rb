@@ -1,6 +1,7 @@
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
+require 'cucumber/core/test/duration_matcher'
 
 module Cucumber::Core::Test
   describe Runner do
@@ -33,7 +34,7 @@ module Cucumber::Core::Test
 
         it "records the nanoseconds duration of the execution on the result" do
           expect( report ).to receive(:after_test_case) do |reported_test_case, result|
-            expect( result.duration ).to eq 1
+            expect( result.duration ).to be_duration 1
           end
           test_case.describe_to runner
         end
@@ -44,7 +45,7 @@ module Cucumber::Core::Test
 
         it "records the duration" do
           expect( report ).to receive(:after_test_case) do |reported_test_case, result|
-            expect( result.duration ).to eq 1
+            expect( result.duration ).to be_duration 1
           end
           test_case.describe_to runner
         end

@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 require 'cucumber/core/test/result'
+require 'cucumber/core/test/duration_matcher'
 
 module Cucumber::Core::Test
   describe Result do
@@ -9,7 +10,7 @@ module Cucumber::Core::Test
 
     describe Result::Passed do
       subject(:result) { Result::Passed.new(duration) }
-      let(:duration)   { 1 * 1000 * 1000 }
+      let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
 
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:passed).with(args)
@@ -38,7 +39,7 @@ module Cucumber::Core::Test
 
     describe Result::Failed do
       subject(:result) { Result::Failed.new(duration, exception) }
-      let(:duration)   { 1 * 1000 * 1000 }
+      let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
       let(:exception)  { StandardError.new("error message") }
 
       it "describes itself to a visitor" do
@@ -84,6 +85,7 @@ module Cucumber::Core::Test
 
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:undefined).with(args)
+        expect( visitor ).to receive(:duration).with(an_unknown_duration, args)
         result.describe_to(visitor, args)
       end
 
@@ -99,6 +101,7 @@ module Cucumber::Core::Test
 
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:skipped).with(args)
+        expect( visitor ).to receive(:duration).with(an_unknown_duration, args)
         result.describe_to(visitor, args)
       end
 
@@ -111,8 +114,8 @@ module Cucumber::Core::Test
 
     describe Result::Summary do
       let(:summary)   { Result::Summary.new }
-      let(:failed)    { Result::Failed.new(10, exception) }
-      let(:passed)    { Result::Passed.new(11) }
+      let(:failed)    { Result::Failed.new(Result::Duration.new(10), exception) }
+      let(:passed)    { Result::Passed.new(Result::Duration.new(11)) }
       let(:skipped)   { Result::Skipped.new }
       let(:unknown)   { Result::Unknown.new }
       let(:undefined) { Result::Undefined.new }
@@ -175,12 +178,37 @@ module Cucumber::Core::Test
 
       it "records durations" do
         [passed, failed].each { |r| r.describe_to summary }
-        expect( summary.durations ).to eq [11, 10]
+        expect( summary.durations[0] ).to be_duration 11
+        expect( summary.durations[1] ).to be_duration 10
       end
 
       it "records exceptions" do
         [passed, failed].each { |r| r.describe_to summary }
         expect( summary.exceptions ).to eq [exception]
+      end
+    end
+
+    describe Result::Duration do
+      subject(:duration) { Result::Duration.new(10) }
+
+      it "exist? returns true" do
+        expect( duration.exist? ).to be_truthy
+      end
+
+      it "has a duration" do
+        expect( duration.duration ).to eq 10
+      end
+    end
+
+    describe Result::UnknownDuration do
+      subject(:duration) { Result::UnknownDuration.new }
+
+      it "exist? returns false" do
+        expect( duration.exist? ).to be_falsy
+      end
+
+      it "return duration 0" do
+        expect( duration.duration ).to eq 0
       end
     end
   end

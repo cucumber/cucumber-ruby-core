@@ -2,6 +2,7 @@
 
 ### New Features
 
+ * Introduce a Duration ojbect (#[71](https://github.com/cucumber/cucumber-ruby-core/pull/71) [@brasmusson](https://github.com/brasmusson))
  * BeforeStep hooks (#[70](https://github.com/cucumber/cucumber-ruby-core/pull/70) [@almostwhitehat](https://github.com/almostwhitehat))
 
 ### Bugfixes
