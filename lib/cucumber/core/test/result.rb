@@ -192,8 +192,8 @@ module Cucumber
             @totals[status] += 1
             self
           end
+        end
       end
     end
   end
-end
 end
