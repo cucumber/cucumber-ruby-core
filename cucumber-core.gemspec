@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake',      '>= 0.9.2'
   s.add_development_dependency 'rspec',     '~> 3'
   s.add_development_dependency 'unindent',  '>= 1.0'
-  s.add_development_dependency 'redcarpet', '~> 3'
+  s.add_development_dependency 'kramdown',  '~> 1.4.2'
 
   # For coverage reports
   s.add_development_dependency 'coveralls', '~> 0.7'

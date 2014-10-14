@@ -1,5 +1,5 @@
 require 'stringio'
-require 'redcarpet'
+require 'kramdown'
 
 describe "README.md code snippet" do
   let(:code_blocks) do
@@ -19,9 +19,9 @@ describe "README.md code snippet" do
   end
 
   def parse_ruby_from(markdown)
-    readme = Readme.parse(markdown)
-    expect(readme.code_blocks).not_to be_empty
-    readme.code_blocks
+    code_blocks = Kramdown::Parser::GFM.parse(markdown).first.children.select { |e| e.type == :codeblock }.map(&:value)
+    expect(code_blocks).not_to be_empty
+    code_blocks
   end
 
   def capture_stdout
@@ -31,23 +31,6 @@ describe "README.md code snippet" do
     result = $stdout.string
     $stdout = original
     result
-  end
-
-  class Readme < Redcarpet::Render::Base
-    def self.parse(markdown)
-      result = new
-      Redcarpet::Markdown.new(result, fenced_code_blocks: true).render(markdown)
-      result
-    end
-
-    def block_code(code, language)
-      code_blocks << code
-      nil
-    end
-
-    def code_blocks
-      @code_blocks ||= []
-    end
   end
 
 end
