@@ -200,15 +200,11 @@ module Cucumber
           def initialize(duration)
             @duration = duration
           end
-
-          def exist?
-            true
-          end
         end
 
         class UnknownDuration
-          def exist?
-            false
+          def nil?
+            true
           end
 
           def duration

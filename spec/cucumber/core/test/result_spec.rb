@@ -191,8 +191,8 @@ module Cucumber::Core::Test
     describe Result::Duration do
       subject(:duration) { Result::Duration.new(10) }
 
-      it "exist? returns true" do
-        expect( duration.exist? ).to be_truthy
+      it "nil? returns false" do
+        expect( duration.nil? ).to be_falsy
       end
 
       it "has a duration" do
@@ -203,8 +203,8 @@ module Cucumber::Core::Test
     describe Result::UnknownDuration do
       subject(:duration) { Result::UnknownDuration.new }
 
-      it "exist? returns false" do
-        expect( duration.exist? ).to be_falsy
+      it "nil? returns true" do
+        expect( duration.nil? ).to be_truthy
       end
 
       it "return duration 0" do
