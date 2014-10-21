@@ -464,6 +464,33 @@ module Cucumber
 
         expect( report.test_cases.total ).to eq 1
       end
+
+      it "filters test cases by filename" do
+        documents = []
+        documents << gherkin("some.feature") do
+          feature 'some feature' do
+            scenario 'some scenario' do
+              step 'missing'
+            end
+          end
+        end
+        documents << gherkin("other.feature") do
+          feature 'other feature' do
+            scenario 'other scenario' do
+              step 'missing'
+            end
+          end
+        end
+
+        report = Core::Report::Summary.new
+        mappings = HookTestMappings.new
+        some_feature = Cucumber::Core::Ast::Location.new("some.feature")
+        filters = [[ Cucumber::Core::Test::LocationsFilter, [[some_feature]] ]]
+
+        execute documents, mappings, report, filters
+
+        expect( report.test_cases.total ).to eq 1
+      end
     end
   end
 end
