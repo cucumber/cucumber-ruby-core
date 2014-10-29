@@ -191,24 +191,21 @@ module Cucumber::Core::Test
     describe Result::Duration do
       subject(:duration) { Result::Duration.new(10) }
 
-      it "nil? returns false" do
-        expect( duration.nil? ).to be_falsy
-      end
-
-      it "has a duration" do
-        expect( duration.duration ).to eq 10
+      it "#nanoseconds can be accessed in #tap" do
+        expect( duration.tap { |duration| @duration = duration.nanoseconds } ).to eq duration
+        expect( @duration ).to eq 10
       end
     end
 
     describe Result::UnknownDuration do
       subject(:duration) { Result::UnknownDuration.new }
 
-      it "nil? returns true" do
-        expect( duration.nil? ).to be_truthy
+      it "#tap does not execute the passed block" do
+        expect( duration.tap { raise "tap executed block" } ).to eq duration
       end
 
-      it "return duration 0" do
-        expect( duration.duration ).to eq 0
+      it "accessing #nanoseconds outside #tap block raises exception" do
+        expect { duration.nanoseconds }.to raise_error(RuntimeError)
       end
     end
   end

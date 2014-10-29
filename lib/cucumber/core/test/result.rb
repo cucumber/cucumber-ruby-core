@@ -195,20 +195,20 @@ module Cucumber
         end
 
         class Duration
-          attr_reader :duration
+          attr_reader :nanoseconds
 
-          def initialize(duration)
-            @duration = duration
+          def initialize(nanoseconds)
+            @nanoseconds = nanoseconds
           end
         end
 
         class UnknownDuration
-          def nil?
-            true
+          def tap(&block)
+            self
           end
 
-          def duration
-            0
+          def nanoseconds
+            raise "#nanoseconds only allowed to be used in #tap block"
           end
         end
       end

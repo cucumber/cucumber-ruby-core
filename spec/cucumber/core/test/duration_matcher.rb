@@ -5,13 +5,15 @@ require 'rspec/expectations'
 module Cucumber::Core::Test
   RSpec::Matchers.define :be_duration do |expected|
     match do |actual|
-      not actual.nil? and actual.duration == expected
+      actual.tap { |duration| @nanoseconds = duration.nanoseconds }
+      @nanoseconds == expected
     end
   end
 
   RSpec::Matchers.define :an_unknown_duration do
     match do |actual|
-      actual.nil? and expect(actual).to respond_to(:duration)
+      actual.tap { raise "#tap block was executed, not an UnknownDuration" } 
+      expect(actual).to respond_to(:nanoseconds)
     end
   end
 end
