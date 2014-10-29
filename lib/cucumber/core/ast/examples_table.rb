@@ -40,8 +40,8 @@ module Cucumber
             @cells
           end
 
-          def build_row(row_cells, number, location)
-            Row.new(Hash[@cells.zip(row_cells)], number, location)
+          def build_row(row_cells, number, location, language)
+            Row.new(Hash[@cells.zip(row_cells)], number, location, language)
           end
         end
 
@@ -49,13 +49,14 @@ module Cucumber
           include DescribesItself
           include HasLocation
 
-          attr_reader :number
+          attr_reader :number, :language
 
-          def initialize(data, number, location)
+          def initialize(data, number, location, language)
             raise ArgumentError, data.to_s unless data.is_a?(Hash)
             @data = data
             @number = number
             @location = location
+            @language = language
           end
 
           def ==(other)

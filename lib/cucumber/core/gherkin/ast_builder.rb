@@ -220,7 +220,7 @@ module Cucumber
 
         class ScenarioOutlineBuilder < Builder
           def result(background, language, feature_tags)
-            raise ParseError.new("Missing Examples section for Scenario Outline at #{location}") if examples_tables.empty?
+            raise ParseError.new("Missing Examples section for Scenario Outline at #{location}") if examples_builders.empty?
             Ast::ScenarioOutline.new(
               node,
               language,
@@ -233,12 +233,12 @@ module Cucumber
               node.name,
               node.description,
               steps(language),
-              examples_tables
+              examples_tables(language)
             )
           end
 
           def add_examples(file, node)
-            examples_tables << ExamplesTableBuilder.new(file, node).result
+            examples_builders << ExamplesTableBuilder.new(file, node)
           end
 
           def add_step(file, node)
@@ -255,13 +255,17 @@ module Cucumber
             @step_builders ||= []
           end
 
-          def examples_tables
-            @examples_tables ||= []
+          def examples_tables(language)
+            examples_builders.map { |examples_builder| examples_builder.result(language) }
+          end
+
+          def examples_builders
+            @examples_builders ||= []
           end
 
           class ExamplesTableBuilder < Builder
 
-            def result
+            def result(language)
               Ast::ExamplesTable.new(
                 node,
                 location,
@@ -271,7 +275,7 @@ module Cucumber
                 node.name,
                 node.description,
                 header,
-                example_rows
+                example_rows(language)
               )
             end
 
@@ -282,10 +286,10 @@ module Cucumber
               Ast::ExamplesTable::Header.new(row.cells, location)
             end
 
-            def example_rows
+            def example_rows(language)
               _, *raw_examples = *node.rows
               raw_examples.each_with_index.map do |row, index|
-                header.build_row(row.cells, index + 1, location.on_line(row.line))
+                header.build_row(row.cells, index + 1, location.on_line(row.line), language)
               end
             end
 

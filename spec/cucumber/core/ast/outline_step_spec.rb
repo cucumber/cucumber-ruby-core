@@ -32,7 +32,7 @@ module Cucumber
             let(:name) { 'a <color> cucumber' }
 
             it "replaces the argument" do
-              row = ExamplesTable::Row.new({'color' => 'green'}, 1, location)
+              row = ExamplesTable::Row.new({'color' => 'green'}, 1, location, language)
               expect( outline_step.to_step(row).name ).to eq 'a green cucumber'
             end
 
@@ -49,7 +49,7 @@ module Cucumber
               expect( visitor ).to receive(:data_table) do |data_table|
                 expect( data_table.raw ).to eq [['x', 'y'], ['a', 'a replacement']]
               end
-              row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1, location)
+              row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1, location, language)
               step = outline_step.to_step(row)
               step.describe_to(visitor)
             end
@@ -67,7 +67,7 @@ module Cucumber
               expect( visitor ).to receive(:doc_string) do |doc_string|
                 expect( doc_string.content ).to eq "a replacement that needs replacing"
               end
-              row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1, location)
+              row = ExamplesTable::Row.new({'arg' => 'replacement'}, 1, location, language)
               step = outline_step.to_step(row)
               step.describe_to(visitor)
             end
