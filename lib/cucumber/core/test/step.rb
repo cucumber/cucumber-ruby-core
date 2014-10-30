@@ -10,7 +10,6 @@ module Cucumber
         attr_reader :source
 
         def initialize(source, mapping = Test::UndefinedAction.new)
-          raise ArgumentError if source.any?(&:nil?)
           @mapping = mapping
           super(source)
         end
@@ -20,9 +19,7 @@ module Cucumber
         end
 
         def describe_source_to(visitor, *args)
-          source.reverse.each do |node|
-            node.describe_to(visitor, *args)
-          end
+          source.describe_to(visitor, *args)
           self
         end
 
@@ -39,11 +36,11 @@ module Cucumber
         end
 
         def name
-          source.last.name
+          source.step.name
         end
 
         def location
-          source.last.location
+          source.step.location
         end
 
         def match_locations?(queried_locations)

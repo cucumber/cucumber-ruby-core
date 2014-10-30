@@ -169,13 +169,13 @@ module Cucumber::Core
 
         it "sets the source correctly on the test steps" do
           expect( receiver ).to receive(:on_background_step).with(
-            [feature, background, background_step]
+            Source::BackgroundStep.new(feature, background, background_step)
           )
           expect( receiver ).to receive(:on_step).with(
-            [feature, scenario, scenario_step]
+            Source::ScenarioStep.new(feature, scenario, scenario_step)
           )
           expect( receiver ).to receive(:on_test_case).with(
-            [feature, scenario]
+            Source::Scenario.new(feature, scenario)
           )
           compiler.feature(feature) do |f|
             f.background(background) do |b|
