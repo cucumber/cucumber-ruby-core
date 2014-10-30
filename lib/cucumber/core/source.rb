@@ -2,29 +2,51 @@ module Cucumber
   module Core
     module Source
 
-      module DescribesNodes
-        def describe_to(visitor, *args)
-          nodes.reverse.each do |node|
-            node.describe_to(visitor, *args)
+      def self.new(*node_names, &block)
+        Class.new {
+          attr_reader :nodes
+
+          def initialize(*nodes)
+            @nodes = nodes
           end
-        end
+
+          def location
+            nodes.last.location
+          end
+
+          node_names.each_with_index do |name, index|
+            define_method(name) do
+              nodes[index]
+            end
+          end
+
+          def describe_to(visitor, *args)
+            nodes.reverse.each do |node|
+              node.describe_to(visitor, *args)
+            end
+          end
+
+          def ==(other)
+            @nodes == other.nodes
+          end
+
+          def any?(&block)
+            @nodes.any?(&block)
+          end
+
+          class_exec(&block) if block
+        }
       end
 
-      Background = Struct.new(:feature, :background) do
+      Background = Source.new(:feature, :background) do
         def with_step(step)
           BackgroundStep.new(feature, background, step)
         end
       end
 
-      BackgroundStep = Struct.new(:feature, :background, :step)
+      BackgroundStep = Source.new(:feature, :background, :step)
 
-      Scenario = Struct.new(:feature, :scenario) do
-        include DescribesNodes
-
-        def location
-          scenario.location
-        end
-
+      Scenario = Source.new(:feature, :scenario) do
         def with_step(step)
           ScenarioStep.new(feature, scenario, step)
         end
@@ -32,42 +54,19 @@ module Cucumber
         def with_hook(hook)
           ScenarioHook.new(feature, scenario, hook)
         end
-
-        def nodes
-          [feature, scenario]
-        end
-
       end
 
-      ScenarioStep = Struct.new(:feature, :scenario, :step) do
-        include DescribesNodes
-
+      ScenarioStep = Source.new(:feature, :scenario, :step) do
         def with_hook(hook)
           ScenarioStepHook.new(feature, scenario, step, hook)
         end
-
-        def nodes
-          [feature, scenario, step]
-        end
       end
 
-      ScenarioHook = Struct.new(:feature, :scenario, :hook) do
-        include DescribesNodes
+      ScenarioHook = Source.new(:feature, :scenario, :hook)
 
-        def nodes
-          [feature, scenario, hook]
-        end
-      end
+      ScenarioStepHook = Source.new(:feature, :scenario, :step, :hook)
 
-      ScenarioStepHook = Struct.new(:feature, :scenario, :step, :hook) do
-        include DescribesNodes
-
-        def nodes
-          [feature, scenario, step, hook]
-        end
-      end
-
-      ScenarioOutline = Struct.new(:feature, :scenario_outline) do
+      ScenarioOutline = Source.new(:feature, :scenario_outline) do
         def with_step(examples_table, row, step)
           ScenarioOutlineStep.new(feature, scenario_outline, examples_table, row, step)
         end
@@ -77,25 +76,9 @@ module Cucumber
         end
       end
 
-      ScenarioOutlineStep = Struct.new(:feature, :scenario_outline, :examples_table, :row, :step) do
-        include DescribesNodes
+      ScenarioOutlineStep = Source.new(:feature, :scenario_outline, :examples_table, :row, :step)
 
-        def nodes
-          [feature, scenario_outline, examples_table, row, step]
-        end
-      end
-
-      ScenarioOutlineExamplesTableRow = Struct.new(:feature, :scenario_outline, :examples_table, :row) do
-        include DescribesNodes
-
-        def location
-          row.location
-        end
-
-        def nodes
-          [feature, scenario_outline, examples_table, row]
-        end
+      ScenarioOutlineExamplesTableRow = Source.new(:feature, :scenario_outline, :examples_table, :row)
       end
     end
   end
-end

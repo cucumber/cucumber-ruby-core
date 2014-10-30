@@ -74,16 +74,16 @@ module Cucumber
           "<#{self.class}: #{location}>"
         end
 
+        def feature
+          source.feature
+        end
+
         private
 
         def compose_around_hooks(visitor, *args, &block)
           around_hooks.reverse.reduce(block) do |continue, hook|
             -> { hook.describe_to(visitor, *args, &continue) }
           end.call
-        end
-
-        def feature
-          source.first
         end
 
         class NameBuilder

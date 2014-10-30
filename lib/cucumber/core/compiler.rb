@@ -124,7 +124,7 @@ module Cucumber
         include Cucumber.initializer(:source, :receiver)
 
         def step(step)
-          receiver.on_step(source.with_step(step))
+          receiver.on_step source.with_step(step)
           self
         end
       end
