@@ -79,6 +79,6 @@ module Cucumber
       ScenarioOutlineStep = Source.new(:feature, :scenario_outline, :examples_table, :row, :step)
 
       ScenarioOutlineExamplesTableRow = Source.new(:feature, :scenario_outline, :examples_table, :row)
-      end
     end
   end
+end
