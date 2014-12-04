@@ -12,10 +12,11 @@ module Cucumber
 
         def initialize(path)
           @path = path
+          @feature_builder = nil
         end
 
         def result
-          return nil unless @feature_builder
+          return Ast::NullFeature.new unless @feature_builder
           @feature_builder.result(language)
         end
 

@@ -51,6 +51,12 @@ module Cucumber
         end
 
       end
+
+      class NullFeature
+        def method_missing(*args, &block)
+          self
+        end
+      end
     end
   end
 end

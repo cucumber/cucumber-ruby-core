@@ -27,6 +27,24 @@ module Cucumber
           end
         end
 
+        RSpec::Matchers.define :a_null_feature do
+          match do |actual|
+            allow( visitor ).to receive(:feature).and_throw
+
+            actual.describe_to( visitor )
+          end
+        end
+
+        context "for empty files" do
+          let(:source) { Gherkin::Document.new(path, '') }
+          let(:path)   { 'path_to/the.feature' }
+
+          it "creates a NullFeature" do
+            expect( receiver ).to receive(:feature).with(a_null_feature)
+            parse
+          end
+        end
+
         include Writer
         def self.source(&block)
           let(:source) { gherkin(&block) }
