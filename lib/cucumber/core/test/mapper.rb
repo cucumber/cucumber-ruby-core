@@ -138,7 +138,7 @@ module Cucumber
           def build_hook_step(block, hook_type, mapping_type)
             mapping = mapping_type.new(&block)
             hook = hook_type.new(mapping.location)
-            Step.new(source + [hook], mapping)
+            Step.new(source.with_hook(hook), mapping)
           end
 
         end

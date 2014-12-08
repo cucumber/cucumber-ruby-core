@@ -6,7 +6,7 @@ module Cucumber
     module Test
       class Case
         include Cucumber.initializer(:test_steps, :source, :around_hooks)
-        attr_reader :source
+        attr_reader :source, :test_steps
 
         def initialize(test_steps, source, around_hooks = [])
           super(test_steps, source, around_hooks)
@@ -28,9 +28,7 @@ module Cucumber
         end
 
         def describe_source_to(visitor, *args)
-          source.reverse.each do |node|
-            node.describe_to(visitor, *args)
-          end
+          source.describe_to(visitor, *args)
           self
         end
 
@@ -64,7 +62,7 @@ module Cucumber
         end
 
         def location
-          source.last.location
+          source.location
         end
 
         def match_locations?(queried_locations)
@@ -76,16 +74,16 @@ module Cucumber
           "<#{self.class}: #{location}>"
         end
 
+        def feature
+          source.feature
+        end
+
         private
 
         def compose_around_hooks(visitor, *args, &block)
           around_hooks.reverse.reduce(block) do |continue, hook|
             -> { hook.describe_to(visitor, *args, &continue) }
           end.call
-        end
-
-        def feature
-          source.first
         end
 
         class NameBuilder

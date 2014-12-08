@@ -3,6 +3,7 @@ require 'cucumber/core'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
 require 'cucumber/core/test/case'
+require 'cucumber/core/source'
 require 'unindent'
 
 module Cucumber
@@ -12,7 +13,7 @@ module Cucumber
         include Core
         include Core::Gherkin::Writer
 
-        let(:test_case) { Test::Case.new(test_steps, [feature, scenario]) }
+        let(:test_case) { Test::Case.new(test_steps, Source::Scenario.new(feature, scenario)) }
         let(:feature) { double }
         let(:scenario) { double }
         let(:test_steps) { [double, double] }

@@ -1,6 +1,7 @@
 require 'cucumber/initializer'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
+require 'cucumber/core/source'
 
 module Cucumber
   module Core
@@ -62,14 +63,14 @@ module Cucumber
         end
 
         def background(background, &descend)
-          source = [@feature, background]
+          source = Source::Background.new(@feature, background)
           compiler = BackgroundCompiler.new(source, receiver)
           descend.call(compiler)
           self
         end
 
         def scenario(scenario, &descend)
-          source = [@feature, scenario]
+          source = Source::Scenario.new(@feature, scenario)
           scenario_compiler = ScenarioCompiler.new(source, receiver)
           descend.call(scenario_compiler)
           receiver.on_test_case(source)
@@ -77,7 +78,7 @@ module Cucumber
         end
 
         def scenario_outline(scenario_outline, &descend)
-          source = [@feature, scenario_outline]
+          source = Source::ScenarioOutline.new(@feature, scenario_outline)
           compiler = ScenarioOutlineCompiler.new(source, receiver)
           descend.call(compiler)
           self
@@ -101,9 +102,9 @@ module Cucumber
 
         def examples_table_row(row)
           steps(row).each do |step|
-            receiver.on_step(source + [@examples_table, row, step])
+            receiver.on_step source.with_step(@examples_table, row, step)
           end
-          receiver.on_test_case(source + [@examples_table, row])
+          receiver.on_test_case source.with_row(@examples_table, row)
           self
         end
 
@@ -123,7 +124,7 @@ module Cucumber
         include Cucumber.initializer(:source, :receiver)
 
         def step(step)
-          receiver.on_step(source + [step])
+          receiver.on_step source.with_step(step)
           self
         end
       end
@@ -133,7 +134,7 @@ module Cucumber
         include Cucumber.initializer(:source, :receiver)
 
         def step(step)
-          receiver.on_background_step(source + [step])
+          receiver.on_background_step(source.with_step(step))
           self
         end
       end

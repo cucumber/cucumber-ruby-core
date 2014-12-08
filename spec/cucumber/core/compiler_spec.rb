@@ -169,13 +169,13 @@ module Cucumber::Core
 
         it "sets the source correctly on the test steps" do
           expect( receiver ).to receive(:on_background_step).with(
-            [feature, background, background_step]
+            Source::BackgroundStep.new(feature, background, background_step)
           )
           expect( receiver ).to receive(:on_step).with(
-            [feature, scenario, scenario_step]
+            Source::ScenarioStep.new(feature, scenario, scenario_step)
           )
           expect( receiver ).to receive(:on_test_case).with(
-            [feature, scenario]
+            Source::Scenario.new(feature, scenario)
           )
           compiler.feature(feature) do |f|
             f.background(background) do |b|
@@ -204,16 +204,16 @@ module Cucumber::Core
         it "sets the source correctly on the test steps" do
           allow( outline_step ).to receive(:to_step) { outline_ast_step }
           expect( receiver ).to receive(:on_step).with(
-            [feature, scenario_outline, examples_table_1, examples_table_1_row_1, outline_ast_step]
+            Source::ScenarioOutlineStep.new(feature, scenario_outline, examples_table_1, examples_table_1_row_1, outline_ast_step)
           ).ordered
           expect( receiver ).to receive(:on_test_case).with(
-            [feature, scenario_outline, examples_table_1, examples_table_1_row_1]
+            Source::ScenarioOutlineExamplesTableRow.new(feature, scenario_outline, examples_table_1, examples_table_1_row_1)
           ).ordered
           expect( receiver ).to receive(:on_step).with(
-            [feature, scenario_outline, examples_table_2, examples_table_2_row_1, outline_ast_step]
+            Source::ScenarioOutlineStep.new(feature, scenario_outline, examples_table_2, examples_table_2_row_1, outline_ast_step)
           ).ordered
           expect( receiver ).to receive(:on_test_case).with(
-            [feature, scenario_outline, examples_table_2, examples_table_2_row_1]
+            Source::ScenarioOutlineExamplesTableRow.new(feature, scenario_outline, examples_table_2, examples_table_2_row_1)
           ).ordered
           compiler.feature(feature) do |f|
             f.scenario_outline(scenario_outline) do |o|

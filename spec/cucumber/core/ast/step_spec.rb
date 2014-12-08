@@ -1,4 +1,6 @@
 require 'cucumber/core/ast/step'
+require 'cucumber/core/ast/empty_multiline_argument'
+require 'cucumber/core/ast/outline_step'
 
 module Cucumber
   module Core

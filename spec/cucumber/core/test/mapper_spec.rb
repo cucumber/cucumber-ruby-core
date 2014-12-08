@@ -2,6 +2,7 @@ require 'cucumber/core/test/mapper'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
 require 'cucumber/core/ast'
+require 'cucumber/core/source'
 
 module Cucumber
   module Core
@@ -25,7 +26,7 @@ module Cucumber
         let(:last_result) { double('last_result') }
 
         context "an unmapped step" do
-          let(:test_step) { Test::Step.new([double(name: 'unmapped')]) }
+          let(:test_step) { Test::Step.new(Source::ScenarioStep.new(double, double, double(name: 'unmapped'))) }
           let(:test_case) { Test::Case.new([test_step], double) }
 
           it "maps to a step that executes to an undefined result" do
@@ -38,7 +39,7 @@ module Cucumber
         end
 
         context "a mapped step" do
-          let(:test_step) { Test::Step.new([double(name: 'mapped')]) }
+          let(:test_step) { Test::Step.new(Source::ScenarioStep.new(double, double, double(name: 'mapped'))) }
           let(:test_case) { Test::Case.new([test_step], double) }
 
           it "maps to a step that executes the block" do
@@ -52,8 +53,8 @@ module Cucumber
         end
 
         context "a combination" do
-          let(:mapped)   { Test::Step.new([double(name: 'passing')]) }
-          let(:unmapped) { Test::Step.new([double(name: 'unmapped')]) }
+          let(:mapped)   { Test::Step.new(Source::ScenarioStep.new(double, double, double(name: 'passing'))) }
+          let(:unmapped) { Test::Step.new(Source::ScenarioStep.new(double, double, double(name: 'unmapped'))) }
           let(:test_case) { Test::Case.new([mapped, unmapped], double) }
 
           it "maps each of the test steps" do
@@ -69,10 +70,10 @@ module Cucumber
 
         context "mapping hooks" do
           let(:test_case)  { Case.new([test_step], source) }
-          let(:test_step)  { Step.new([Ast::Step.new(:node, :language, :location, :keyword, :name, :multiline_arg)]) }
-          let(:source)     { [feature, scenario] }
-          let(:feature)    { double('feature') }
-          let(:scenario)   { double('scenario', location: 'test') }
+          let(:test_step)  { Step.new(Source::ScenarioStep.new(feature, scenario, Ast::Step.new(:node, :language, :location, :keyword, :name, :multiline_arg))) }
+          let(:source)     { Source::Scenario.new(feature, scenario) }
+          let(:feature)    { Ast::Feature.new(*[double] * 10) }
+          let(:scenario)   { Ast::Scenario.new(*[double] * 11) }
 
           it "prepends before hooks to the test case" do
             allow( mappings ).to receive(:test_case) do |test_case, mapper|
@@ -132,7 +133,7 @@ module Cucumber
               expect( scenario ).to receive(:describe_to)
               expect( visitor ).to receive(:before_hook) do |hook, hook_args|
                 expect( args ).to eq(hook_args)
-                expect( hook.location.to_s ).to eq("#{__FILE__}:125")
+                expect( hook.location.to_s ).to eq("#{__FILE__}:126")
               end
               test_step.describe_source_to(visitor, args)
             end
@@ -146,15 +147,7 @@ module Cucumber
             end
             allow(receiver).to receive(:test_case).and_yield(receiver)
             allow(receiver).to receive(:test_step) do |test_step|
-              args = double('args')
-              visitor = double('visitor')
-              expect( feature ).to receive(:describe_to)
-              expect( scenario ).to receive(:describe_to)
-              expect( visitor ).to receive(:after_hook) do |hook, hook_args|
-                expect( args ).to eq(hook_args)
-                expect( hook.location.to_s ).to eq("#{__FILE__}:145")
-              end
-              test_step.describe_source_to(visitor, args)
+              expect( test_step.source.hook.location.to_s ).to eq("#{__FILE__}:146")
             end
             test_case.describe_to mapper
           end
@@ -168,13 +161,22 @@ module Cucumber
             allow(receiver).to receive(:test_case).and_yield(receiver)
             allow(receiver).to receive(:test_step) do |test_step|
               test_step.describe_source_to(visitor, args)
+              visitor.next
             end
+
             expect( visitor ).to receive(:step).ordered
+            expect( visitor ).to receive(:scenario).ordered
+            expect( visitor ).to receive(:feature).ordered
+            expect( visitor ).to receive(:next).ordered
+
             expect( visitor ).to receive(:after_step_hook) do |hook, hook_args|
               expect( args ).to eq(hook_args)
-              expect( hook.location.to_s ).to eq("#{__FILE__}:164")
+              expect( hook.location.to_s ).to eq("#{__FILE__}:157")
             end.once.ordered
             expect( visitor ).to receive(:step).ordered
+            expect( visitor ).to receive(:scenario).ordered
+            expect( visitor ).to receive(:feature).ordered
+            expect( visitor ).to receive(:next).ordered
             test_case.describe_to mapper
           end
 
@@ -190,10 +192,14 @@ module Cucumber
             end
             expect( visitor ).to receive(:before_step_hook) do |hook, hook_args|
               expect( args ).to eq(hook_args)
-              expect( hook.location.to_s ).to eq("#{__FILE__}:183")
+              expect( hook.location.to_s ).to eq("#{__FILE__}:185")
             end.once.ordered
             expect( visitor ).to receive(:step).ordered
+            expect( visitor ).to receive(:scenario).ordered
+            expect( visitor ).to receive(:feature).ordered
             expect( visitor ).to receive(:step).ordered
+            expect( visitor ).to receive(:scenario).ordered
+            expect( visitor ).to receive(:feature).ordered
             test_case.describe_to mapper
           end
 
