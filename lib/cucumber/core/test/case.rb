@@ -6,7 +6,7 @@ module Cucumber
     module Test
       class Case
         include Cucumber.initializer(:test_steps, :source, :around_hooks)
-        attr_reader :source
+        attr_reader :source, :test_steps
 
         def initialize(test_steps, source, around_hooks = [])
           super(test_steps, source, around_hooks)
