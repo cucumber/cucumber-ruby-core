@@ -4,6 +4,7 @@
 
  * Introduce a Duration object (#[71](https://github.com/cucumber/cucumber-ruby-core/pull/71) [@brasmusson](https://github.com/brasmusson))
  * BeforeStep hooks (#[70](https://github.com/cucumber/cucumber-ruby-core/pull/70) [@almostwhitehat](https://github.com/almostwhitehat))
+ * Expose `Test::Case#test_steps` (@mattwynne)
 
 ### Bugfixes
 
