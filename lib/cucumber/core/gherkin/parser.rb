@@ -7,7 +7,12 @@ module Cucumber
       ParseError = Class.new(StandardError)
 
       class Parser
-        include Cucumber.initializer(:receiver)
+        attr_reader :receiver
+        private     :receiver
+
+        def initialize(receiver)
+          @receiver = receiver
+        end
 
         def document(document)
           builder = AstBuilder.new(document.uri)

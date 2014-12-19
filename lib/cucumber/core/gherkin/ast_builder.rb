@@ -1,4 +1,3 @@
-require 'cucumber/initializer'
 require 'cucumber/core/ast'
 require 'cucumber/core/platform'
 require 'gherkin/rubify'
@@ -76,7 +75,13 @@ module Cucumber
         end
 
         class Builder
-          include Cucumber.initializer(:file, :node)
+          attr_reader :file, :node
+          private     :file, :node
+
+          def initialize(file, node)
+            @file = file
+            @node = node
+          end
 
           private
 

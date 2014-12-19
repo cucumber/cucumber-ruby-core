@@ -1,4 +1,3 @@
-require 'cucumber/initializer'
 
 module Cucumber
   module Core
@@ -6,8 +5,11 @@ module Cucumber
       module Hooks
 
         class BeforeHook
-          include Cucumber.initializer(:location)
-          public :location
+          attr_reader :location
+
+          def initialize(location)
+            @location = location
+          end
 
           def name
             "Before hook"
@@ -23,8 +25,11 @@ module Cucumber
         end
 
         class AfterHook
-          include Cucumber.initializer(:location)
-          public :location
+          attr_reader :location
+
+          def initialize(location)
+            @location = location
+          end
 
           def name
             "After hook"
@@ -54,8 +59,11 @@ module Cucumber
         end
 
         class BeforeStepHook
-          include Cucumber.initializer(:location)
-          public :location
+          attr_reader :location
+
+          def initialize(location)
+            @location = location
+          end
 
           def name
             "BeforeStep hook"
@@ -71,8 +79,11 @@ module Cucumber
         end
 
         class AfterStepHook
-          include Cucumber.initializer(:location)
-          public :location
+          attr_reader :location
+
+          def initialize(location)
+            @location = location
+          end
 
           def name
             "AfterStep hook"

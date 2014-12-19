@@ -1,4 +1,3 @@
-require 'cucumber/initializer'
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/action'
 
@@ -6,13 +5,12 @@ module Cucumber
   module Core
     module Test
       class Step
-        include Cucumber.initializer(:source)
         attr_reader :source
 
         def initialize(source, mapping = Test::UndefinedAction.new)
           raise ArgumentError if source.any?(&:nil?)
+          @source = source
           @mapping = mapping
-          super(source)
         end
 
         def describe_to(visitor, *args)

@@ -1,11 +1,14 @@
-require 'cucumber/initializer'
 
 module Cucumber
   module Core
     module Gherkin
       class Document
-        include Cucumber.initializer(:uri, :body)
         attr_reader :uri, :body
+
+        def initialize(uri, body)
+          @uri = uri
+          @body = body
+        end
 
         def to_s
           body

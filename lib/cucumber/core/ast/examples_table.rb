@@ -1,4 +1,3 @@
-require 'cucumber/initializer'
 require 'cucumber/core/ast/describes_itself'
 require 'cucumber/core/ast/location'
 require 'cucumber/core/ast/names'
@@ -12,11 +11,21 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :header, :keyword, :tags, :comments, :location, :gherkin_statement
+        def initialize(gherkin_statement, location, comments, tags, keyword, title, description, header, example_rows)
+          @gherkin_statement = gherkin_statement
+          @location = location
+          @comments = comments
+          @tags = tags
+          @keyword = keyword
+          @title = title
+          @description = description
+          @header = header
+          @example_rows = example_rows
+        end
 
-        include Cucumber.initializer(
-          :gherkin_statement, :location, :comments, :tags, :keyword, :title, :description, :header, :example_rows
-        )
+        attr_reader :gherkin_statement, :location, :comments, :tags, :keyword,
+                    :title, :description, :header, :example_rows
+        private :title, :description, :example_rows
 
         private
 

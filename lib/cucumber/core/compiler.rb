@@ -1,4 +1,3 @@
-require 'cucumber/initializer'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
 
@@ -7,7 +6,12 @@ module Cucumber
 
     # Compiles the AST into test cases
     class Compiler
-      include Cucumber.initializer(:receiver)
+      attr_reader :receiver
+      private     :receiver
+
+      def initialize(receiver)
+        @receiver = receiver
+      end
 
       def feature(feature)
         compiler = FeatureCompiler.new(TestCaseBuilder.new(receiver))
@@ -22,7 +26,12 @@ module Cucumber
 
       # @private
       class TestCaseBuilder
-        include Cucumber.initializer(:receiver)
+        attr_reader :receiver
+        private     :receiver
+
+        def initialize(receiver)
+          @receiver = receiver
+        end
 
         def on_background_step(source)
           background_test_steps << Test::Step.new(source)
@@ -53,7 +62,12 @@ module Cucumber
 
       # @private
       class FeatureCompiler
-        include Cucumber.initializer(:receiver)
+        attr_reader :receiver
+        private     :receiver
+
+        def initialize(receiver)
+          @receiver = receiver
+        end
 
         def feature(feature, &descend)
           @feature = feature
@@ -86,7 +100,13 @@ module Cucumber
 
       # @private
       class ScenarioOutlineCompiler
-        include Cucumber.initializer(:source, :receiver)
+        attr_reader :source, :receiver
+        private     :source, :receiver
+
+        def initialize(source, receiver)
+          @source   = source
+          @receiver = receiver
+        end
 
         def outline_step(outline_step)
           outline_steps << outline_step
@@ -120,7 +140,13 @@ module Cucumber
 
       # @private
       class ScenarioCompiler
-        include Cucumber.initializer(:source, :receiver)
+        attr_reader :source, :receiver
+        private     :source, :receiver
+
+        def initialize(source, receiver)
+          @source   = source
+          @receiver = receiver
+        end
 
         def step(step)
           receiver.on_step(source + [step])
@@ -130,7 +156,13 @@ module Cucumber
 
       # @private
       class BackgroundCompiler
-        include Cucumber.initializer(:source, :receiver)
+        attr_reader :source, :receiver
+        private     :source, :receiver
+
+        def initialize(source, receiver)
+          @source   = source
+          @receiver = receiver
+        end
 
         def step(step)
           receiver.on_background_step(source + [step])

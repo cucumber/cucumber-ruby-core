@@ -2,7 +2,13 @@ module Cucumber
   module Core
     module Test
       class LocationsFilter
-        include Cucumber.initializer(:locations, :receiver)
+        attr_reader :locations, :receiver
+        private :locations, :receiver
+
+        def initialize(locations, receiver)
+          @locations = locations
+          @receiver = receiver
+        end
 
         def test_case(test_case)
           if test_case.match_locations?(@locations)

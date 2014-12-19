@@ -1,15 +1,16 @@
-require 'cucumber/initializer'
 require 'cucumber/core/test/result'
 
 module Cucumber
   module Core
     module Test
       class Case
-        include Cucumber.initializer(:test_steps, :source, :around_hooks)
-        attr_reader :source, :test_steps
+        attr_reader :source, :test_steps, :around_hooks
+        private     :around_hooks
 
         def initialize(test_steps, source, around_hooks = [])
-          super(test_steps, source, around_hooks)
+          @test_steps = test_steps
+          @source = source
+          @around_hooks = around_hooks
         end
 
         def step_count

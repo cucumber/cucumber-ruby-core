@@ -1,11 +1,16 @@
-require 'cucumber/initializer'
 require 'cucumber/core/test/hooks'
 
 module Cucumber
   module Core
     module Test
       class Mapper
-        include Cucumber.initializer(:mapping_definition, :receiver)
+        attr_reader :mapping_definition, :receiver
+        private     :mapping_definition, :receiver
+
+        def initialize(mapping_definition, receiver)
+          @mapping_definition = mapping_definition
+          @receiver           = receiver
+        end
 
         def test_case(test_case, &descend)
           hook_factory = HookFactory.new(test_case.source)
@@ -27,7 +32,12 @@ module Cucumber
         private
 
         class CaseMapper
-          include Cucumber.initializer(:mapping_definition)
+          attr_reader :mapping_definition
+          private     :mapping_definition
+
+          def initialize(mapping_definition)
+            @mapping_definition = mapping_definition
+          end
 
           def test_step(test_step)
             hook_factory = HookFactory.new(test_step.source)
@@ -55,7 +65,13 @@ module Cucumber
 
           # Passed to users in the mappings to add hooks to a scenario
           class DSL
-            include Cucumber.initializer(:mapper, :hook_factory)
+            attr_reader :mapper, :hook_factory
+            private     :mapper, :hook_factory
+
+            def initialize(mapper, hook_factory)
+              @mapper       = mapper
+              @hook_factory = hook_factory
+            end
 
             # Run this block of code before the scenario
             def before(&block)
@@ -79,9 +95,11 @@ module Cucumber
         end
 
         class StepMapper
-          include Cucumber.initializer(:test_step)
-
           attr_accessor :test_step
+
+          def initialize(test_step)
+            @test_step = test_step
+          end
 
           def before_step_hooks
             @before_step_hooks ||= []
@@ -93,7 +111,13 @@ module Cucumber
 
           # Passed to users in the mappings to define and add hooks to a step
           class DSL
-            include Cucumber.initializer(:mapper, :hook_factory)
+            attr_reader :mapper, :hook_factory
+            private     :mapper, :hook_factory
+
+            def initialize(mapper, hook_factory)
+              @mapper       = mapper
+              @hook_factory = hook_factory
+            end
 
             def before(&block)
               mapper.before_step_hooks << hook_factory.before_step(block)
@@ -115,7 +139,11 @@ module Cucumber
         end
 
         class HookFactory
-          include Cucumber.initializer(:source)
+          attr_accessor :source
+
+          def initialize(source)
+            @source = source
+          end
 
           def after(block)
             build_hook_step(block, Hooks::AfterHook, Test::UnskippableAction)

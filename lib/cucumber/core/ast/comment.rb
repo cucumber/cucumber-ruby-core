@@ -1,4 +1,3 @@
-require 'cucumber/initializer'
 require 'cucumber/core/ast/location'
 
 module Cucumber
@@ -6,7 +5,14 @@ module Cucumber
     module Ast
       class Comment
         include HasLocation
-        include Cucumber.initializer :location, :value
+
+        attr_reader :location, :value
+        private :location, :value
+
+        def initialize(location, value)
+          @location = location
+          @value = value
+        end
 
         def to_s
           value

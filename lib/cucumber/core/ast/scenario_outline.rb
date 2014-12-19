@@ -13,14 +13,26 @@ module Cucumber
 
         MissingExamples = Class.new(StandardError)
 
-        attr_reader :feature_tags
+        attr_reader :gherkin_statement, :language, :background, :comments,
+                    :tags, :feature_tags, :keyword, :title, :description,
+                    :steps, :examples_tables, :line
+        private :language, :background, :comments, :feature_tags,
+                :line
 
-        attr_reader :line
-        private :line
-
-        include Cucumber.initializer(:gherkin_statement, :language, :location, :background, :comments, :tags, :feature_tags, :keyword, :title, :description, :steps, :examples_tables)
-
-        attr_reader :comments, :tags, :keyword, :background, :location, :gherkin_statement
+        def initialize(gherkin_statement, language, location, background, comments, tags, feature_tags, keyword, title, description, steps, examples_tables)
+          @gherkin_statement = gherkin_statement
+          @language          = language
+          @location          = location
+          @background        = background
+          @comments          = comments
+          @tags              = tags
+          @feature_tags      = feature_tags
+          @keyword           = keyword
+          @title             = title
+          @description       = description
+          @steps             = steps
+          @examples_tables   = examples_tables
+        end
 
         private
 

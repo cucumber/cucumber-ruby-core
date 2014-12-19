@@ -1,5 +1,4 @@
 # encoding: UTF-8¬
-require 'cucumber/initializer'
 
 module Cucumber
   module Core
@@ -29,12 +28,11 @@ module Cucumber
 
         class Passed
           include Result.status_queries(:passed)
-          include Cucumber.initializer(:duration)
-          attr_reader :duration
+          attr_accessor :duration
 
           def initialize(duration)
             raise ArgumentError unless duration
-            super
+            @duration = duration
           end
 
           def describe_to(visitor, *args)
@@ -50,13 +48,13 @@ module Cucumber
 
         class Failed
           include Result.status_queries(:failed)
-          include Cucumber.initializer(:duration, :exception)
           attr_reader :duration, :exception
 
           def initialize(duration, exception)
             raise ArgumentError unless duration 
             raise ArgumentError unless exception
-            super
+            @duration = duration
+            @exception = exception
           end
 
           def describe_to(visitor, *args)

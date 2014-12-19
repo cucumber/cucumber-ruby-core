@@ -1,4 +1,3 @@
-require 'cucumber/initializer'
 require 'cucumber/core/test/timer'
 
 module Cucumber
@@ -57,7 +56,12 @@ module Cucumber
 
           module Status
             class Base
-              include Cucumber.initializer(:step_result)
+              attr_reader :step_result
+              private :step_result
+
+              def initialize(step_result)
+                @step_result = step_result
+              end
 
               def execute(test_step, monitor)
                 result = test_step.execute(monitor.result)

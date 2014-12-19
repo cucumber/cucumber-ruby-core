@@ -2,7 +2,13 @@ module Cucumber
   module Core
     module Test
       class NameFilter
-        include Cucumber.initializer(:name_regexps, :receiver)
+        attr_reader :name_regexps, :receiver
+        private :name_regexps, :receiver
+
+        def initialize(name_regexps, receiver)
+          @name_regexps = name_regexps
+          @receiver = receiver
+        end
 
         def test_case(test_case)
           if accept?(test_case)

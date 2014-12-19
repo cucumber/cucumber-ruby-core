@@ -2,7 +2,13 @@ module Cucumber
   module Core
     module Test
       class TagFilter
-        include Cucumber.initializer(:filter_expressions, :receiver)
+        attr_reader :filter_expressions, :receiver
+        private :filter_expressions, :receiver
+
+        def initialize(filter_expressions, receiver)
+          @filter_expressions = filter_expressions
+          @receiver = receiver
+        end
 
         def test_case(test_case)
           test_cases << test_case
