@@ -13,13 +13,13 @@ module Cucumber
           @timer = Timer.new
         end
 
-        def skip(last_result)
+        def skip(*)
           skipped
         end
 
-        def execute(last_result)
+        def execute(*args)
           @timer.start
-          @block.call(last_result)
+          @block.call(*args)
           passed
         rescue Result::Raisable => exception
           exception.with_duration(@timer.duration)
@@ -51,17 +51,17 @@ module Cucumber
       end
 
       class UnskippableAction < Action
-        def skip(last_result)
-          execute(last_result)
+        def skip(*args)
+          execute(*args)
         end
       end
 
       class UndefinedAction
-        def execute(last_result)
+        def execute(*)
           undefined
         end
 
-        def skip(last_result)
+        def skip(*)
           undefined
         end
 
