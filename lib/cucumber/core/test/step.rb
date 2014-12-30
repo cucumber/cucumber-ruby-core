@@ -7,10 +7,9 @@ module Cucumber
       class Step
         attr_reader :source
 
-        def initialize(source, mapping = Test::UndefinedAction.new)
+        def initialize(source, action = Test::UndefinedAction.new)
           raise ArgumentError if source.any?(&:nil?)
-          @source = source
-          @mapping = mapping
+          @source, @action = source, action
         end
 
         def describe_to(visitor, *args)
@@ -25,14 +24,14 @@ module Cucumber
         end
 
         def skip(last_result)
-          @mapping.skip(last_result)
+          @action.skip(last_result)
         end
 
         def execute(last_result)
-          @mapping.execute(last_result)
+          @action.execute(last_result)
         end
 
-        def with_mapping(&block)
+        def with_action(&block)
           self.class.new(source, Test::Action.new(&block))
         end
 

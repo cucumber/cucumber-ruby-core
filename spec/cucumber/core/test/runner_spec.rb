@@ -10,10 +10,10 @@ module Cucumber::Core::Test
     let(:source)    { double }
     let(:runner)    { Runner.new(report) }
     let(:report)    { double.as_null_object }
-    let(:passing)   { Step.new([double]).with_mapping {} }
-    let(:failing)   { Step.new([double]).with_mapping { raise exception } }
-    let(:pending)   { Step.new([double]).with_mapping { raise Result::Pending.new("TODO") } }
-    let(:skipping)  { Step.new([double]).with_mapping { raise Result::Skipped.new } }
+    let(:passing)   { Step.new([double]).with_action {} }
+    let(:failing)   { Step.new([double]).with_action { raise exception } }
+    let(:pending)   { Step.new([double]).with_action { raise Result::Pending.new("TODO") } }
+    let(:skipping)  { Step.new([double]).with_action { raise Result::Skipped.new } }
     let(:undefined) { Step.new([double]) }
     let(:exception) { StandardError.new('test error') }
 
@@ -203,7 +203,7 @@ module Cucumber::Core::Test
           result_spy = last_result
         end
         after_hook = Step.new([double], hook_mapping)
-        failing_step = Step.new([double]).with_mapping { fail }
+        failing_step = Step.new([double]).with_action { fail }
         test_case = Case.new([failing_step, after_hook], source)
         test_case.describe_to runner
         expect(result_spy).to be_failed

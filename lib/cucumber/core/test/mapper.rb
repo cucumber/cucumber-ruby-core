@@ -125,7 +125,7 @@ module Cucumber
 
             # Define the step with a block of code to be executed
             def map(&block)
-              mapper.test_step = mapper.test_step.with_mapping(&block)
+              mapper.test_step = mapper.test_step.with_action(&block)
               self
             end
 

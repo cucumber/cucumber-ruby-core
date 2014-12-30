@@ -102,8 +102,8 @@ module Cucumber
               mapper.after { log.after_hook_1 }
               mapper.after { log.after_hook_2 }
             end
-            mapped_step = test_step.with_mapping { log.step_1 }
-            test_case = Case.new([mapped_step], source)
+            activated_step = test_step.with_action { log.step_1 }
+            test_case = Case.new([activated_step], source)
 
             expect( log ).to receive(:before_hook_1).ordered
             expect( log ).to receive(:before_hook_2).ordered

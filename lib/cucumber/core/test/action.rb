@@ -8,7 +8,7 @@ module Cucumber
     module Test
       class Action
         def initialize(&block)
-          raise ArgumentError, "Passing a block to execute the mapping is mandatory." unless block
+          raise ArgumentError, "Passing a block to execute the action is mandatory." unless block
           @block = block
           @timer = Timer.new
         end
