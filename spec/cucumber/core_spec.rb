@@ -71,7 +71,7 @@ module Cucumber
           end
         end
 
-        compile [gherkin], visitor, [[Cucumber::Core::Test::TagFilter, [['@a', '@b']]]]
+        compile [gherkin], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])]
       end
 
       describe 'with tag filters that have limits' do
@@ -114,7 +114,7 @@ module Cucumber
 
         context 'on scenarios' do
           let(:tag_filters) {
-            [[Cucumber::Core::Test::TagFilter, [['@one:1']]]]
+            [ Cucumber::Core::Test::TagFilter.new(['@one:1']) ]
           }
 
           it 'raises a tag excess error with the location of the test cases' do
@@ -128,7 +128,7 @@ module Cucumber
 
         context 'on scenario outlines' do
           let(:tag_filters) {
-            [[Cucumber::Core::Test::TagFilter, [['@three:1']]]]
+            [ Cucumber::Core::Test::TagFilter.new(['@three:1']) ]
           }
 
           it 'raises a tag excess error with the location of the test cases' do
@@ -142,7 +142,7 @@ module Cucumber
 
         context 'on a feature with scenarios' do
           let(:tag_filters) {
-            [[Cucumber::Core::Test::TagFilter, [['@feature:2']]]]
+            [ Cucumber::Core::Test::TagFilter.new(['@feature:2']) ]
           }
 
           it 'raises a tag excess error with the location of the test cases' do
@@ -158,7 +158,7 @@ module Cucumber
 
         context 'with negated tags' do
           let(:tag_filters) {
-            [[Cucumber::Core::Test::TagFilter, [['~@one:1']]]]
+            [ Cucumber::Core::Test::TagFilter.new(['~@one:1']) ]
           }
 
           it 'raises a tag excess error with the location of the test cases' do
@@ -172,7 +172,7 @@ module Cucumber
 
         context 'whith multiple tag limits' do
           let(:tag_filters) {
-            [[Cucumber::Core::Test::TagFilter, [['@one:1, @three:1', '~@feature:3']]]]
+            [ Cucumber::Core::Test::TagFilter.new(['@one:1, @three:1', '~@feature:3']) ]
           }
 
           it 'raises a tag excess error with the location of the test cases' do
@@ -441,7 +441,7 @@ module Cucumber
         report = Core::Report::Summary.new
         mappings = HookTestMappings.new
 
-        execute [gherkin], mappings, report, [[Cucumber::Core::Test::TagFilter, ['@a']]]
+        execute [gherkin], mappings, report, [ Cucumber::Core::Test::TagFilter.new(['@a']) ]
 
         expect( report.test_cases.total ).to eq 2
       end
@@ -460,7 +460,7 @@ module Cucumber
         report = Core::Report::Summary.new
         mappings = HookTestMappings.new
 
-        execute [gherkin], mappings, report, [[Cucumber::Core::Test::NameFilter, [[/scenario/]]]]
+        execute [gherkin], mappings, report, [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ]
 
         expect( report.test_cases.total ).to eq 1
       end
@@ -485,7 +485,7 @@ module Cucumber
         report = Core::Report::Summary.new
         mappings = HookTestMappings.new
         some_feature = Cucumber::Core::Ast::Location.new("some.feature")
-        filters = [[ Cucumber::Core::Test::LocationsFilter, [[some_feature]] ]]
+        filters = [ Cucumber::Core::Test::LocationsFilter.new([some_feature]) ]
 
         execute documents, mappings, report, filters
 

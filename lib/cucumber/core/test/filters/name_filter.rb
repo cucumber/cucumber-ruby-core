@@ -5,7 +5,7 @@ module Cucumber
         attr_reader :name_regexps, :receiver
         private :name_regexps, :receiver
 
-        def initialize(name_regexps, receiver)
+        def initialize(name_regexps, receiver=nil)
           @name_regexps = name_regexps
           @receiver = receiver
         end
@@ -20,6 +20,10 @@ module Cucumber
         def done
           @receiver.done
           self
+        end
+
+        def with_receiver(receiver)
+          self.class.new(name_regexps, receiver)
         end
 
         private

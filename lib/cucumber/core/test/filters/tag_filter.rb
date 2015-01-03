@@ -5,7 +5,7 @@ module Cucumber
         attr_reader :filter_expressions, :receiver
         private :filter_expressions, :receiver
 
-        def initialize(filter_expressions, receiver)
+        def initialize(filter_expressions, receiver=nil)
           @filter_expressions = filter_expressions
           @receiver = receiver
         end
@@ -24,7 +24,12 @@ module Cucumber
           self
         end
 
+        def with_receiver(receiver)
+          self.class.new(filter_expressions, receiver)
+        end
+
         private
+
         def test_cases
           @test_cases ||= TestCases.new
         end

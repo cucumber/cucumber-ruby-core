@@ -7,7 +7,7 @@ module Cucumber
         attr_reader :mapping_definition, :receiver
         private     :mapping_definition, :receiver
 
-        def initialize(mapping_definition, receiver)
+        def initialize(mapping_definition, receiver=nil)
           @mapping_definition = mapping_definition
           @receiver           = receiver
         end
@@ -27,6 +27,10 @@ module Cucumber
         def done
           receiver.done
           self
+        end
+
+        def with_receiver(receiver)
+          self.class.new(mapping_definition, receiver)
         end
 
         private

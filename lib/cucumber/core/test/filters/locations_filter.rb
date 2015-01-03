@@ -5,7 +5,7 @@ module Cucumber
         attr_reader :locations, :receiver
         private :locations, :receiver
 
-        def initialize(locations, receiver)
+        def initialize(locations, receiver=nil)
           @locations = locations
           @receiver = receiver
         end
@@ -20,6 +20,10 @@ module Cucumber
         def done
           @receiver.done
           self
+        end
+
+        def with_receiver(receiver)
+          self.class.new(locations, receiver)
         end
       end
     end

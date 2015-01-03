@@ -9,7 +9,7 @@ module Cucumber
 
     def execute(gherkin_documents, mapping_definition, report, filters = [])
       receiver = Test::Runner.new(report)
-      filters << [Test::Mapper, [mapping_definition]]
+      filters << Test::Mapper.new(mapping_definition)
       compile gherkin_documents, receiver, filters
       self
     end
@@ -33,8 +33,8 @@ module Cucumber
     end
 
     def compose(filters, last_receiver)
-      filters.reverse.reduce(last_receiver) do |receiver, (filter_type, args)|
-        filter_type.new(*args + [receiver])
+      filters.reverse.reduce(last_receiver) do |receiver, filter|
+        filter.with_receiver(receiver)
       end
     end
 
