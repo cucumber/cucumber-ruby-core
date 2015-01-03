@@ -23,12 +23,12 @@ module Cucumber
           self
         end
 
-        def skip(previous_result)
-          @action.skip(previous_result)
+        def skip(*args)
+          @action.skip(*args)
         end
 
-        def execute(previous_result)
-          @action.execute(previous_result)
+        def execute(*args)
+          @action.execute(*args)
         end
 
         def with_action(&block)

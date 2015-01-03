@@ -2,7 +2,6 @@ require 'cucumber/core/test/step'
 
 module Cucumber::Core::Test
   describe Step do
-    let(:last_result) { double('last_result') }
 
     describe "describing itself" do
       it "describes itself to a visitor" do
@@ -28,10 +27,20 @@ module Cucumber::Core::Test
     describe "executing" do
       let(:ast_step) { double }
 
+      it "passes arbitrary arguments to the action's block" do
+        args_spy = nil
+        expected_args = [double, double]
+        test_step = Step.new([ast_step]).with_action do |*actual_args|
+          args_spy = actual_args
+        end
+        test_step.execute(*expected_args)
+        expect(args_spy).to eq expected_args
+      end
+
       context "when a passing mapping exists" do
         it "returns a passing result" do
           test_step = Step.new([ast_step]).with_action {}
-          expect( test_step.execute(last_result) ).to be_passed
+          expect( test_step.execute ).to be_passed
         end
       end
 
@@ -40,7 +49,7 @@ module Cucumber::Core::Test
 
         it "returns a failing result" do
           test_step = Step.new([ast_step]).with_action { raise exception }
-          result = test_step.execute(last_result)
+          result = test_step.execute
           expect( result           ).to be_failed
           expect( result.exception ).to eq exception
         end
@@ -49,7 +58,7 @@ module Cucumber::Core::Test
       context "with no mapping" do
         it "returns an Undefined result" do
           test_step = Step.new([ast_step])
-          result = test_step.execute(last_result)
+          result = test_step.execute
           expect( result           ).to be_undefined
         end
       end
