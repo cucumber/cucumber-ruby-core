@@ -4,24 +4,24 @@ module Cucumber
   module Core
     module Test
       class Runner
-        attr_reader :report
-        private :report
+        attr_reader :report, :running_test_case
+        private :report, :running_test_case
 
         def initialize(report)
           @report = report
         end
 
         def test_case(test_case, &descend)
+          @running_test_case = RunningTestCase.new
           report.before_test_case(test_case)
           descend.call(self)
-          report.after_test_case(test_case, current_case_result)
-          @current_step_runner = nil
+          report.after_test_case(test_case, running_test_case.result)
           self
         end
 
         def test_step(test_step)
           report.before_test_step test_step
-          step_result = current_step_runner.execute(test_step)
+          step_result = running_test_case.execute(test_step)
           report.after_test_step test_step, step_result
           self
         end
@@ -36,17 +36,7 @@ module Cucumber
           self
         end
 
-        private
-
-        def current_case_result
-          current_step_runner.result
-        end
-
-        def current_step_runner
-          @current_step_runner ||= StepRunner.new
-        end
-
-        class StepRunner
+        class RunningTestCase
           def initialize
             @timer = Timer.new.start
             @status = Status::Unknown.new(Result::Unknown.new)
