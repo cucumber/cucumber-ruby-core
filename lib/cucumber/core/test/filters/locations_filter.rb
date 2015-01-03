@@ -1,14 +1,9 @@
+require 'cucumber/core/filter'
+
 module Cucumber
   module Core
     module Test
-      class LocationsFilter
-        attr_reader :locations, :receiver
-        private :locations, :receiver
-
-        def initialize(locations, receiver=nil)
-          @locations = locations
-          @receiver = receiver
-        end
+      class LocationsFilter < Filter.new(:locations)
 
         def test_case(test_case)
           if test_case.match_locations?(@locations)
@@ -17,14 +12,6 @@ module Cucumber
           self
         end
 
-        def done
-          @receiver.done
-          self
-        end
-
-        def with_receiver(receiver)
-          self.class.new(locations, receiver)
-        end
       end
     end
   end

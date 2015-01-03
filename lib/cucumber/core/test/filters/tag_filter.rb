@@ -1,14 +1,9 @@
+require 'cucumber/core/filter'
+
 module Cucumber
   module Core
     module Test
-      class TagFilter
-        attr_reader :filter_expressions, :receiver
-        private :filter_expressions, :receiver
-
-        def initialize(filter_expressions, receiver=nil)
-          @filter_expressions = filter_expressions
-          @receiver = receiver
-        end
+      class TagFilter < Filter.new(:filter_expressions)
 
         def test_case(test_case)
           test_cases << test_case
@@ -22,10 +17,6 @@ module Cucumber
           tag_limits.enforce(test_cases)
           receiver.done
           self
-        end
-
-        def with_receiver(receiver)
-          self.class.new(filter_expressions, receiver)
         end
 
         private

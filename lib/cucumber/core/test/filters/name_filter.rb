@@ -1,29 +1,15 @@
+require 'cucumber/core/filter'
+
 module Cucumber
   module Core
     module Test
-      class NameFilter
-        attr_reader :name_regexps, :receiver
-        private :name_regexps, :receiver
-
-        def initialize(name_regexps, receiver=nil)
-          @name_regexps = name_regexps
-          @receiver = receiver
-        end
+      class NameFilter < Filter.new(:name_regexps)
 
         def test_case(test_case)
           if accept?(test_case)
             test_case.describe_to(receiver)
           end
           self
-        end
-
-        def done
-          @receiver.done
-          self
-        end
-
-        def with_receiver(receiver)
-          self.class.new(name_regexps, receiver)
         end
 
         private
