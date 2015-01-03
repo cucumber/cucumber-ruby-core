@@ -8,6 +8,7 @@ module Cucumber
         private     :around_hooks
 
         def initialize(test_steps, source, around_hooks = [])
+          raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.kind_of?(Array)
           @test_steps = test_steps
           @source = source
           @around_hooks = around_hooks
