@@ -37,14 +37,14 @@ module Cucumber::Core::Test
         expect(args_spy).to eq expected_args
       end
 
-      context "when a passing mapping exists" do
+      context "when a passing action exists" do
         it "returns a passing result" do
           test_step = Step.new([ast_step]).with_action {}
           expect( test_step.execute ).to be_passed
         end
       end
 
-      context "when a failing mapping exists" do
+      context "when a failing action exists" do
         let(:exception) { StandardError.new('oops') }
 
         it "returns a failing result" do
@@ -55,7 +55,7 @@ module Cucumber::Core::Test
         end
       end
 
-      context "with no mapping" do
+      context "with no action" do
         it "returns an Undefined result" do
           test_step = Step.new([ast_step])
           result = test_step.execute
