@@ -1,8 +1,10 @@
 require 'report_api_spy'
 require 'cucumber/core'
+require 'cucumber/core/filter'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
 require 'cucumber/core/report/summary'
+require 'cucumber/core/test/around_hook'
 
 module Cucumber
   describe Core do
@@ -198,17 +200,20 @@ module Cucumber
 
     describe "executing a test suite" do
       context "without hooks" do
-        class StepTestMappings
-          Failure = Class.new(StandardError)
+        class WithSteps < Core::Filter.new
+          def test_case(test_case)
+            test_steps = test_case.test_steps.map do |step|
+              case step.name
+              when /fail/
+                step.with_action { raise Failure }
+              when /pass/
+                step.with_action {}
+              else
+                step
+              end
+            end
 
-          def test_case(test_case, mapper)
-            self
-          end
-
-          def test_step(step, mapper)
-            mapper.map { raise Failure } if step.name =~ /fail/
-            mapper.map {}                if step.name =~ /pass/
-            self
+            test_case.with_steps(test_steps).describe_to(receiver)
           end
         end
 
@@ -228,9 +233,8 @@ module Cucumber
             end
           end
           report = Core::Report::Summary.new
-          mappings = StepTestMappings.new
 
-          execute [gherkin], mappings, report
+          execute [gherkin], report, [WithSteps.new]
 
           expect( report.test_cases.total           ).to eq 2
           expect( report.test_cases.total_passed    ).to eq 1
@@ -243,149 +247,22 @@ module Cucumber
         end
       end
 
-      context "with hooks" do
-        class HookTestMappings
-          Failure = Class.new(StandardError)
-          attr_reader :logger
-
-          def initialize
-            @logger = []
-          end
-
-          def test_case(test_case, mapper)
-            mapper.before { @logger << ['--'] }
-            failing_before = proc do
-              @logger << [:failing_before, test_case.name]
-              raise Failure
-            end
-            passing_after = proc do
-              @logger << [:passing_after, test_case.name]
-            end
-            passing_before = proc do 
-              @logger << [:passing_before, test_case.name]
-            end
-            failing_after = proc do
-              @logger << [:failing_after, test_case.name]
-              raise Failure
-            end
-
-            case test_case.name
-
-            when /fail before/
-              mapper.before( &failing_before )
-              mapper.after( &passing_after )
-
-            when /fail after/
-              mapper.before( &passing_before )
-              mapper.after( &failing_after )
-
-            else
-              mapper.before( &passing_before )
-              mapper.after( &passing_after )
-
-            end
-
-            self
-          end
-
-          def test_step(test_step, mapper)
-            mapper.map { @logger << [:step, test_step.name] } # all steps pass
-            if test_step.name == 'fail after'
-              mapper.after do
-                @logger << :failing_after_step
-                raise Failure 
-              end
-            end
-            self
-          end
-        end
-
-        it "executes the steps and hooks in the right order" do
-          gherkin = gherkin do
-            feature do
-              scenario 'fail before' do
-                step 'passing'
-              end
-
-              scenario 'fail after' do
-                step 'passing'
-              end
-
-              scenario 'fail step' do
-                step 'fail after'
-              end
-
-              scenario 'passing' do
-                step 'passing'
-              end
-            end
-          end
-          report = Core::Report::Summary.new
-          mappings = HookTestMappings.new
-
-          execute [gherkin], mappings, report
-
-          expect( report.test_steps.total        ).to eq(17)
-          expect( report.test_steps.total_failed ).to eq(3)
-          expect( report.test_cases.total        ).to eq(4)
-          expect( report.test_cases.total_passed ).to eq(1)
-          expect( report.test_cases.total_failed ).to eq(3)
-          expect( mappings.logger ).to eq [
-            ["--"], 
-            [:failing_before, "Scenario: fail before"], 
-            [:passing_after, "Scenario: fail before"],
-            ["--"], 
-            [:passing_before, "Scenario: fail after"], 
-            [:step, "passing"],
-            [:failing_after, "Scenario: fail after"],
-            ["--"],
-            [:passing_before, "Scenario: fail step"],
-            [:step, "fail after"],
-            :failing_after_step,
-            [:passing_after, "Scenario: fail step"],
-            ["--"],
-            [:passing_before, "Scenario: passing"],
-            [:step, "passing"],
-            [:passing_after, "Scenario: passing"]
-          ]
-        end
-      end
-
       context "with around hooks" do
-        class AroundHookTestMappings
-          attr_reader :logger
+        class WithAroundHooks < Core::Filter.new(:logger)
+          def test_case(test_case)
+            base_step = Core::Test::Step.new(test_case.source)
+            test_steps = [
+              base_step.with_action { logger << :step },
+            ]
 
-          def initialize
-            @logger = []
-          end
-
-          def test_case(test_case, mapper)
-            logger = @logger
-            mapper.around do |run_scenario|
+            around_hook = Core::Test::AroundHook.new do |run_scenario|
               logger << :before_all
               run_scenario.call
               logger << :middle
               run_scenario.call
               logger << :after_all
             end
-            mapper.before do
-              logger << :before
-            end
-            mapper.after do
-              logger << :after
-            end
-            self
-          end
-
-          def test_step(step, mapper)
-            logger = @logger
-            mapper.map do
-              logger << :during
-            end
-            mapper.after do
-              logger << :after_step
-            end
-            self
+            test_case.with_steps(test_steps).with_around_hooks([around_hook]).describe_to(receiver)
           end
         end
 
@@ -398,24 +275,18 @@ module Cucumber
             end
           end
           report = Core::Report::Summary.new
-          mappings = AroundHookTestMappings.new
+          logger = []
 
-          execute [gherkin], mappings, report
+          execute [gherkin], report, [WithAroundHooks.new(logger)]
 
           expect( report.test_cases.total        ).to eq 1
           expect( report.test_cases.total_passed ).to eq 1
           expect( report.test_cases.total_failed ).to eq 0
-          expect( mappings.logger ).to eq [
+          expect( logger ).to eq [
             :before_all, 
-              :before, 
-                :during, 
-                :after_step, 
-              :after, 
+              :step, 
             :middle, 
-              :before,
-                :during, 
-                :after_step, 
-              :after,
+              :step, 
             :after_all
           ]
         end
@@ -439,9 +310,8 @@ module Cucumber
           end
         end
         report = Core::Report::Summary.new
-        mappings = HookTestMappings.new
 
-        execute [gherkin], mappings, report, [ Cucumber::Core::Test::TagFilter.new(['@a']) ]
+        execute [gherkin], report, [ Cucumber::Core::Test::TagFilter.new(['@a']) ]
 
         expect( report.test_cases.total ).to eq 2
       end
@@ -458,9 +328,8 @@ module Cucumber
           end
         end
         report = Core::Report::Summary.new
-        mappings = HookTestMappings.new
 
-        execute [gherkin], mappings, report, [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ]
+        execute [gherkin], report, [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ]
 
         expect( report.test_cases.total ).to eq 1
       end
@@ -483,11 +352,10 @@ module Cucumber
         end
 
         report = Core::Report::Summary.new
-        mappings = HookTestMappings.new
         some_feature = Cucumber::Core::Ast::Location.new("some.feature")
         filters = [ Cucumber::Core::Test::LocationsFilter.new([some_feature]) ]
 
-        execute documents, mappings, report, filters
+        execute documents, report, filters
 
         expect( report.test_cases.total ).to eq 1
       end

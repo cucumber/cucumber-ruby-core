@@ -2,14 +2,12 @@ require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/gherkin/document'
 require 'cucumber/core/compiler'
 require 'cucumber/core/test/runner'
-require 'cucumber/core/test/mapper'
 
 module Cucumber
   module Core
 
-    def execute(gherkin_documents, mapping_definition, report, filters = [])
+    def execute(gherkin_documents, report, filters = [])
       receiver = Test::Runner.new(report)
-      filters << Test::Mapper.new(mapping_definition)
       compile gherkin_documents, receiver, filters
       self
     end

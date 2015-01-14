@@ -65,21 +65,34 @@ Here's an example of how you might use [`Cucumber::Core#execute`](http://rubydoc
 
 ```ruby
 require 'cucumber/core'
+require 'cucumber/core/filter'
 
 class MyRunner
   include Cucumber::Core
 
   def run(features)
-    execute features, Mappings.new, Report.new
+    execute features, Report.new, [ActivateSteps.new]
   end
 
-  class Mappings
-    def test_case(test_case, mapper)
+  class ActivateSteps < Cucumber::Core::Filter.new
+    def test_case(test_case)
+      test_steps = test_case.test_steps.map do |step|
+        activate(step)
+      end
+
+      test_case.with_steps(test_steps).describe_to(receiver)
     end
 
-    def test_step(test_step, mapper)
-      mapper.map { fail } if test_step.name =~ /fail/
-      mapper.map { } if test_step.name =~ /pass/
+    private
+    def activate(step)
+      case step.name
+      when /fail/
+        step.with_action { raise Failure }
+      when /pass/
+        step.with_action {}
+      else
+        step
+      end
     end
   end
 
