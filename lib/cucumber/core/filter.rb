@@ -24,17 +24,17 @@ module Cucumber
 
       # Utility method for quick construction of filter classes.
       #
-      # Example usage:
+      # @example Example usage:
       #
-      # class BlankingFilter < Filter.new(:name_to_blank, :receiver)
-      #   def test_case(test_case)
-      #     if name_to_blank == test_case.name
-      #       test_case.with_steps([]).describe_to(receiver)
-      #     else
-      #       test_case.describe_to(receiver)
+      #   class BlankingFilter < Filter.new(:name_to_blank, :receiver)
+      #     def test_case(test_case)
+      #       if name_to_blank == test_case.name
+      #         test_case.with_steps([]).describe_to(receiver)
+      #       else
+      #         test_case.describe_to(receiver)
+      #       end
       #     end
       #   end
-      # end
       #
       # The attribute names passed to the Filter constructor will become private attributes of
       # your filter class.
