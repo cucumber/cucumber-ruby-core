@@ -69,51 +69,46 @@ require 'cucumber/core/filter'
 
 class MyRunner
   include Cucumber::Core
+end
 
-  def run(features)
-    execute features, Report.new, [ActivateSteps.new]
+class ActivateSteps < Cucumber::Core::Filter.new
+  def test_case(test_case)
+    test_steps = test_case.test_steps.map do |step|
+      activate(step)
+    end
+
+    test_case.with_steps(test_steps).describe_to(receiver)
   end
 
-  class ActivateSteps < Cucumber::Core::Filter.new
-    def test_case(test_case)
-      test_steps = test_case.test_steps.map do |step|
-        activate(step)
-      end
-
-      test_case.with_steps(test_steps).describe_to(receiver)
-    end
-
-    private
-    def activate(step)
-      case step.name
-      when /fail/
-        step.with_action { raise Failure }
-      when /pass/
-        step.with_action {}
-      else
-        step
-      end
+  private
+  def activate(step)
+    case step.name
+    when /fail/
+      step.with_action { raise Failure }
+    when /pass/
+      step.with_action {}
+    else
+      step
     end
   end
+end
 
-  class Report
-    def before_test_step(test_step)
-    end
-
-    def after_test_step(test_step, result)
-      puts "#{test_step.name} #{result}"
-    end
-
-    def before_test_case(test_case)
-    end
-
-    def after_test_case(test_case, result)
-    end
-
-    def done
-    end
+class Report
+  def before_test_step(test_step)
   end
 
+  def after_test_step(test_step, result)
+    puts "#{test_step.name} #{result}"
+  end
+
+  def before_test_case(test_case)
+  end
+
+  def after_test_case(test_case, result)
+  end
+
+  def done
+  end
 end
 
 feature = Cucumber::Core::Gherkin::Document.new(__FILE__, <<-GHERKIN)
@@ -124,7 +119,7 @@ Feature:
     And undefined
 GHERKIN
 
-MyRunner.new.run([feature])
+MyRunner.new.execute([feature], Report.new, [ActivateSteps.new])
 ```
 
 If you run this little Ruby script, you should see the following output:
