@@ -16,6 +16,11 @@ module CaptureWarnings
       print_warnings('other', other_warnings) if ENV['VIEW_OTHER_WARNINGS']
     end
 
+    # Until they fix https://bugs.ruby-lang.org/issues/10661
+    if RUBY_VERSION == "2.2.0"
+      project_warnings = project_warnings.reject { |w| w =~ /warning: possible reference to past scope/ }
+    end
+
     if project_warnings.any?
       puts "#{ project_warnings.count } cucumber-core warnings detected" 
       print_warnings('cucumber-core', project_warnings)
