@@ -15,9 +15,8 @@ The entry-point is a single method on the module `Cucumber::Core` called [`#exec
 
 1. Parses the plain-text Gherkin documents into an **AST**
 2. Compiles the AST down to **test cases**
-3. Passes the test cases through your **mappings** to activate them
-4. Passes the activated test cases through any **filters**
-5. Executes the test cases, calling back to the **report**
+3. Passes the activated test cases through any **filters**
+4. Executes the test cases, calling back to the **report**
 
 We've introduced a number of concepts here, so let's go through them in detail.
 
@@ -31,19 +30,13 @@ These are immutable value objects.
 
 Your gherkin might contain scenarios, as well as examples from tables beneath a scenario outline.
 
-Test cases represent the general case of both of these. We compile the AST down to instances of [`Cucumber::Core::Test::Case`](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Test/Case), each containing a number of instances of [`Cucumber::Core::Test::Step`](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Test/Step). It's these that are then mapped, filtered, and executed.
+Test cases represent the general case of both of these. We compile the AST down to instances of [`Cucumber::Core::Test::Case`](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Test/Case), each containing a number of instances of [`Cucumber::Core::Test::Step`](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Test/Step). It's these that are then filtered and executed.
 
 Test cases and their test steps are also immutable value objects.
 
-### Mappings
-
-When test cases are first compiled from the AST, they contain no information about how to execute them. Mappings are how we connect them to the code they need to run in order to execute your tests.
-
 ### Filters
 
-Once we have the test cases, and they've been activated by the mappings, you may want to pass them through a filter or two. Filters can be used to do things like sort, replace or remove some of the test cases or their steps before they're executed.
-
-In fact, the mappings are just a special case of a filter.
+Once we have the test cases, and they've been activated by the mappings, you may want to pass them through a filter or two. Filters can be used to do things like activate, sort, replace or remove some of the test cases or their steps before they're executed.
 
 ### Report
 
