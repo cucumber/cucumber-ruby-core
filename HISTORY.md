@@ -1,4 +1,17 @@
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.3...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0...master)
+
+## [v1.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.4...v1.0.0)
+
+### Features Removed
+
+  * Removed the Mapper DSL (@mattwynne, @tooky)
+  * Removed Cucumber.initializer (@tooky)
+
+### New Features
+
+  * Added dynamic filter class constructor (@mattwynne)
+
+## [v1.0.0.beta.4](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.3...v1.0.0.beta.4)
 
 ### New Features
 
