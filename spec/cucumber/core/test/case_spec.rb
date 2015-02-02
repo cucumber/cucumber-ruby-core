@@ -68,6 +68,7 @@ module Cucumber
               receiver = double.as_null_object
 
               expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.simple_name ).to eq 'Scenario name'
                 expect( test_case.name ).to eq 'Scenario: Scenario name'
               end
               compile([gherkin], receiver)
@@ -96,12 +97,15 @@ module Cucumber
               end
               receiver = double.as_null_object
               expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.simple_name ).to eq 'outline name, examples name (row 1)'
                 expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 1)'
               end.once.ordered
               expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.simple_name ).to eq 'outline name, examples name (row 2)'
                 expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 2)'
               end.once.ordered
               expect( receiver ).to receive(:test_case) do |test_case|
+                expect( test_case.simple_name ).to eq 'outline name, Examples (row 1)'
                 expect( test_case.name ).to eq 'Scenario Outline: outline name, Examples (row 1)'
               end.once.ordered
               compile [gherkin], receiver
@@ -349,7 +353,7 @@ module Cucumber
           context "for a scenario outline" do
             let(:source) do
               Gherkin::Document.new(file, <<-END.unindent)
-                Feature: 
+                Feature:
 
                   Scenario: one
                     Given one a
