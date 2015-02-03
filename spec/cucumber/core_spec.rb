@@ -48,7 +48,7 @@ module Cucumber
       it "filters out test cases based on a tag expression" do
         visitor = double.as_null_object
         expect( visitor ).to receive(:test_case) do |test_case|
-          expect( test_case.name ).to eq 'Scenario Outline: foo, bar (row 1)'
+          expect( test_case.name ).to eq 'foo, bar (row 1)'
         end.exactly(1).times
 
         gherkin = gherkin do
@@ -283,10 +283,10 @@ module Cucumber
           expect( report.test_cases.total_passed ).to eq 1
           expect( report.test_cases.total_failed ).to eq 0
           expect( logger ).to eq [
-            :before_all, 
-              :step, 
-            :middle, 
-              :step, 
+            :before_all,
+              :step,
+            :middle,
+              :step,
             :after_all
           ]
         end
