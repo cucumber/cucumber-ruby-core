@@ -62,12 +62,7 @@ module Cucumber
           end
 
           def slurp_comments
-            # TODO: I can't think of another way to handle this?
-            # When we use the comments, we need to reset the collection
-            # for the next element...
-            slurped_comments = comment_lines.dup
-            @comment_lines = nil
-            slurped_comments
+            comment_lines.tap { @comment_lines = nil }
           end
         end
 
