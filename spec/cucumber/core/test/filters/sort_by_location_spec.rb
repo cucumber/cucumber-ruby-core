@@ -34,10 +34,10 @@ module Cucumber::Core::Test
       it "filters by the locations" do
         filter = SortByLocation.new(locations)
         expect(receiver).to receive(:test_case) { |test_case|
-          expect(test_case.name).to match /y/
+          expect(test_case.name).to match(/y/)
         }.once.ordered
         expect(receiver).to receive(:test_case) { |test_case|
-          expect(test_case.name).to match /x/
+          expect(test_case.name).to match(/x/)
         }.once.ordered
         compile [doc], receiver, [filter]
       end
