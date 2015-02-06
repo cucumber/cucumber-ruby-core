@@ -7,66 +7,68 @@ module Cucumber::Core::Test
     include Cucumber::Core::Gherkin::Writer
     include Cucumber::Core
 
-    describe ".new" do
-      let(:receiver) { double.as_null_object }
+    let(:receiver) { SpyReceiver.new }
 
-      let(:doc) { 
-        gherkin do
-          feature do
-            scenario 'x' do
-              step 'a step'
-            end
+    let(:doc) do
+      gherkin do
+        feature do
+          scenario 'x' do
+            step 'a step'
+          end
 
-            scenario 'y' do
-              step 'a step'
-            end
+          scenario 'y' do
+            step 'a step'
           end
         end
-      }
+      end
+    end
 
-      it "sorts by the given locations" do
-        locations = [
-          Cucumber::Core::Ast::Location.new('features/test.feature', 6),
-          Cucumber::Core::Ast::Location.new('features/test.feature', 3)
-        ]
-        filter = LocationFilter.new(locations)
-        expect(receiver).to receive(:test_case) { |test_case|
-          expect(test_case.name).to match(/y/)
-        }.once.ordered
-        expect(receiver).to receive(:test_case) { |test_case|
-          expect(test_case.name).to match(/x/)
-        }.once.ordered
-        compile [doc], receiver, [filter]
+    it "sorts by the given locations" do
+      locations = [
+        Cucumber::Core::Ast::Location.new('features/test.feature', 6),
+        Cucumber::Core::Ast::Location.new('features/test.feature', 3)
+      ]
+      filter = LocationFilter.new(locations)
+      compile [doc], receiver, [filter]
+      expect(receiver.test_case_locations).to eq ["features/test.feature:6", "features/test.feature:3"]
+    end
+
+    it "works with wildcard locations" do
+      locations = [
+        Cucumber::Core::Ast::Location.new('features/test.feature')
+      ]
+      filter = LocationFilter.new(locations)
+      compile [doc], receiver, [filter]
+      expect(receiver.test_case_locations).to eq ["features/test.feature:3", "features/test.feature:6"]
+    end
+
+    it "filters out scenarios that don't match" do
+      locations = [
+        Cucumber::Core::Ast::Location.new('features/test.feature', 3)
+      ]
+      filter = LocationFilter.new(locations)
+      compile [doc], receiver, [filter]
+      expect(receiver.test_case_locations).to eq ["features/test.feature:3"]
+    end
+
+    class SpyReceiver
+      def test_case(test_case)
+        test_cases << test_case
       end
 
-      it "works with wildcard locations" do
-        locations = [
-          Cucumber::Core::Ast::Location.new('features/test.feature')
-        ]
-        filter = LocationFilter.new(locations)
-        expect(receiver).to receive(:test_case) { |test_case|
-          expect(test_case.name).to match(/x/)
-        }.once.ordered
-        expect(receiver).to receive(:test_case) { |test_case|
-          expect(test_case.name).to match(/y/)
-        }.once.ordered
-        compile [doc], receiver, [filter]
+      def done
       end
 
-      it "filters out scenarios that don't match" do
-        locations = [
-          Cucumber::Core::Ast::Location.new('features/test.feature', 3)
-        ]
-        filter = LocationFilter.new(locations)
-        expect(receiver).to receive(:test_case) { |test_case|
-          expect(test_case.name).to match(/x/)
-        }.once.ordered
-        compile [doc], receiver, [filter]
+      def test_case_locations
+        test_cases.map(&:location).map(&:to_s)
       end
 
-      def run(filter)
-        compile [doc], receiver, [filter]
+      private
+
+      def test_cases
+        @test_cases ||= []
       end
+
     end
   end
 end
