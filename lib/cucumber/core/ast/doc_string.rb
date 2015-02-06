@@ -50,7 +50,7 @@ module Cucumber
           if other.respond_to?(:to_str)
             return content == other.to_str
           end
-          raise ArgumentError, "Can't compare a #{self.class.name} with a #{other.class.name}"
+          false
         end
 
         private

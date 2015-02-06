@@ -45,8 +45,8 @@ module Cucumber
             expect( doc_string ).to eq 'foo'
           end
 
-          it 'raises an error when compared with something odd' do
-            expect { doc_string == 5 }.to raise_error(ArgumentError)
+          it 'returns false when compared with something odd' do
+            expect( doc_string ).not_to eq 5
           end
         end
 
