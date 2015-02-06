@@ -21,8 +21,12 @@ module Cucumber
         private
 
         def sorted_test_cases
-          test_cases.sort_by do |test_case|
-            index_of(test_case)
+          locations.map { |location| test_cases_matching(location) }.flatten
+        end
+
+        def test_cases_matching(location)
+          test_cases.select do |test_case|
+            test_case.match_locations?([location])
           end
         end
 
@@ -30,11 +34,6 @@ module Cucumber
           @test_cases ||= []
         end
 
-        def index_of(test_case)
-          locations.find_index do |location|
-            test_case.match_locations?([location])
-          end
-        end
       end
     end
   end
