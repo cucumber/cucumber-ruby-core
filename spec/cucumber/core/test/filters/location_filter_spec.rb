@@ -1,9 +1,9 @@
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core'
-require 'cucumber/core/test/filters/sort_by_location'
+require 'cucumber/core/test/filters/location_filter'
 
 module Cucumber::Core::Test
-  describe SortByLocation do
+  describe LocationFilter do
     include Cucumber::Core::Gherkin::Writer
     include Cucumber::Core
 
@@ -29,7 +29,7 @@ module Cucumber::Core::Test
           Cucumber::Core::Ast::Location.new('features/test.feature', 6),
           Cucumber::Core::Ast::Location.new('features/test.feature', 3)
         ]
-        filter = SortByLocation.new(locations)
+        filter = LocationFilter.new(locations)
         expect(receiver).to receive(:test_case) { |test_case|
           expect(test_case.name).to match(/y/)
         }.once.ordered
@@ -43,7 +43,7 @@ module Cucumber::Core::Test
         locations = [
           Cucumber::Core::Ast::Location.new('features/test.feature')
         ]
-        filter = SortByLocation.new(locations)
+        filter = LocationFilter.new(locations)
         expect(receiver).to receive(:test_case) { |test_case|
           expect(test_case.name).to match(/x/)
         }.once.ordered
@@ -57,7 +57,7 @@ module Cucumber::Core::Test
         locations = [
           Cucumber::Core::Ast::Location.new('features/test.feature', 3)
         ]
-        filter = SortByLocation.new(locations)
+        filter = LocationFilter.new(locations)
         expect(receiver).to receive(:test_case) { |test_case|
           expect(test_case.name).to match(/x/)
         }.once.ordered

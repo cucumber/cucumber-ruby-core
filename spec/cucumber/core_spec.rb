@@ -353,7 +353,7 @@ module Cucumber
 
         report = Core::Report::Summary.new
         some_feature = Cucumber::Core::Ast::Location.new("some.feature")
-        filters = [ Cucumber::Core::Test::LocationsFilter.new([some_feature]) ]
+        filters = [ Cucumber::Core::Test::LocationFilter.new([some_feature]) ]
 
         execute documents, report, filters
 

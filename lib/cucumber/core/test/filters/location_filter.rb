@@ -3,7 +3,9 @@ require 'cucumber/core/filter'
 module Cucumber
   module Core
     module Test
-      class SortByLocation < Filter.new(:locations)
+
+      # Sorts and filters scenarios based on a list of locations
+      class LocationFilter < Filter.new(:locations)
 
         def test_case(test_case)
           test_cases << test_case
