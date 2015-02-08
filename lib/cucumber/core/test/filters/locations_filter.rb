@@ -5,7 +5,7 @@ module Cucumber
     module Test
 
       # Sorts and filters scenarios based on a list of locations
-      class LocationFilter < Filter.new(:locations)
+      class LocationsFilter < Filter.new(:locations)
 
         def test_case(test_case)
           test_cases << test_case
