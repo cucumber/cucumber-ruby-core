@@ -22,6 +22,18 @@ module Cucumber
           "#{location}:in `#{keyword}#{name}'"
         end
 
+        def actual_keyword(previous_step_keyword = nil)
+          if [language.keywords('and'), language.keywords('but')].flatten.uniq.include? keyword
+            if previous_step_keyword.nil?
+              language.keywords('given').reject{|kw| kw == '* '}[0]
+            else
+              previous_step_keyword
+            end
+          else
+            keyword
+          end
+        end
+
         private
 
         def children

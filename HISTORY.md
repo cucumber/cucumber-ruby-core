@@ -1,8 +1,12 @@
 ## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.0...master)
 
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0...v1.1.0)
+### New Features
 
-### New features
+  * Calculate actual keyword for snippets (@brasmusson)
+
+## [v1.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0...v1.1.0)
+
+### New features
 
   * LocationsFilter now sorts test cases as well as filtering them (@mattwynne)
 

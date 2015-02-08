@@ -1,4 +1,5 @@
 require 'cucumber/core/ast/step'
+require 'gherkin/i18n'
 
 module Cucumber
   module Core
@@ -47,6 +48,53 @@ module Cucumber
 
         end
 
+        describe "actual keyword" do
+          let(:language) { ::Gherkin::I18n.get('en') }
+
+          context "for keywords 'given', 'when' and 'then'" do
+            let(:given_step) { Step.new(double, language, double, "Given ", double, double) }
+            let(:when_step) { Step.new(double, language, double, "When ", double, double) }
+            let(:then_step) { Step.new(double, language, double, "Then ", double, double) }
+
+            it "returns the keyword itself" do
+              expect( given_step.actual_keyword(nil) ).to eq("Given ")
+              expect( when_step.actual_keyword(nil) ).to eq("When ")
+              expect( then_step.actual_keyword(nil) ).to eq("Then ")
+            end
+          end
+
+          context "for keyword 'and', 'but', and '*'" do
+            let(:and_step) { Step.new(double, language, double, "And ", double, double) }
+            let(:but_step) { Step.new(double, language, double, "But ", double, double) }
+            let(:asterisk_step) { Step.new(double, language, double, "* ", double, double) }
+
+            context "when the previous step keyword exist" do
+              it "returns the previous step keyword" do
+                expect( and_step.actual_keyword("Then ") ).to eq("Then ")
+                expect( but_step.actual_keyword("Then ") ).to eq("Then ")
+                expect( asterisk_step.actual_keyword("Then ") ).to eq("Then ")
+              end
+            end
+
+            context "when the previous step keyword does not exist" do
+              it "returns the 'given' keyword" do
+                expect( and_step.actual_keyword(nil) ).to eq("Given ")
+                expect( but_step.actual_keyword(nil) ).to eq("Given ")
+                expect( asterisk_step.actual_keyword(nil) ).to eq("Given ")
+              end
+            end
+
+          end
+
+          context "for i18n languages" do
+            let(:language) { ::Gherkin::I18n.get('en-lol') }
+            let(:and_step) { Step.new(double, language, double, "AN ", double, double) }
+
+            it "returns the keyword in the correct language" do
+              expect( and_step.actual_keyword(nil) ).to eq("I CAN HAZ ")
+            end
+          end
+        end
       end
 
       describe ExpandedOutlineStep do
