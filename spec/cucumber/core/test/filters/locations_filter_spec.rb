@@ -1,9 +1,9 @@
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core'
-require 'cucumber/core/test/filters/location_filter'
+require 'cucumber/core/test/filters/locations_filter'
 
 module Cucumber::Core::Test
-  describe LocationFilter do
+  describe LocationsFilter do
     include Cucumber::Core::Gherkin::Writer
     include Cucumber::Core
 
@@ -28,7 +28,7 @@ module Cucumber::Core::Test
         Cucumber::Core::Ast::Location.new('features/test.feature', 6),
         Cucumber::Core::Ast::Location.new('features/test.feature', 3)
       ]
-      filter = LocationFilter.new(locations)
+      filter = LocationsFilter.new(locations)
       compile [doc], receiver, [filter]
       expect(receiver.test_case_locations).to eq ["features/test.feature:6", "features/test.feature:3"]
     end
@@ -37,7 +37,7 @@ module Cucumber::Core::Test
       locations = [
         Cucumber::Core::Ast::Location.new('features/test.feature')
       ]
-      filter = LocationFilter.new(locations)
+      filter = LocationsFilter.new(locations)
       compile [doc], receiver, [filter]
       expect(receiver.test_case_locations).to eq ["features/test.feature:3", "features/test.feature:6"]
     end
@@ -46,7 +46,7 @@ module Cucumber::Core::Test
       locations = [
         Cucumber::Core::Ast::Location.new('features/test.feature', 3)
       ]
-      filter = LocationFilter.new(locations)
+      filter = LocationsFilter.new(locations)
       compile [doc], receiver, [filter]
       expect(receiver.test_case_locations).to eq ["features/test.feature:3"]
     end
