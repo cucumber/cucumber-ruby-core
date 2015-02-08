@@ -1,4 +1,10 @@
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.0...master)
+
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0...v1.1.0)
+
+### New features
+
+  * LocationsFilter now sorts test cases as well as filtering them (@mattwynne)
 
 ## [v1.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.4...v1.0.0)
 
