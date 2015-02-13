@@ -1,4 +1,10 @@
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.0...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...master)
+
+* Your change here?
+
+##
+[v1.1.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...v1.1.1)
+
 
 ### New Features
 
