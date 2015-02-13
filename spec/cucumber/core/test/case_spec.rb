@@ -68,7 +68,8 @@ module Cucumber
               receiver = double.as_null_object
 
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'Scenario: Scenario name'
+                expect( test_case.name ).to eq 'Scenario name'
+                expect( test_case.keyword ).to eq 'Scenario'
               end
               compile([gherkin], receiver)
             end
@@ -96,13 +97,14 @@ module Cucumber
               end
               receiver = double.as_null_object
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 1)'
+                expect( test_case.name ).to eq 'outline name, examples name (row 1)'
+                expect( test_case.keyword ).to eq 'Scenario Outline'
               end.once.ordered
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'Scenario Outline: outline name, examples name (row 2)'
+                expect( test_case.name ).to eq 'outline name, examples name (row 2)'
               end.once.ordered
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'Scenario Outline: outline name, Examples (row 1)'
+                expect( test_case.name ).to eq 'outline name, Examples (row 1)'
               end.once.ordered
               compile [gherkin], receiver
             end
@@ -273,7 +275,7 @@ module Cucumber
             end
 
             let(:test_case) do
-              test_cases.find { |c| c.name == 'Scenario: two' }
+              test_cases.find { |c| c.name == 'two' }
             end
 
             it 'matches the precise location of the scenario' do
@@ -282,7 +284,7 @@ module Cucumber
             end
 
             it 'matches the precise location of an empty scenario' do
-              empty_scenario_test_case = test_cases.find { |c| c.name == 'Scenario: empty' }
+              empty_scenario_test_case = test_cases.find { |c| c.name == 'empty' }
               location = Ast::Location.new(file, 26)
               expect( empty_scenario_test_case.match_locations?([location]) ).to be_truthy
             end
@@ -320,7 +322,7 @@ module Cucumber
 
             context "with a docstring" do
               let(:test_case) do
-                test_cases.find { |c| c.name == 'Scenario: with docstring' }
+                test_cases.find { |c| c.name == 'with docstring' }
               end
 
               it "matches a location at the start the docstring" do
@@ -336,7 +338,7 @@ module Cucumber
 
             context "with a table" do
               let(:test_case) do
-                test_cases.find { |c| c.name == 'Scenario: with a table' }
+                test_cases.find { |c| c.name == 'with a table' }
               end
 
               it "matches a location on the first table row" do
@@ -349,7 +351,7 @@ module Cucumber
           context "for a scenario outline" do
             let(:source) do
               Gherkin::Document.new(file, <<-END.unindent)
-                Feature: 
+                Feature:
 
                   Scenario: one
                     Given one a
@@ -376,7 +378,7 @@ module Cucumber
             end
 
             let(:test_case) do
-              test_cases.find { |c| c.name == "Scenario Outline: two, x1 (row 1)" }
+              test_cases.find { |c| c.name == "two, x1 (row 1)" }
             end
 
             it 'matches the precise location of the scenario outline examples table row' do
