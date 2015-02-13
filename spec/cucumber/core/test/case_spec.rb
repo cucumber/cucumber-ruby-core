@@ -69,6 +69,7 @@ module Cucumber
 
               expect( receiver ).to receive(:test_case) do |test_case|
                 expect( test_case.name ).to eq 'Scenario name'
+                expect( test_case.keyword ).to eq 'Scenario'
               end
               compile([gherkin], receiver)
             end
@@ -97,6 +98,7 @@ module Cucumber
               receiver = double.as_null_object
               expect( receiver ).to receive(:test_case) do |test_case|
                 expect( test_case.name ).to eq 'outline name, examples name (row 1)'
+                expect( test_case.keyword ).to eq 'Scenario Outline'
               end.once.ordered
               expect( receiver ).to receive(:test_case) do |test_case|
                 expect( test_case.name ).to eq 'outline name, examples name (row 2)'

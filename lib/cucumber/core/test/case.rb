@@ -47,6 +47,10 @@ module Cucumber
         def name
           @name ||= NameBuilder.new(self).result
         end
+        
+        def keyword
+          @keyword ||= NameBuilder.new(self).keyword
+        end
 
         def tags
           @tags ||= TagCollector.new(self).result
@@ -92,6 +96,7 @@ module Cucumber
 
         class NameBuilder
           attr_reader :result
+          attr_reader :keyword
 
           def initialize(test_case)
             test_case.describe_source_to self
@@ -102,12 +107,14 @@ module Cucumber
           end
 
           def scenario(scenario)
-            @result = "#{scenario.name}"
+            @result = scenario.name
+            @keyword = scenario.keyword
             self
           end
 
           def scenario_outline(outline)
-            @result = "#{outline.name}" + @result
+            @result = outline.name + @result
+            @keyword = outline.keyword
             self
           end
 
