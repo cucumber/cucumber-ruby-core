@@ -5,7 +5,6 @@ module Cucumber
     module Test
       class Case
         attr_reader :source, :test_steps, :around_hooks
-        private     :around_hooks
 
         def initialize(test_steps, source, around_hooks = [])
           raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.kind_of?(Array)
