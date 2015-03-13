@@ -7,7 +7,7 @@ module Cucumber::Core::Test
   describe Runner do
 
     let(:test_case) { Case.new(test_steps, source) }
-    let(:source)    { double }
+    let(:source)    { [double('ast node', location: double)] }
     let(:runner)    { Runner.new(report) }
     let(:report)    { double.as_null_object }
     let(:passing)   { Step.new([double]).with_action {} }
@@ -207,6 +207,39 @@ module Cucumber::Core::Test
         test_case = Case.new([failing_step, after_hook], source)
         test_case.describe_to runner
         expect(result_spy).to be_failed
+      end
+    end
+
+    require 'cucumber/core/test/around_hook'
+    context "with around hooks" do
+      it "passes normally when around hooks don't fail" do
+        around_hook = AroundHook.new { |block| block.call }
+        passing_step = Step.new([double]).with_action {}
+        test_case = Case.new([passing_step], source, [around_hook])
+        expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
+          expect(result).to be_passed
+        end
+        test_case.describe_to runner
+      end
+
+      it "gets a failed result if the Around hook fails" do
+        around_hook = AroundHook.new { |block| fail 'this should be caught and reported in the result' }
+        passing_step = Step.new([double]).with_action {}
+        test_case = Case.new([passing_step], source, [around_hook])
+        expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
+          expect(result).to be_failed
+        end
+        test_case.describe_to runner
+      end
+
+      it "fails when a step fails if the around hook works" do
+        around_hook = AroundHook.new { |block| block.call }
+        failing_step = Step.new([double]).with_action { fail "this should be reported correctly" }
+        test_case = Case.new([failing_step], source, [around_hook])
+        expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
+          expect(result).to be_failed
+        end
+        test_case.describe_to runner
       end
     end
 

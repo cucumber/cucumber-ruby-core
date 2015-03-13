@@ -27,7 +27,7 @@ module Cucumber
         end
 
         def around_hook(hook, &continue)
-          hook.call(continue)
+          running_test_case.execute(hook, &continue)
           self
         end
 
@@ -42,8 +42,8 @@ module Cucumber
             @status = Status::Unknown.new(Result::Unknown.new)
           end
 
-          def execute(test_step)
-            status.execute(test_step, self)
+          def execute(test_step, &continue)
+            status.execute(test_step, self, &continue)
           end
 
           def result
@@ -95,8 +95,8 @@ module Cucumber
                 @step_result = step_result
               end
 
-              def execute(test_step, monitor)
-                result = test_step.execute(monitor.result)
+              def execute(test_step, monitor, &continue)
+                result = test_step.execute(monitor.result, &continue)
                 result.describe_to(monitor, result)
               end
 
@@ -118,7 +118,7 @@ module Cucumber
             end
 
             class Failing < Base
-              def execute(test_step, monitor)
+              def execute(test_step, monitor, &continue)
                 test_step.skip(monitor.result)
               end
 
