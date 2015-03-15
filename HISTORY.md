@@ -1,9 +1,10 @@
 ## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...master)
 
-* Your change here?
+### New Features
 
-##
-[v1.1.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...v1.1.1)
+  * Make Test Case names for Scenario Outlines language neutral [83](https://github.com/cucumber/cucumber-ruby-core/pull/83) (@brasmusson)
+
+## [v1.1.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.0...v1.1.1)
 
 
 ### New Features

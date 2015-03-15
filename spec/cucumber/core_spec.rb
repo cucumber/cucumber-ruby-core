@@ -48,7 +48,7 @@ module Cucumber
       it "filters out test cases based on a tag expression" do
         visitor = double.as_null_object
         expect( visitor ).to receive(:test_case) do |test_case|
-          expect( test_case.name ).to eq 'foo, bar (row 1)'
+          expect( test_case.name ).to eq 'foo, bar (#1)'
         end.exactly(1).times
 
         gherkin = gherkin do

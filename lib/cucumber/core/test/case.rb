@@ -125,7 +125,7 @@ module Cucumber
           end
 
           def examples_table_row(row)
-            @result = " (row #{row.number})"
+            @result = " (##{row.number})"
             self
           end
         end

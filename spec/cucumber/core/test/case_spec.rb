@@ -97,14 +97,14 @@ module Cucumber
               end
               receiver = double.as_null_object
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'outline name, examples name (row 1)'
+                expect( test_case.name ).to eq 'outline name, examples name (#1)'
                 expect( test_case.keyword ).to eq 'Scenario Outline'
               end.once.ordered
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'outline name, examples name (row 2)'
+                expect( test_case.name ).to eq 'outline name, examples name (#2)'
               end.once.ordered
               expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'outline name, Examples (row 1)'
+                expect( test_case.name ).to eq 'outline name, Examples (#1)'
               end.once.ordered
               compile [gherkin], receiver
             end
@@ -378,7 +378,7 @@ module Cucumber
             end
 
             let(:test_case) do
-              test_cases.find { |c| c.name == "two, x1 (row 1)" }
+              test_cases.find { |c| c.name == "two, x1 (#1)" }
             end
 
             it 'matches the precise location of the scenario outline examples table row' do
