@@ -222,22 +222,35 @@ module Cucumber::Core::Test
         test_case.describe_to runner
       end
 
-      it "gets a failed result if the Around hook fails" do
-        around_hook = AroundHook.new { |block| fail 'this should be caught and reported in the result' }
+      it "gets a failed result if the Around hook fails before the test case is run" do
+        around_hook = AroundHook.new { |block| raise exception }
         passing_step = Step.new([double]).with_action {}
         test_case = Case.new([passing_step], source, [around_hook])
         expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
+          expect(result.exception).to eq exception
+        end
+        test_case.describe_to runner
+      end
+
+      it "gets a failed result if the Around hook fails after the test case is run" do
+        around_hook = AroundHook.new { |block| block.call; raise exception }
+        passing_step = Step.new([double]).with_action {}
+        test_case = Case.new([passing_step], source, [around_hook])
+        expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
+          expect(result).to be_failed
+          expect(result.exception).to eq exception
         end
         test_case.describe_to runner
       end
 
       it "fails when a step fails if the around hook works" do
         around_hook = AroundHook.new { |block| block.call }
-        failing_step = Step.new([double]).with_action { fail "this should be reported correctly" }
+        failing_step = Step.new([double]).with_action { raise exception }
         test_case = Case.new([failing_step], source, [around_hook])
         expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
+          expect(result.exception).to eq exception
         end
         test_case.describe_to runner
       end
