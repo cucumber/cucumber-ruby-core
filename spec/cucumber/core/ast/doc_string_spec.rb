@@ -8,6 +8,22 @@ module Cucumber
         let(:location) { double }
         let(:doc_string) { DocString.new(content, content_type, location) }
 
+        describe "#data_table?" do
+          let(:doc_string) { DocString.new("test", "text/plain" , location) }
+
+          it "returns false" do
+            expect(doc_string).not_to be_data_table
+          end
+        end
+
+        describe "#doc_string" do
+          let(:doc_string) { DocString.new("test", "text/plain" , location) }
+
+          it "returns true" do
+            expect(doc_string).to be_doc_string
+          end
+        end
+
         context '#map' do
           let(:content) { 'original content' }
           let(:content_type) { double }

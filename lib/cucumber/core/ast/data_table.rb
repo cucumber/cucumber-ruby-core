@@ -49,6 +49,14 @@ module Cucumber
           dup
         end
 
+        def data_table?
+          true
+        end
+
+        def doc_string?
+          false
+        end
+
         # Creates a copy of this table
         #
         def dup

@@ -33,6 +33,14 @@ module Cucumber
           super @content
         end
 
+        def data_table?
+          false
+        end
+
+        def doc_string?
+          true
+        end
+
         def map
           raise ArgumentError, "No block given" unless block_given?
           new_content = yield content

@@ -28,6 +28,22 @@ module Cucumber
           end
         end
 
+        describe "#data_table?" do
+          let(:table) { DataTable.new([[1,2],[3,4]], location) }
+
+          it "returns true" do
+            expect(table).to be_data_table
+          end
+        end
+
+        describe "#doc_string" do
+          let(:table) { DataTable.new([[1,2],[3,4]], location) }
+
+          it "returns false" do
+            expect(table).not_to be_doc_string
+          end
+        end
+
         describe "#map" do
           let(:table) { DataTable.new([ %w{foo bar}, %w{1 2} ], location) }
 

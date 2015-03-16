@@ -6,6 +6,14 @@ module Cucumber
           self
         end
 
+        def data_table?
+          false
+        end
+
+        def doc_string?
+          false
+        end
+
         def map(&block)
           self
         end
