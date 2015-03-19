@@ -3,6 +3,10 @@
 ### New Features
 
   * Make Test Case names for Scenario Outlines language neutral [83](https://github.com/cucumber/cucumber-ruby-core/pull/83) (@brasmusson)
+  * Add predicate methods for Multline arguments (@mattwynne)
+  * Expose `Test::Case#feature` (@mattwynne)
+  * Fail test case if around hook fails (@mattwynne, @tooky)
+  * Expose `Test::Case#around_hooks` (@tooky)
 
 ## [v1.1.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.0...v1.1.1)
 
