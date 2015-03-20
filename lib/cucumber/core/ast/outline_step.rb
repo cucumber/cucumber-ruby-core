@@ -21,6 +21,11 @@ module Cucumber
           Ast::ExpandedOutlineStep.new(self, gherkin_statement, language, row.location, keyword, row.expand(name), replace_multiline_arg(row))
         end
 
+        def inspect
+          keyword_and_name = [keyword, name].join(": ")
+          %{#<#{self.class} "#{keyword_and_name}" (#{location})>}
+        end
+
         private
 
         def description_for_visitors

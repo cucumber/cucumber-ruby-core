@@ -52,6 +52,10 @@ module Cucumber
           def build_row(row_cells, number, location, language)
             Row.new(Hash[@cells.zip(row_cells)], number, location, language)
           end
+
+          def inspect
+            "#<#{self.class} #{values} (#{location})>"
+          end
         end
 
         class Row
@@ -88,7 +92,7 @@ module Cucumber
           end
 
           def inspect
-            "#{self.class}: #{@data.inspect}"
+            "#<#{self.class}: #{@data.inspect} (#{location})>"
           end
 
           protected

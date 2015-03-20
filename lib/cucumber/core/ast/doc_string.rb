@@ -61,6 +61,15 @@ module Cucumber
           false
         end
 
+        def inspect
+          [
+            %{#<#{self.class} (#{location})},
+            %{  """#{content_type}},
+            %{  #{@content}},
+            %{  """>}
+          ].join("\n")
+        end
+
         private
 
         def description_for_visitors

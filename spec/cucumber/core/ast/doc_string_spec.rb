@@ -1,5 +1,6 @@
 require 'cucumber/core/ast/location'
 require 'cucumber/core/ast/doc_string'
+require 'unindent'
 
 module Cucumber
   module Core
@@ -90,6 +91,21 @@ module Cucumber
           it 'delegates #split to the content string' do
             expect(doc_string.split('n')).to eq ['co', 'te', 't']
           end
+        end
+      end
+
+      context "inspect" do
+        let(:location) { Location.new("features/feature.feature", 8) }
+        let(:content_type) { 'text/plain' }
+
+        it "provides a useful inspect method" do
+          doc_string = DocString.new("some text", content_type, location)
+          expect(doc_string.inspect).to eq <<-END.chomp.unindent
+          #<Cucumber::Core::Ast::DocString (features/feature.feature:8)
+            """text/plain
+            some text
+            """>
+          END
         end
       end
     end

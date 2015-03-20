@@ -34,6 +34,11 @@ module Cucumber
           end
         end
 
+        def inspect
+          keyword_and_name = [keyword, name].join(": ")
+          %{#<#{self.class} "#{keyword_and_name}" (#{location})>}
+        end
+
         private
 
         def children

@@ -91,7 +91,7 @@ module Cucumber
         end
 
         def inspect
-          raw.inspect
+          %{#<#{self.class} #{raw.inspect} (#{location})>}
         end
 
         private

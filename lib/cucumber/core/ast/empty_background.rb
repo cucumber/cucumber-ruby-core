@@ -5,6 +5,10 @@ module Cucumber
         def describe_to(*)
           self
         end
+
+        def inspect
+          "#<#{self.class.name}>"
+        end
       end
     end
   end

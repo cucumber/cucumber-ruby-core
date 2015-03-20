@@ -10,6 +10,10 @@ module Cucumber
           @location = location
           @name = name
         end
+
+        def inspect
+          %{#<#{self.class} "#{name}" (#{location})>}
+        end
       end
     end
   end

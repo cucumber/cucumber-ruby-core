@@ -17,6 +17,10 @@ module Cucumber
         def to_s
           value
         end
+
+        def inspect
+          %{#<#{self.class} #{value} (#{location})}
+        end
       end
     end
   end

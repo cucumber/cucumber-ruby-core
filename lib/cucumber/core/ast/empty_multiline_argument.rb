@@ -25,6 +25,10 @@ module Cucumber
         def to_sexp
           []
         end
+
+        def inspect
+          "#<#{self.class}>"
+        end
       end
     end
   end

@@ -22,6 +22,11 @@ module Cucumber
         def to_s
           @title
         end
+
+        def inspect
+          keyword_and_name = [keyword, name].join(": ")
+          %{#<#{self.class} "#{keyword_and_name}" (#{location})>}
+        end
       end
     end
   end
