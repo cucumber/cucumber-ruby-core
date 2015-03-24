@@ -1,4 +1,10 @@
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.2...master)
+
+### New Features
+
+  * Added custom `inspect` methods for AST Nodes (@tooky)
+
+## [v1.1.2](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...v1.1.2)
 
 ### New Features
 
