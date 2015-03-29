@@ -2,6 +2,8 @@ module Cucumber
   module Core
     module Ast
       class EmptyBackground
+        attr_accessor :feature
+
         def describe_to(*)
           self
         end

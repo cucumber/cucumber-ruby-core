@@ -66,6 +66,25 @@ module Cucumber
           end
         end
 
+        context "a Feature with a Background" do
+          source do
+            feature do
+              background
+              scenario
+            end
+          end
+
+          it "makes the Background know its Feature" do
+            visitor = double
+            allow( visitor ).to receive(:feature).and_yield(visitor)
+            expect( visitor ).to receive(:background) do |background|
+              expect( background.feature.inspect ).to eq feature.inspect
+            end
+            allow( visitor ).to receive(:scenario)
+            feature.describe_to(visitor)
+          end
+        end
+
         context "a Scenario with a DocString" do
           source do
             feature do

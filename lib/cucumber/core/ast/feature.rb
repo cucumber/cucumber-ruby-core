@@ -27,6 +27,7 @@ module Cucumber
           @title = title
           @description = description
           @feature_elements = feature_elements
+          @background.feature = self
         end
 
         def children

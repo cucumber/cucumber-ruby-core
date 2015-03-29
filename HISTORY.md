@@ -1,6 +1,10 @@
 ## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.3...master)
 
-## [v1.1.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.2...v1.1.2)
+### Bugfixes
+
+ * Set the feature attribute och background ([#84](https://github.com/cucumber/cucumber-ruby-core/issues/84) @brasmusson)
+
+## [v1.1.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.2...v1.1.3)
 
 ### New Features
 
