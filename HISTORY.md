@@ -1,5 +1,9 @@
 ## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.3...master)
 
+### New Features
+
+ * Expose name, description and examples_rows attributes of `Ast::ExamplesTable` (@mattwynne)
+
 ### Bugfixes
 
  * Set the feature attribute och background ([#84](https://github.com/cucumber/cucumber-ruby-core/issues/84) @brasmusson)
