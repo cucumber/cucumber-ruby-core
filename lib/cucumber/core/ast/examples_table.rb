@@ -24,7 +24,7 @@ module Cucumber
         end
 
         attr_reader :gherkin_statement, :location, :comments, :tags, :keyword,
-                    :name, :description, :header, :example_rows
+                    :header, :example_rows
 
         private
 

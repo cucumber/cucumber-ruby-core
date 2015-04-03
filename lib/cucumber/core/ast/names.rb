@@ -2,25 +2,21 @@ module Cucumber
   module Core
     module Ast
       module Names
-        attr_reader :description
-
-        def name
-          title
-        end
+        attr_reader :description, :name
 
         def title
           warn("deprecated. Use #name")
-          @title
+          name
         end
 
         def legacy_conflated_name_and_description
-          s = @title
+          s = name
           s += "\n#{@description}" if @description != ""
           s
         end
 
         def to_s
-          @title
+          name
         end
 
         def inspect

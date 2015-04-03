@@ -12,11 +12,11 @@ module Cucumber
         include DescribesItself
 
         attr_reader :gherkin_statement, :language, :location, :background,
-                    :comments, :tags, :feature_tags, :keyword, :title,
+                    :comments, :tags, :feature_tags, :keyword,
                     :description, :raw_steps
         private :raw_steps, :description
 
-        def initialize(gherkin_statement, language, location, background, comments, tags, feature_tags, keyword, title, description, raw_steps)
+        def initialize(gherkin_statement, language, location, background, comments, tags, feature_tags, keyword, name, description, raw_steps)
           @gherkin_statement = gherkin_statement
           @language          = language
           @location          = location
@@ -25,7 +25,7 @@ module Cucumber
           @tags              = tags
           @feature_tags      = feature_tags
           @keyword           = keyword
-          @title             = title
+          @name              = name
           @description       = description
           @raw_steps         = raw_steps
         end
