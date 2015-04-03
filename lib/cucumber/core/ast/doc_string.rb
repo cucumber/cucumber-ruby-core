@@ -22,7 +22,6 @@ module Cucumber
       class DocString < SimpleDelegator
         include HasLocation
         include DescribesItself
-        attr_accessor :file
 
         attr_reader :content_type, :content
 

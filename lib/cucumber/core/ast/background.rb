@@ -24,9 +24,8 @@ module Cucumber
         attr_reader :language, :description, :raw_steps
         private     :language, :description, :raw_steps
 
-        attr_accessor :feature
-        attr_accessor :comments, :keyword, :location
-        attr_reader   :gherkin_statement
+        attr_reader :comments, :keyword, :location
+        attr_reader :gherkin_statement
 
         def children
           raw_steps
