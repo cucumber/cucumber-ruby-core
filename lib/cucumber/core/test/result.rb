@@ -81,12 +81,8 @@ module Cucumber
           end
 
           def with_appended_backtrace(step)
-            return self unless step.respond_to?(:backtrace_line)
-            new_exception = exception.dup
-            new_exception.set_backtrace([])
-            exception.backtrace.each { |line| new_exception.backtrace << line }
-            new_exception.backtrace << step.backtrace_line
-            self.class.new(duration, new_exception)
+            exception.backtrace << step.backtrace_line if step.respond_to?(:backtrace_line)
+            self
           end
 
           def with_filtered_backtrace(filter)
@@ -115,10 +111,9 @@ module Cucumber
 
           def with_appended_backtrace(step)
             return self unless step.respond_to?(:backtrace_line)
-            new_backtrace = []
-            backtrace.each { |line| new_backtrace << line } if backtrace
-            new_backtrace << step.backtrace_line
-            self.class.new(message, duration, new_backtrace)
+            set_backtrace([]) unless backtrace
+            backtrace << step.backtrace_line
+            self
           end
 
           def with_filtered_backtrace(filter)

@@ -112,7 +112,7 @@ module Cucumber::Core::Test
             test_case.describe_to runner
           end
 
-          it 'gets backtrace appended' do
+          it 'appends the backtrace of the result' do
             expect( report ).to receive(:after_test_case) do |test_case, result|
               expect( result.backtrace ).to eq(["step line"])
             end
@@ -132,7 +132,7 @@ module Cucumber::Core::Test
             test_case.describe_to runner
           end
 
-          it 'gets its backtrace appended' do
+          it 'appends the backtrace of the result' do
             expect( report ).to receive(:after_test_case) do |test_case, result|
               expect( result.backtrace.last ).to eq("step line")
             end
@@ -151,7 +151,7 @@ module Cucumber::Core::Test
             test_case.describe_to runner
           end
 
-          it 'gets its backtrace appended' do
+          it 'appends the backtrace of the result' do
             expect( report ).to receive(:after_test_case) do |test_case, result|
               expect( result.backtrace.last ).to eq("step line")
             end
@@ -170,7 +170,7 @@ module Cucumber::Core::Test
             test_case.describe_to runner
           end
 
-          it 'gets its exception backtrace appended' do
+          it 'appends the backtrace of the exception of the result' do
             expect( report ).to receive(:after_test_case) do |test_case, result|
               expect( result.exception.backtrace.last ).to eq("step line")
             end
