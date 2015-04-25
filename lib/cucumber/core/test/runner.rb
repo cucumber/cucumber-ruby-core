@@ -97,6 +97,8 @@ module Cucumber
 
               def execute(test_step, monitor, &continue)
                 result = test_step.execute(monitor.result, &continue)
+                result = result.with_message(%(Undefined step: "#{test_step.name}")) if result.undefined?
+                result = result.with_appended_backtrace(test_step.source.last) if test_step.respond_to?(:source)
                 result.describe_to(monitor, result)
               end
 

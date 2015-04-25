@@ -30,6 +30,14 @@ module Cucumber::Core::Test
         expect { Result::Passed.new }.to raise_error(ArgumentError)
       end
 
+      it "does nothing when appending the backtrace" do
+        expect( result.with_appended_backtrace(double) ).to equal result
+      end
+
+      it "does nothing when filtering the backtrace" do
+        expect( result.with_filtered_backtrace(double) ).to equal result
+      end
+
       it { expect( result ).to     be_passed    }
       it { expect( result ).not_to be_failed    }
       it { expect( result ).not_to be_undefined }
@@ -58,6 +66,31 @@ module Cucumber::Core::Test
         expect { Result::Failed.new(duration) }.to raise_error(ArgumentError)
       end
 
+      it "does nothing if step has no backtrace line" do
+        result.exception.set_backtrace("exception backtrace")
+        step = "does not respond_to?(:backtrace_line)"
+
+        expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(["exception backtrace"])
+      end
+
+      it "appends the backtrace line of the step" do
+        result.exception.set_backtrace("exception backtrace")
+        step = double
+        expect( step ).to receive(:backtrace_line).and_return("step_line")
+
+        expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(["exception backtrace", "step_line"])
+      end
+
+      it "apply filters to the exception" do
+        filter_class = double
+        filter = double
+        filtered_exception = double
+        expect( filter_class ).to receive(:new).with(result.exception).and_return(filter)
+        expect( filter ).to receive(:exception).and_return(filtered_exception)
+
+        expect( result.with_filtered_backtrace(filter_class).exception ).to equal filtered_exception
+      end
+
       it { expect( result ).not_to be_passed    }
       it { expect( result ).to     be_failed    }
       it { expect( result ).not_to be_undefined }
@@ -78,6 +111,54 @@ module Cucumber::Core::Test
       it { expect( result ).not_to be_undefined }
       it { expect( result ).to     be_unknown   }
       it { expect( result ).not_to be_skipped   }
+    end
+
+    describe Result::Raisable do
+      context "with or without backtrace" do
+        subject(:result) { Result::Raisable.new }
+        
+        it "does nothing if step has no backtrace line" do
+          step = "does not respond_to?(:backtrace_line)"
+
+          expect( result.with_appended_backtrace(step).backtrace ).to eq(nil)
+        end
+      end
+
+      context "without backtrace" do
+        subject(:result) { Result::Raisable.new }
+
+        it "set the backtrace to the backtrace line of the step" do
+          step = double
+          expect( step ).to receive(:backtrace_line).and_return("step_line")
+
+          expect( result.with_appended_backtrace(step).backtrace ).to eq(["step_line"])
+        end
+
+        it "does nothing when filtering the backtrace" do
+          expect( result.with_filtered_backtrace(double) ).to equal result
+        end
+      end
+
+      context "with backtrace" do
+        subject(:result) { Result::Raisable.new("message", 0, "backtrace") }
+
+        it "appends the backtrace line of the step" do
+          step = double
+          expect( step ).to receive(:backtrace_line).and_return("step_line")
+
+          expect( result.with_appended_backtrace(step).backtrace ).to eq(["backtrace", "step_line"])
+        end
+
+        it "apply filters to the backtrace" do
+          filter_class = double
+          filter = double
+          filtered_result = double
+          expect( filter_class ).to receive(:new).with(result.exception).and_return(filter)
+          expect( filter ).to receive(:exception).and_return(filtered_result)
+
+          expect( result.with_filtered_backtrace(filter_class) ).to equal filtered_result
+        end
+      end
     end
 
     describe Result::Undefined do
