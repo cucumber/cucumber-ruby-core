@@ -15,7 +15,7 @@ module Cucumber
         end
 
         context "for invalid gherkin" do
-          let(:source) { Gherkin::Document.new(path, 'not gherkin') }
+          let(:source) { Gherkin::Document.new(path, "\nnot gherkin\n\nFeature: \n") }
           let(:path)   { 'path_to/the.feature' }
 
           it "raises an error" do
@@ -39,8 +39,18 @@ module Cucumber
           let(:path)   { 'path_to/the.feature' }
 
           it "creates a NullFeature" do
+            pending "Gherkin now raises errors for empty files"
             expect( receiver ).to receive(:feature).with(a_null_feature)
             parse
+          end
+
+          # Current behavior
+          it "raises an error" do
+            pending
+            expect { parse }.to raise_error(ParseError) do |error|
+              expect( error.message ).to match(/unexpected end of file/)
+              expect( error.message ).to match(/#{path}/)
+            end
           end
         end
 
@@ -62,6 +72,7 @@ module Cucumber
           end
 
           it "sets the language from the Gherkin" do
+            pending
             expect( feature.language.iso_code ).to eq 'ja'
           end
         end
@@ -83,7 +94,7 @@ module Cucumber
             allow( visitor ).to receive(:step).and_yield(visitor)
 
             location = double
-            expected = Ast::DocString.new("content", "", location)
+            expected = Ast::DocString.new(content:"content", content_type: "", location: location)
             expect( visitor ).to receive(:doc_string).with(expected)
             feature.describe_to(visitor)
           end
@@ -110,7 +121,7 @@ module Cucumber
             allow( visitor ).to receive(:scenario).and_yield(visitor)
             allow( visitor ).to receive(:step).and_yield(visitor)
 
-            expected = Ast::DataTable.new([['name', 'surname'], ['rob', 'westgeest']], Ast::Location.new('foo.feature', 23))
+            expected = Ast::DataTable.new(rows: [['name', 'surname'], ['rob', 'westgeest']], location: Ast::Location.new('foo.feature', 23))
             expect( visitor ).to receive(:data_table).with(expected)
             feature.describe_to(visitor)
           end
@@ -124,11 +135,11 @@ module Cucumber
             end
           end
 
-          it "parses the comment into the AST" do
+          it "parses the comment onto the feature" do
+            pending
             visitor = double
-            allow( visitor ).to receive(:feature).and_yield(visitor)
-            expect( visitor ).to receive(:scenario) do |scenario|
-              expect( scenario.comments.join ).to eq "# wow"
+            allow( visitor ).to receive(:feature) do |feature|
+              expect( feature.comments.join ).to eq "# wow"
             end
             feature.describe_to(visitor)
           end

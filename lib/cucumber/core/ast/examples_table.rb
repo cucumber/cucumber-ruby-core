@@ -11,10 +11,8 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        def initialize(gherkin_statement, location, comments, tags, keyword, name, description, header, example_rows)
-          @gherkin_statement = gherkin_statement
+        def initialize(location:, tags:, keyword:, name:, description: "", header:, example_rows:)
           @location = location
-          @comments = comments
           @tags = tags
           @keyword = keyword
           @name = name
@@ -23,7 +21,7 @@ module Cucumber
           @example_rows = example_rows
         end
 
-        attr_reader :gherkin_statement, :location, :comments, :tags, :keyword,
+        attr_reader :location, :tags, :keyword,
                     :header, :example_rows
 
         private
@@ -109,6 +107,7 @@ module Cucumber
           end
         end
       end
+      class Examples < ExamplesTable; end
     end
   end
 end

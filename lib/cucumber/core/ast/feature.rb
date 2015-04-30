@@ -11,12 +11,11 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :gherkin_statement, :language, :location, :background,
+        attr_reader :language, :location, :background,
                     :comments, :tags, :keyword, :description,
                     :feature_elements
 
-        def initialize(gherkin_statement, language, location, background, comments, tags, keyword, name, description, feature_elements)
-          @gherkin_statement = gherkin_statement
+        def initialize(language:, location:, background: EmptyBackground.new, comments:, tags:, keyword:, name:, description: "", scenario_definitions:)
           @language = language
           @location = location
           @background = background
@@ -25,7 +24,7 @@ module Cucumber
           @keyword = keyword
           @name = name
           @description = description
-          @feature_elements = feature_elements
+          @feature_elements = scenario_definitions
         end
 
         def children

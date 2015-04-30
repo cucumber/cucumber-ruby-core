@@ -1,5 +1,4 @@
 require 'cucumber/core/ast/step'
-require 'gherkin/i18n'
 
 module Cucumber
   module Core

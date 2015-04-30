@@ -1,6 +1,5 @@
 require 'cucumber/core/ast'
 require 'cucumber/core/platform'
-require 'gherkin/rubify'
 
 module Cucumber
   module Core
@@ -327,11 +326,9 @@ module Cucumber
 
         module MultilineArgument
           class << self
-            include ::Gherkin::Rubify
 
             def from(argument, parent_location)
               return Ast::EmptyMultilineArgument.new unless argument
-              argument = rubify(argument)
               case argument
               when ::Gherkin::Formatter::Model::DocString
                 Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line_range))
