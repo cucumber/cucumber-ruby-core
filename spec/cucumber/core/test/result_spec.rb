@@ -38,11 +38,13 @@ module Cucumber::Core::Test
         expect( result.with_filtered_backtrace(double) ).to equal result
       end
 
-      it { expect( result ).to     be_passed    }
-      it { expect( result ).not_to be_failed    }
-      it { expect( result ).not_to be_undefined }
-      it { expect( result ).not_to be_unknown   }
-      it { expect( result ).not_to be_skipped   }
+      specify { expect( result.to_sym ).to eq :passed }
+
+      specify { expect( result ).to     be_passed    }
+      specify { expect( result ).not_to be_failed    }
+      specify { expect( result ).not_to be_undefined }
+      specify { expect( result ).not_to be_unknown   }
+      specify { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Failed do
@@ -91,11 +93,13 @@ module Cucumber::Core::Test
         expect( result.with_filtered_backtrace(filter_class).exception ).to equal filtered_exception
       end
 
-      it { expect( result ).not_to be_passed    }
-      it { expect( result ).to     be_failed    }
-      it { expect( result ).not_to be_undefined }
-      it { expect( result ).not_to be_unknown   }
-      it { expect( result ).not_to be_skipped   }
+      specify { expect( result.to_sym ).to eq :failed }
+
+      specify { expect( result ).not_to be_passed    }
+      specify { expect( result ).to     be_failed    }
+      specify { expect( result ).not_to be_undefined }
+      specify { expect( result ).not_to be_unknown   }
+      specify { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Unknown do
@@ -106,17 +110,19 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
-      it { expect( result ).not_to be_passed    }
-      it { expect( result ).not_to be_failed    }
-      it { expect( result ).not_to be_undefined }
-      it { expect( result ).to     be_unknown   }
-      it { expect( result ).not_to be_skipped   }
+      specify { expect( result.to_sym ).to eq :unknown }
+
+      specify { expect( result ).not_to be_passed    }
+      specify { expect( result ).not_to be_failed    }
+      specify { expect( result ).not_to be_undefined }
+      specify { expect( result ).to     be_unknown   }
+      specify { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Raisable do
       context "with or without backtrace" do
         subject(:result) { Result::Raisable.new }
-        
+
         it "does nothing if step has no backtrace line" do
           step = "does not respond_to?(:backtrace_line)"
 
@@ -170,11 +176,13 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
-      it { expect( result ).not_to be_passed    }
-      it { expect( result ).not_to be_failed    }
-      it { expect( result ).to     be_undefined }
-      it { expect( result ).not_to be_unknown   }
-      it { expect( result ).not_to be_skipped   }
+      specify { expect( result.to_sym ).to eq :undefined }
+
+      specify { expect( result ).not_to be_passed    }
+      specify { expect( result ).not_to be_failed    }
+      specify { expect( result ).to     be_undefined }
+      specify { expect( result ).not_to be_unknown   }
+      specify { expect( result ).not_to be_skipped   }
     end
 
     describe Result::Skipped do
@@ -186,11 +194,13 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
-      it { expect( result ).not_to be_passed    }
-      it { expect( result ).not_to be_failed    }
-      it { expect( result ).not_to be_undefined }
-      it { expect( result ).not_to be_unknown   }
-      it { expect( result ).to     be_skipped   }
+      specify { expect( result.to_sym ).to eq :skipped }
+
+      specify { expect( result ).not_to be_passed    }
+      specify { expect( result ).not_to be_failed    }
+      specify { expect( result ).not_to be_undefined }
+      specify { expect( result ).not_to be_unknown   }
+      specify { expect( result ).to     be_skipped   }
     end
 
     describe Result::Summary do
