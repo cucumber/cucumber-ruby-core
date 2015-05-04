@@ -44,6 +44,14 @@ module Cucumber
           def to_s
             "✓"
           end
+
+          def with_appended_backtrace(step)
+            self
+          end
+
+          def with_filtered_backtrace(filter)
+            self
+          end
         end
 
         class Failed
@@ -72,6 +80,14 @@ module Cucumber
             self.class.new(new_duration, exception)
           end
 
+          def with_appended_backtrace(step)
+            exception.backtrace << step.backtrace_line if step.respond_to?(:backtrace_line)
+            self
+          end
+
+          def with_filtered_backtrace(filter)
+            self.class.new(duration, filter.new(exception.dup).exception)
+          end
         end
 
         # Base class for exceptions that can be raised in a step defintion causing 
@@ -91,6 +107,18 @@ module Cucumber
 
           def with_duration(new_duration)
             self.class.new(message, new_duration, backtrace)
+          end
+
+          def with_appended_backtrace(step)
+            return self unless step.respond_to?(:backtrace_line)
+            set_backtrace([]) unless backtrace
+            backtrace << step.backtrace_line
+            self
+          end
+
+          def with_filtered_backtrace(filter)
+            return self unless backtrace
+            filter.new(dup).exception
           end
         end
 

@@ -100,6 +100,24 @@ module Cucumber::Core::Test
             expect( report ).to receive(:after_test_case) do |test_case, result|
               expect( result ).to be_undefined
             end
+            allow( undefined.source.last ).to receive(:name)
+            test_case.describe_to runner
+          end
+
+          it 'sets the message on the result' do
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result.message ).to eq("Undefined step: \"step name\"")
+            end
+            expect( undefined.source.last ).to receive(:name).and_return("step name")
+            test_case.describe_to runner
+          end
+
+          it 'appends the backtrace of the result' do
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result.backtrace ).to eq(["step line"])
+            end
+            expect( undefined.source.last ).to receive(:backtrace_line).and_return("step line")
+            allow( undefined.source.last ).to receive(:name)
             test_case.describe_to runner
           end
         end
@@ -113,6 +131,14 @@ module Cucumber::Core::Test
             end
             test_case.describe_to runner
           end
+
+          it 'appends the backtrace of the result' do
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result.backtrace.last ).to eq("step line")
+            end
+            expect( pending.source.last ).to receive(:backtrace_line).and_return("step line")
+            test_case.describe_to runner
+          end
         end
 
         context "a skipping step" do
@@ -124,6 +150,14 @@ module Cucumber::Core::Test
             end
             test_case.describe_to runner
           end
+
+          it 'appends the backtrace of the result' do
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result.backtrace.last ).to eq("step line")
+            end
+            expect( skipping.source.last ).to receive(:backtrace_line).and_return("step line")
+            test_case.describe_to runner
+          end
         end
 
         context 'that fail' do
@@ -133,6 +167,14 @@ module Cucumber::Core::Test
             expect( report ).to receive(:after_test_case) do |test_case, result|
               expect( result ).to be_failed
             end
+            test_case.describe_to runner
+          end
+
+          it 'appends the backtrace of the exception of the result' do
+            expect( report ).to receive(:after_test_case) do |test_case, result|
+              expect( result.exception.backtrace.last ).to eq("step line")
+            end
+            expect( failing.source.last ).to receive(:backtrace_line).and_return("step line")
             test_case.describe_to runner
           end
         end
