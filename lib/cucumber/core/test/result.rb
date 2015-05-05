@@ -5,19 +5,19 @@ module Cucumber
     module Test
       module Result
 
-        # Defines to_sym on a result class for the given status symbol
+        # Defines to_sym on a result class for the given result type
         #
         # Defines predicate methods on a result class with only the given one
         # returning true
-        def self.query_methods(status_symbol)
+        def self.query_methods(result_type)
           Module.new do
             define_method :to_sym do
-              status_symbol
+              result_type
             end
 
-            [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_status|
-              define_method("#{possible_status}?") do
-                possible_status == to_sym
+            [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_result_type|
+              define_method("#{possible_result_type}?") do
+                possible_result_type == to_sym
               end
             end
           end
