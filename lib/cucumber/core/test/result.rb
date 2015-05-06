@@ -5,13 +5,19 @@ module Cucumber
     module Test
       module Result
 
+        # Defines to_sym on a result class for the given result type
+        #
         # Defines predicate methods on a result class with only the given one
         # returning true
-        def self.status_queries(status)
+        def self.query_methods(result_type)
           Module.new do
-            [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_status|
-              define_method("#{possible_status}?") do
-                possible_status == status
+            define_method :to_sym do
+              result_type
+            end
+
+            [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_result_type|
+              define_method("#{possible_result_type}?") do
+                possible_result_type == to_sym
               end
             end
           end
@@ -19,7 +25,7 @@ module Cucumber
 
         # Null object for results. Represents the state where we haven't run anything yet
         class Unknown
-          include Result.status_queries :unknown
+          include Result.query_methods :unknown
 
           def describe_to(visitor, *args)
             self
@@ -27,7 +33,7 @@ module Cucumber
         end
 
         class Passed
-          include Result.status_queries(:passed)
+          include Result.query_methods :passed
           attr_accessor :duration
 
           def initialize(duration)
@@ -55,11 +61,11 @@ module Cucumber
         end
 
         class Failed
-          include Result.status_queries(:failed)
+          include Result.query_methods :failed
           attr_reader :duration, :exception
 
           def initialize(duration, exception)
-            raise ArgumentError unless duration 
+            raise ArgumentError unless duration
             raise ArgumentError unless exception
             @duration = duration
             @exception = exception
@@ -90,7 +96,7 @@ module Cucumber
           end
         end
 
-        # Base class for exceptions that can be raised in a step defintion causing 
+        # Base class for exceptions that can be raised in a step defintion causing
         # the step to have that result.
         class Raisable < StandardError
           attr_reader :message, :duration
@@ -123,7 +129,7 @@ module Cucumber
         end
 
         class Undefined < Raisable
-          include Result.status_queries :undefined
+          include Result.query_methods :undefined
 
           def describe_to(visitor, *args)
             visitor.undefined(*args)
@@ -138,7 +144,7 @@ module Cucumber
         end
 
         class Skipped < Raisable
-          include Result.status_queries :skipped
+          include Result.query_methods :skipped
 
           def describe_to(visitor, *args)
             visitor.skipped(*args)
@@ -153,7 +159,7 @@ module Cucumber
         end
 
         class Pending < Raisable
-          include Result.status_queries :pending
+          include Result.query_methods :pending
 
           def describe_to(visitor, *args)
             visitor.pending(self, *args)
@@ -170,7 +176,7 @@ module Cucumber
         # An object that responds to the description protocol from the results
         # and collects summary information.
         #
-        # e.g. 
+        # e.g.
         #     summary = Result::Summary.new
         #     Result::Passed.new(0).describe_to(summary)
         #     puts summary.total_passed
