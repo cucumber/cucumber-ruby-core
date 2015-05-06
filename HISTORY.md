@@ -3,6 +3,7 @@
 ### New Features
 
  * Expose name, description and examples_rows attributes of `Ast::ExamplesTable` (@mattwynne)
+ * Add #to_sym to Cucumber::Core::Test::Result classes ([#89](https://github.com/cucumber/cucumber-ruby-core/pull/89) @pdswan)
 
 ### Bugfixes
 
