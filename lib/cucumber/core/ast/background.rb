@@ -22,7 +22,7 @@ module Cucumber
         end
 
         attr_reader :language, :description, :raw_steps
-        private     :language, :description, :raw_steps
+        private     :language, :raw_steps
 
         attr_reader :comments, :keyword, :location
         attr_reader :gherkin_statement
