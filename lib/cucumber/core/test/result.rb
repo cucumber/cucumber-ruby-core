@@ -51,6 +51,10 @@ module Cucumber
             "✓"
           end
 
+          def non_zero_exit_status?(is_strict)
+            false
+          end
+
           def with_appended_backtrace(step)
             self
           end
@@ -80,6 +84,10 @@ module Cucumber
 
           def to_s
             "✗"
+          end
+
+          def non_zero_exit_status?(is_strict)
+            true
           end
 
           def with_duration(new_duration)
@@ -141,6 +149,9 @@ module Cucumber
             "?"
           end
 
+          def non_zero_exit_status?(is_strict)
+            is_strict
+          end
         end
 
         class Skipped < Raisable
@@ -156,6 +167,9 @@ module Cucumber
             "-"
           end
 
+          def non_zero_exit_status?(is_strict)
+            false
+          end
         end
 
         class Pending < Raisable
@@ -169,6 +183,10 @@ module Cucumber
 
           def to_s
             "P"
+          end
+
+          def non_zero_exit_status?(is_strict)
+            is_strict
           end
         end
 

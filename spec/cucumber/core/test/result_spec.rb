@@ -45,6 +45,9 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
+
+      specify { expect( result.non_zero_exit_status?(false) ).to be_falsey }
+      specify { expect( result.non_zero_exit_status?(true) ).to be_falsey }
     end
 
     describe Result::Failed do
@@ -100,6 +103,9 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
+
+      specify { expect( result.non_zero_exit_status?(false) ).to be_truthy }
+      specify { expect( result.non_zero_exit_status?(true) ).to be_truthy }
     end
 
     describe Result::Unknown do
@@ -183,6 +189,9 @@ module Cucumber::Core::Test
       specify { expect( result ).to     be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
+
+      specify { expect( result.non_zero_exit_status?(false) ).to be_falsey }
+      specify { expect( result.non_zero_exit_status?(true) ).to be_truthy }
     end
 
     describe Result::Skipped do
@@ -201,6 +210,31 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).to     be_skipped   }
+
+      specify { expect( result.non_zero_exit_status?(false) ).to be_falsey }
+      specify { expect( result.non_zero_exit_status?(true) ).to be_falsey }
+    end
+
+    describe Result::Pending do
+      subject(:result) { Result::Pending.new }
+
+      it "describes itself to a visitor" do
+        expect( visitor ).to receive(:pending).with(result, args)
+        expect( visitor ).to receive(:duration).with(an_unknown_duration, args)
+        result.describe_to(visitor, args)
+      end
+
+      specify { expect( result.to_sym ).to eq :pending }
+
+      specify { expect( result ).not_to be_passed    }
+      specify { expect( result ).not_to be_failed    }
+      specify { expect( result ).not_to be_undefined }
+      specify { expect( result ).not_to be_unknown   }
+      specify { expect( result ).not_to be_skipped   }
+      specify { expect( result ).to     be_pending   }
+
+      specify { expect( result.non_zero_exit_status?(false) ).to be_falsey }
+      specify { expect( result.non_zero_exit_status?(true) ).to be_truthy }
     end
 
     describe Result::Summary do
