@@ -7,7 +7,7 @@ module Cucumber
         include HasLocation
 
         attr_reader :location, :value
-        private :location, :value
+        private :value
 
         def initialize(location, value)
           @location = location
