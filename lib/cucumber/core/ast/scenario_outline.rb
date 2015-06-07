@@ -16,8 +16,7 @@ module Cucumber
         attr_reader :gherkin_statement, :language, :background, :comments,
                     :tags, :feature_tags, :keyword,
                     :steps, :examples_tables, :line
-        private :language, :background, :comments, :feature_tags,
-                :line
+        private :language, :background, :feature_tags, :line
 
         def initialize(gherkin_statement, language, location, background, comments, tags, feature_tags, keyword, name, description, steps, examples_tables)
           @gherkin_statement = gherkin_statement

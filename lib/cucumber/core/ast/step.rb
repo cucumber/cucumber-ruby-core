@@ -8,10 +8,10 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :keyword, :name, :language, :exception, :multiline_arg, :gherkin_statement
+        attr_reader :keyword, :name, :language, :comments, :exception, :multiline_arg, :gherkin_statement
 
-        def initialize(gherkin_statement, language, location, keyword, name, multiline_arg)
-          @gherkin_statement, @language, @location, @keyword, @name, @multiline_arg = gherkin_statement, language, location, keyword, name, multiline_arg
+        def initialize(gherkin_statement, language, location, comments, keyword, name, multiline_arg)
+          @gherkin_statement, @language, @location, @comments, @keyword, @name, @multiline_arg = gherkin_statement, language, location, comments, keyword, name, multiline_arg
         end
 
         def to_sexp
@@ -52,8 +52,8 @@ module Cucumber
 
       class ExpandedOutlineStep < Step
 
-        def initialize(outline_step, gherkin_statement, language, location, keyword, name, multiline_arg)
-          @outline_step, @gherkin_statement, @language, @location, @keyword, @name, @multiline_arg = outline_step, gherkin_statement, language, location, keyword, name, multiline_arg
+        def initialize(outline_step, gherkin_statement, language, location, comments, keyword, name, multiline_arg)
+          @outline_step, @gherkin_statement, @language, @location, @comments, @keyword, @name, @multiline_arg = outline_step, gherkin_statement, language, location, comments, keyword, name, multiline_arg
         end
 
         alias :self_match_locations? :match_locations?

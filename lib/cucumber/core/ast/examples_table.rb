@@ -39,17 +39,20 @@ module Cucumber
         class Header
           include HasLocation
 
-          def initialize(cells, location)
+          attr_reader :comments
+
+          def initialize(cells, location, comments)
             @cells = cells
             @location = location
+            @comments = comments
           end
 
           def values
             @cells
           end
 
-          def build_row(row_cells, number, location, language)
-            Row.new(Hash[@cells.zip(row_cells)], number, location, language)
+          def build_row(row_cells, number, location, language, comments)
+            Row.new(Hash[@cells.zip(row_cells)], number, location, language, comments)
           end
 
           def inspect
@@ -61,14 +64,15 @@ module Cucumber
           include DescribesItself
           include HasLocation
 
-          attr_reader :number, :language
+          attr_reader :number, :language, :comments
 
-          def initialize(data, number, location, language)
+          def initialize(data, number, location, language, comments)
             raise ArgumentError, data.to_s unless data.is_a?(Hash)
             @data = data
             @number = number
             @location = location
             @language = language
+            @comments = comments
           end
 
           def ==(other)

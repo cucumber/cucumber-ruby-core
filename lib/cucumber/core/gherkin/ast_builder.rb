@@ -215,6 +215,7 @@ module Cucumber
                 node,
                 language,
                 location,
+                comments,
                 node.keyword,
                 node.name,
                 
@@ -289,16 +290,24 @@ module Cucumber
 
             def header
               row = node.rows[0]
-              Ast::ExamplesTable::Header.new(row.cells, location)
+              Ast::ExamplesTable::Header.new(row.cells, location, row_comments(row))
             end
 
             def example_rows(language)
               _, *raw_examples = *node.rows
               raw_examples.each_with_index.map do |row, index|
-                header.build_row(row.cells, index + 1, location.on_line(row.line), language)
+                header.build_row(row.cells, index + 1, location.on_line(row.line), language, row_comments(row))
               end
             end
 
+            def row_comments(row)
+              row.comments.map do |comment|
+                Ast::Comment.new(
+                  Ast::Location.new(file, comment.line), 
+                  comment.value
+                )
+              end
+            end
           end
 
           class StepBuilder < Builder
@@ -307,6 +316,7 @@ module Cucumber
                 node,
                 language,
                 location,
+                comments,
                 node.keyword,
                 node.name,
                 MultilineArgument.from(node.doc_string || node.rows, location)
