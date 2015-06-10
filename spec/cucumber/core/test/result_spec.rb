@@ -46,6 +46,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
 
+      specify { expect( result ).to be_ok }
       specify { expect( result.ok?(false) ).to be_truthy }
       specify { expect( result.ok?(true) ).to be_truthy }
     end
@@ -104,6 +105,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
 
+      specify { expect( result ).to_not be_ok }
       specify { expect( result.ok?(false) ).to be_falsey }
       specify { expect( result.ok?(true) ).to be_falsey }
     end
@@ -190,6 +192,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
 
+      specify { expect( result ).to be_ok }
       specify { expect( result.ok?(false) ).to be_truthy }
       specify { expect( result.ok?(true) ).to be_falsey }
     end
@@ -211,6 +214,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).to     be_skipped   }
 
+      specify { expect( result ).to be_ok }
       specify { expect( result.ok?(false) ).to be_truthy }
       specify { expect( result.ok?(true) ).to be_truthy }
     end
@@ -233,6 +237,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_skipped   }
       specify { expect( result ).to     be_pending   }
 
+      specify { expect( result ).to be_ok }
       specify { expect( result.ok?(false) ).to be_truthy }
       specify { expect( result.ok?(true) ).to be_falsey }
     end

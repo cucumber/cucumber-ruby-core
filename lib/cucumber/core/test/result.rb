@@ -51,7 +51,7 @@ module Cucumber
             "✓"
           end
 
-          def ok?(be_strict)
+          def ok?(be_strict = false)
             true
           end
 
@@ -86,7 +86,7 @@ module Cucumber
             "✗"
           end
 
-          def ok?(be_strict)
+          def ok?(be_strict = false)
             false
           end
 
@@ -149,7 +149,7 @@ module Cucumber
             "?"
           end
 
-          def ok?(be_strict)
+          def ok?(be_strict = false)
             !be_strict
           end
         end
@@ -167,7 +167,7 @@ module Cucumber
             "-"
           end
 
-          def ok?(be_strict)
+          def ok?(be_strict = false)
             true
           end
         end
@@ -185,7 +185,7 @@ module Cucumber
             "P"
           end
 
-          def ok?(be_strict)
+          def ok?(be_strict = false)
             !be_strict
           end
         end
