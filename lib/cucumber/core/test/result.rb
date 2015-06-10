@@ -51,8 +51,8 @@ module Cucumber
             "✓"
           end
 
-          def non_zero_exit_status?(is_strict)
-            false
+          def ok?(be_strict)
+            true
           end
 
           def with_appended_backtrace(step)
@@ -86,8 +86,8 @@ module Cucumber
             "✗"
           end
 
-          def non_zero_exit_status?(is_strict)
-            true
+          def ok?(be_strict)
+            false
           end
 
           def with_duration(new_duration)
@@ -149,8 +149,8 @@ module Cucumber
             "?"
           end
 
-          def non_zero_exit_status?(is_strict)
-            is_strict
+          def ok?(be_strict)
+            !be_strict
           end
         end
 
@@ -167,8 +167,8 @@ module Cucumber
             "-"
           end
 
-          def non_zero_exit_status?(is_strict)
-            false
+          def ok?(be_strict)
+            true
           end
         end
 
@@ -185,8 +185,8 @@ module Cucumber
             "P"
           end
 
-          def non_zero_exit_status?(is_strict)
-            is_strict
+          def ok?(be_strict)
+            !be_strict
           end
         end
 

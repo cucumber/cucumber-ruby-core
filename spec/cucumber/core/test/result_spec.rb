@@ -46,8 +46,8 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
 
-      specify { expect( result.non_zero_exit_status?(false) ).to be_falsey }
-      specify { expect( result.non_zero_exit_status?(true) ).to be_falsey }
+      specify { expect( result.ok?(false) ).to be_truthy }
+      specify { expect( result.ok?(true) ).to be_truthy }
     end
 
     describe Result::Failed do
@@ -104,8 +104,8 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
 
-      specify { expect( result.non_zero_exit_status?(false) ).to be_truthy }
-      specify { expect( result.non_zero_exit_status?(true) ).to be_truthy }
+      specify { expect( result.ok?(false) ).to be_falsey }
+      specify { expect( result.ok?(true) ).to be_falsey }
     end
 
     describe Result::Unknown do
@@ -190,8 +190,8 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
 
-      specify { expect( result.non_zero_exit_status?(false) ).to be_falsey }
-      specify { expect( result.non_zero_exit_status?(true) ).to be_truthy }
+      specify { expect( result.ok?(false) ).to be_truthy }
+      specify { expect( result.ok?(true) ).to be_falsey }
     end
 
     describe Result::Skipped do
@@ -211,8 +211,8 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).to     be_skipped   }
 
-      specify { expect( result.non_zero_exit_status?(false) ).to be_falsey }
-      specify { expect( result.non_zero_exit_status?(true) ).to be_falsey }
+      specify { expect( result.ok?(false) ).to be_truthy }
+      specify { expect( result.ok?(true) ).to be_truthy }
     end
 
     describe Result::Pending do
@@ -233,8 +233,8 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_skipped   }
       specify { expect( result ).to     be_pending   }
 
-      specify { expect( result.non_zero_exit_status?(false) ).to be_falsey }
-      specify { expect( result.non_zero_exit_status?(true) ).to be_truthy }
+      specify { expect( result.ok?(false) ).to be_truthy }
+      specify { expect( result.ok?(true) ).to be_falsey }
     end
 
     describe Result::Summary do
