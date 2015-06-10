@@ -5,6 +5,7 @@
  * Add the comments to the Steps, Examples tables and Examples table rows Ast classes (@brasmusson)
  * Expose name, description and examples_rows attributes of `Ast::ExamplesTable` (@mattwynne)
  * Add #to_sym to Cucumber::Core::Test::Result classes ([#89](https://github.com/cucumber/cucumber-ruby-core/pull/89) @pdswan)
+ * Add #ok? to Cucumber::Core::Test::Result classes ([#92](https://github.com/cucumber/cucumber-ruby-core/pull/92) @brassmusson)
 
 ### Bugfixes
 
