@@ -7,8 +7,9 @@ module Cucumber
   module Core
     module Test
       class Action
-        def initialize(&block)
+        def initialize(location = nil, &block)
           raise ArgumentError, "Passing a block to execute the action is mandatory." unless block
+          @location = location ? location : Ast::Location.new(*block.source_location)
           @block = block
           @timer = Timer.new
         end
@@ -28,7 +29,7 @@ module Cucumber
         end
 
         def location
-          Ast::Location.new(*@block.source_location)
+          @location
         end
 
         def inspect
@@ -57,6 +58,12 @@ module Cucumber
       end
 
       class UndefinedAction
+        attr_reader :location
+
+        def initialize(source_location)
+          @location = source_location
+        end
+
         def execute(*)
           undefined
         end

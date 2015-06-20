@@ -2,10 +2,11 @@
 
 ### New Features
 
+ * Enable the location of actions to be the step or hook location (@brasmusson)
  * Add the comments to the Steps, Examples tables and Examples table rows Ast classes (@brasmusson)
  * Expose name, description and examples_rows attributes of `Ast::ExamplesTable` (@mattwynne)
  * Add #to_sym to Cucumber::Core::Test::Result classes ([#89](https://github.com/cucumber/cucumber-ruby-core/pull/89) @pdswan)
- * Add #ok? to Cucumber::Core::Test::Result classes ([#92](https://github.com/cucumber/cucumber-ruby-core/pull/92) @brassmusson)
+ * Add #ok? to Cucumber::Core::Test::Result classes ([#92](https://github.com/cucumber/cucumber-ruby-core/pull/92) @brasmusson)
 
 ### Bugfixes
 

@@ -13,6 +13,28 @@ module Cucumber
           end
         end
 
+        context "location" do
+
+          context "with location passed to the constructor" do
+          let(:location) { double }
+
+            it "returns the location passed to the constructor" do
+              action = Action.new(location) {}
+              expect( action.location ).to be location
+            end
+          end
+
+          context "without location passed to the constructor" do
+            let(:block) { proc {} }
+
+            it "returns the location of the block passed to the constructor" do
+              action = Action.new(&block)
+              expect( action.location ).to eq Ast::Location.new(*block.source_location)
+            end
+          end
+
+        end
+
         context "executing" do
           it "executes the block passed to the constructor" do
             executed = false
@@ -105,8 +127,15 @@ module Cucumber
       end
 
       describe UndefinedAction do
-        let(:action) { UndefinedAction.new }
+        let(:location) { double }
+        let(:action) { UndefinedAction.new(location) }
         let(:test_step) { double }
+
+        context "location" do
+          it "returns the location passed to the constructor" do
+            expect( action.location ).to be location
+          end
+        end
 
         context "executing" do
           it "returns an undefined result" do

@@ -10,15 +10,16 @@ module Cucumber::Core::Test
     let(:source)    { [double('ast node', location: double)] }
     let(:runner)    { Runner.new(report) }
     let(:report)    { double.as_null_object }
-    let(:passing)   { Step.new([double]).with_action {} }
-    let(:failing)   { Step.new([double]).with_action { raise exception } }
-    let(:pending)   { Step.new([double]).with_action { raise Result::Pending.new("TODO") } }
-    let(:skipping)  { Step.new([double]).with_action { raise Result::Skipped.new } }
-    let(:undefined) { Step.new([double]) }
+    let(:passing)   { Step.new([source]).with_action {} }
+    let(:failing)   { Step.new([source]).with_action { raise exception } }
+    let(:pending)   { Step.new([source]).with_action { raise Result::Pending.new("TODO") } }
+    let(:skipping)  { Step.new([source]).with_action { raise Result::Skipped.new } }
+    let(:undefined) { Step.new([source]) }
     let(:exception) { StandardError.new('test error') }
 
     before do
       allow(report).to receive(:before_test_case)
+      allow(source).to receive(:location)
     end
 
     context "reporting the duration of a test case" do
@@ -244,8 +245,8 @@ module Cucumber::Core::Test
         hook_mapping = UnskippableAction.new do |last_result|
           result_spy = last_result
         end
-        after_hook = Step.new([double], hook_mapping)
-        failing_step = Step.new([double]).with_action { fail }
+        after_hook = Step.new([source], hook_mapping)
+        failing_step = Step.new([source]).with_action { fail }
         test_case = Case.new([failing_step, after_hook], source)
         test_case.describe_to runner
         expect(result_spy).to be_failed
@@ -256,7 +257,7 @@ module Cucumber::Core::Test
     context "with around hooks" do
       it "passes normally when around hooks don't fail" do
         around_hook = AroundHook.new { |block| block.call }
-        passing_step = Step.new([double]).with_action {}
+        passing_step = Step.new([source]).with_action {}
         test_case = Case.new([passing_step], source, [around_hook])
         expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_passed
@@ -266,7 +267,7 @@ module Cucumber::Core::Test
 
       it "gets a failed result if the Around hook fails before the test case is run" do
         around_hook = AroundHook.new { |block| raise exception }
-        passing_step = Step.new([double]).with_action {}
+        passing_step = Step.new([source]).with_action {}
         test_case = Case.new([passing_step], source, [around_hook])
         expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
@@ -277,7 +278,7 @@ module Cucumber::Core::Test
 
       it "gets a failed result if the Around hook fails after the test case is run" do
         around_hook = AroundHook.new { |block| block.call; raise exception }
-        passing_step = Step.new([double]).with_action {}
+        passing_step = Step.new([source]).with_action {}
         test_case = Case.new([passing_step], source, [around_hook])
         expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
@@ -288,7 +289,7 @@ module Cucumber::Core::Test
 
       it "fails when a step fails if the around hook works" do
         around_hook = AroundHook.new { |block| block.call }
-        failing_step = Step.new([double]).with_action { raise exception }
+        failing_step = Step.new([source]).with_action { raise exception }
         test_case = Case.new([failing_step], source, [around_hook])
         expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed

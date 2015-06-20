@@ -4,16 +4,21 @@ module Cucumber::Core::Test
   describe Step do
 
     describe "describing itself" do
+      let(:step_or_hook) { double }
+      before(:each) do
+        allow( step_or_hook ).to receive(:location)
+      end
+
       it "describes itself to a visitor" do
         visitor = double
         args = double
-        test_step = Step.new([double])
+        test_step = Step.new([step_or_hook])
         expect( visitor ).to receive(:test_step).with(test_step, args)
         test_step.describe_to(visitor, args)
       end
 
       it "describes its source to a visitor" do
-        feature, scenario, step_or_hook = double, double, double
+        feature, scenario = double, double
         visitor = double
         args = double
         expect( feature      ).to receive(:describe_to).with(visitor, args)
@@ -26,6 +31,9 @@ module Cucumber::Core::Test
 
     describe "executing" do
       let(:ast_step) { double }
+      before(:each) do
+        allow( ast_step ).to receive(:location)
+      end
 
       it "passes arbitrary arguments to the action's block" do
         args_spy = nil
@@ -70,6 +78,13 @@ module Cucumber::Core::Test
       test_step = Step.new([step_or_hook])
       expect( test_step.name     ).to eq name
       expect( test_step.location ).to eq location
+    end
+
+    it "exposes the location of the action as attribute" do
+      location = double
+      action = double(location: location)
+      test_step = Step.new([double], action)
+      expect( test_step.action_location ).to eq location
     end
 
   end

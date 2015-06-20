@@ -7,7 +7,7 @@ module Cucumber
       class Step
         attr_reader :source
 
-        def initialize(source, action = Test::UndefinedAction.new)
+        def initialize(source, action = Test::UndefinedAction.new(source.last.location))
           raise ArgumentError if source.any?(&:nil?)
           @source, @action = source, action
         end
@@ -31,8 +31,8 @@ module Cucumber
           @action.execute(*args)
         end
 
-        def with_action(&block)
-          self.class.new(source, Test::Action.new(&block))
+        def with_action(location = nil, &block)
+          self.class.new(source, Test::Action.new(location, &block))
         end
 
         def name
@@ -41,6 +41,10 @@ module Cucumber
 
         def location
           source.last.location
+        end
+
+        def action_location
+          @action.location
         end
 
         def match_locations?(queried_locations)
