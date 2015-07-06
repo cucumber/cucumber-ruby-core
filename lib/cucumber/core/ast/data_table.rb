@@ -32,7 +32,7 @@ module Cucumber
         # You don't typically create your own DataTable objects - Cucumber will do
         # it internally and pass them to your Step Definitions.
         #
-        def initialize(rows:, location:)
+        def initialize(rows, location)
           raw = ensure_array_of_array(rows)
           verify_rows_are_same_length(raw)
           @raw = raw.freeze

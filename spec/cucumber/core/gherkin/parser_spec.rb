@@ -39,18 +39,8 @@ module Cucumber
           let(:path)   { 'path_to/the.feature' }
 
           it "creates a NullFeature" do
-            pending "Gherkin now raises errors for empty files"
             expect( receiver ).to receive(:feature).with(a_null_feature)
             parse
-          end
-
-          # Current behavior
-          it "raises an error" do
-            pending
-            expect { parse }.to raise_error(ParseError) do |error|
-              expect( error.message ).to match(/unexpected end of file/)
-              expect( error.message ).to match(/#{path}/)
-            end
           end
         end
 
@@ -72,7 +62,6 @@ module Cucumber
           end
 
           it "sets the language from the Gherkin" do
-            pending
             expect( feature.language.iso_code ).to eq 'ja'
           end
         end
@@ -94,7 +83,7 @@ module Cucumber
             allow( visitor ).to receive(:step).and_yield(visitor)
 
             location = double
-            expected = Ast::DocString.new(content:"content", content_type: "", location: location)
+            expected = Ast::DocString.new("content", "", location)
             expect( visitor ).to receive(:doc_string).with(expected)
             feature.describe_to(visitor)
           end
@@ -121,25 +110,54 @@ module Cucumber
             allow( visitor ).to receive(:scenario).and_yield(visitor)
             allow( visitor ).to receive(:step).and_yield(visitor)
 
-            expected = Ast::DataTable.new(rows: [['name', 'surname'], ['rob', 'westgeest']], location: Ast::Location.new('foo.feature', 23))
+            expected = Ast::DataTable.new([['name', 'surname'], ['rob', 'westgeest']], Ast::Location.new('foo.feature', 23))
             expect( visitor ).to receive(:data_table).with(expected)
             feature.describe_to(visitor)
           end
         end
 
-        context "a Scenario with a Comment" do
+        context "a feature file with a comments on different levels" do
           source do
+            comment 'feature comment'
             feature do
-              comment 'wow'
-              scenario
+              comment 'scenario comment'
+              scenario do
+                comment 'step comment'
+                step
+              end
+              comment 'scenario outline comment'
+              scenario_outline do
+                comment 'outline step comment'
+                step
+                comment 'examples comment'
+                examples do
+                  row
+                  row
+                end
+              end
             end
           end
 
-          it "parses the comment onto the feature" do
-            pending
+          it "the comments are distibuted to down the ast tree from the feature" do
             visitor = double
-            allow( visitor ).to receive(:feature) do |feature|
-              expect( feature.comments.join ).to eq "# wow"
+            expect( visitor ).to receive(:feature) do |feature|
+              expect( feature.comments.join ).to eq "# feature comment"
+              visitor
+            end.and_yield(visitor)
+            expect( visitor ).to receive(:scenario) do |scenario|
+              expect( scenario.comments.join ).to eq "  # scenario comment"
+            end.and_yield(visitor)
+            expect( visitor ).to receive(:step) do |step|
+              expect( step.comments.join ).to eq "    # step comment"
+            end.and_yield(visitor)
+            expect( visitor ).to receive(:scenario_outline) do |scenario_outline|
+              expect( scenario_outline.comments.join ).to eq "  # scenario outline comment"
+            end.and_yield(visitor)
+            expect( visitor ).to receive(:outline_step) do |outline_step|
+              expect( outline_step.comments.join ).to eq "    # outline step comment"
+            end.and_yield(visitor)
+            expect( visitor ).to receive(:examples_table) do |examples_table|
+              expect( examples_table.comments.join ).to eq "    # examples comment"
             end
             feature.describe_to(visitor)
           end

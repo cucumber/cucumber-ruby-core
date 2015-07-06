@@ -11,8 +11,9 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        def initialize(location:, tags:, keyword:, name:, description: "", header:, example_rows:)
+        def initialize(location, comments, tags, keyword, name, description, header, example_rows)
           @location = location
+          @comments = comments
           @tags = tags
           @keyword = keyword
           @name = name
@@ -21,7 +22,7 @@ module Cucumber
           @example_rows = example_rows
         end
 
-        attr_reader :location, :tags, :keyword,
+        attr_reader :location, :tags, :keyword, :comments,
                     :header, :example_rows
 
         private

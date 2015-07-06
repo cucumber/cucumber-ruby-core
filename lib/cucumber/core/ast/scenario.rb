@@ -11,14 +11,14 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :language, :location, :background,
-                    :tags, :keyword,
+        attr_reader :location, :background,
+                    :comments, :tags, :keyword,
                     :description, :raw_steps
         private :raw_steps
 
-        def initialize(language: "TODO", location:, tags:, keyword:, name:, description: "", steps:)
-          @language          = language
+        def initialize(location, comments, tags, keyword, name, description, steps)
           @location          = location
+          @comments          = comments
           @tags              = tags
           @keyword           = keyword
           @name              = name

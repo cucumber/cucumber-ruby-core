@@ -1,9 +1,10 @@
-require 'gherkin/parser'
-require 'gherkin/token_scanner'
-require 'gherkin/token_matcher'
-require 'gherkin/ast_builder'
-require 'gherkin/errors'
+require 'gherkin3/parser'
+require 'gherkin3/token_scanner'
+require 'gherkin3/token_matcher'
+require 'gherkin3/ast_builder'
+require 'gherkin3/errors'
 require 'cucumber/core/gherkin/ast_builder'
+require 'cucumber/core/ast'
 
 module Cucumber
   module Core
@@ -19,14 +20,17 @@ module Cucumber
         end
 
         def document(document)
-          parser  = ::Gherkin::Parser.new
-          scanner = ::Gherkin::TokenScanner.new(document.body)
-          builder = AstTransformer.new
+          parser  = ::Gherkin3::Parser.new
+          scanner = ::Gherkin3::TokenScanner.new(document.body)
+          builder = AstTransformer.new(document.uri)
+
+          if document.body.strip.empty?
+            return receiver.feature Ast::NullFeature.new
+          end
 
           begin
-            result = parser.parse(scanner, builder, ::Gherkin::TokenMatcher.new)
+            result = parser.parse(scanner, builder, ::Gherkin3::TokenMatcher.new)
 
-            #builder.language = parser.i18n_language
             receiver.feature result
           rescue *PARSER_ERRORS => e
             raise Core::Gherkin::ParseError.new("#{document.uri}: #{e.message}")
@@ -40,17 +44,18 @@ module Cucumber
 
         private
 
-        PARSER_ERRORS = if Cucumber::JRUBY
-                          [
-                            # Not sure...
-                          ]
-                        else
-                          [
-                            ::Gherkin::ParserError,
-                          ]
-                        end
+        PARSER_ERRORS = ::Gherkin3::ParserError
 
-        class AstTransformer < ::Gherkin::AstBuilder
+        class AstTransformer < ::Gherkin3::AstBuilder
+          attr_reader :uri, :ast_builder
+          private :uri, :ast_builder
+
+          def initialize(uri)
+            super()
+            @uri = uri
+            @ast_builder = Cucumber::Core::Gherkin::AstBuilder.new(uri)
+          end
+
           def create_ast_value(data)
             data = super
 
@@ -58,35 +63,35 @@ module Cucumber
               data[:type] = :OutlineStep
             end
 
-            ast_class = Ast.const_get(data[:type])
-            ast_class.new(attributes_from(data))
+            attributes = attributes_from(data)
+            case data[:type]
+            when :Feature
+              ast_builder.feature(attributes)
+            when :Background
+              ast_builder.background(attributes)
+            when :Scenario
+              ast_builder.scenario(attributes)
+            when :ScenarioOutline
+              ast_builder.scenario_outline(attributes)
+            when :Examples
+              ast_builder.examples(attributes)
+            when :Step
+              ast_builder.step(attributes)
+            when :OutlineStep
+              ast_builder.outline_step(attributes)
+            when :DataTable
+              ast_builder.data_table(attributes)
+            when :DocString
+              ast_builder.doc_string(attributes)
+            else
+              raise
+            end
           rescue => e
             raise e.class, "Unable to create AST node: '#{data[:type]} from #{data}' #{e.message}", e.backtrace
           end
 
           def attributes_from(data)
-            result = data.dup
-            result.delete(:type)
-            if result.key?(:rows)
-              result[:rows] = result[:rows].map { |r| r[:cells].map { |c| c[:value] } }
-            end
-
-            if result.key?(:tableHeader)
-              header_attrs = result.delete(:tableHeader)
-              header_attrs.delete(:type)
-              header_attrs[:cells] = header_attrs[:cells].map { |c| c[:value] }
-              result[:header] = Ast::ExamplesTable::Header.new(header_attrs)
-            end
-
-            if result.key?(:tableBody)
-              body_attrs = result.delete(:tableBody)
-              result[:example_rows] = body_attrs.each.with_index.map do |row,index|
-                cells = row[:cells].map { |c| c[:value] }
-                header = result[:header]
-                header.build_row(cells, index + 1, row[:location], row[:language])
-              end
-            end
-            rubify_keys(result)
+            rubify_keys(data.dup)
           end
 
           def rubify_keys(hash)

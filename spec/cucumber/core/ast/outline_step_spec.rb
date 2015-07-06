@@ -8,8 +8,7 @@ module Cucumber
   module Core
     module Ast
       describe OutlineStep do
-        let(:outline_step) { OutlineStep.new(node, language, location, comments, keyword, name, multiline_arg) }
-        let(:node) { double }
+        let(:outline_step) { OutlineStep.new(language, location, comments, keyword, name, multiline_arg) }
         let(:language) { double }
         let(:location) { double }
         let(:comments)  { double }
@@ -46,7 +45,7 @@ module Cucumber
           end
 
           context "when the step has a DataTable" do
-            let(:outline_step) { OutlineStep.new(node, language, location, comments, keyword, name, table) }
+            let(:outline_step) { OutlineStep.new(language, location, comments, keyword, name, table) }
             let(:name)  { "anything" }
             let(:table) { DataTable.new([['x', 'y'],['a', 'a <arg>']], Location.new('foo.feature', 23)) }
 
@@ -64,7 +63,7 @@ module Cucumber
 
           context "when the step has a DocString" do
             let(:location) { double }
-            let(:outline_step) { OutlineStep.new(node, language, location, comments, keyword, name, doc_string) }
+            let(:outline_step) { OutlineStep.new(language, location, comments, keyword, name, doc_string) }
             let(:doc_string) { DocString.new('a <arg> that needs replacing', '', location) }
             let(:name) { 'anything' }
 

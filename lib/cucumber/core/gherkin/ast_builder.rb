@@ -8,337 +8,350 @@ module Cucumber
       # Gherkin parser.
       class AstBuilder
 
-        def initialize(path)
-          @path = path
-          @feature_builder = nil
+        def initialize(uri)
+          @uri = uri
         end
 
-        def result
-          return Ast::NullFeature.new unless @feature_builder
-          @feature_builder.result(language)
+        def feature(attributes)
+          FeatureBuilder.new(file, attributes).result
         end
 
-        def language=(language)
-          @language = language
+        def background(attributes)
+          BackgroundBuilder.new(file, attributes)
         end
 
-        def uri(uri)
-          @path = uri
+        def scenario(attributes)
+          ScenarioBuilder.new(file, attributes)
         end
 
-        def feature(node)
-          @feature_builder = FeatureBuilder.new(file, node)
+        def scenario_outline(attributes)
+          ScenarioOutlineBuilder.new(file, attributes)
         end
 
-        def background(node)
-          builder = BackgroundBuilder.new(file, node)
-          @feature_builder.background_builder = builder
-          @current = builder
+        def examples(attributes)
+          ExamplesTableBuilder.new(file, attributes)
         end
 
-        def scenario(node)
-          builder = ScenarioBuilder.new(file, node)
-          @feature_builder.add_child builder
-          @current = builder
+        def step(attributes)
+          StepBuilder.new(file, attributes)
         end
 
-        def scenario_outline(node)
-          builder = ScenarioOutlineBuilder.new(file, node)
-          @feature_builder.add_child builder
-          @current = builder
+        def outline_step(attributes)
+          OutlineStepBuilder.new(file, attributes)
         end
 
-        def examples(node)
-          @current.add_examples file, node
+        def data_table(attributes)
+          DataTableBuilder.new(file, attributes)
         end
 
-        def step(node)
-          @current.add_step file, node
-        end
-
-        def eof
-        end
-
-        def syntax_error(state, event, legal_events, line)
-          # raise "SYNTAX ERROR"
+        def doc_string(attributes)
+          DocStringBuilder.new(file, attributes)
         end
 
         private
 
-        def language
-          @language || raise("Language has not been set")
-        end
-
         def file
-          @path
+          @uri
         end
 
         class Builder
-          attr_reader :file, :node
-          private     :file, :node
+          attr_reader :file, :attributes, :comments, :line
+          private     :file, :attributes, :comments, :line
 
-          def initialize(file, node)
+          def initialize(file, attributes)
             @file = file
-            @node = node
+            @attributes = attributes
+            @comments = []
+            @line = attributes[:location][:line]
+          end
+
+          def handle_comments(comments)
+            remaining_comments = []
+            comments.each do |comment|
+              if line > comment.location.line
+                @comments << comment
+              else
+                remaining_comments << comment
+              end
+            end
+            children.each { |child| remaining_comments = child.handle_comments(remaining_comments) }
+            remaining_comments
           end
 
           private
 
+          def keyword
+            attributes[:keyword]
+          end
+
+          def name
+            attributes[:name]
+          end
+
+          def description
+            attributes[:description] ||= ""
+          end
+
           def tags
-            node.tags.map do |tag|
+            attributes[:tags].map do |tag|
               Ast::Tag.new(
-                Ast::Location.new(file, tag.line),
-                tag.name)
+                Ast::Location.new(file, tag[:location][:line]),
+                tag[:name])
             end
           end
 
           def location
-            Ast::Location.new(file, node.line)
+            Ast::Location.new(file, attributes[:location][:line])
           end
 
-          def comments
-            node.comments.map do |comment|
-              Ast::Comment.new(
-                Ast::Location.new(file, comment.line), 
-                comment.value
-              )
-            end
+          def children
+            []
           end
         end
 
         class FeatureBuilder < Builder
-          attr_accessor :background_builder
-          private :background_builder
+          attr_reader :language
 
           def initialize(*)
             super
-            @background_builder = nil
+            @language = Ast::LanguageDelegator.new(attributes[:language], ::Gherkin3::Dialect.for(attributes[:language]))
           end
 
-          def result(language)
-            background = background(language)
+          def result
+            handle_comments(all_comments)
             Ast::Feature.new(
-              node,
               language,
               location,
               background,
               comments,
               tags,
-              node.keyword,
-              node.name.lstrip,
-              node.description.rstrip,
-              children.map { |builder| builder.result(background, language, tags) }
+              keyword,
+              name,
+              description,
+              scenario_definitions
             )
-          end
-
-          def add_child(child)
-            children << child
-          end
-
-          def children
-            @children ||= []
           end
 
           private
 
-          def background(language)
-            return Ast::EmptyBackground.new unless background_builder
-            @background ||= background_builder.result(language)
+          def background
+            return Ast::EmptyBackground.new unless attributes[:background]
+            attributes[:background].result(language)
+          end
+
+          def scenario_definitions
+            attributes[:scenario_definitions].map { |sd| sd.result(language) }
+          end
+
+          def all_comments
+            attributes[:comments].map do |comment|
+              Ast::Comment.new(
+                Ast::Location.new(file, comment[:location][:line]),
+                comment[:text]
+              )
+            end
+          end
+
+          def children
+            (attributes[:background] ? [attributes[:background]] : []) + attributes[:scenario_definitions]
           end
         end
 
         class BackgroundBuilder < Builder
           def result(language)
             Ast::Background.new(
-              node,
-              language,
               location,
               comments,
-              node.keyword,
-              node.name,
-              node.description,
+              keyword,
+              name,
+              description,
               steps(language)
             )
           end
 
-          def add_step(file, node)
-            step_builders << ScenarioBuilder::StepBuilder.new(file, node)
-          end
-
-          private
-
           def steps(language)
-            step_builders.map { |step_builder| step_builder.result(language) }
+            attributes[:steps].map { |step| step.result(language) }
           end
 
-          def step_builders
-            @step_builders ||= []
+          def children
+            attributes[:steps]
           end
-
         end
 
         class ScenarioBuilder < Builder
-          def result(background, language, feature_tags)
+          def result(language)
             Ast::Scenario.new(
-              node,
-              language,
               location,
-              background,
               comments,
               tags,
-              feature_tags,
-              node.keyword,
-              node.name,
-              node.description,
+              keyword,
+              name,
+              description,
               steps(language)
             )
           end
 
-          def add_step(file, node)
-            step_builders << StepBuilder.new(file, node)
-          end
-
-          private
-
           def steps(language)
-            step_builders.map { |step_builder| step_builder.result(language) }
+            attributes[:steps].map { |step| step.result(language) }
           end
 
-          def step_builders
-            @step_builders ||= []
+          def children
+            attributes[:steps]
+          end
+        end
+
+        class StepBuilder < Builder
+          def result(language)
+            Ast::Step.new(
+              language,
+              location,
+              comments,
+              keyword,
+              attributes[:text],
+              multiline_argument
+            )
           end
 
-          class StepBuilder < Builder
-            def result(language)
-              Ast::Step.new(
-                node,
-                language,
-                location,
-                comments,
-                node.keyword,
-                node.name,
-                
-                MultilineArgument.from(node.doc_string || node.rows, location)
-              )
-            end
+          def multiline_argument
+            return Ast::EmptyMultilineArgument.new unless attributes[:argument]
+            attributes[:argument].result
+          end
+
+          def children
+            return [] unless attributes[:argument]
+            [attributes[:argument]]
+          end
+        end
+
+        class OutlineStepBuilder < Builder
+          def result(language)
+            Ast::OutlineStep.new(
+              language,
+              location,
+              comments,
+              keyword,
+              attributes[:text],
+              multiline_argument
+            )
+          end
+
+          def multiline_argument
+            return Ast::EmptyMultilineArgument.new unless attributes[:argument]
+            attributes[:argument].result
+          end
+
+          def children
+            return [] unless attributes[:argument]
+            [attributes[:argument]]
           end
         end
 
         class ScenarioOutlineBuilder < Builder
-          def result(background, language, feature_tags)
-            raise ParseError.new("Missing Examples section for Scenario Outline at #{location}") if examples_builders.empty?
+          def result(language)
             Ast::ScenarioOutline.new(
-              node,
-              language,
               location,
-              background,
               comments,
               tags,
-              feature_tags,
-              node.keyword,
-              node.name,
-              node.description,
+              keyword,
+              name,
+              description,
               steps(language),
-              examples_tables(language)
+              examples(language)
             )
           end
 
-          def add_examples(file, node)
-            examples_builders << ExamplesTableBuilder.new(file, node)
+          def steps(language)
+            attributes[:steps].map { |step| step.result(language) }
           end
 
-          def add_step(file, node)
-            step_builders << StepBuilder.new(file, node)
+          def examples(language)
+            attributes[:examples].map { |example| example.result(language) }
+          end
+
+          def children
+            attributes[:steps] + attributes[:examples]
+          end
+        end
+
+        class ExamplesTableBuilder < Builder
+          attr_reader :header_builder, :example_rows_builders
+
+          def initialize(*)
+            super
+            @header_builder = HeaderBuilder.new(file, attributes[:table_header])
+            @example_rows_builders = attributes[:table_body].map do |row_attributes|
+              ExampleRowBuilder.new(file, row_attributes)
+            end
+          end
+
+          def result(language)
+            Ast::Examples.new(
+              location,
+              comments,
+              tags,
+              keyword,
+              name,
+              description,
+              header,
+              example_rows(language)
+            )
           end
 
           private
 
-          def steps(language)
-            step_builders.map { |step_builder| step_builder.result(language) }
+          def header
+            @header = header_builder.result
           end
 
-          def step_builders
-            @step_builders ||= []
+          def example_rows(language)
+            example_rows_builders.each.with_index.map { |builder, index| builder.result(language, header, index) }
           end
 
-          def examples_tables(language)
-            examples_builders.map { |examples_builder| examples_builder.result(language) }
-          end
-
-          def examples_builders
-            @examples_builders ||= []
-          end
-
-          class ExamplesTableBuilder < Builder
-
-            def result(language)
-              Ast::ExamplesTable.new(
-                node,
-                location,
-                comments,
-                tags,
-                node.keyword,
-                node.name,
-                node.description,
-                header,
-                example_rows(language)
-              )
-            end
-
-            private
-
-            def header
-              row = node.rows[0]
-              Ast::ExamplesTable::Header.new(row.cells, location, row_comments(row))
-            end
-
-            def example_rows(language)
-              _, *raw_examples = *node.rows
-              raw_examples.each_with_index.map do |row, index|
-                header.build_row(row.cells, index + 1, location.on_line(row.line), language, row_comments(row))
-              end
-            end
-
-            def row_comments(row)
-              row.comments.map do |comment|
-                Ast::Comment.new(
-                  Ast::Location.new(file, comment.line), 
-                  comment.value
-                )
-              end
+          class HeaderBuilder < Builder
+            def result
+              cells = attributes[:cells].map { |c| c[:value] }
+              Ast::ExamplesTable::Header.new(cells, location, comments)
             end
           end
 
-          class StepBuilder < Builder
-            def result(language)
-              Ast::OutlineStep.new(
-                node,
-                language,
-                location,
-                comments,
-                node.keyword,
-                node.name,
-                MultilineArgument.from(node.doc_string || node.rows, location)
-              )
+          def children
+            [header_builder] + example_rows_builders
+          end
+
+          class ExampleRowBuilder < Builder
+            def result(language, header, index)
+              cells = attributes[:cells].map { |c| c[:value] }
+              header.build_row(cells, index + 1, location, language, comments)
             end
           end
         end
 
-        module MultilineArgument
-          class << self
+        class DataTableBuilder < Builder
+          def result
+            Ast::DataTable.new(
+              rows,
+              location
+            )
+          end
 
-            def from(argument, parent_location)
-              return Ast::EmptyMultilineArgument.new unless argument
-              case argument
-              when ::Gherkin::Formatter::Model::DocString
-                Ast::DocString.new(argument.value, argument.content_type, parent_location.on_line(argument.line_range))
-              when Array
-                location = parent_location.on_line(argument.first.line..argument.last.line)
-                Ast::DataTable.new(argument.map{|row| row.cells}, location)
-              else
-                raise ArgumentError, "Don't know how to convert #{argument.inspect} into a MultilineArgument"
-              end
-            end
+          def rows
+            attributes[:rows] = attributes[:rows].map { |r| r[:cells].map { |c| c[:value] } }
+          end
+        end
+
+        class DocStringBuilder < Builder
+          def result
+            Ast::DocString.new(
+              attributes[:content],
+              attributes[:content_type],
+              doc_string_location
+            )
+          end
+
+          def doc_string_location
+            start_line = attributes[:location][:line]
+            end_line = start_line + attributes[:content].each_line.to_a.length + 1
+            Ast::Location.new(file, start_line..end_line)
           end
         end
 

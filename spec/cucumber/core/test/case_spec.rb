@@ -334,6 +334,16 @@ module Cucumber
                 location = Ast::Location.new(file, 18)
                 expect( test_case.match_locations?([location]) ).to be_truthy
               end
+
+              it "matches a location at the end of the docstring" do
+                location = Ast::Location.new(file, 19)
+                expect( test_case.match_locations?([location]) ).to be_truthy
+              end
+
+              it "does not match a location after the docstring" do
+                location = Ast::Location.new(file, 20)
+                expect( test_case.match_locations?([location]) ).to be_falsy
+              end
             end
 
             context "with a table" do

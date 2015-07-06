@@ -79,9 +79,6 @@ module Cucumber
           attr_reader :line
 
           def initialize(raw_data)
-            if Cucumber::JRUBY && raw_data.is_a?(::Java::GherkinFormatterModel::Range)
-              raw_data = Range.new(raw_data.first, raw_data.last)
-            end
             super Array(raw_data).to_set
             @line = data.first
           end
