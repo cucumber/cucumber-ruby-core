@@ -1,6 +1,8 @@
 ## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.2.0...master)
 
-...
+### New Features
+
+ * Add factory method to Cucumber::Core::Ast::Location that uses the output from Proc#source_location (@brasmusson)
 
 ## [v1.2.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.3...v1.2.0)
 

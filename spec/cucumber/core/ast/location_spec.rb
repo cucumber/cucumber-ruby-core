@@ -1,6 +1,12 @@
 require 'cucumber/core/ast/location'
 
 module Cucumber::Core::Ast
+  RSpec::Matchers.define :be_included_in do |expected|
+    match do |actual|
+      expected.include? actual
+    end
+  end  
+
   describe Location do
     let(:line) { 12 }
     let(:file) { "foo.feature" }
@@ -115,6 +121,45 @@ module Cucumber::Core::Ast
         end
       end
     end
+
+    describe "created from source location" do
+      context "when the location is in the tree below pwd" do
+        it "create a relative path from pwd" do
+          expect( Location.from_source_location(Dir.pwd + "/path/file.rb", 1).file ).to eq "path/file.rb"
+        end
+      end
+
+      context "when the location is in an installed gem" do
+        it "create a relative path from the gem directory" do
+          expect( Location.from_source_location("/path/gems/gem-name/path/file.rb", 1).file ).to eq "gem-name/path/file.rb"
+        end
+      end
+
+      context "when the location is neither below pwd nor in an installed gem" do
+        it "use the absolute path to the file" do
+          expect( Location.from_source_location("/path/file.rb", 1).file ).to eq "/path/file.rb"
+        end
+      end
+    end
+
+    describe "created from file-colon-line" do
+      it "handles also Windows paths" do
+        expect( Location.from_file_colon_line("c:\path\file.rb:123").file ).to eq "c:\path\file.rb"
+      end
+    end
+
+    describe "created of caller" do
+      it "use the location of the caller" do
+        expect( Location.of_caller.to_s ).to be_included_in caller[0]
+      end
+
+      context "when specifying additional caller depth"do      
+        it "use the location of the n:th caller" do
+          expect( Location.of_caller(1).to_s ).to be_included_in caller[1]
+        end
+      end
+    end
+
   end
 end
 

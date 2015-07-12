@@ -13,9 +13,25 @@ module Cucumber
         def_delegator :filepath, :same_as?
         def_delegator :filepath, :filename, :file
 
-        def self.of_caller
-          file, raw_line = *caller[1].split(':')[0..1]
-          new(file, raw_line.to_i)
+        def self.of_caller(additional_depth = 0)
+          from_file_colon_line(*caller[1 + additional_depth])
+        end
+
+        def self.from_file_colon_line(file_colon_line)
+          file, raw_line = file_colon_line.match(/(.*):(\d+)/)[1..2]
+          from_source_location(file, raw_line.to_i)
+        end
+
+        def self.from_source_location(file, line)
+          file = File.expand_path(file)
+          pwd = File.expand_path(Dir.pwd)
+          pwd.force_encoding(file.encoding)
+          if file.index(pwd)
+            file = file[pwd.length+1..-1]
+          elsif file =~ /.*\/gems\/(.*\.rb)$/
+            file = $1
+          end
+          new(file, line)
         end
 
         def initialize(filepath, raw_lines=WILDCARD)
