@@ -7,9 +7,14 @@ module Cucumber
       class Step
         attr_reader :source
 
-        def initialize(source, action = Test::UndefinedAction.new(source.last.location))
+        def initialize(source, action = Test::UndefinedAction.new(source.last.location), data = {})
           raise ArgumentError if source.any?(&:nil?)
           @source, @action = source, action
+          @data = data
+        end
+
+        def data(key)
+          @data.fetch(key)
         end
 
         def describe_to(visitor, *args)
@@ -32,7 +37,11 @@ module Cucumber
         end
 
         def with_action(location = nil, &block)
-          self.class.new(source, Test::Action.new(location, &block))
+          self.class.new(source, Test::Action.new(location, &block), @data)
+        end
+
+        def with_data(new_data)
+          self.class.new(source, @action, @data.merge(new_data))
         end
 
         def name

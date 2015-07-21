@@ -87,5 +87,20 @@ module Cucumber::Core::Test
       expect( test_step.action_location ).to eq location
     end
 
+    context "extra data" do
+      let(:match)     { double(:match) }
+      let(:test_step) { Step.new([], double(:action), match: match) }
+
+      it "exposes access to named data" do
+        expect( test_step.data(:match) ).to eq match
+      end
+
+      it "updates with new data" do
+        new_match     = double(:new_match)
+        updated_step  = test_step.with_data(match: new_match)
+
+        expect( updated_step.data(:match) ).to eq new_match
+      end
+    end
   end
 end
