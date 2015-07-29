@@ -34,7 +34,7 @@ module Cucumber
 
         def short_name
           first_line = name.split(/\n/)[0]
-          if first_line =~ /#{language.feature}:(.*)/
+          if first_line =~ /#{language.feature_keywords}:(.*)/
             $1.strip
           else
             first_line

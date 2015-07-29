@@ -23,9 +23,9 @@ module Cucumber
         end
 
         def actual_keyword(previous_step_keyword = nil)
-          if [language.and, language.but].flatten.uniq.include? keyword
+          if [language.and_keywords, language.but_keywords].flatten.uniq.include? keyword
             if previous_step_keyword.nil?
-              language.given.reject{|kw| kw == '* '}[0]
+              language.given_keywords.reject{|kw| kw == '* '}[0]
             else
               previous_step_keyword
             end

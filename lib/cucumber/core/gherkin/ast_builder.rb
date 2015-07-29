@@ -16,38 +16,6 @@ module Cucumber
           FeatureBuilder.new(file, attributes).result
         end
 
-        def background(attributes)
-          BackgroundBuilder.new(file, attributes)
-        end
-
-        def scenario(attributes)
-          ScenarioBuilder.new(file, attributes)
-        end
-
-        def scenario_outline(attributes)
-          ScenarioOutlineBuilder.new(file, attributes)
-        end
-
-        def examples(attributes)
-          ExamplesTableBuilder.new(file, attributes)
-        end
-
-        def step(attributes)
-          StepBuilder.new(file, attributes)
-        end
-
-        def outline_step(attributes)
-          OutlineStepBuilder.new(file, attributes)
-        end
-
-        def data_table(attributes)
-          DataTableBuilder.new(file, attributes)
-        end
-
-        def doc_string(attributes)
-          DocStringBuilder.new(file, attributes)
-        end
-
         private
 
         def file
@@ -60,9 +28,9 @@ module Cucumber
 
           def initialize(file, attributes)
             @file = file
-            @attributes = attributes
+            @attributes = rubify_keys(attributes.dup)
             @comments = []
-            @line = attributes[:location][:line]
+            @line = @attributes[:location][:line]
           end
 
           def handle_comments(comments)
@@ -107,14 +75,35 @@ module Cucumber
           def children
             []
           end
+
+          def rubify_keys(hash)
+            hash.keys.each do |key|
+              if key.downcase != key
+                hash[underscore(key).to_sym] = hash.delete(key)
+              end
+            end
+            return hash
+          end
+
+          def underscore(string)
+            string.to_s.gsub(/::/, '/').
+              gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+              gsub(/([a-z\d])([A-Z])/,'\1_\2').
+              tr("-", "_").
+              downcase
+          end
         end
 
         class FeatureBuilder < Builder
-          attr_reader :language
+          attr_reader :language, :background_builder, :scenario_definition_builders
 
           def initialize(*)
             super
             @language = Ast::LanguageDelegator.new(attributes[:language], ::Gherkin3::Dialect.for(attributes[:language]))
+            @background_builder = BackgroundBuilder.new(file, attributes[:background]) if attributes[:background]
+            @scenario_definition_builders = attributes[:scenario_definitions].map do |sd|
+              sd[:type] == :Scenario ? ScenarioBuilder.new(file, sd) : ScenarioOutlineBuilder.new(file, sd)
+            end
           end
 
           def result
@@ -135,12 +124,12 @@ module Cucumber
           private
 
           def background
-            return Ast::EmptyBackground.new unless attributes[:background]
-            attributes[:background].result(language)
+            return Ast::EmptyBackground.new unless background_builder
+            background_builder.result(language)
           end
 
           def scenario_definitions
-            attributes[:scenario_definitions].map { |sd| sd.result(language) }
+            scenario_definition_builders.map { |builder| builder.result(language) }
           end
 
           def all_comments
@@ -153,11 +142,18 @@ module Cucumber
           end
 
           def children
-            (attributes[:background] ? [attributes[:background]] : []) + attributes[:scenario_definitions]
+            (background_builder ? [background_builder] : []) + scenario_definition_builders
           end
         end
 
         class BackgroundBuilder < Builder
+          attr_reader :step_builders
+
+          def initialize(*)
+            super
+            @step_builders = attributes[:steps].map { |step| StepBuilder.new(file, step) }
+          end
+
           def result(language)
             Ast::Background.new(
               location,
@@ -170,15 +166,22 @@ module Cucumber
           end
 
           def steps(language)
-            attributes[:steps].map { |step| step.result(language) }
+            step_builders.map { |builder| builder.result(language) }
           end
 
           def children
-            attributes[:steps]
+            step_builders
           end
         end
 
         class ScenarioBuilder < Builder
+          attr_reader :step_builders
+
+          def initialize(*)
+            super
+            @step_builders = attributes[:steps].map { |step| StepBuilder.new(file, step) }
+          end
+
           def result(language)
             Ast::Scenario.new(
               location,
@@ -192,15 +195,22 @@ module Cucumber
           end
 
           def steps(language)
-            attributes[:steps].map { |step| step.result(language) }
+            step_builders.map { |builder| builder.result(language) }
           end
 
           def children
-            attributes[:steps]
+            step_builders
           end
         end
 
         class StepBuilder < Builder
+          attr_reader :multiline_argument_builder
+
+          def initialize(*)
+            super
+            @multiline_argument_builder = attributes[:argument] ? argument_builder(attributes[:argument]) : nil
+          end
+
           def result(language)
             Ast::Step.new(
               language,
@@ -213,17 +223,23 @@ module Cucumber
           end
 
           def multiline_argument
-            return Ast::EmptyMultilineArgument.new unless attributes[:argument]
-            attributes[:argument].result
+            return Ast::EmptyMultilineArgument.new unless multiline_argument_builder
+            multiline_argument_builder.result
           end
 
           def children
-            return [] unless attributes[:argument]
-            [attributes[:argument]]
+            return [] unless multiline_argument_builder
+            [multiline_argument_builder]
+          end
+
+          private
+
+          def argument_builder(attributes)
+            attributes[:type] == :DataTable ? DataTableBuilder.new(file, attributes) : DocStringBuilder.new(file, attributes) 
           end
         end
 
-        class OutlineStepBuilder < Builder
+        class OutlineStepBuilder < StepBuilder
           def result(language)
             Ast::OutlineStep.new(
               language,
@@ -234,19 +250,17 @@ module Cucumber
               multiline_argument
             )
           end
-
-          def multiline_argument
-            return Ast::EmptyMultilineArgument.new unless attributes[:argument]
-            attributes[:argument].result
-          end
-
-          def children
-            return [] unless attributes[:argument]
-            [attributes[:argument]]
-          end
         end
 
         class ScenarioOutlineBuilder < Builder
+          attr_reader :step_builders, :example_builders
+
+          def initialize(*)
+            super
+            @step_builders = attributes[:steps].map { |step| OutlineStepBuilder.new(file, step) }
+            @example_builders = attributes[:examples].map { |example| ExamplesTableBuilder.new(file, example) }
+          end
+
           def result(language)
             Ast::ScenarioOutline.new(
               location,
@@ -261,15 +275,15 @@ module Cucumber
           end
 
           def steps(language)
-            attributes[:steps].map { |step| step.result(language) }
+            step_builders.map { |builder| builder.result(language) }
           end
 
           def examples(language)
-            attributes[:examples].map { |example| example.result(language) }
+            example_builders.map { |builder| builder.result(language) }
           end
 
           def children
-            attributes[:steps] + attributes[:examples]
+            step_builders + example_builders
           end
         end
 
