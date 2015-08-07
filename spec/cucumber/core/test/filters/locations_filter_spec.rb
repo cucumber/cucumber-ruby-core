@@ -1,6 +1,7 @@
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core'
 require 'cucumber/core/test/filters/locations_filter'
+require 'timeout'
 
 module Cucumber::Core::Test
   describe LocationsFilter do
@@ -10,7 +11,7 @@ module Cucumber::Core::Test
     let(:receiver) { SpyReceiver.new }
 
     let(:doc) do
-      gherkin do
+      gherkin('features/test.feature') do
         feature do
           scenario 'x' do
             step 'a step'
@@ -51,6 +52,44 @@ module Cucumber::Core::Test
       expect(receiver.test_case_locations).to eq ["features/test.feature:3"]
     end
 
+    num_features = 1
+    num_scenarios_per_feature = 300
+    context "under load" do
+      let(:docs) do
+        (1..num_features).map do |i|
+          gherkin("features/test_#{i}.feature") do
+            feature do
+              (1..num_scenarios_per_feature).each do |j|
+                scenario "scenario #{j}" do
+                  step
+                end
+              end
+            end
+          end
+        end
+      end
+
+      num_locations = num_features
+      let(:locations) do
+        (1..num_locations).map do |i|
+          (1..num_scenarios_per_feature).map do |j|
+            line = 3 + (j - 1) * 3
+            Cucumber::Core::Ast::Location.new("features/test_#{i}.feature", line)
+          end
+        end.flatten
+      end
+
+      max_duration_ms = 6000
+      it "filters within #{max_duration_ms}ms" do
+        filter = LocationsFilter.new(locations)
+        Timeout.timeout(max_duration_ms / 1000.0) do
+          compile docs, receiver, [filter]
+        end
+        expect(receiver.test_cases.length).to eq num_features * num_scenarios_per_feature
+      end
+
+    end
+
     class SpyReceiver
       def test_case(test_case)
         test_cases << test_case
@@ -62,8 +101,6 @@ module Cucumber::Core::Test
       def test_case_locations
         test_cases.map(&:location).map(&:to_s)
       end
-
-      private
 
       def test_cases
         @test_cases ||= []
