@@ -1,7 +1,5 @@
 require 'gherkin3/parser'
 require 'gherkin3/token_scanner'
-require 'gherkin3/token_matcher'
-require 'gherkin3/ast_builder'
 require 'gherkin3/errors'
 require 'cucumber/core/gherkin/ast_builder'
 require 'cucumber/core/ast'
@@ -23,14 +21,13 @@ module Cucumber
           parser  = ::Gherkin3::Parser.new
           scanner = ::Gherkin3::TokenScanner.new(document.body)
           core_builder = AstBuilder.new(document.uri)
-          gherkin_builder = ::Gherkin3::AstBuilder.new
 
           if document.body.strip.empty?
             return receiver.feature Ast::NullFeature.new
           end
 
           begin
-            result = parser.parse(scanner, gherkin_builder, ::Gherkin3::TokenMatcher.new)
+            result = parser.parse(scanner)
 
             receiver.feature core_builder.feature(result)
           rescue *PARSER_ERRORS => e
