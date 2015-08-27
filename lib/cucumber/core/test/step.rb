@@ -57,6 +57,25 @@ module Cucumber
         end
 
       end
+
+      class IsStepVisitor
+        def initialize(test_step)
+          @is_step = false
+          test_step.describe_to(self)
+        end
+
+        def step?
+          @is_step
+        end
+
+        def test_step(*)
+          @is_step = true
+        end
+
+        def method_missing(*)
+          self
+        end
+      end
     end
   end
 end
