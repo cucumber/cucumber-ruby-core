@@ -297,6 +297,22 @@ module Cucumber::Core::Test
         end
         test_case.describe_to runner
       end
+
+      it "sends after_test_step for a step interrupted by (a timeout in) the around hook" do
+        around_hook = AroundHook.new { |block| block.call; raise exception }
+        passing_step = Step.new([source]).with_action {}
+        test_case = Case.new([], source, [around_hook])
+        runner.stub(:running_test_step).and_return(passing_step)
+        expect(report).to receive(:after_test_step).with(passing_step, anything) do |reported_test_case, result|
+          expect(result).to be_failed
+          expect(result.exception).to eq exception
+        end
+        expect(report).to receive(:after_test_case).with(test_case, anything) do |reported_test_case, result|
+          expect(result).to be_failed
+          expect(result.exception).to eq exception
+        end
+        test_case.describe_to runner
+      end
     end
 
   end

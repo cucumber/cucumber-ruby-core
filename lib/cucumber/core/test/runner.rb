@@ -4,8 +4,8 @@ module Cucumber
   module Core
     module Test
       class Runner
-        attr_reader :report, :running_test_case
-        private :report, :running_test_case
+        attr_reader :report, :running_test_case, :running_test_step
+        private :report, :running_test_case, :running_test_step
 
         def initialize(report)
           @report = report
@@ -13,6 +13,7 @@ module Cucumber
 
         def test_case(test_case, &descend)
           @running_test_case = RunningTestCase.new
+          @running_test_step = nil
           report.before_test_case(test_case)
           descend.call(self)
           report.after_test_case(test_case, running_test_case.result)
@@ -20,14 +21,18 @@ module Cucumber
         end
 
         def test_step(test_step)
+          @running_test_step = test_step
           report.before_test_step test_step
           step_result = running_test_case.execute(test_step)
           report.after_test_step test_step, step_result
+          @running_test_step = nil
           self
         end
 
         def around_hook(hook, &continue)
-          running_test_case.execute(hook, &continue)
+          result = running_test_case.execute(hook, &continue)
+          report.after_test_step running_test_step, result if running_test_step
+          @running_test_step = nil
           self
         end
 
