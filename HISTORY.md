@@ -4,7 +4,7 @@
 
 ### Bugfixes
 
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.2.0...v1.3.0)
+## [v1.3.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.2.0...v1.3.0)
 
 ### New Features
 
