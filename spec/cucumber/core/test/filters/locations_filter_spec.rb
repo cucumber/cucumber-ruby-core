@@ -79,8 +79,8 @@ module Cucumber::Core::Test
         end.flatten
       end
 
-      max_duration_ms = 6000
-      it "filters within #{max_duration_ms}ms" do
+      max_duration_ms = 7000
+      it "filters #{num_features * num_scenarios_per_feature} test cases within #{max_duration_ms}ms" do
         filter = LocationsFilter.new(locations)
         Timeout.timeout(max_duration_ms / 1000.0) do
           compile docs, receiver, [filter]
