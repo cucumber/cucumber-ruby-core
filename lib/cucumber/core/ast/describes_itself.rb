@@ -8,7 +8,6 @@ module Cucumber
               begin
                 child.describe_to(child_visitor, *args)
               rescue => e
-                p children
                 raise e.class, "Failed describing child of #{self.inspect} - #{e.message}", e.backtrace
               end
             end
