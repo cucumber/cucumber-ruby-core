@@ -3,6 +3,7 @@
 ### New Features
 
  * Add factory method to Cucumber::Core::Ast::Location that uses the output from Proc#source_location (@brasmusson)
+ * Integrate Gherkin3 parser (@brassmusson)
 
 ### Bugfixes
 
