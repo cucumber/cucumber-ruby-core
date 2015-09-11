@@ -66,6 +66,7 @@ module Cucumber
         end
       end
 
+      require 'delegate'
       class LanguageDelegator < SimpleDelegator
         attr_reader :iso_code
 
