@@ -52,6 +52,72 @@ module Cucumber::Core::Test
       expect(receiver.test_case_locations).to eq ["features/test.feature:3"]
     end
 
+    it "matches step locations to the scenario" do
+      locations = [
+        Cucumber::Core::Ast::Location.new('features/test.feature', 4)
+      ]
+      filter = LocationsFilter.new(locations)
+      compile [doc], receiver, [filter]
+      expect(receiver.test_case_locations).to eq ["features/test.feature:3"]
+    end
+
+    context "with scenario outlines" do
+      let(:doc) do
+        gherkin('features/test.feature') do
+          feature do
+            scenario_outline 'x' do
+              step 'a step'
+              examples do
+                row 'header'
+                row 'data1'
+                row 'data2'
+              end
+              examples do
+                row 'header'
+                row 'data3'
+              end
+            end
+          end
+        end
+      end
+
+      it "matches row location the test case of the row" do
+        locations = [
+                     Cucumber::Core::Ast::Location.new('features/test.feature', 8),
+                    ]
+        filter = LocationsFilter.new(locations)
+        compile [doc], receiver, [filter]
+        expect(receiver.test_case_locations).to eq ["features/test.feature:8"]
+      end
+
+      it "matches examples location the all test cases of the table" do
+        locations = [
+                     Cucumber::Core::Ast::Location.new('features/test.feature', 6),
+                    ]
+        filter = LocationsFilter.new(locations)
+        compile [doc], receiver, [filter]
+        expect(receiver.test_case_locations).to eq ["features/test.feature:8", "features/test.feature:9"]
+      end
+
+      it "matches outline location the all test cases of all the tables" do
+        locations = [
+                     Cucumber::Core::Ast::Location.new('features/test.feature', 3),
+                    ]
+        filter = LocationsFilter.new(locations)
+        compile [doc], receiver, [filter]
+        expect(receiver.test_case_locations).to eq ["features/test.feature:8", "features/test.feature:9", "features/test.feature:13"]
+      end
+
+      it "matches outline step location the all test cases of all the tables" do
+        locations = [
+                     Cucumber::Core::Ast::Location.new('features/test.feature', 4),
+                    ]
+        filter = LocationsFilter.new(locations)
+        compile [doc], receiver, [filter]
+        expect(receiver.test_case_locations).to eq ["features/test.feature:8", "features/test.feature:9", "features/test.feature:13"]
+      end
+    end
+
     num_features = 1
     num_scenarios_per_feature = 300
     context "under load" do
