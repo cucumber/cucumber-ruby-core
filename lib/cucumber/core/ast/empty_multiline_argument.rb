@@ -18,7 +18,7 @@ module Cucumber
           self
         end
 
-        def locations
+        def all_locations
           []
         end
 

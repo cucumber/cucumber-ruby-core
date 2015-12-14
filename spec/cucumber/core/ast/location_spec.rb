@@ -182,6 +182,15 @@ module Cucumber::Core::Ast
         )
         expect(location.to_s).to eq "test.feature:1:6:7"
       end
+
+      it "raises an error when the locations are from different files" do
+        expect {
+          Location.merge(
+            Location.new("one.feature", 1),
+            Location.new("two.feature", 1)
+          )
+        }.to raise_error(IncompatibleLocations)
+      end
     end
 
   end

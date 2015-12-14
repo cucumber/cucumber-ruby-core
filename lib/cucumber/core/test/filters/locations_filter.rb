@@ -36,7 +36,7 @@ module Cucumber
 
         def matches?(test_case, filter)
           return false unless test_case.location.file == filter.file
-          test_case.locations.any? { |location| filter.match?(location) }
+          test_case.all_locations.any? { |location| filter.match?(location) }
         end
 
       end

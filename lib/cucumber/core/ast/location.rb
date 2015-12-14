@@ -3,8 +3,9 @@ require 'cucumber/core/platform'
 module Cucumber
   module Core
     module Ast
+      IncompatibleLocations = Class.new(StandardError)
+
       module Location
-        WILDCARD = :*
 
         def self.of_caller(additional_depth = 0)
           from_file_colon_line(*caller[1 + additional_depth])
@@ -38,8 +39,7 @@ module Cucumber
 
         def self.merge(*locations)
           locations.reduce do |a, b|
-            lines = a.lines + b.lines
-            Precise.new(a.file, lines)
+            a + b
           end
         end
 
@@ -85,6 +85,11 @@ module Cucumber
 
           def on_line(new_line)
             Location.new(file, new_line)
+          end
+
+          def +(other)
+            raise IncompatibleLocations if file != other.file
+            Precise.new(file, lines + other.lines)
           end
 
           def inspect
@@ -149,8 +154,8 @@ module Cucumber
           @location
         end
 
-        def locations
-          @locations ||= ([location] + attributes.map { |node| node.locations }).flatten
+        def all_locations
+          @all_locations ||= Location.merge([location] + attributes.map { |node| node.all_locations }.flatten)
         end
 
         def attributes

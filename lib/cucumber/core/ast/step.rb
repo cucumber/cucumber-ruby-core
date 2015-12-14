@@ -56,8 +56,8 @@ module Cucumber
           @outline_step, @language, @location, @comments, @keyword, @name, @multiline_arg = outline_step, language, location, comments, keyword, name, multiline_arg
         end
 
-        def locations
-          @outline_step.locations
+        def all_locations
+          @outline_step.all_locations
         end
 
         alias :step_backtrace_line :backtrace_line
