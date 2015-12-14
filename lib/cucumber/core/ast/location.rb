@@ -55,6 +55,10 @@ module Cucumber
             lines.include?(other_lines)
           end
 
+          def line
+            lines.first
+          end
+
           def match?(other)
             return false unless other.file == file
             other.include?(lines)
@@ -84,15 +88,16 @@ module Cucumber
         require 'set'
         class Lines < Struct.new(:data)
           protected :data
-          attr_reader :line
 
           def initialize(raw_data)
             super Array(raw_data).to_set
-            @line = data.first
+          end
+
+          def first
+            data.first
           end
 
           def include?(other)
-            return true if (data|other.data).include?(WILDCARD)
             other.data.subset?(data) || data.subset?(other.data)
           end
 
@@ -142,9 +147,8 @@ module Cucumber
           @location
         end
 
-        def match_locations?(queried_locations)
-          return true if attributes.any? { |node| node.match_locations? queried_locations }
-          queried_locations.any? { |queried_location| queried_location.match? location }
+        def locations
+          @locations ||= ([location] + attributes.map { |node| node.locations }).flatten
         end
 
         def attributes

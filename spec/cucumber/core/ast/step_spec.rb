@@ -148,16 +148,6 @@ module Cucumber
           end
         end
 
-        describe "matching location" do
-          let(:location) { double }
-
-          it "also match the outline steps location" do
-            allow( location).to receive(:any?).and_return(nil)
-            expect( outline_step ).to receive(:match_locations?).with(location)
-            step.match_locations?(location)
-          end
-        end
-
         describe "backtrace line" do
           let(:outline_step) { OutlineStep.new(double, "path/file.feature:5", double, "Given ", "this step <state>", double) }
           let(:step) { ExpandedOutlineStep.new(outline_step, double, "path/file.feature:10", double, "Given ", "this step passes", double) }

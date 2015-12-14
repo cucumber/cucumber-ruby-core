@@ -18,8 +18,8 @@ module Cucumber
           self
         end
 
-        def match_locations?(*args)
-          false
+        def locations
+          []
         end
 
         def to_sexp

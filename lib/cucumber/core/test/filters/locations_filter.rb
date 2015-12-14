@@ -5,7 +5,7 @@ module Cucumber
     module Test
 
       # Sorts and filters scenarios based on a list of locations
-      class LocationsFilter < Filter.new(:locations)
+      class LocationsFilter < Filter.new(:filter_locations)
 
         def test_case(test_case)
           test_cases << test_case
@@ -23,17 +23,20 @@ module Cucumber
         private
 
         def sorted_test_cases
-          locations.map { |location| test_cases_matching(location) }.flatten
-        end
-
-        def test_cases_matching(location)
-          test_cases.select do |test_case|
-            test_case.match_locations?([location])
-          end
+          filter_locations.map { |filter_location|
+            test_cases.select { |test_case| 
+              matches?(test_case, filter_location)
+            }
+          }.flatten
         end
 
         def test_cases
           @test_cases ||= []
+        end
+
+        def matches?(test_case, filter)
+          return false unless test_case.location.file == filter.file
+          test_case.locations.any? { |location| filter.match?(location) }
         end
 
       end

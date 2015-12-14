@@ -73,8 +73,21 @@ module Cucumber
         end
 
         def match_locations?(queried_locations)
-          return true if source.any? { |s| s.match_locations?(queried_locations) }
-          test_steps.any? { |node| node.match_locations? queried_locations }
+          queried_locations.any? { |queried_location|
+            all_source.any? { |node|
+              node.locations.any? { |location|
+                queried_location.match? location
+              }
+            }
+          }
+        end
+
+        def locations
+          @locations ||= all_source.map(&:locations).flatten.uniq
+        end
+
+        def all_source
+          @all_source ||= (source + test_steps.map(&:source)).flatten.uniq
         end
 
         def inspect
