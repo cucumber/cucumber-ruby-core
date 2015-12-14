@@ -172,6 +172,18 @@ module Cucumber::Core::Ast
       end
     end
 
+    describe ".merge" do
+      it "merges locations from the same file" do
+        file = "test.feature"
+        location = Location.merge(
+          Location.new(file, 1),
+          Location.new(file, 6),
+          Location.new(file, 7)
+        )
+        expect(location.to_s).to eq "test.feature:1:6:7"
+      end
+    end
+
   end
 end
 

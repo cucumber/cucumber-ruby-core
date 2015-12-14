@@ -36,6 +36,13 @@ module Cucumber
           end
         end
 
+        def self.merge(*locations)
+          locations.reduce do |a, b|
+            lines = a.lines + b.lines
+            Precise.new(a.file, lines)
+          end
+        end
+
         class Wildcard < Struct.new(:file)
           def to_s
             file
@@ -99,6 +106,11 @@ module Cucumber
 
           def include?(other)
             other.data.subset?(data) || data.subset?(other.data)
+          end
+
+          def +(more_lines)
+            new_data = data + more_lines.data
+            self.class.new(new_data)
           end
 
           def to_s
