@@ -3,15 +3,8 @@ require 'cucumber/core/platform'
 module Cucumber
   module Core
     module Ast
-      class Location < Struct.new(:filepath, :lines)
+      module Location
         WILDCARD = :*
-
-        extend Forwardable
-
-        def_delegator :lines,    :include?
-        def_delegator :lines,    :line
-        def_delegator :filepath, :same_as?
-        def_delegator :filepath, :filename, :file
 
         def self.of_caller(additional_depth = 0)
           from_file_colon_line(*caller[1 + additional_depth])
@@ -34,42 +27,57 @@ module Cucumber
           new(file, line)
         end
 
-        def initialize(filepath, raw_lines=WILDCARD)
-          filepath || raise(ArgumentError, "file is mandatory")
-          super(FilePath.new(filepath), Lines.new(raw_lines))
+        def self.new(file, raw_lines=nil)
+          file || raise(ArgumentError, "file is mandatory")
+          if raw_lines
+            Precise.new(file, Lines.new(raw_lines))
+          else
+            Wildcard.new(file)
+          end
         end
 
-        def match?(other)
-          other.same_as?(filepath) && other.include?(lines)
+        class Wildcard < Struct.new(:file)
+          def to_s
+            file
+          end
+
+          def match?(other)
+            other.file == file
+          end
+
+          def include?(lines)
+            true
+          end
         end
 
-        def to_s
-          [filepath.to_s, lines.to_s].reject { |v| v == WILDCARD.to_s }.join(":")
-        end
+        class Precise < Struct.new(:file, :lines)
+          def include?(other_lines)
+            lines.include?(other_lines)
+          end
 
-        def hash
-          self.class.hash ^ to_s.hash
-        end
-
-        def to_str
-          to_s
-        end
-
-        def on_line(new_line)
-          Location.new(filepath.filename, new_line)
-        end
-
-        def inspect
-          "<#{self.class}: #{to_s}>"
-        end
-
-        class FilePath < Struct.new(:filename)
-          def same_as?(other)
-            filename == other.filename
+          def match?(other)
+            return false unless other.file == file
+            other.include?(lines)
           end
 
           def to_s
-            filename
+            [file, lines.to_s].join(":")
+          end
+
+          def hash
+            self.class.hash ^ to_s.hash
+          end
+
+          def to_str
+            to_s
+          end
+
+          def on_line(new_line)
+            Location.new(file, new_line)
+          end
+
+          def inspect
+            "<#{self.class}: #{to_s}>"
           end
         end
 

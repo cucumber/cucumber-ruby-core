@@ -30,14 +30,6 @@ module Cucumber::Core::Ast
       end
     end
 
-    describe "line" do
-      it "is an integer" do
-        expect(Location.new(file, line).line).to be_kind_of(Integer)
-        expect(Location.new(file, 1..2).line).to be_kind_of(Integer)
-        expect(Location.of_caller.line).to be_kind_of(Integer)
-      end
-    end
-
     describe "to_s" do
       it "is file:line for a precise location" do
         expect( Location.new("foo.feature", 12).to_s ).to eq "foo.feature:12"
