@@ -102,7 +102,9 @@ module Cucumber
           end
 
           def to_s
-            boundary.join('..')
+            return first.to_s if data.length == 1
+            return "#{data.min}..#{data.max}" if range?
+            data.to_a.join(":")
           end
 
           def inspect
@@ -111,20 +113,8 @@ module Cucumber
 
           protected
 
-          def boundary
-            first_and_last(value).uniq
-          end
-
-          def at_index(idx)
-            data.to_a[idx]
-          end
-
-          def value
-            method :at_index
-          end
-
-          def first_and_last(something)
-            [0, -1].map(&something)
+          def range?
+            data.size == (data.max - data.min + 1)
           end
         end
       end

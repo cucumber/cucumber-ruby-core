@@ -42,6 +42,10 @@ module Cucumber::Core::Ast
       it "is file:first_line..last_line for a ranged location" do
         expect( Location.new("foo.feature", 13..19).to_s ).to eq "foo.feature:13..19"
       end
+
+      it "is file:line:line:line for an arbitrary set of lines" do
+        expect( Location.new("foo.feature", [1,3,5]).to_s ).to eq "foo.feature:1:3:5"
+      end
     end
 
     describe "matches" do
@@ -110,6 +114,22 @@ module Cucumber::Core::Ast
         it "does not match a location in another file" do
           other = Location.new("bar.feature", 13)
           expect( range ).not_to be_match(other)
+        end
+      end
+
+      context "an arbitrary list of lines" do
+        let(:location) { Location.new("foo.feature", [1,5,6,7]) }
+
+        it "matches any of the given lines" do
+          [1,5,6,7].each do |line|
+            other = Location.new("foo.feature", line)
+            expect(location).to be_match(other)
+          end
+        end
+
+        it "does not match another line" do
+          other = Location.new("foo.feature", 2)
+          expect(location).not_to be_match(other)
         end
       end
     end
