@@ -27,7 +27,7 @@ module Cucumber
             test_cases[filter_location.file].select { |test_case| 
               test_case.all_locations.any? { |location| filter_location.match?(location) }
             }
-          }.flatten
+          }.flatten.uniq
         end
 
         def test_cases
