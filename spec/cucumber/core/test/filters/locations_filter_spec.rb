@@ -324,7 +324,7 @@ module Cucumber::Core
       end
     end
 
-    context "under load" do
+    context "under load", slow: true do
       num_features = 50
       num_scenarios_per_feature = 50
 
