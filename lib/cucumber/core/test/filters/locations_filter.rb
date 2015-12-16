@@ -8,7 +8,7 @@ module Cucumber
       class LocationsFilter < Filter.new(:filter_locations)
 
         def test_case(test_case)
-          test_cases << test_case
+          test_cases[test_case.location.file] << test_case
           self
         end
 
@@ -24,21 +24,15 @@ module Cucumber
 
         def sorted_test_cases
           filter_locations.map { |filter_location|
-            test_cases.select { |test_case| 
-              matches?(test_case, filter_location)
+            test_cases[filter_location.file].select { |test_case| 
+              test_case.all_locations.any? { |location| filter_location.match?(location) }
             }
           }.flatten
         end
 
         def test_cases
-          @test_cases ||= []
+          @test_cases ||= Hash.new { |hash, key| hash[key] = [] }
         end
-
-        def matches?(test_case, filter)
-          return false unless test_case.location.file == filter.file
-          test_case.all_locations.any? { |location| filter.match?(location) }
-        end
-
       end
     end
   end
