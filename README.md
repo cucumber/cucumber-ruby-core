@@ -6,7 +6,7 @@
 [![Coverage Status](https://coveralls.io/repos/cucumber/cucumber-ruby-core/badge.png?branch=master)](https://coveralls.io/r/cucumber/cucumber-ruby-core?branch=master)
 [![Dependency Status](https://gemnasium.com/cucumber/cucumber-ruby-core.png)](https://gemnasium.com/cucumber/cucumber-ruby-core)
 
-Cucumber Core is the [inner hexagon](http://alistair.cockburn.us/Hexagonal+architecture) for the [Ruby flavour of Cucumber](https://github.com/cucumber/cucumber).
+Cucumber Core is the [inner hexagon](http://alistair.cockburn.us/Hexagonal+architecture) for the [Ruby flavour of Cucumber](https://github.com/cucumber/cucumber-ruby).
 
 It contains the core domain logic to execute Cucumber features. It has no user interface, just a Ruby API. If you're interested in how Cucumber works, or in building other tools that work with Gherkin documents, you've come to the right place.
 
