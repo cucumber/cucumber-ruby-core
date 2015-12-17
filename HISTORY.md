@@ -4,6 +4,8 @@
 
 ### Bugfixes
 
+ * Speed up location filtering ([99](https://github.com/cucumber/cucumber-ruby-core/issues/99) @mattwynne @akostadinov @brasmusson)
+
 ## [v1.3.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.2.0...v1.3.0)
 
 ### New Features
