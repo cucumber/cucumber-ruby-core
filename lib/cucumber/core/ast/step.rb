@@ -56,11 +56,8 @@ module Cucumber
           @outline_step, @language, @location, @comments, @keyword, @name, @multiline_arg = outline_step, language, location, comments, keyword, name, multiline_arg
         end
 
-        alias :self_match_locations? :match_locations?
-
-        def match_locations?(queried_locations)
-          return true if self_match_locations?(queried_locations) 
-          @outline_step.match_locations?(queried_locations)
+        def all_locations
+          @outline_step.all_locations
         end
 
         alias :step_backtrace_line :backtrace_line

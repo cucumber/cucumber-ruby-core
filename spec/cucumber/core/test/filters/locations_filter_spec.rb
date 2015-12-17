@@ -205,6 +205,17 @@ module Cucumber::Core
             expect( test_case.match_locations?([location]) ).to be_truthy
           end
         end
+
+        context "with duplicate locations in the filter" do
+          it "matches each test case only once" do
+            location_tc_two = test_case_named('two').location
+            location_tc_one = test_case_named('one').location
+            location_last_step_tc_two = Ast::Location.new(file, 10)
+            filter = Test::LocationsFilter.new([location_tc_two, location_tc_one, location_last_step_tc_two])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('two').location, location_tc_one = test_case_named('one').location]
+          end
+        end
       end
 
       context "for a scenario outline" do
@@ -324,7 +335,7 @@ module Cucumber::Core
       end
     end
 
-    context "under load" do
+    context "under load", slow: true do
       num_features = 50
       num_scenarios_per_feature = 50
 

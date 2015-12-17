@@ -3,15 +3,9 @@ require 'cucumber/core/platform'
 module Cucumber
   module Core
     module Ast
-      class Location < Struct.new(:filepath, :lines)
-        WILDCARD = :*
+      IncompatibleLocations = Class.new(StandardError)
 
-        extend Forwardable
-
-        def_delegator :lines,    :include?
-        def_delegator :lines,    :line
-        def_delegator :filepath, :same_as?
-        def_delegator :filepath, :filename, :file
+      module Location
 
         def self.of_caller(additional_depth = 0)
           from_file_colon_line(*caller[1 + additional_depth])
@@ -34,62 +28,100 @@ module Cucumber
           new(file, line)
         end
 
-        def initialize(filepath, raw_lines=WILDCARD)
-          filepath || raise(ArgumentError, "file is mandatory")
-          super(FilePath.new(filepath), Lines.new(raw_lines))
+        def self.new(file, raw_lines=nil)
+          file || raise(ArgumentError, "file is mandatory")
+          if raw_lines
+            Precise.new(file, Lines.new(raw_lines))
+          else
+            Wildcard.new(file)
+          end
         end
 
-        def match?(other)
-          other.same_as?(filepath) && other.include?(lines)
+        def self.merge(*locations)
+          locations.reduce do |a, b|
+            a + b
+          end
         end
 
-        def to_s
-          [filepath.to_s, lines.to_s].reject { |v| v == WILDCARD.to_s }.join(":")
+        class Wildcard < Struct.new(:file)
+          def to_s
+            file
+          end
+
+          def match?(other)
+            other.file == file
+          end
+
+          def include?(lines)
+            true
+          end
         end
 
-        def hash
-          self.class.hash ^ to_s.hash
-        end
+        class Precise < Struct.new(:file, :lines)
+          def include?(other_lines)
+            lines.include?(other_lines)
+          end
 
-        def to_str
-          to_s
-        end
+          def line
+            lines.first
+          end
 
-        def on_line(new_line)
-          Location.new(filepath.filename, new_line)
-        end
-
-        def inspect
-          "<#{self.class}: #{to_s}>"
-        end
-
-        class FilePath < Struct.new(:filename)
-          def same_as?(other)
-            filename == other.filename
+          def match?(other)
+            return false unless other.file == file
+            other.include?(lines)
           end
 
           def to_s
-            filename
+            [file, lines.to_s].join(":")
+          end
+
+          def hash
+            self.class.hash ^ to_s.hash
+          end
+
+          def to_str
+            to_s
+          end
+
+          def on_line(new_line)
+            Location.new(file, new_line)
+          end
+
+          def +(other)
+            raise IncompatibleLocations if file != other.file
+            Precise.new(file, lines + other.lines)
+          end
+
+          def inspect
+            "<#{self.class}: #{to_s}>"
           end
         end
 
         require 'set'
         class Lines < Struct.new(:data)
           protected :data
-          attr_reader :line
 
           def initialize(raw_data)
             super Array(raw_data).to_set
-            @line = data.first
+          end
+
+          def first
+            data.first
           end
 
           def include?(other)
-            return true if (data|other.data).include?(WILDCARD)
             other.data.subset?(data) || data.subset?(other.data)
           end
 
+          def +(more_lines)
+            new_data = data + more_lines.data
+            self.class.new(new_data)
+          end
+
           def to_s
-            boundary.join('..')
+            return first.to_s if data.length == 1
+            return "#{data.min}..#{data.max}" if range?
+            data.to_a.join(":")
           end
 
           def inspect
@@ -98,20 +130,8 @@ module Cucumber
 
           protected
 
-          def boundary
-            first_and_last(value).uniq
-          end
-
-          def at_index(idx)
-            data.to_a[idx]
-          end
-
-          def value
-            method :at_index
-          end
-
-          def first_and_last(something)
-            [0, -1].map(&something)
+          def range?
+            data.size == (data.max - data.min + 1)
           end
         end
       end
@@ -134,9 +154,8 @@ module Cucumber
           @location
         end
 
-        def match_locations?(queried_locations)
-          return true if attributes.any? { |node| node.match_locations? queried_locations }
-          queried_locations.any? { |queried_location| queried_location.match? location }
+        def all_locations
+          @all_locations ||= Location.merge([location] + attributes.map { |node| node.all_locations }.flatten)
         end
 
         def attributes

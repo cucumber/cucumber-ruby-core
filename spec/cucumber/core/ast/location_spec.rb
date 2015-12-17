@@ -30,14 +30,6 @@ module Cucumber::Core::Ast
       end
     end
 
-    describe "line" do
-      it "is an integer" do
-        expect(Location.new(file, line).line).to be_kind_of(Integer)
-        expect(Location.new(file, 1..2).line).to be_kind_of(Integer)
-        expect(Location.of_caller.line).to be_kind_of(Integer)
-      end
-    end
-
     describe "to_s" do
       it "is file:line for a precise location" do
         expect( Location.new("foo.feature", 12).to_s ).to eq "foo.feature:12"
@@ -49,6 +41,10 @@ module Cucumber::Core::Ast
 
       it "is file:first_line..last_line for a ranged location" do
         expect( Location.new("foo.feature", 13..19).to_s ).to eq "foo.feature:13..19"
+      end
+
+      it "is file:line:line:line for an arbitrary set of lines" do
+        expect( Location.new("foo.feature", [1,3,5]).to_s ).to eq "foo.feature:1:3:5"
       end
     end
 
@@ -120,6 +116,22 @@ module Cucumber::Core::Ast
           expect( range ).not_to be_match(other)
         end
       end
+
+      context "an arbitrary list of lines" do
+        let(:location) { Location.new("foo.feature", [1,5,6,7]) }
+
+        it "matches any of the given lines" do
+          [1,5,6,7].each do |line|
+            other = Location.new("foo.feature", line)
+            expect(location).to be_match(other)
+          end
+        end
+
+        it "does not match another line" do
+          other = Location.new("foo.feature", 2)
+          expect(location).not_to be_match(other)
+        end
+      end
     end
 
     describe "created from source location" do
@@ -157,6 +169,27 @@ module Cucumber::Core::Ast
         it "use the location of the n:th caller" do
           expect( Location.of_caller(1).to_s ).to be_included_in caller[1]
         end
+      end
+    end
+
+    describe ".merge" do
+      it "merges locations from the same file" do
+        file = "test.feature"
+        location = Location.merge(
+          Location.new(file, 1),
+          Location.new(file, 6),
+          Location.new(file, 7)
+        )
+        expect(location.to_s).to eq "test.feature:1:6:7"
+      end
+
+      it "raises an error when the locations are from different files" do
+        expect {
+          Location.merge(
+            Location.new("one.feature", 1),
+            Location.new("two.feature", 1)
+          )
+        }.to raise_error(IncompatibleLocations)
       end
     end
 

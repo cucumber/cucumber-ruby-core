@@ -5,10 +5,10 @@ module Cucumber
     module Test
 
       # Sorts and filters scenarios based on a list of locations
-      class LocationsFilter < Filter.new(:locations)
+      class LocationsFilter < Filter.new(:filter_locations)
 
         def test_case(test_case)
-          test_cases << test_case
+          test_cases[test_case.location.file] << test_case
           self
         end
 
@@ -23,19 +23,16 @@ module Cucumber
         private
 
         def sorted_test_cases
-          locations.map { |location| test_cases_matching(location) }.flatten
-        end
-
-        def test_cases_matching(location)
-          test_cases.select do |test_case|
-            test_case.match_locations?([location])
-          end
+          filter_locations.map { |filter_location|
+            test_cases[filter_location.file].select { |test_case| 
+              test_case.all_locations.any? { |location| filter_location.match?(location) }
+            }
+          }.flatten.uniq
         end
 
         def test_cases
-          @test_cases ||= []
+          @test_cases ||= Hash.new { |hash, key| hash[key] = [] }
         end
-
       end
     end
   end

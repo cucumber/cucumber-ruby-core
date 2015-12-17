@@ -1,5 +1,6 @@
 require 'cucumber/core/test/result'
 require 'cucumber/core/gherkin/tag_expression'
+require 'cucumber/core/ast/location'
 
 module Cucumber
   module Core
@@ -73,8 +74,21 @@ module Cucumber
         end
 
         def match_locations?(queried_locations)
-          return true if source.any? { |s| s.match_locations?(queried_locations) }
-          test_steps.any? { |node| node.match_locations? queried_locations }
+          queried_locations.any? { |queried_location|
+            all_source.any? { |node|
+              node.all_locations.any? { |location|
+                queried_location.match? location
+              }
+            }
+          }
+        end
+
+        def all_locations
+          @all_locations ||= Ast::Location.merge(all_source.map(&:all_locations).flatten)
+        end
+
+        def all_source
+          @all_source ||= (source + test_steps.map(&:source)).flatten.uniq
         end
 
         def inspect

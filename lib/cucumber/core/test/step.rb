@@ -47,11 +47,6 @@ module Cucumber
           @action.location
         end
 
-        def match_locations?(queried_locations)
-          return true if queried_locations.include? location
-          source.any? { |s| s.match_locations?(queried_locations) }
-        end
-
         def inspect
           "#<#{self.class}: #{location}>"
         end
