@@ -6,10 +6,8 @@ module Cucumber
     module Test
       describe Timer do
         before do
-          time = double
-          allow( Time ).to receive(:now) { time }
-          allow( time ).to receive(:nsec).and_return(946752000, 946752001)
-          allow( time ).to receive(:to_i).and_return(1377009235, 1377009235)
+          allow(Timer::MonotonicTime).to receive(:time_in_nanoseconds)
+                                            .and_return(525702744080000, 525702744080001)
         end
 
         it "returns a Result::Duration object" do
