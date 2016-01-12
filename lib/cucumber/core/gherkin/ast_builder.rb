@@ -99,7 +99,7 @@ module Cucumber
 
           def initialize(*)
             super
-            @language = Ast::LanguageDelegator.new(attributes[:language], ::Gherkin3::Dialect.for(attributes[:language]))
+            @language = Ast::LanguageDelegator.new(attributes[:language], ::Gherkin::Dialect.for(attributes[:language]))
             @background_builder = BackgroundBuilder.new(file, attributes[:background]) if attributes[:background]
             @scenario_definition_builders = attributes[:scenario_definitions].map do |sd|
               sd[:type] == :Scenario ? ScenarioBuilder.new(file, sd) : ScenarioOutlineBuilder.new(file, sd)

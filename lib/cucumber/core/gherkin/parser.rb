@@ -1,6 +1,6 @@
-require 'gherkin3/parser'
-require 'gherkin3/token_scanner'
-require 'gherkin3/errors'
+require 'gherkin/parser'
+require 'gherkin/token_scanner'
+require 'gherkin/errors'
 require 'cucumber/core/gherkin/ast_builder'
 require 'cucumber/core/ast'
 
@@ -18,8 +18,8 @@ module Cucumber
         end
 
         def document(document)
-          parser  = ::Gherkin3::Parser.new
-          scanner = ::Gherkin3::TokenScanner.new(document.body)
+          parser  = ::Gherkin::Parser.new
+          scanner = ::Gherkin::TokenScanner.new(document.body)
           core_builder = AstBuilder.new(document.uri)
 
           if document.body.strip.empty?
@@ -42,7 +42,7 @@ module Cucumber
 
         private
 
-        PARSER_ERRORS = ::Gherkin3::ParserError
+        PARSER_ERRORS = ::Gherkin::ParserError
 
       end
     end

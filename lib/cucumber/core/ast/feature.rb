@@ -1,7 +1,7 @@
 require 'cucumber/core/ast/describes_itself'
 require 'cucumber/core/ast/names'
 require 'cucumber/core/ast/location'
-require 'gherkin3/dialect'
+require 'gherkin/dialect'
 
 module Cucumber
   module Core

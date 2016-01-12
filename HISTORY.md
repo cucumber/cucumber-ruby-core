@@ -1,6 +1,8 @@
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.0...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.1...master)
 
 ### New Features
+
+ * Update to Gherkin v3.2.0 (@brasmusson)
 
 ### Bugfixes
 
@@ -17,7 +19,7 @@
 ### New Features
 
  * Add factory method to Cucumber::Core::Ast::Location that uses the output from Proc#source_location (@brasmusson)
- * Integrate Gherkin3 parser (@brassmusson)
+ * Integrate Gherkin3 parser (@brasmusson)
 
 ### Bugfixes
 

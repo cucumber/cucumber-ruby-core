@@ -1,7 +1,7 @@
 require 'cucumber/core/ast/step'
 require 'cucumber/core/ast/outline_step'
 require 'cucumber/core/ast/empty_multiline_argument'
-require 'gherkin3/dialect'
+require 'gherkin/dialect'
 
 module Cucumber
   module Core
@@ -57,7 +57,7 @@ module Cucumber
         end
 
         describe "actual keyword" do
-          let(:language) { ::Gherkin3::Dialect.for('en') }
+          let(:language) { ::Gherkin::Dialect.for('en') }
 
           context "for keywords 'given', 'when' and 'then'" do
             let(:given_step) { Step.new(language, double, double, "Given ", double, double) }
@@ -95,7 +95,7 @@ module Cucumber
           end
 
           context "for i18n languages" do
-            let(:language) { ::Gherkin3::Dialect.for('en-lol') }
+            let(:language) { ::Gherkin::Dialect.for('en-lol') }
             let(:and_step) { Step.new(language, double, double, "AN ", double, double) }
 
             it "returns the keyword in the correct language" do
