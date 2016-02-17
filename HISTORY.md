@@ -4,6 +4,8 @@
 
 ### Bugfixes
 
+ * Use monotonic time ([103](https://github.com/cucumber/cucumber-ruby-core/pull/103) @mikz)
+
 ## [v1.4.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.1...v1.4.0)
 
 ### New Features
