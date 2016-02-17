@@ -4,7 +4,7 @@
 
 ### Bugfixes
 
- * Use monotonic time ([103](https://github.com/cucumber/cucumber-ruby-core/pull/103) @mikz)
+ * Use monotonic time ([#103](https://github.com/cucumber/cucumber-ruby-core/pull/103) @mikz)
 
 ## [v1.4.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.1...v1.4.0)
 
@@ -20,7 +20,7 @@
 
 ### Bugfixes
 
- * Speed up location filtering ([99](https://github.com/cucumber/cucumber-ruby-core/issues/99) @mattwynne @akostadinov @brasmusson)
+ * Speed up location filtering ([#99](https://github.com/cucumber/cucumber-ruby-core/issues/99) @mattwynne @akostadinov @brasmusson)
 
 ## [v1.3.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.2.0...v1.3.0)
 
