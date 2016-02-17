@@ -24,8 +24,26 @@ module Cucumber
         private
 
         def time_in_nanoseconds
-          t = Time.now
-          t.to_i * 10 ** 9 + t.nsec
+          MonotonicTime.time_in_nanoseconds
+        end
+
+        module MonotonicTime
+          module_function
+
+          if defined?(Process::CLOCK_MONOTONIC)
+            def time_in_nanoseconds
+              Process.clock_gettime(Process::CLOCK_MONOTONIC, :nanosecond)
+            end
+          elsif (defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby') == 'jruby'
+            def time_in_nanoseconds
+              java.lang.System.nanoTime()
+            end
+          else
+            def time_in_nanoseconds
+              t = Time.now
+              t.to_i * 10 ** 9 + t.nsec
+            end
+          end
         end
       end
     end
