@@ -68,7 +68,7 @@ module Cucumber
         end
 
         context 'quacking like a String' do
-          let(:content) { 'content' }
+          let(:content) { String.new('content') }
           let(:content_type) { 'text/plain' }
 
           it 'delegates #encoding to the content string' do

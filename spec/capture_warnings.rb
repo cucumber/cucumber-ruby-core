@@ -22,7 +22,7 @@ module CaptureWarnings
     end
 
     if project_warnings.any?
-      puts "#{ project_warnings.count } cucumber-core warnings detected" 
+      puts "#{ project_warnings.count } cucumber-core warnings detected"
       print_warnings('cucumber-core', project_warnings)
       fail "Please remove all cucumber-core warnings."
     end
@@ -34,7 +34,7 @@ module CaptureWarnings
     old_stderr = STDERR.clone
     pipe_r, pipe_w = IO.pipe
     pipe_r.sync    = true
-    error         = ""
+    error         = String.new
     reader = Thread.new do
       begin
         loop do
