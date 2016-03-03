@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/ast'
 require 'cucumber/core/platform'
 

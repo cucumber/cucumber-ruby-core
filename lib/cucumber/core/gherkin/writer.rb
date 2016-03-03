@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/gherkin/writer/helpers'
 require 'cucumber/core/gherkin/document'
 

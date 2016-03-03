@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/ast/names'
 require 'cucumber/core/ast/location'
 require 'cucumber/core/ast/describes_itself'

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/ast/step'
 require 'cucumber/core/ast/outline_step'
 require 'cucumber/core/ast/empty_multiline_argument'

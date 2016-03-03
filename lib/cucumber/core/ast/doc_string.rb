@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/ast/describes_itself'
 require 'delegate'
 module Cucumber

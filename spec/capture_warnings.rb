@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # With thanks to @myronmarston
 # https://github.com/vcr/vcr/blob/master/spec/capture_warnings.rb
 

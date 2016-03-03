@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/ast/outline_step'
 require 'cucumber/core/ast/examples_table'
 require 'cucumber/core/ast/data_table'
