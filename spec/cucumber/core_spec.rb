@@ -5,6 +5,7 @@ require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
 require 'cucumber/core/report/summary'
 require 'cucumber/core/test/around_hook'
+require 'cucumber/core/test/filters/activate_steps_for_self_test'
 
 module Cucumber
   describe Core do
@@ -200,23 +201,6 @@ module Cucumber
 
     describe "executing a test suite" do
       context "without hooks" do
-        class WithSteps < Core::Filter.new
-          def test_case(test_case)
-            test_steps = test_case.test_steps.map do |step|
-              case step.name
-              when /fail/
-                step.with_action { raise Failure }
-              when /pass/
-                step.with_action {}
-              else
-                step
-              end
-            end
-
-            test_case.with_steps(test_steps).describe_to(receiver)
-          end
-        end
-
         it "executes the test cases in the suite" do
           gherkin = gherkin do
             feature 'Feature name' do
@@ -234,7 +218,7 @@ module Cucumber
           end
           report = Core::Report::Summary.new
 
-          execute [gherkin], report, [WithSteps.new]
+          execute [gherkin], report, [Core::Test::Filters::ActivateStepsForSelfTest.new]
 
           expect( report.test_cases.total           ).to eq 2
           expect( report.test_cases.total_passed    ).to eq 1
