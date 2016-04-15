@@ -200,6 +200,57 @@ module Cucumber
     end
 
     describe "executing a test suite" do
+
+      it "fires events" do
+        gherkin = gherkin do
+          feature 'Feature name' do
+            scenario 'The one that passes' do
+              step 'passing'
+            end
+
+            scenario 'The one that fails' do
+              step 'passing'
+              step 'failing'
+              step 'passing'
+              step 'undefined'
+            end
+          end
+        end
+
+        observed_events = []
+        execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new] do |events|
+          events.on(:test_case_starting) do |test_case|
+            observed_events << [:test_case_starting, test_case.name]
+          end
+          events.on(:test_case_finished) do |test_case, result|
+            observed_events << [:test_case_finished, test_case.name, result.to_sym]
+          end
+          events.on(:test_step_starting) do |test_step|
+            observed_events << [:test_step_starting, test_step.name]
+          end
+          events.on(:test_step_finished) do |test_step, result|
+            observed_events << [:test_step_finished, test_step.name, result.to_sym]
+          end
+        end
+
+        expect(observed_events).to eq [
+          [:test_case_starting, 'The one that passes'],
+          [:test_step_starting, 'passing'],
+          [:test_step_finished, 'passing', :passed],
+          [:test_case_finished, 'The one that passes', :passed],
+          [:test_case_starting, 'The one that fails'],
+          [:test_step_starting, 'passing'],
+          [:test_step_finished, 'passing', :passed],
+          [:test_step_starting, 'failing'],
+          [:test_step_finished, 'failing', :failed],
+          [:test_step_starting, 'passing'],
+          [:test_step_finished, 'passing', :skipped],
+          [:test_step_starting, 'undefined'],
+          [:test_step_finished, 'undefined', :undefined],
+          [:test_case_finished, 'The one that fails', :failed],
+        ]
+      end
+
       context "without hooks" do
         it "executes the test cases in the suite" do
           gherkin = gherkin do
@@ -216,9 +267,10 @@ module Cucumber
               end
             end
           end
-          report = Core::Report::Summary.new
 
-          execute [gherkin], report, [Core::Test::Filters::ActivateStepsForSelfTest.new]
+          event_bus = Core::Events::Bus.new
+          report = Core::Report::Summary.new(event_bus)
+          execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus
 
           expect( report.test_cases.total           ).to eq 2
           expect( report.test_cases.total_passed    ).to eq 1
@@ -258,10 +310,11 @@ module Cucumber
               end
             end
           end
-          report = Core::Report::Summary.new
           logger = []
 
-          execute [gherkin], report, [WithAroundHooks.new(logger)]
+          event_bus = Core::Events::Bus.new
+          report = Core::Report::Summary.new(event_bus)
+          execute [gherkin], [WithAroundHooks.new(logger)], event_bus
 
           expect( report.test_cases.total        ).to eq 1
           expect( report.test_cases.total_passed ).to eq 1
@@ -293,9 +346,10 @@ module Cucumber
             end
           end
         end
-        report = Core::Report::Summary.new
 
-        execute [gherkin], report, [ Cucumber::Core::Test::TagFilter.new(['@a']) ]
+        event_bus = Core::Events::Bus.new
+        report = Core::Report::Summary.new(event_bus)
+        execute [gherkin], [ Cucumber::Core::Test::TagFilter.new(['@a']) ], event_bus
 
         expect( report.test_cases.total ).to eq 2
       end
@@ -311,9 +365,10 @@ module Cucumber
             end
           end
         end
-        report = Core::Report::Summary.new
 
-        execute [gherkin], report, [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ]
+        event_bus = Core::Events::Bus.new
+        report = Core::Report::Summary.new(event_bus)
+        execute [gherkin], [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ], event_bus
 
         expect( report.test_cases.total ).to eq 1
       end

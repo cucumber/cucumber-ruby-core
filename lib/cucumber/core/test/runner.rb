@@ -4,40 +4,39 @@ module Cucumber
   module Core
     module Test
       class Runner
-        attr_reader :report, :running_test_case, :running_test_step
-        private :report, :running_test_case, :running_test_step
+        attr_reader :events, :running_test_case, :running_test_step
+        private :events, :running_test_case, :running_test_step
 
-        def initialize(report)
-          @report = report
+        def initialize(events)
+          @events = events
         end
 
         def test_case(test_case, &descend)
           @running_test_case = RunningTestCase.new
           @running_test_step = nil
-          report.before_test_case(test_case)
+          events.test_case_starting(test_case)
           descend.call(self)
-          report.after_test_case(test_case, running_test_case.result)
+          events.test_case_finished(test_case, running_test_case.result)
           self
         end
 
         def test_step(test_step)
           @running_test_step = test_step
-          report.before_test_step test_step
+          events.test_step_starting test_step
           step_result = running_test_case.execute(test_step)
-          report.after_test_step test_step, step_result
+          events.test_step_finished test_step, step_result
           @running_test_step = nil
           self
         end
 
         def around_hook(hook, &continue)
           result = running_test_case.execute(hook, &continue)
-          report.after_test_step running_test_step, result if running_test_step
+          events.test_step_finished running_test_step, result if running_test_step
           @running_test_step = nil
           self
         end
 
         def done
-          report.done
           self
         end
 

@@ -87,24 +87,6 @@ class ActivateSteps < Cucumber::Core::Filter.new
   end
 end
 
-class Report
-  def before_test_step(test_step)
-  end
-
-  def after_test_step(test_step, result)
-    puts "#{test_step.name} #{result}"
-  end
-
-  def before_test_case(test_case)
-  end
-
-  def after_test_case(test_case, result)
-  end
-
-  def done
-  end
-end
-
 feature = Cucumber::Core::Gherkin::Document.new(__FILE__, <<-GHERKIN)
 Feature:
   Scenario:
@@ -113,7 +95,11 @@ Feature:
     And undefined
 GHERKIN
 
-MyRunner.new.execute([feature], Report.new, [ActivateSteps.new])
+MyRunner.new.execute([feature], [ActivateSteps.new]) do |events|
+  events.on(:test_step_finished) do |test_step, result|
+    puts "#{test_step.name} #{result}"
+  end
+end
 ```
 
 If you run this little Ruby script, you should see the following output:
