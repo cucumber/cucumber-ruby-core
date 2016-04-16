@@ -66,11 +66,13 @@ module Cucumber
       end
 
       class BackgroundFinder
-        attr_writer :background
-
         def initialize(feature_elements)
           @background = nil
           feature_elements[0].describe_to(self) unless feature_elements.empty?
+        end
+
+        def background(background)
+          @background = background
         end
 
         def result
