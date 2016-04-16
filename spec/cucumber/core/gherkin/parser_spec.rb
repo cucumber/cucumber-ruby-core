@@ -225,11 +225,7 @@ module Cucumber
 
         context "a Scenario Outline with no Examples" do
           source do
-            feature do
-              scenario_outline do
-                step 'passing <arg>'
-              end
-            end
+            feature(language: 'not-a-language')
           end
           it "throws an error" do
             expect { feature.describe_to(double.as_null_object) }.to raise_error(ParseError)

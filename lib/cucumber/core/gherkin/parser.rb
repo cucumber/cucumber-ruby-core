@@ -22,10 +22,6 @@ module Cucumber
           scanner = ::Gherkin::TokenScanner.new(document.body)
           core_builder = AstBuilder.new(document.uri)
 
-          if document.body.strip.empty?
-            return receiver.feature Ast::NullFeature.new
-          end
-
           begin
             result = parser.parse(scanner)
 

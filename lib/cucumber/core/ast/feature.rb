@@ -16,20 +16,20 @@ module Cucumber
                     :comments, :tags, :keyword, :description,
                     :feature_elements
 
-        def initialize(language, location, background, comments, tags, keyword, name, description, scenario_definitions)
+        def initialize(language, location, comments, tags, keyword, name, description, feature_elements)
           @language = language
           @location = location
-          @background = background
+          @background = BackgroundFinder.new(feature_elements).result
           @comments = comments
           @tags = tags
           @keyword = keyword
           @name = name
           @description = description
-          @feature_elements = scenario_definitions
+          @feature_elements = feature_elements
         end
 
         def children
-          [background] + @feature_elements
+          @feature_elements
         end
 
         def short_name
@@ -47,7 +47,6 @@ module Cucumber
           sexp += [comment] if comment
           tags = @tags.to_sexp
           sexp += tags if tags.any?
-          sexp += [@background.to_sexp] if @background
           sexp += @feature_elements.map{|fe| fe.to_sexp}
           sexp
         end
@@ -63,6 +62,22 @@ module Cucumber
       class NullFeature
         def method_missing(*args, &block)
           self
+        end
+      end
+
+      class BackgroundFinder
+        attr_writer :background
+
+        def initialize(feature_elements)
+          @background = nil
+          feature_elements[0].describe_to(self) unless feature_elements.empty?
+        end
+
+        def result
+          @background ? @background : EmptyBackground.new
+        end
+
+        def method_missing(*)
         end
       end
 

@@ -13,7 +13,7 @@ module Cucumber
         end
 
         def feature(attributes)
-          FeatureBuilder.new(file, attributes).result
+          DocumentBuilder.new(file, attributes).feature
         end
 
         private
@@ -94,42 +94,17 @@ module Cucumber
           end
         end
 
-        class FeatureBuilder < Builder
-          attr_reader :language, :background_builder, :scenario_definition_builders
-
-          def initialize(*)
-            super
-            @language = Ast::LanguageDelegator.new(attributes[:language], ::Gherkin::Dialect.for(attributes[:language]))
-            @background_builder = BackgroundBuilder.new(file, attributes[:background]) if attributes[:background]
-            @scenario_definition_builders = attributes[:scenario_definitions].map do |sd|
-              sd[:type] == :Scenario ? ScenarioBuilder.new(file, sd) : ScenarioOutlineBuilder.new(file, sd)
-            end
+        class DocumentBuilder < Builder
+          def initialize(file, attributes)
+            @file = file
+            @attributes = rubify_keys(attributes.dup)
           end
 
-          def result
-            handle_comments(all_comments)
-            Ast::Feature.new(
-              language,
-              location,
-              background,
-              comments,
-              tags,
-              keyword,
-              name,
-              description,
-              scenario_definitions
-            )
-          end
-
-          private
-
-          def background
-            return Ast::EmptyBackground.new unless background_builder
-            background_builder.result(language)
-          end
-
-          def scenario_definitions
-            scenario_definition_builders.map { |builder| builder.result(language) }
+          def feature
+            return Ast::NullFeature.new unless attributes[:feature]
+            feature_builder = FeatureBuilder.new(file, attributes[:feature])
+            feature_builder.handle_comments(all_comments)
+            feature_builder.result
           end
 
           def all_comments
@@ -140,9 +115,47 @@ module Cucumber
               )
             end
           end
+        end
+
+        class FeatureBuilder < Builder
+          attr_reader :language, :feature_element_builders
+
+          def initialize(*)
+            super
+            @language = Ast::LanguageDelegator.new(attributes[:language], ::Gherkin::Dialect.for(attributes[:language]))
+            @feature_element_builders = attributes[:children].map do |child|
+              case child[:type]
+              when :Background
+                BackgroundBuilder.new(file, child)
+              when :Scenario
+                ScenarioBuilder.new(file, child)
+              else 
+                ScenarioOutlineBuilder.new(file, child)
+              end
+            end
+          end
+
+          def result
+            Ast::Feature.new(
+              language,
+              location,
+              comments,
+              tags,
+              keyword,
+              name,
+              description,
+              feature_elements
+            )
+          end
+
+          private
+
+          def feature_elements
+            feature_element_builders.map { |builder| builder.result(language) }
+          end
 
           def children
-            (background_builder ? [background_builder] : []) + scenario_definition_builders
+            feature_element_builders
           end
         end
 
