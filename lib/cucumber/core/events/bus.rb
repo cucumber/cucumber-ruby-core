@@ -3,6 +3,7 @@ module Cucumber
     module Events
 
       EventNameError = Class.new(StandardError)
+      DuplicateEventTypes = Class.new(StandardError)
 
       # Event Bus
       #
@@ -53,9 +54,15 @@ module Cucumber
         end
 
         def search_namespaces(event_id)
-          @default_namespaces.each do |namespace|
-            return constantize("#{namespace}::#{camel_case(event_id)}") rescue NameError
-          end
+          result = @default_namespaces.map { |namespace|
+            begin
+              constantize("#{namespace}::#{camel_case(event_id)}")
+            rescue NameError
+              nil
+            end
+          }.compact
+          return result.first if result.length == 1
+          raise DuplicateEventTypes if result.length > 1
           raise EventNameError.new("Unknown Event type `#{camel_case(event_id)}`")
         end
 
