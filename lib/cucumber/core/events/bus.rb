@@ -2,8 +2,50 @@ module Cucumber
   module Core
     module Events
 
+      # Utility class to help translate back and forth between types and symbols for events
+      class EventId
+        def self.new(raw)
+          case raw
+          when Symbol
+            super camel_case(raw)
+          when Class
+            super raw.name
+          end
+        end
+
+        def self.camel_case(underscored_name)
+          underscored_name.to_s.split("_").map { |word| word.upcase[0] + word[1..-1] }.join
+        end
+
+        def initialize(type_name)
+          @type_name = type_name
+        end
+
+        def to_s
+          @type_name
+        end
+
+        def to_sym
+          underscore(@type_name.split("::").last).to_sym
+        end
+
+        def underscore(string)
+          string.to_s.gsub(/::/, '/').
+            gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+            gsub(/([a-z\d])([A-Z])/,'\1_\2').
+            tr("-", "_").
+            downcase
+        end
+      end
+
       EventNameError = Class.new(StandardError)
-      DuplicateEventTypes = Class.new(StandardError)
+      DuplicateEventTypes = Class.new(StandardError) do
+        def initialize(type, other_type)
+          id = EventId.new(type).to_sym
+          clashes = [type, other_type]
+          super "Duplicate events with ID #{id} found across namespaces:\n#{clashes.join("\n")}"
+        end
+      end
 
       # Event Bus
       #
@@ -12,8 +54,47 @@ module Cucumber
       #
       class Bus
 
-        def initialize(*default_namespaces)
-          @default_namespaces = ["Cucumber::Core::Events"] + default_namespaces.map(&:to_s)
+        class EventTypes
+          attr_reader :namespaces
+
+          def initialize(namespaces)
+            @namespaces = namespaces
+            @registry = build_registry
+          end
+
+          def fetch(event_id)
+            @registry.fetch(event_id.to_sym) do
+              raise(EventNameError.new(
+                "Unknown Event type `#{event_id}` in namespaces [#{namespaces.map(&:name).join(",")}]"))
+            end
+          end
+
+          def [](event_id)
+            @registry[event_id.to_sym]
+          end
+
+          private
+
+          def build_registry
+            event_types.reduce({}) { |result, type|
+              id = EventId.new(type).to_sym
+              if result.key?(id)
+                raise DuplicateEventTypes.new(type, result[id])
+              end
+              result[id] = type
+              result
+            }
+          end
+
+          def event_types
+            event_types = @namespaces.
+              map { |namespace| namespace.constants.map { |const| namespace.const_get(const) }}.flatten.
+              select { |type| type.ancestors.include?(Core::Event) }
+          end
+        end
+
+        def initialize(*namespaces)
+          @event_types = EventTypes.new([Cucumber::Core::Events] + namespaces)
           @handlers = {}
         end
 
@@ -28,11 +109,13 @@ module Cucumber
 
         # Broadcast an event
         def broadcast(event)
-          handlers_for(event.class).each { |handler| handler.call(*event.attributes) }
+          search_namespaces(EventId.new(event.class))
+          handlers = handlers_for(event.class)
+          handlers.each { |handler| handler.call(*event.attributes) }
         end
 
-        def method_missing(message, *args)
-          event_class = parse_event_id(message)
+        def method_missing(event_id, *args)
+          event_class = search_namespaces(EventId.new(event_id))
           broadcast event_class.new(*args)
         end
 
@@ -46,61 +129,13 @@ module Cucumber
           case event_id
           when Class
             return event_id
-          when String
-            constantize(event_id)
           else
             search_namespaces(event_id)
           end
         end
 
         def search_namespaces(event_id)
-          result = @default_namespaces.map { |namespace|
-            begin
-              constantize("#{namespace}::#{camel_case(event_id)}")
-            rescue NameError
-              nil
-            end
-          }.compact
-          return result.first if result.length == 1
-          raise DuplicateEventTypes if result.length > 1
-          raise EventNameError.new("Unknown Event type `#{camel_case(event_id)}`")
-        end
-
-        def camel_case(underscored_name)
-          underscored_name.to_s.split("_").map { |word| word.upcase[0] + word[1..-1] }.join
-        end
-
-        # Thanks ActiveSupport
-        # (Only needed to support Ruby 1.9.3 and JRuby)
-        def constantize(camel_cased_word)
-          names = camel_cased_word.split('::')
-
-          # Trigger a built-in NameError exception including the ill-formed constant in the message.
-          Object.const_get(camel_cased_word) if names.empty?
-
-          # Remove the first blank element in case of '::ClassName' notation.
-          names.shift if names.size > 1 && names.first.empty?
-
-          names.inject(Object) do |constant, name|
-            if constant == Object
-              constant.const_get(name)
-            else
-              candidate = constant.const_get(name)
-              next candidate if constant.const_defined?(name, false)
-              next candidate unless Object.const_defined?(name)
-
-              # Go down the ancestors to check if it is owned directly. The check
-              # stops when we reach Object or the end of ancestors tree.
-              constant = constant.ancestors.inject do |const, ancestor|
-                break const    if ancestor == Object
-                break ancestor if ancestor.const_defined?(name, false)
-                const
-              end
-
-              # owner is in Object, so raise
-              constant.const_get(name, false)
-            end
-          end
+          @event_types.fetch(event_id)
         end
       end
     end

@@ -1,8 +1,11 @@
 module Cucumber
   module Core
-    module Event
+    class Event
       def self.new(*attributes)
-        Class.new do
+        # Use normal constructor for subclasses of Event
+        return super if self.ancestors.index(Event) > 0
+
+        Class.new(Event) do
           attr_reader(*attributes)
 
           define_method(:initialize) do |*args|
@@ -15,6 +18,13 @@ module Cucumber
             attributes.map { |attribute| self.send(attribute) }
           end
 
+          define_method(:to_h) do
+            attributes.reduce({}) { |result, attribute| 
+              value = self.send(attribute)
+              result[attribute] = value
+              result
+            }
+          end
         end
       end
     end

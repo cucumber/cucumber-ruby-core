@@ -4,14 +4,23 @@ module Cucumber
   module Core
     module Events
 
-      class TestEvent < Event.new(:some_attribute)
+      class TestEvent < Core::Event.new(:some_attribute)
       end
 
-      class AnotherTestEvent < Event.new
-      end
+      AnotherTestEvent = Core::Event.new
 
       describe Bus do
         let(:bus) { Bus.new }
+
+        context "being constructed" do
+          it "raises an error if there are event types with clashing names in different namespaces" do
+            module Bar
+              TestEvent = Class.new(Event.new)
+            end
+
+            expect { Bus.new(Cucumber::Core::Events::Bar) }.to raise_error(DuplicateEventTypes)
+          end
+        end
 
         context "broadcasting events" do
           it "calls a subscriber for an event, passing details of the event" do
@@ -51,7 +60,7 @@ module Cucumber
           end
 
           it "raises an error when given an event to broadcast that it doesn't recognise" do
-            expect { bus.some_unknown_event }.to raise_error(EventNameError, "Unknown Event type `SomeUnknownEvent`")
+            expect { bus.some_unknown_event }.to raise_error(EventNameError, "Unknown Event type `SomeUnknownEvent` in namespaces [Cucumber::Core::Events]")
           end
 
           it "can search multiple namespaces for an event type" do
@@ -64,30 +73,9 @@ module Cucumber
             expect { bus.some_other_event }.not_to raise_error
           end
 
-          it "raises an error if there are event types with clashing names in different namespaces" do
-            module Bar
-              TestEvent = Class.new(Event.new)
-            end
-
-            bus = Bus.new(Cucumber::Core::Events::Bar)
-            expect { bus.test_event }.to raise_error(DuplicateEventTypes)
-          end
-
         end
 
         context "subscribing to events" do
-
-          it "allows subscription by string" do
-            received_payload = nil
-            bus.on('Cucumber::Core::Events::TestEvent') do |some_attribute|
-              received_payload = some_attribute
-            end
-
-            bus.test_event(:some_attribute)
-
-            expect(received_payload).to eq(:some_attribute)
-          end
-
           it "allows subscription by symbol (for events in the given namespace)" do
             received_payload = nil
             bus.on(:test_event) do |some_attribute|
