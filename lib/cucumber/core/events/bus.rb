@@ -21,13 +21,14 @@ module Cucumber
           raise ArgumentError.new("Please pass either an object or a handler block") unless handler
           event_class = parse_event_id(event_id)
           handlers_for(event_class) << handler
-        rescue EventNameError => error
+        rescue EventIdError => error
           raise error, error.message + "\nDid you get the ID of the event wrong? Try one of these:\n#{@event_types.keys.join("\n")}", error.backtrace
         end
 
         # Broadcast an event
         def broadcast(event)
-          search_namespaces(Events::EventId(event.class))
+          raise ArgumentError, "Please pass an Event" unless event.is_a?(Event)
+          ensure_registered(event.class)
           handlers = handlers_for(event.class)
           handlers.each { |handler| handler.call(*event.attributes) }
         end
@@ -49,9 +50,7 @@ module Cucumber
           case raw
           when Class
             event_type = raw
-            if !@event_types.values.include?(event_type)
-              raise EventNameError.new(Events::EventId(event_type))
-            end
+            ensure_registered(event_type)
             event_type
           else
             search_namespaces(raw)
@@ -60,8 +59,13 @@ module Cucumber
 
         def search_namespaces(event_id)
           @event_types.fetch(event_id) do
-            raise EventNameError.new(event_id)
+            raise EventIdError.new(event_id)
           end
+        end
+
+        def ensure_registered(event_type)
+          return if @event_types.values.include?(event_type)
+          raise EventTypeError.new(event_type)
         end
       end
 
@@ -117,9 +121,15 @@ module Cucumber
         end
       end
 
-      EventNameError = Class.new(StandardError) do
+      EventIdError = Class.new(StandardError) do
         def initialize(event_id)
           super "No Event type with ID `#{event_id}` is registered with the event bus."
+        end
+      end
+
+      EventTypeError = Class.new(StandardError) do
+        def initialize(event_type)
+          super "No Event type `#{event_type}` is registered with the event bus."
         end
       end
 

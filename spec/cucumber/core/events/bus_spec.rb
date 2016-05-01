@@ -9,6 +9,10 @@ module Cucumber
 
       AnotherTestEvent = Core::Event.new
 
+      module UnregisteredNamespace
+        UnregisteredEvent = Core::Event.new
+      end
+
       describe Bus do
         let(:bus) { Bus.new }
 
@@ -73,6 +77,20 @@ module Cucumber
             expect { bus.some_other_event }.not_to raise_error
           end
 
+          context "#broadcast method" do
+            it "must be passed an instance of Event" do
+              expect { 
+                bus.broadcast Object.new
+              }.to raise_error(ArgumentError)
+            end
+
+            it "must be passed an instance of a registered event type" do
+              expect { 
+                bus.broadcast UnregisteredNamespace::UnregisteredEvent
+              }.to raise_error(ArgumentError)
+            end
+          end
+
         end
 
         context "subscribing to events" do
@@ -90,18 +108,13 @@ module Cucumber
           it "raises an error if you use an unknown Event ID" do
             expect { 
               bus.on(:some_unknown_event) { :whatever }
-            }.to raise_error(EventNameError)
+            }.to raise_error(EventIdError)
           end
 
           it "raises an error if you use an un-registered Event type" do
-            module AnotherModule
-              class MyEvent < Event.new(:foo) 
-              end
-            end
-
             expect { 
-              bus.on(AnotherModule::MyEvent) { :whatever }
-            }.to raise_error(EventNameError)
+              bus.on(UnregisteredNamespace::UnregisteredEvent) { :whatever }
+            }.to raise_error(EventTypeError)
           end
 
           it "allows subscription by class" do
