@@ -60,7 +60,7 @@ module Cucumber
           end
 
           it "raises an error when given an event to broadcast that it doesn't recognise" do
-            expect { bus.some_unknown_event }.to raise_error(EventNameError, "No Event type with ID `some_unknown_event` found in namespaces [Cucumber::Core::Events]")
+            expect { bus.some_unknown_event }.to raise_error(NameError)
           end
 
           it "can search multiple namespaces for an event type" do
@@ -121,6 +121,12 @@ module Cucumber
 
             bus.test_event :some_attribute
             expect(handler.received_payload).to eq :some_attribute
+          end
+
+          it "raises an error if you use an unknown event ID" do
+            expect { 
+              bus.on(:some_unknown_event) { :whatever }
+            }.to raise_error(EventNameError)
           end
         end
 

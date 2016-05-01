@@ -9,8 +9,8 @@ module Cucumber
       #
       class Bus
         def initialize(*namespaces)
-          @namespaces = [Cucumber::Core::Events] + namespaces
-          @event_types = EventTypes.registry(@namespaces)
+          all_namespaces = [Cucumber::Core::Events] + namespaces
+          @event_types = EventTypes.registry(all_namespaces)
           @handlers = {}
         end
 
@@ -21,6 +21,8 @@ module Cucumber
           raise ArgumentError.new("Please pass either an object or a handler block") unless handler
           event_class = parse_event_id(event_id)
           handlers_for(event_class) << handler
+        rescue EventNameError => error
+          raise error, error.message + "\nDid you get the ID of the event wrong? Try one of these:\n#{@event_types.keys.join("\n")}", error.backtrace
         end
 
         # Broadcast an event
@@ -31,8 +33,10 @@ module Cucumber
         end
 
         def method_missing(event_id, *args)
-          event_class = search_namespaces(Events::EventId(event_id))
+          event_class = @event_types.fetch(Events::EventId(event_id)) { super }
           broadcast event_class.new(*args)
+        rescue NameError => error
+          raise error, error.message + "\nDid you get the ID of the event wrong? Try one of these:\n#{@event_types.keys.join("\n")}", error.backtrace
         end
 
         private
@@ -52,30 +56,18 @@ module Cucumber
 
         def search_namespaces(event_id)
           @event_types.fetch(event_id) do
-            raise EventNameError.new(event_id, @namespaces)
+            raise EventNameError.new(event_id)
           end
         end
       end
 
       def self.EventId(raw)
-        EventId.new(raw).to_sym
+        return raw if raw.is_a?(Symbol)
+        EventId.new(raw.name).to_sym
       end
 
       # Utility class to help translate back and forth between types and symbols for events
       class EventId
-        def self.new(raw)
-          case raw
-          when Symbol
-            super camel_case(raw)
-          when Class
-            super raw.name
-          end
-        end
-
-        def self.camel_case(underscored_name)
-          underscored_name.to_s.split("_").map { |word| word.upcase[0] + word[1..-1] }.join
-        end
-
         def initialize(type_name)
           @type_name = type_name
         end
@@ -83,6 +75,8 @@ module Cucumber
         def to_sym
           underscore(@type_name.split("::").last).to_sym
         end
+
+        private
 
         def underscore(string)
           string.to_s.gsub(/::/, '/').
@@ -99,24 +93,29 @@ module Cucumber
         def registry(namespaces)
           event_types(namespaces).reduce({}) { |result, type|
             id = Events::EventId(type)
-            if result.key?(id)
-              raise DuplicateEventTypes.new(type, result[id])
-            end
+            raise DuplicateEventTypes.new(type, result[id]) if result.key?(id)
             result[id] = type
             result
           }
         end
 
         def event_types(namespaces)
-          event_types = namespaces.
-            map { |namespace| namespace.constants.map { |const| namespace.const_get(const) }}.flatten.
+          event_types = all_types(namespaces).
             select { |type| type.ancestors.include?(Core::Event) }
+        end
+
+        def all_types(namespaces)
+          namespaces.
+            map { |namespace| namespace.constants.
+              map { |const| namespace.const_get(const) }
+            }.
+            flatten
         end
       end
 
       EventNameError = Class.new(StandardError) do
-        def initialize(event_id, namespaces)
-          super "No Event type with ID `#{event_id}` found in namespaces [#{namespaces.map(&:name).join(",")}]"
+        def initialize(event_id)
+          super "No Event type with ID `#{event_id}` is registered with the event bus."
         end
       end
 
