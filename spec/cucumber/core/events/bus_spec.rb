@@ -76,9 +76,37 @@ module Cucumber
         end
 
         context "subscribing to events" do
-          it "allows subscription by symbol (for events in the given namespace)" do
+          it "allows subscription by symbol (Event ID)" do
             received_payload = nil
             bus.on(:test_event) do |some_attribute|
+              received_payload = some_attribute
+            end
+
+            bus.test_event :some_attribute
+
+            expect(received_payload).to eq(:some_attribute)
+          end
+
+          it "raises an error if you use an unknown Event ID" do
+            expect { 
+              bus.on(:some_unknown_event) { :whatever }
+            }.to raise_error(EventNameError)
+          end
+
+          it "raises an error if you use an un-registered Event type" do
+            module AnotherModule
+              class MyEvent < Event.new(:foo) 
+              end
+            end
+
+            expect { 
+              bus.on(AnotherModule::MyEvent) { :whatever }
+            }.to raise_error(EventNameError)
+          end
+
+          it "allows subscription by class" do
+            received_payload = nil
+            bus.on(TestEvent) do |some_attribute|
               received_payload = some_attribute
             end
 
@@ -97,7 +125,7 @@ module Cucumber
             end
 
             handler = MyHandler.new
-            bus.on(TestEvent, handler)
+            bus.on(:test_event, handler)
 
             bus.test_event :some_attribute
 
@@ -123,11 +151,6 @@ module Cucumber
             expect(handler.received_payload).to eq :some_attribute
           end
 
-          it "raises an error if you use an unknown event ID" do
-            expect { 
-              bus.on(:some_unknown_event) { :whatever }
-            }.to raise_error(EventNameError)
-          end
         end
 
       end

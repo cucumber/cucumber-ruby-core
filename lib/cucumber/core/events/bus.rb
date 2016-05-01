@@ -45,12 +45,16 @@ module Cucumber
           @handlers[event_class.to_s] ||= []
         end
 
-        def parse_event_id(event_id)
-          case event_id
+        def parse_event_id(raw)
+          case raw
           when Class
-            return event_id
+            event_type = raw
+            if !@event_types.values.include?(event_type)
+              raise EventNameError.new(Events::EventId(event_type))
+            end
+            event_type
           else
-            search_namespaces(event_id)
+            search_namespaces(raw)
           end
         end
 
