@@ -60,7 +60,7 @@ module Cucumber
           end
 
           it "raises an error when given an event to broadcast that it doesn't recognise" do
-            expect { bus.some_unknown_event }.to raise_error(EventNameError, "Unknown Event type `SomeUnknownEvent` in namespaces [Cucumber::Core::Events]")
+            expect { bus.some_unknown_event }.to raise_error(EventNameError, "No Event type with ID `some_unknown_event` found in namespaces [Cucumber::Core::Events]")
           end
 
           it "can search multiple namespaces for an event type" do

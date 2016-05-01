@@ -21,10 +21,6 @@ module Cucumber
           @type_name = type_name
         end
 
-        def to_s
-          @type_name
-        end
-
         def to_sym
           underscore(@type_name.split("::").last).to_sym
         end
@@ -38,10 +34,14 @@ module Cucumber
         end
       end
 
+      def self.EventId(raw)
+        EventId.new(raw).to_sym
+      end
+
       EventNameError = Class.new(StandardError)
       DuplicateEventTypes = Class.new(StandardError) do
         def initialize(type, other_type)
-          id = EventId.new(type).to_sym
+          id = Events::EventId(type)
           clashes = [type, other_type]
           super "Duplicate events with ID #{id} found across namespaces:\n#{clashes.join("\n")}"
         end
@@ -63,21 +63,21 @@ module Cucumber
           end
 
           def fetch(event_id)
-            @registry.fetch(event_id.to_sym) do
+            @registry.fetch(event_id) do
               raise(EventNameError.new(
-                "Unknown Event type `#{event_id}` in namespaces [#{namespaces.map(&:name).join(",")}]"))
+                "No Event type with ID `#{event_id}` found in namespaces [#{namespaces.map(&:name).join(",")}]"))
             end
           end
 
           def [](event_id)
-            @registry[event_id.to_sym]
+            @registry[event_id]
           end
 
           private
 
           def build_registry
             event_types.reduce({}) { |result, type|
-              id = EventId.new(type).to_sym
+              id = Events::EventId(type)
               if result.key?(id)
                 raise DuplicateEventTypes.new(type, result[id])
               end
@@ -109,13 +109,13 @@ module Cucumber
 
         # Broadcast an event
         def broadcast(event)
-          search_namespaces(EventId.new(event.class))
+          search_namespaces(Events::EventId(event.class))
           handlers = handlers_for(event.class)
           handlers.each { |handler| handler.call(*event.attributes) }
         end
 
         def method_missing(event_id, *args)
-          event_class = search_namespaces(EventId.new(event_id))
+          event_class = search_namespaces(Events::EventId(event_id))
           broadcast event_class.new(*args)
         end
 
