@@ -2,15 +2,6 @@ module Cucumber
   module Core
     module Events
 
-      EventNameError = Class.new(StandardError)
-      DuplicateEventTypes = Class.new(StandardError) do
-        def initialize(type, other_type)
-          id = Events::EventId(type)
-          clashes = [type, other_type]
-          super "Duplicate events with ID #{id} found across namespaces:\n#{clashes.join("\n")}"
-        end
-      end
-
       # Event Bus
       #
       # Implements an in-process pub-sub event broadcaster allowing multiple observers
@@ -27,8 +18,7 @@ module Cucumber
 
           def fetch(event_id)
             @registry.fetch(event_id) do
-              raise(EventNameError.new(
-                "No Event type with ID `#{event_id}` found in namespaces [#{namespaces.map(&:name).join(",")}]"))
+              raise EventNameError.new(event_id, namespaces)
             end
           end
 
@@ -137,6 +127,21 @@ module Cucumber
             downcase
         end
       end
+
+      EventNameError = Class.new(StandardError) do
+        def initialize(event_id, namespaces)
+          super "No Event type with ID `#{event_id}` found in namespaces [#{namespaces.map(&:name).join(",")}]"
+        end
+      end
+
+      DuplicateEventTypes = Class.new(StandardError) do
+        def initialize(type, other_type)
+          id = Events::EventId(type)
+          clashes = [type, other_type]
+          super "Duplicate events with ID #{id} found across namespaces:\n#{clashes.join("\n")}"
+        end
+      end
+
 
     end
   end
