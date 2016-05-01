@@ -2,42 +2,6 @@ module Cucumber
   module Core
     module Events
 
-      # Utility class to help translate back and forth between types and symbols for events
-      class EventId
-        def self.new(raw)
-          case raw
-          when Symbol
-            super camel_case(raw)
-          when Class
-            super raw.name
-          end
-        end
-
-        def self.camel_case(underscored_name)
-          underscored_name.to_s.split("_").map { |word| word.upcase[0] + word[1..-1] }.join
-        end
-
-        def initialize(type_name)
-          @type_name = type_name
-        end
-
-        def to_sym
-          underscore(@type_name.split("::").last).to_sym
-        end
-
-        def underscore(string)
-          string.to_s.gsub(/::/, '/').
-            gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-            gsub(/([a-z\d])([A-Z])/,'\1_\2').
-            tr("-", "_").
-            downcase
-        end
-      end
-
-      def self.EventId(raw)
-        EventId.new(raw).to_sym
-      end
-
       EventNameError = Class.new(StandardError)
       DuplicateEventTypes = Class.new(StandardError) do
         def initialize(type, other_type)
@@ -53,7 +17,6 @@ module Cucumber
       # to subscribe to different events that fire as your tests are executed.
       #
       class Bus
-
         class EventTypes
           attr_reader :namespaces
 
@@ -138,6 +101,43 @@ module Cucumber
           @event_types.fetch(event_id)
         end
       end
+
+      def self.EventId(raw)
+        EventId.new(raw).to_sym
+      end
+
+      # Utility class to help translate back and forth between types and symbols for events
+      class EventId
+        def self.new(raw)
+          case raw
+          when Symbol
+            super camel_case(raw)
+          when Class
+            super raw.name
+          end
+        end
+
+        def self.camel_case(underscored_name)
+          underscored_name.to_s.split("_").map { |word| word.upcase[0] + word[1..-1] }.join
+        end
+
+        def initialize(type_name)
+          @type_name = type_name
+        end
+
+        def to_sym
+          underscore(@type_name.split("::").last).to_sym
+        end
+
+        def underscore(string)
+          string.to_s.gsub(/::/, '/').
+            gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+            gsub(/([a-z\d])([A-Z])/,'\1_\2').
+            tr("-", "_").
+            downcase
+        end
+      end
+
     end
   end
 end
