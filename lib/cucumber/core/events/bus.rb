@@ -8,46 +8,9 @@ module Cucumber
       # to subscribe to different events that fire as your tests are executed.
       #
       class Bus
-        class EventTypes
-          attr_reader :namespaces
-
-          def initialize(namespaces)
-            @namespaces = namespaces
-            @registry = build_registry
-          end
-
-          def fetch(event_id)
-            @registry.fetch(event_id) do
-              raise EventNameError.new(event_id, namespaces)
-            end
-          end
-
-          def [](event_id)
-            @registry[event_id]
-          end
-
-          private
-
-          def build_registry
-            event_types.reduce({}) { |result, type|
-              id = Events::EventId(type)
-              if result.key?(id)
-                raise DuplicateEventTypes.new(type, result[id])
-              end
-              result[id] = type
-              result
-            }
-          end
-
-          def event_types
-            event_types = @namespaces.
-              map { |namespace| namespace.constants.map { |const| namespace.const_get(const) }}.flatten.
-              select { |type| type.ancestors.include?(Core::Event) }
-          end
-        end
-
         def initialize(*namespaces)
-          @event_types = EventTypes.new([Cucumber::Core::Events] + namespaces)
+          @namespaces = [Cucumber::Core::Events] + namespaces
+          @event_types = EventTypes.registry(@namespaces)
           @handlers = {}
         end
 
@@ -88,7 +51,9 @@ module Cucumber
         end
 
         def search_namespaces(event_id)
-          @event_types.fetch(event_id)
+          @event_types.fetch(event_id) do
+            raise EventNameError.new(event_id, @namespaces)
+          end
         end
       end
 
@@ -128,6 +93,27 @@ module Cucumber
         end
       end
 
+      module EventTypes
+        module_function 
+
+        def registry(namespaces)
+          event_types(namespaces).reduce({}) { |result, type|
+            id = Events::EventId(type)
+            if result.key?(id)
+              raise DuplicateEventTypes.new(type, result[id])
+            end
+            result[id] = type
+            result
+          }
+        end
+
+        def event_types(namespaces)
+          event_types = namespaces.
+            map { |namespace| namespace.constants.map { |const| namespace.const_get(const) }}.flatten.
+            select { |type| type.ancestors.include?(Core::Event) }
+        end
+      end
+
       EventNameError = Class.new(StandardError) do
         def initialize(event_id, namespaces)
           super "No Event type with ID `#{event_id}` found in namespaces [#{namespaces.map(&:name).join(",")}]"
@@ -141,7 +127,6 @@ module Cucumber
           super "Duplicate events with ID #{id} found across namespaces:\n#{clashes.join("\n")}"
         end
       end
-
 
     end
   end
