@@ -25,6 +25,35 @@ module Cucumber
               result
             }
           end
+
+          define_method(:event_id) do
+            self.class.event_id
+          end
+        end
+      end
+
+      def self.event_id
+        EventId.new(self.name).to_sym
+      end
+
+      @private
+      class EventId
+        def initialize(type_name)
+          @type_name = type_name
+        end
+
+        def to_sym
+          underscore(@type_name.split("::").last).to_sym
+        end
+
+        private
+
+        def underscore(string)
+          string.to_s.gsub(/::/, '/').
+            gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+            gsub(/([a-z\d])([A-Z])/,'\1_\2').
+            tr("-", "_").
+            downcase
         end
       end
     end
