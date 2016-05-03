@@ -5,12 +5,11 @@ module Cucumber
       # Event Bus
       #
       # Implements an in-process pub-sub event broadcaster allowing multiple observers
-      # to subscribe to different events that fire as your tests are executed.
+      # to subscribe to events that fire as your tests are executed.
       #
       class Bus
-        def initialize(*namespaces)
-          all_namespaces = [Cucumber::Core::Events] + namespaces
-          @event_types = EventTypes.registry(all_namespaces)
+        def initialize(registry = Events.registry)
+          @event_types = registry
           @handlers = {}
         end
 
@@ -95,32 +94,6 @@ module Cucumber
         end
       end
 
-      module EventTypes
-        module_function 
-
-        def registry(namespaces)
-          event_types(namespaces).reduce({}) { |result, type|
-            id = Events::EventId(type)
-            raise DuplicateEventTypes.new(type, result[id]) if result.key?(id)
-            result[id] = type
-            result
-          }
-        end
-
-        def event_types(namespaces)
-          event_types = all_types(namespaces).
-            select { |type| type.ancestors.include?(Core::Event) }
-        end
-
-        def all_types(namespaces)
-          namespaces.
-            map { |namespace| namespace.constants.
-              map { |const| namespace.const_get(const) }
-            }.
-            flatten
-        end
-      end
-
       EventIdError = Class.new(StandardError) do
         def initialize(event_id)
           super "No Event type with ID `#{event_id}` is registered with the event bus."
@@ -130,14 +103,6 @@ module Cucumber
       EventTypeError = Class.new(StandardError) do
         def initialize(event_type)
           super "No Event type `#{event_type}` is registered with the event bus."
-        end
-      end
-
-      DuplicateEventTypes = Class.new(StandardError) do
-        def initialize(type, other_type)
-          id = Events::EventId(type)
-          clashes = [type, other_type]
-          super "Duplicate events with ID #{id} found across namespaces:\n#{clashes.join("\n")}"
         end
       end
 

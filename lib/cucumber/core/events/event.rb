@@ -36,7 +36,7 @@ module Cucumber
         EventId.new(self.name).to_sym
       end
 
-      @private
+      # @private
       class EventId
         def initialize(type_name)
           @type_name = type_name
