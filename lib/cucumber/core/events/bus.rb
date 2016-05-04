@@ -8,8 +8,10 @@ module Cucumber
       # to subscribe to events that fire as your tests are executed.
       #
       class Bus
+        attr_reader :event_types
+
         def initialize(registry = Events.registry)
-          @event_types = registry
+          @event_types = registry.freeze
           @handlers = {}
         end
 
@@ -21,7 +23,7 @@ module Cucumber
           event_class = parse_event_id(event_id)
           handlers_for(event_class) << handler
         rescue EventIdError => error
-          raise error, error.message + "\nDid you get the ID of the event wrong? Try one of these:\n#{@event_types.keys.join("\n")}", error.backtrace
+          raise error, error.message + "\nDid you get the ID of the event wrong? Try one of these:\n#{event_types.keys.join("\n")}", error.backtrace
         end
 
         # Broadcast an event
@@ -33,10 +35,10 @@ module Cucumber
         end
 
         def method_missing(event_id, *args)
-          event_class = @event_types.fetch(Events::EventId(event_id)) { super }
+          event_class = event_types.fetch(Events::EventId(event_id)) { super }
           broadcast event_class.new(*args)
         rescue NameError => error
-          raise error, error.message + "\nDid you get the ID of the event wrong? Try one of these:\n#{@event_types.keys.join("\n")}", error.backtrace
+          raise error, error.message + "\nDid you get the ID of the event wrong? Try one of these:\n#{event_types.keys.join("\n")}", error.backtrace
         end
 
         private
@@ -52,18 +54,15 @@ module Cucumber
             ensure_registered(event_type)
             event_type
           else
-            search_namespaces(raw)
-          end
-        end
-
-        def search_namespaces(event_id)
-          @event_types.fetch(event_id) do
-            raise EventIdError.new(event_id)
+            event_id = raw
+            event_types.fetch(event_id) do
+              raise EventIdError.new(event_id)
+            end
           end
         end
 
         def ensure_registered(event_type)
-          return if @event_types.values.include?(event_type)
+          return if event_types.values.include?(event_type)
           raise EventTypeError.new(event_type)
         end
       end

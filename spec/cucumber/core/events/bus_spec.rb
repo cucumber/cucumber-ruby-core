@@ -145,6 +145,14 @@ module Cucumber
 
         end
 
+        it "will let you inspect the registry" do
+          expect(bus.event_types[:test_event]).to eq TestEvent
+        end
+
+        it "won't let you modify the registry" do
+          expect { bus.event_types[:foo] = :bar }.to raise_error(RuntimeError)
+        end
+
       end
     end
   end
