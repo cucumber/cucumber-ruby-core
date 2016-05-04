@@ -6,5 +6,5 @@ if ENV['TRAVIS']
   formatters << Coveralls::SimpleCov::Formatter
 end
 
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(*formatters)
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(formatters)
 SimpleCov.start
