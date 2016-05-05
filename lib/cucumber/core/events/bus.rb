@@ -31,7 +31,7 @@ module Cucumber
           raise ArgumentError, "Please pass an Event" unless event.is_a?(Event)
           ensure_registered(event.class)
           handlers = handlers_for(event.class)
-          handlers.each { |handler| handler.call(*event.attributes) }
+          handlers.each { |handler| handler.call(event) }
         end
 
         def method_missing(event_id, *args)

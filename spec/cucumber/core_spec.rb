@@ -219,16 +219,20 @@ module Cucumber
 
         observed_events = []
         execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new] do |events|
-          events.on(:test_case_starting) do |test_case|
+          events.on(:test_case_starting) do |event|
+            test_case = event.test_case
             observed_events << [:test_case_starting, test_case.name]
           end
-          events.on(:test_case_finished) do |test_case, result|
+          events.on(:test_case_finished) do |event|
+            test_case, result = *event.attributes
             observed_events << [:test_case_finished, test_case.name, result.to_sym]
           end
-          events.on(:test_step_starting) do |test_step|
+          events.on(:test_step_starting) do |event|
+            test_step = event.test_step
             observed_events << [:test_step_starting, test_step.name]
           end
-          events.on(:test_step_finished) do |test_step, result|
+          events.on(:test_step_finished) do |event|
+            test_step, result = *event.attributes
             observed_events << [:test_step_finished, test_step.name, result.to_sym]
           end
         end

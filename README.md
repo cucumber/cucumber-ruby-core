@@ -96,7 +96,8 @@ Feature:
 GHERKIN
 
 MyRunner.new.execute([feature], [ActivateSteps.new]) do |events|
-  events.on(:test_step_finished) do |test_step, result|
+  events.on(:test_step_finished) do |event|
+    test_step, result = event.test_step, event.result
     puts "#{test_step.name} #{result}"
   end
 end

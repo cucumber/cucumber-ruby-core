@@ -18,13 +18,13 @@ module Cucumber
         context "broadcasting events" do
           it "calls a subscriber for an event, passing details of the event" do
             received_payload = nil
-            bus.on(TestEvent) do |some_attribute|
-              received_payload = some_attribute
+            bus.on(TestEvent) do |event|
+              received_payload = event
             end
 
             bus.test_event :some_attribute
 
-            expect(received_payload).to eq(:some_attribute)
+            expect(received_payload.some_attribute).to eq(:some_attribute)
           end
 
           it "does not call subscribers for other events" do
@@ -75,13 +75,13 @@ module Cucumber
         context "subscribing to events" do
           it "allows subscription by symbol (Event ID)" do
             received_payload = nil
-            bus.on(:test_event) do |some_attribute|
-              received_payload = some_attribute
+            bus.on(:test_event) do |event|
+              received_payload = event
             end
 
             bus.test_event :some_attribute
 
-            expect(received_payload).to eq(:some_attribute)
+            expect(received_payload.some_attribute).to eq(:some_attribute)
           end
 
           it "raises an error if you use an unknown Event ID" do
@@ -90,29 +90,29 @@ module Cucumber
             }.to raise_error(EventIdError)
           end
 
+          it "allows subscription by class" do
+            received_payload = nil
+            bus.on(TestEvent) do |event|
+              received_payload = event
+            end
+
+            bus.test_event :some_attribute
+
+            expect(received_payload.some_attribute).to eq(:some_attribute)
+          end
+
           it "raises an error if you use an un-registered Event type" do
             expect { 
               bus.on(UnregisteredEvent) { :whatever }
             }.to raise_error(EventTypeError)
           end
 
-          it "allows subscription by class" do
-            received_payload = nil
-            bus.on(TestEvent) do |some_attribute|
-              received_payload = some_attribute
-            end
-
-            bus.test_event :some_attribute
-
-            expect(received_payload).to eq(:some_attribute)
-          end
-
           it "allows handlers that are objects with a `call` method" do
             class MyHandler
               attr_reader :received_payload
 
-              def call(some_attribute)
-                @received_payload = some_attribute
+              def call(event)
+                @received_payload = event
               end
             end
 
@@ -121,7 +121,7 @@ module Cucumber
 
             bus.test_event :some_attribute
 
-            expect(handler.received_payload).to eq :some_attribute
+            expect(handler.received_payload.some_attribute).to eq :some_attribute
           end
 
           it "allows handlers that are procs" do
@@ -132,15 +132,15 @@ module Cucumber
                 events.on :test_event, &method(:on_test_event)
               end
 
-              def on_test_event(some_attribute)
-                @received_payload = some_attribute
+              def on_test_event(event)
+                @received_payload = event
               end
             end
 
             handler = MyProccyHandler.new(bus)
 
             bus.test_event :some_attribute
-            expect(handler.received_payload).to eq :some_attribute
+            expect(handler.received_payload.some_attribute).to eq :some_attribute
           end
 
         end
