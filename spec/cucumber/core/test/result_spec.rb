@@ -253,26 +253,30 @@ module Cucumber::Core::Test
 
       it "counts failed results" do
         failed.describe_to summary
-        expect( summary.total_failed ).to eq 1
-        expect( summary.total        ).to eq 1
+        expect( summary.total_failed   ).to eq 1
+        expect( summary.total(:failed) ).to eq 1
+        expect( summary.total          ).to eq 1
       end
 
       it "counts passed results" do
         passed.describe_to summary
-        expect( summary.total_passed ).to eq 1
-        expect( summary.total        ).to eq 1
+        expect( summary.total_passed   ).to eq 1
+        expect( summary.total(:passed) ).to eq 1
+        expect( summary.total          ).to eq 1
       end
 
       it "counts skipped results" do
         skipped.describe_to summary
-        expect( summary.total_skipped ).to eq 1
-        expect( summary.total         ).to eq 1
+        expect( summary.total_skipped   ).to eq 1
+        expect( summary.total(:skipped) ).to eq 1
+        expect( summary.total           ).to eq 1
       end
 
       it "counts undefined results" do
         undefined.describe_to summary
-        expect( summary.total_undefined ).to eq 1
-        expect( summary.total           ).to eq 1
+        expect( summary.total_undefined   ).to eq 1
+        expect( summary.total(:undefined) ).to eq 1
+        expect( summary.total             ).to eq 1
       end
 
       it "counts abitrary raisable results" do
@@ -283,13 +287,16 @@ module Cucumber::Core::Test
         end
 
         flickering.new.describe_to summary
-        expect( summary.total_flickering ).to eq 1
-        expect( summary.total           ).to eq 1
+        expect( summary.total_flickering   ).to eq 1
+        expect( summary.total(:flickering) ).to eq 1
+        expect( summary.total              ).to eq 1
       end
 
       it "returns zero for a status where no messges have been received" do
-        expect( summary.total_passed ).to eq 0
-        expect( summary.total_ponies ).to eq 0
+        expect( summary.total_passed   ).to eq 0
+        expect( summary.total(:passed) ).to eq 0
+        expect( summary.total_ponies   ).to eq 0
+        expect( summary.total(:ponies) ).to eq 0
       end
 
       it "doesn't count unknown results" do

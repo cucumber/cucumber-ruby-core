@@ -227,8 +227,12 @@ module Cucumber
             self
           end
 
-          def total
-            @totals.reduce(0) { |total, status| total += status[1] }
+          def total(for_status = nil)
+            if for_status
+              @totals.fetch(for_status) { 0 }
+            else
+              @totals.reduce(0) { |total, status| total += status[1] }
+            end
           end
 
           private
