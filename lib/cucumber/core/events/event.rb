@@ -1,6 +1,9 @@
 module Cucumber
   module Core
     class Event
+
+      # Macro to generate new sub-classes of {Event} with
+      # attribute readers.
       def self.new(*attributes)
         # Use normal constructor for subclasses of Event
         return super if self.ancestors.index(Event) > 0
@@ -32,7 +35,8 @@ module Cucumber
         end
       end
 
-
+      # @return [Symbol] the underscored name of the class to be used
+      #                  as the key in an event registry.
       def self.event_id
         underscore = -> (string) {
           string.to_s.gsub(/::/, '/').

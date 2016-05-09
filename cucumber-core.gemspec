@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec',     '~> 3'
   s.add_development_dependency 'unindent',  '>= 1.0'
   s.add_development_dependency 'kramdown',  '~> 1.4.2'
+  s.add_development_dependency 'yard'
 
   # For coverage reports
   s.add_development_dependency 'coveralls', '~> 0.7'
