@@ -37,18 +37,25 @@ module Cucumber
         end
       end
 
-      # @return [Symbol] the underscored name of the class to be used
-      #                  as the key in an event registry.
-      def self.event_id
-        underscore = -> (string) {
+
+      class << self
+
+        # @return [Symbol] the underscored name of the class to be used
+        #                  as the key in an event registry.
+        def event_id
+          underscore(self.name.split("::").last).to_sym
+        end
+
+        private
+
+        def underscore(string)
           string.to_s.gsub(/::/, '/').
           gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
           gsub(/([a-z\d])([A-Z])/,'\1_\2').
           tr("-", "_").
           downcase
-        }
+        end
 
-        underscore.call(self.name.split("::").last).to_sym
       end
 
     end
