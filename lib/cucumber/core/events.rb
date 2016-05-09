@@ -1,5 +1,4 @@
-require 'cucumber/core/events/bus'
-require 'cucumber/core/events/event'
+require 'cucumber/core/event'
 
 module Cucumber
   module Core
@@ -45,7 +44,7 @@ module Cucumber
       end
 
       # The registry contains all the events registered in the core, 
-      # that will be used by the {Events::Bus} by default.
+      # that will be used by the {EventBus} by default.
       def self.registry
         build_registry(
           TestCaseStarting,
@@ -55,7 +54,7 @@ module Cucumber
         )
       end
 
-      # Build an event registry to be passed to the {Events::Bus}
+      # Build an event registry to be passed to the {EventBus}
       # constructor from a list of types.
       #
       # Each type must respond to `event_id` so that it can be added
