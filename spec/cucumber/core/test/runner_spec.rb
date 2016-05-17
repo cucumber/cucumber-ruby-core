@@ -22,7 +22,7 @@ module Cucumber::Core::Test
       allow(source).to receive(:location)
     end
 
-    context "eventsing the duration of a test case" do
+    context "reporting the duration of a test case" do
       before do
         allow( Timer::MonotonicTime ).to receive(:time_in_nanoseconds).and_return(525702744080000, 525702744080001)
       end
@@ -50,7 +50,7 @@ module Cucumber::Core::Test
       end
     end
 
-    context "eventsing the exception that failed a test case" do
+    context "reporting the exception that failed a test case" do
       let(:test_steps) { [failing] }
       it "sets the exception on the result" do
         allow(events).to receive(:before_test_case)
@@ -65,12 +65,12 @@ module Cucumber::Core::Test
       context "without steps" do
         let(:test_steps) { [] }
 
-        it "calls theeventsbefore running the case" do
+        it "emits a test_case_starting event before running the test case" do
           expect(events).to receive(:test_case_starting).with(test_case)
           test_case.describe_to runner
         end
 
-        it "calls theeventsafter running the case" do
+        it "emits the test_case_finished event after running the the test case" do
           expect(events).to receive(:test_case_finished) do |reported_test_case, result|
             expect( reported_test_case ).to eq test_case
             expect( result ).to be_unknown
@@ -83,7 +83,7 @@ module Cucumber::Core::Test
         context 'that all pass' do
           let(:test_steps) { [ passing, passing ]  }
 
-          it 'eventss a passing test case' do
+          it 'emits the test_case_finished event with a passing result' do
             expect(events).to receive(:test_case_finished) do |test_case, result|
               expect( result ).to be_passed
             end
@@ -94,7 +94,7 @@ module Cucumber::Core::Test
         context 'an undefined step' do
           let(:test_steps) { [ undefined ]  }
 
-          it 'eventss an undefined test case' do
+          it 'emits the test_case_finished event with an undefined result' do
             expect(events).to receive(:test_case_finished) do |test_case, result|
               expect( result ).to be_undefined
             end
@@ -123,7 +123,7 @@ module Cucumber::Core::Test
         context 'a pending step' do
           let(:test_steps) { [ pending ] }
 
-          it 'eventss a pending test case' do
+          it 'emits the test_case_finished event with a pending result' do
             expect(events).to receive(:test_case_finished) do |test_case, result|
               expect( result ).to be_pending
             end
@@ -142,7 +142,7 @@ module Cucumber::Core::Test
         context "a skipping step" do
           let(:test_steps) { [skipping] }
 
-          it "eventss a skipped test case" do
+          it "emits the test_case_finished event with a skipped result" do
             expect(events).to receive(:test_case_finished) do |test_case, result|
               expect( result ).to be_skipped
             end
@@ -161,7 +161,7 @@ module Cucumber::Core::Test
         context 'that fail' do
           let(:test_steps) { [ failing ] }
 
-          it 'eventss a failing test case' do
+          it 'emits the test_case_finished event with a failing result' do
             expect(events).to receive(:test_case_finished) do |test_case, result|
               expect( result ).to be_failed
             end
@@ -180,29 +180,21 @@ module Cucumber::Core::Test
         context 'where the first step fails' do
           let(:test_steps) { [ failing, passing ] }
 
-          it 'executes the after hook at the end regardless of the failure' do
-            expect(events).to receive(:test_case_finished) do |test_case, result|
-              expect( result ).to be_failed
-              expect( result.exception ).to eq exception
-            end
-            test_case.describe_to runner
-          end
-
-          it 'eventss the first step as failed' do
+          it 'emits the test_step_finished event with a failed result' do
             expect(events).to receive(:test_step_finished).with(failing, anything) do |test_step, result|
               expect( result ).to be_failed
             end
             test_case.describe_to runner
           end
 
-          it 'eventss the second step as skipped' do
+          it 'emits a test_step_finished event with a skipped result' do
             expect(events).to receive(:test_step_finished).with(passing, anything) do |test_step, result|
               expect( result ).to be_skipped
             end
             test_case.describe_to runner
           end
 
-          it 'eventss the test case as failed' do
+          it 'emits a test_case_finished event with a failed result' do
             expect(events).to receive(:test_case_finished) do |test_case, result|
               expect( result ).to be_failed
               expect( result.exception ).to eq exception
@@ -226,7 +218,7 @@ module Cucumber::Core::Test
         let(:last_test_case)  { Case.new([passing], source) }
         let(:test_cases)      { [first_test_case, last_test_case] }
 
-        it 'eventss the results correctly for the following test case' do
+        it 'reports the results correctly for the following test case' do
           expect(events).to receive(:test_case_finished).with(last_test_case, anything) do |reported_test_case, result|
             expect( result ).to be_passed
           end
