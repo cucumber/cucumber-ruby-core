@@ -118,6 +118,10 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
+      it "defines a with_filtered_backtrace method" do
+        expect(result.with_filtered_backtrace(double("filter"))).to eql result
+      end
+
       specify { expect( result.to_sym ).to eq :unknown }
 
       specify { expect( result ).not_to be_passed    }
