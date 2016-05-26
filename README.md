@@ -126,4 +126,4 @@ undefined ?
 
 ## Copyright
 
-Copyright (c) 2013-2014 Cucumber Limited.
+Copyright (c) Cucumber Limited.
