@@ -21,9 +21,7 @@ module Cucumber
       # of the event.
       def on(event_id, handler_object = nil, &handler_proc)
         handler = handler_proc || handler_object
-        raise ArgumentError, "Please pass either an object or a handler block" unless handler
-        raise ArgumentError, "Please use a symbol for the event_id" unless event_id.is_a?(Symbol)
-        raise ArgumentError, "Event ID #{event_id} is not recognised. Try one of these:\n#{event_types.keys.join("\n")}" unless is_registered_id?(event_id)
+        validate_handler_and_event_id!(handler, event_id)
         event_class = event_types[event_id]
         handlers_for(event_class) << handler
       end
@@ -54,6 +52,12 @@ module Cucumber
 
       def is_registered_type?(event_type)
         event_types.values.include?(event_type)
+      end
+
+      def validate_handler_and_event_id!(handler, event_id)
+        raise ArgumentError, "Please pass either an object or a handler block" unless handler
+        raise ArgumentError, "Please use a symbol for the event_id" unless event_id.is_a?(Symbol)
+        raise ArgumentError, "Event ID #{event_id} is not recognised. Try one of these:\n#{event_types.keys.join("\n")}" unless is_registered_id?(event_id)
       end
     end
 
