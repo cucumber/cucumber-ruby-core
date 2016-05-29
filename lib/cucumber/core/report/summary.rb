@@ -12,11 +12,11 @@ module Cucumber
 
         private
 
-        def subscribe_to(events)
-          events.on(:test_case_finished) do |event|
+        def subscribe_to(event_bus)
+          event_bus.on(:test_case_finished) do |event|
             event.result.describe_to test_cases
           end
-          events.on(:test_step_finished) do |event|
+          event_bus.on(:test_step_finished) do |event|
             event.result.describe_to test_steps
           end
           self
