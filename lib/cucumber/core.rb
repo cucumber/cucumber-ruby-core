@@ -1,3 +1,4 @@
+require 'cucumber/core/event_bus'
 require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/gherkin/document'
 require 'cucumber/core/compiler'
@@ -6,8 +7,9 @@ require 'cucumber/core/test/runner'
 module Cucumber
   module Core
 
-    def execute(gherkin_documents, report, filters = [])
-      receiver = Test::Runner.new(report)
+    def execute(gherkin_documents, filters = [], event_bus = EventBus.new)
+      yield event_bus if block_given?
+      receiver = Test::Runner.new(event_bus)
       compile gherkin_documents, receiver, filters
       self
     end

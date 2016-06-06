@@ -2,6 +2,7 @@
 
 ### New Features
 
+ * Implement an event bus (moved from Cucumber-Ruby) ([#106](https://github.com/cucumber/cucumber-ruby-core/pull/106) @mattwynne)
  * Update to Gherkin v4.0 (@brasmusson)
 
 ### Bugfixes

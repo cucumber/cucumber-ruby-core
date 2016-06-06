@@ -15,12 +15,14 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 1.9.3"
 
   s.add_dependency 'gherkin', '~> 4.0'
+  s.add_dependency 'backports', '~> 3.6'
 
   s.add_development_dependency 'bundler',   '>= 1.3.5'
   s.add_development_dependency 'rake',      '>= 0.9.2'
   s.add_development_dependency 'rspec',     '~> 3'
   s.add_development_dependency 'unindent',  '>= 1.0'
   s.add_development_dependency 'kramdown',  '~> 1.4.2'
+  s.add_development_dependency 'yard'
 
   # For coverage reports
   s.add_development_dependency 'coveralls', '~> 0.7'

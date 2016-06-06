@@ -1,4 +1,4 @@
-# cucumber-core
+#cucumber-core
 
 [![Chat with us](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cucumber/cucumber-ruby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://secure.travis-ci.org/cucumber/cucumber-ruby-core.svg)](http://travis-ci.org/cucumber/cucumber-ruby-core)
@@ -10,61 +10,59 @@ Cucumber Core is the [inner hexagon](http://alistair.cockburn.us/Hexagonal+archi
 
 It contains the core domain logic to execute Cucumber features. It has no user interface, just a Ruby API. If you're interested in how Cucumber works, or in building other tools that work with Gherkin documents, you've come to the right place.
 
-## An overview
+##An overview
 
-The entry-point is a single method on the module `Cucumber::Core` called [`#execute`](http://rubydoc.info/gems/cucumber-core/Cucumber/Core#execute-instance_method). Here's what it does:
+The entry-point is a single method on the module [`Cucumber::Core`](Cucumber/Core.html) called [`#execute`](Cucumber/Core.html#execute-instance_method). Here's what it does:
 
 1. Parses the plain-text Gherkin documents into an **AST**
 2. Compiles the AST down to **test cases**
-3. Passes the activated test cases through any **filters**
-4. Executes the test cases, calling back to the **report**
+3. Passes the test cases through any **filters**
+4. Executes the test cases, emitting **events** as it goes
 
 We've introduced a number of concepts here, so let's go through them in detail.
 
-### The AST
+###The AST
 
-The Abstract Syntax Tree or [AST](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Ast) is an object graph that represents the Gherkin documents you've passed into the core. Things like [Feature](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Ast/Feature), [Scenario](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Ast/Scenario) and [ExamplesTable](ExamplesTable).
+The Abstract Syntax Tree or [AST](Cucumber/Core/Ast.html) is an object graph that represents the Gherkin documents you've passed into the core. Things like [Feature](Cucumber/Core/Ast/Feature.html), [Scenario](Cucumber/Core/Ast/Scenario.html) and [ExamplesTable](Cucumber/Core/Ast/ExamplesTable.html).
 
 These are immutable value objects.
 
-### Test cases
+###Test cases
 
 Your gherkin might contain scenarios, as well as examples from tables beneath a scenario outline.
 
-Test cases represent the general case of both of these. We compile the AST down to instances of [`Cucumber::Core::Test::Case`](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Test/Case), each containing a number of instances of [`Cucumber::Core::Test::Step`](http://rubydoc.info/gems/cucumber-core/Cucumber/Core/Test/Step). It's these that are then filtered and executed.
+Test cases represent the general case of both of these. We compile the AST down to instances of [`Cucumber::Core::Test::Case`](Cucumber/Core/Test/Case.html), each containing a number of instances of [`Cucumber::Core::Test::Step`](Cucumber/Core/Test/Step.html). It's these that are then filtered and executed.
 
 Test cases and their test steps are also immutable value objects.
 
-### Filters
+###Filters
 
 Once we have the test cases, and they've been activated by the mappings, you may want to pass them through a filter or two. Filters can be used to do things like activate, sort, replace or remove some of the test cases or their steps before they're executed.
 
-### Report
+###Events
 
-A report is how you find out what is happening during your test run. As the test cases and steps are executed, messages are sent to the report.
+Events are how you find out what is happening during your test run. As the test cases and steps are executed, the runner emits events to signal what's going on.
 
-A report needs to respond to the following methods:
+The following events are emitted during a run:
 
-* `before_test_case(test_case)`
-* `after_test_case(test_case, result)`
-* `before_test_step(test_step)`
-* `after_test_step(test_test, result)`
-* `done`
+- [`TestCaseStarting`](Cucumber/Core/Events/TestCaseStarting.html)
+- [`TestStepStarting`](Cucumber/Core/Events/TestStepStarting.html)
+- [`TestStepFinished`](Cucumber/Core/Events/TestStepFinished.html)
+- [`TestCaseFinished`](Cucumber/Core/Events/TestCaseFinished.html)
 
 That's probably best illustrated with an example.
 
-## Example
+##Example
 
-Here's an example of how you might use [`Cucumber::Core#execute`](http://rubydoc.info/gems/cucumber-core/Cucumber/Core#execute-instance_method)
+Here's an example of how you might use [`Cucumber::Core#execute`](Cucumber/Core#execute-instance_method)
 
 ```ruby
 require 'cucumber/core'
 require 'cucumber/core/filter'
 
-class MyRunner
-  include Cucumber::Core
-end
-
+# This is the most complex part of the example. The filter takes test cases as input,
+# activates each step with an action block, then passes a new test case with those activated
+# steps in it on to the next filter in the chain.
 class ActivateSteps < Cucumber::Core::Filter.new
   def test_case(test_case)
     test_steps = test_case.test_steps.map do |step|
@@ -75,6 +73,7 @@ class ActivateSteps < Cucumber::Core::Filter.new
   end
 
   private
+
   def activate(step)
     case step.name
     when /fail/
@@ -87,24 +86,7 @@ class ActivateSteps < Cucumber::Core::Filter.new
   end
 end
 
-class Report
-  def before_test_step(test_step)
-  end
-
-  def after_test_step(test_step, result)
-    puts "#{test_step.name} #{result}"
-  end
-
-  def before_test_case(test_case)
-  end
-
-  def after_test_case(test_case, result)
-  end
-
-  def done
-  end
-end
-
+# Create a Gherkin document to run
 feature = Cucumber::Core::Gherkin::Document.new(__FILE__, <<-GHERKIN)
 Feature:
   Scenario:
@@ -113,7 +95,19 @@ Feature:
     And undefined
 GHERKIN
 
-MyRunner.new.execute([feature], Report.new, [ActivateSteps.new])
+# Create a runner class that uses the Core's DSL
+class MyRunner
+  include Cucumber::Core
+end
+
+# Now execute the feature, using the filter we built, and subscribing to
+# an event so we can print the output.
+MyRunner.new.execute([feature], [ActivateSteps.new]) do |events|
+  events.on(:test_step_finished) do |event|
+    test_step, result = event.test_step, event.result
+    puts "#{test_step.name} #{result}"
+  end
+end
 ```
 
 If you run this little Ruby script, you should see the following output:
