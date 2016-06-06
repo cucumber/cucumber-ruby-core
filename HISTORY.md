@@ -2,6 +2,8 @@
 
 ### New Features
 
+ * Update to Gherkin v4.0 (@brasmusson)
+
 ### Bugfixes
 
  * Use monotonic time ([#103](https://github.com/cucumber/cucumber-ruby-core/pull/103) @mikz)
