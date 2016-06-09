@@ -11,6 +11,7 @@ rvm:
 branches:
   only:
     - master
+    - v1.x-bugfix
 
 notifications:
   email:
