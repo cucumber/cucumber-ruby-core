@@ -1,4 +1,10 @@
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.x-bugfix)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.5.0...v1.x-bugfix)
+
+### New Features
+
+### Bugfixes
+
+## [v1.5.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.5.0)
 
 ### New Features
 
