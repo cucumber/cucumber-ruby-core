@@ -1,8 +1,15 @@
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.5.0...master)
 
 ### New Features
 
  * Implement an event bus (moved from Cucumber-Ruby) ([#106](https://github.com/cucumber/cucumber-ruby-core/pull/106) @mattwynne)
+
+### Bugfixes
+
+## [v1.5.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.5.0)
+
+### New Features
+
  * Update to Gherkin v4.0 (@brasmusson)
 
 ### Bugfixes
