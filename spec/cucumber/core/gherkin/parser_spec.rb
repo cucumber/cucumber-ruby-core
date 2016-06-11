@@ -224,6 +224,29 @@ module Cucumber
 
         end
 
+        context "a Scenario Outline with an empty examples table" do
+          source do
+            feature do
+              scenario_outline 'outline name' do
+                step 'passing <arg>'
+
+                examples do
+                end
+              end
+            end
+          end
+
+          it "creates an examples table node but no example table rows" do
+            allow( visitor ).to receive(:feature).and_yield(visitor)
+            allow( visitor ).to receive(:scenario_outline).and_yield(visitor)
+            allow( visitor ).to receive(:outline_step)
+            expect( visitor ).to receive(:examples_table).and_yield(visitor)
+            expect( visitor ).to receive(:examples_table_row).exactly(0).times
+            feature.describe_to(visitor)
+          end
+
+        end
+
         context "a Scenario Outline with no Examples" do
           source do
             feature(language: 'not-a-language')

@@ -272,7 +272,7 @@ module Cucumber
           def initialize(*)
             super
             @step_builders = attributes[:steps].map { |step| OutlineStepBuilder.new(file, step) }
-            @example_builders = attributes[:examples].map { |example| ExamplesTableBuilder.new(file, example) }
+            @example_builders = attributes[:examples] ? attributes[:examples].map { |example| ExamplesTableBuilder.new(file, example) } : []
           end
 
           def result(language)
@@ -306,10 +306,8 @@ module Cucumber
 
           def initialize(*)
             super
-            @header_builder = HeaderBuilder.new(file, attributes[:table_header])
-            @example_rows_builders = attributes[:table_body].map do |row_attributes|
-              ExampleRowBuilder.new(file, row_attributes)
-            end
+            @header_builder = attributes[:table_header] ? HeaderBuilder.new(file, attributes[:table_header]) : NullHeaderBuilder.new
+            @example_rows_builders = attributes[:table_body] ? attributes[:table_body].map { |row_attributes| ExampleRowBuilder.new(file, row_attributes) } : []
           end
 
           def result(language)
@@ -339,6 +337,16 @@ module Cucumber
             def result
               cells = attributes[:cells].map { |c| c[:value] }
               Ast::ExamplesTable::Header.new(cells, location, comments)
+            end
+          end
+
+          class NullHeaderBuilder < Builder
+            def initialize
+              @line = -1 # this inhibits Builder#handle_comments to put any comments in this object. 
+            end
+
+            def result
+              nil
             end
           end
 
