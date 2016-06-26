@@ -3,11 +3,12 @@ module Cucumber
   module Core
     module Gherkin
       class Document
-        attr_reader :uri, :body
+        attr_reader :uri, :body, :language
 
-        def initialize(uri, body)
-          @uri = uri
-          @body = body
+        def initialize(uri, body, language=nil)
+          @uri      = uri
+          @body     = body
+          @language = language || 'en'
         end
 
         def to_s
