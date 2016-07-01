@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/test/timer'
 require 'cucumber/core/test/duration_matcher'
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/ast/examples_table'
 
 module Cucumber::Core::Ast

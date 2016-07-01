@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# frozen_string_literal: true
 require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/gherkin/writer'
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/ast/location'
 require 'cucumber/core/ast/doc_string'
 require 'unindent'
@@ -68,7 +69,7 @@ module Cucumber
         end
 
         context 'quacking like a String' do
-          let(:content) { 'content' }
+          let(:content) { String.new('content') }
           let(:content_type) { 'text/plain' }
 
           it 'delegates #encoding to the content string' do

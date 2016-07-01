@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/event_bus'
 require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/gherkin/document'
