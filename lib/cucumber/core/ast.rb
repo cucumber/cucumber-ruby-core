@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/ast/comment'
 require 'cucumber/core/ast/tag'
 require 'cucumber/core/ast/feature'

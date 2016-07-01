@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'gherkin/parser'
 require 'gherkin/token_scanner'
 require 'gherkin/errors'

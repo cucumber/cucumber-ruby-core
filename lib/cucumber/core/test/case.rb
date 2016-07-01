@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'cucumber/core/test/result'
 require 'cucumber/core/gherkin/tag_expression'
 require 'cucumber/core/ast/location'
