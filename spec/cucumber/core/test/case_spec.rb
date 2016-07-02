@@ -14,8 +14,8 @@ module Cucumber
         include Core::Gherkin::Writer
 
         let(:test_case) { Test::Case.new(test_steps, [feature, scenario]) }
-        let(:feature) { double }
-        let(:scenario) { double }
+        let(:feature) { double(location: "features/test.feature:1") }
+        let(:scenario) { double(location: "features/test.feature:2") }
         let(:test_steps) { [double, double] }
 
         context 'describing itself' do
@@ -230,6 +230,28 @@ module Cucumber
               expect( test_case.language.iso_code ).to eq 'en-pirate'
             end
             compile([gherkin], receiver)
+          end
+        end
+
+        describe "equality" do
+          it "is equal to another test case at the same location" do
+            gherkin = gherkin('features/foo.feature') do
+              feature do
+                scenario do
+                  step
+                end
+              end
+            end
+            test_case_instances = []
+            receiver = double.as_null_object
+            allow(receiver).to receive(:test_case) do |test_case|
+              test_case_instances << test_case
+            end
+            2.times { compile([gherkin], receiver) }
+            expect(test_case_instances.length).to eq 2
+            expect(test_case_instances.uniq.length).to eq 1
+            expect(test_case_instances[0]).to be_eql test_case_instances[1]
+            expect(test_case_instances[0]).to eq test_case_instances[1]
           end
         end
 

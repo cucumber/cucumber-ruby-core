@@ -100,6 +100,18 @@ module Cucumber
           source.first
         end
 
+        def hash
+          location.hash
+        end
+
+        def eql?(other)
+          other.hash == hash
+        end
+
+        def ==(other)
+          eql?(other)
+        end
+
         private
 
         def compose_around_hooks(visitor, *args, &block)
