@@ -252,6 +252,7 @@ module Cucumber
             expect(test_case_instances.uniq.length).to eq 1
             expect(test_case_instances[0]).to be_eql test_case_instances[1]
             expect(test_case_instances[0]).to eq test_case_instances[1]
+            expect(test_case_instances[0]).not_to equal test_case_instances[1]
           end
         end
 
