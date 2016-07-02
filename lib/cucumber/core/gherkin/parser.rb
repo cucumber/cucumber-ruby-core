@@ -19,12 +19,13 @@ module Cucumber
         end
 
         def document(document)
-          parser  = ::Gherkin::Parser.new
-          scanner = ::Gherkin::TokenScanner.new(document.body)
-          core_builder = AstBuilder.new(document.uri)
+          parser        = ::Gherkin::Parser.new
+          scanner       = ::Gherkin::TokenScanner.new(document.body)
+          token_matcher = ::Gherkin::TokenMatcher.new(document.language)
+          core_builder  = AstBuilder.new(document.uri)
 
           begin
-            result = parser.parse(scanner)
+            result = parser.parse(scanner, token_matcher)
 
             receiver.feature core_builder.feature(result)
           rescue *PARSER_ERRORS => e
