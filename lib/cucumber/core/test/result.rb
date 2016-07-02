@@ -31,6 +31,10 @@ module Cucumber
           def describe_to(visitor, *args)
             self
           end
+
+          def with_filtered_backtrace(filter)
+            self
+          end
         end
 
         class Passed
