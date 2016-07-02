@@ -7,6 +7,8 @@
 
 ### Bugfixes
 
+* Add with_filtered_backtrace method to unknown result ([107](https://github.com/cucumber/cucumber-ruby-core/pull/107) @dansscheider)
+
 ## [v1.5.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.5.0)
 
 ### New Features
