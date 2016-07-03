@@ -365,6 +365,7 @@ module Cucumber::Core
       end
 
       max_duration_ms = 10000
+      max_duration_ms = max_duration_ms * 2.5 if defined?(JRUBY_VERSION)
       it "filters #{num_features * num_scenarios_per_feature} test cases within #{max_duration_ms}ms" do
         filter = Test::LocationsFilter.new(locations)
         Timeout.timeout(max_duration_ms / 1000.0) do
