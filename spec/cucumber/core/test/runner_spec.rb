@@ -220,9 +220,10 @@ module Cucumber::Core::Test
         let(:test_cases)      { [first_test_case, last_test_case] }
 
         it 'reports the results correctly for the following test case' do
-          expect(event_bus).to receive(:test_case_finished).with(last_test_case, anything) do |reported_test_case, result|
-            expect( result ).to be_passed
-          end
+          expect(event_bus).to receive(:test_case_finished) { |reported_test_case, result|
+            expect(result).to be_failed if reported_test_case.equal?(first_test_case)
+            expect(result).to be_passed if reported_test_case.equal?(last_test_case)
+          }.twice
 
           test_cases.each { |c| c.describe_to runner }
         end
