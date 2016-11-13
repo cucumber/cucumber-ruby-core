@@ -185,6 +185,42 @@ module Cucumber
         end
 
         describe "matching tags" do
+          it "matches tags using tag expressions" do
+            gherkin = gherkin do
+              feature tags: ['@a', '@b'] do
+                scenario tags: ['@c'] do
+                  step
+                end
+              end
+            end
+            receiver = double.as_null_object
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.match_tags?(['@a and @b']) ).to be_truthy
+              expect( test_case.match_tags?(['@a or @d']) ).to be_truthy
+              expect( test_case.match_tags?(['not @d']) ).to be_truthy
+              expect( test_case.match_tags?(['@a and @d']) ).to be_falsy
+            end
+            compile [gherkin], receiver
+          end
+
+          it "matches handles multiple expressions" do
+            gherkin = gherkin do
+              feature tags: ['@a', '@b'] do
+                scenario tags: ['@c'] do
+                  step
+                end
+              end
+            end
+            receiver = double.as_null_object
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.match_tags?(['@a and @b', 'not @d']) ).to be_truthy
+              expect( test_case.match_tags?(['@a and @b', 'not @c']) ).to be_falsy
+            end
+            compile [gherkin], receiver
+          end
+        end
+
+        describe "matching tags (old style)" do
           it "matches boolean expressions of tags" do
             gherkin = gherkin do
               feature tags: ['@a', '@b'] do
@@ -195,7 +231,25 @@ module Cucumber
             end
             receiver = double.as_null_object
             expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.match_tags?('@a') ).to be_truthy
+              expect( test_case.match_tags?(['@a', '@b']) ).to be_truthy
+              expect( test_case.match_tags?(['@a, @d']) ).to be_truthy
+              expect( test_case.match_tags?(['~@d']) ).to be_truthy
+              expect( test_case.match_tags?(['@a', '@d']) ).to be_falsy
+            end
+            compile [gherkin], receiver
+          end
+
+          it "handles mixing old and new style expressions" do
+            gherkin = gherkin do
+              feature tags: ['@a', '@b'] do
+                scenario tags: ['@c'] do
+                  step
+                end
+              end
+            end
+            receiver = double.as_null_object
+            expect( receiver ).to receive(:test_case) do |test_case|
+              expect( test_case.match_tags?(['@a and @b', '~@d']) ).to be_truthy
             end
             compile [gherkin], receiver
           end
