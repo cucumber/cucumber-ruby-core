@@ -18,6 +18,8 @@ module Cucumber
 
       context "broadcasting events" do
 
+        before(:each) { event_bus.start }
+
         it "can broadcast by calling a method named after the event ID" do
           called = false
           event_bus.on(:test_event) {called = true }
@@ -82,7 +84,23 @@ module Cucumber
 
       end
 
+      context "queuing events" do
+
+        it "before the event bus is started, events are queued and broadcasted when started" do
+          called = false
+          event_bus.on(:test_event) {called = true }
+          event_bus.test_event
+          expect(called).to be false
+          event_bus.start
+          expect(called).to be true
+        end
+
+      end
+
       context "subscribing to events" do
+
+        before(:each) { event_bus.start }
+
         it "allows subscription by symbol (Event ID)" do
           received_payload = nil
           event_bus.on(:test_event) do |event|
@@ -138,14 +156,19 @@ module Cucumber
 
       end
 
-      it "will let you inspect the registry" do
-        expect(event_bus.event_types[:test_event]).to eq Events::TestEvent
-      end
+      context "event registry" do
 
-      it "won't let you modify the registry" do
-        expect { event_bus.event_types[:foo] = :bar }.to raise_error(RuntimeError)
-      end
+        before(:each) { event_bus.start }
 
+        it "will let you inspect the registry" do
+          expect(event_bus.event_types[:test_event]).to eq Events::TestEvent
+        end
+
+        it "won't let you modify the registry" do
+          expect { event_bus.event_types[:foo] = :bar }.to raise_error(RuntimeError)
+        end
+
+      end
     end
   end
 end

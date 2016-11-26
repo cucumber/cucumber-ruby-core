@@ -9,12 +9,22 @@ module Cucumber
     # to subscribe to events that fire as your tests are executed.
     #
     class EventBus
-      attr_reader :event_types
+      attr_reader :event_types, :started
+      private :started
 
       # @param [Hash{Symbol => Class}] a hash of event types to use on the bus
       def initialize(registry = Events.registry)
         @event_types = registry.freeze
         @handlers = {}
+        @started = false
+      end
+
+      def start
+        event_queue.each do |event|
+          do_broadcast(event)
+        end
+        reset_event_queue
+        @started = true
       end
 
       # Register for an event. The handler proc will be called back with each of the attributes
@@ -29,7 +39,11 @@ module Cucumber
       # Broadcast an event
       def broadcast(event)
         raise ArgumentError, "Event type #{event.class} is not registered. Try one of these:\n#{event_types.values.join("\n")}" unless is_registered_type?(event.class)
-        handlers_for(event.class).each { |handler| handler.call(event) }
+        if started
+          do_broadcast(event)
+        else
+          event_queue << event
+        end
       end
 
       def method_missing(event_id, *args)
@@ -45,6 +59,10 @@ module Cucumber
         @handlers[event_class.to_s] ||= []
       end
 
+      def do_broadcast(event)
+        handlers_for(event.class).each { |handler| handler.call(event) }
+      end
+
       def is_registered_id?(event_id)
         event_types.keys.include?(event_id)
       end
@@ -57,6 +75,14 @@ module Cucumber
         raise ArgumentError, "Please pass either an object or a handler block" unless handler
         raise ArgumentError, "Please use a symbol for the event_id" unless event_id.is_a?(Symbol)
         raise ArgumentError, "Event ID #{event_id} is not recognised. Try one of these:\n#{event_types.keys.join("\n")}" unless is_registered_id?(event_id)
+      end
+
+      def event_queue
+        @event_queue ||= []
+      end
+
+      def reset_event_queue
+        @event_queue = []
       end
     end
 

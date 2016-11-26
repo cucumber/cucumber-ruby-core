@@ -201,6 +201,9 @@ module Cucumber
     end
 
     describe "executing a test suite" do
+      let(:event_bus) { Core::EventBus.new }
+
+      before(:each) { event_bus.start }
 
       it "fires events" do
         gherkin = gherkin do
@@ -273,7 +276,6 @@ module Cucumber
             end
           end
 
-          event_bus = Core::EventBus.new
           report = Core::Report::Summary.new(event_bus)
           execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus
 
@@ -317,7 +319,6 @@ module Cucumber
           end
           logger = []
 
-          event_bus = Core::EventBus.new
           report = Core::Report::Summary.new(event_bus)
           execute [gherkin], [WithAroundHooks.new(logger)], event_bus
 
@@ -352,7 +353,6 @@ module Cucumber
           end
         end
 
-        event_bus = Core::EventBus.new
         report = Core::Report::Summary.new(event_bus)
         execute [gherkin], [ Cucumber::Core::Test::TagFilter.new(['@a']) ], event_bus
 
@@ -371,7 +371,6 @@ module Cucumber
           end
         end
 
-        event_bus = Core::EventBus.new
         report = Core::Report::Summary.new(event_bus)
         execute [gherkin], [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ], event_bus
 
