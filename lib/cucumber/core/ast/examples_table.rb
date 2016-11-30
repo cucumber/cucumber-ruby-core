@@ -82,6 +82,10 @@ module Cucumber
               other.data == data
           end
 
+          def [](parameter_name)
+            @data[parameter_name]
+          end
+
           def values
             @data.values
           end

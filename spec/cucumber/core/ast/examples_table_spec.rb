@@ -75,10 +75,15 @@ module Cucumber::Core::Ast
         end
       end
 
-      describe 'accesing the values' do
+      describe 'accessing the values' do
         it 'returns the actual row values' do
           row = ExamplesTable::Row.new({'x' => '1', 'y' => '2'}, 1, location, language, comments)
           expect( row.values ).to eq ['1', '2']
+        end
+
+        it "can access a row value by it's parameter name" do
+          row = ExamplesTable::Row.new({'x' => '1', 'y' => '2'}, 1, location, language, comments)
+          expect( row['x']).to eq '1'
         end
       end
 
