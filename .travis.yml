@@ -1,5 +1,8 @@
 sudo: false
 
+before_install:
+  - gem update simplecov
+
 rvm:
   - 2.4.0
   - 2.3.0
