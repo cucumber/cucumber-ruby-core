@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'cucumber/core/test/result'
+require 'cucumber/tag_expressions'
 require 'cucumber/core/gherkin/tag_expression'
 require 'cucumber/core/ast/location'
 
@@ -59,7 +60,7 @@ module Cucumber
         end
 
         def match_tags?(*expressions)
-          Cucumber::Core::Gherkin::TagExpression.new(expressions.flatten).evaluate(tags)
+          expressions.flatten.all? { |expression| match_single_tag_expression?(expression) }
         end
 
         def match_name?(name_regexp)
@@ -118,6 +119,18 @@ module Cucumber
           around_hooks.reverse.reduce(block) do |continue, hook|
             -> { hook.describe_to(visitor, *args, &continue) }
           end.call
+        end
+
+        def match_single_tag_expression?(expression)
+          if old_style_tag_expression?(expression)
+            Cucumber::Core::Gherkin::TagExpression.new([expression]).evaluate(tags)
+          else
+            Cucumber::TagExpressions::Parser.new.parse(expression).evaluate(tags.map(&:name))
+          end
+        end
+
+        def old_style_tag_expression?(expression)
+          expression.include?(',') || expression.include?('~')
         end
 
         class NameBuilder
