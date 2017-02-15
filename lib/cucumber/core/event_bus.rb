@@ -15,6 +15,7 @@ module Cucumber
       def initialize(registry = Events.registry)
         @event_types = registry.freeze
         @handlers = {}
+        @event_queue = []
       end
 
       # Register for an event. The handler proc will be called back with each of the attributes
@@ -24,12 +25,14 @@ module Cucumber
         validate_handler_and_event_id!(handler, event_id)
         event_class = event_types[event_id]
         handlers_for(event_class) << handler
+        broadcast_queued_events_to handler, event_class
       end
 
       # Broadcast an event
       def broadcast(event)
         raise ArgumentError, "Event type #{event.class} is not registered. Try one of these:\n#{event_types.values.join("\n")}" unless is_registered_type?(event.class)
         handlers_for(event.class).each { |handler| handler.call(event) }
+        @event_queue << event
       end
 
       def method_missing(event_id, *args)
@@ -40,6 +43,14 @@ module Cucumber
       end
 
       private
+
+      def broadcast_queued_events_to(handler, event_type)
+        @event_queue.select { |event|
+          event.class == event_type
+        }.each { |event|
+          handler.call(event)
+        }
+      end
 
       def handlers_for(event_class)
         @handlers[event_class.to_s] ||= []
