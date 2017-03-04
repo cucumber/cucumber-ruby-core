@@ -35,8 +35,6 @@ module Cucumber
       def method_missing(event_id, *args)
         event_class = event_types.fetch(event_id) { super }
         broadcast event_class.new(*args)
-      rescue NameError => error
-        raise error, error.message + "\nDid you get the ID of the event wrong? Try one of these:\n#{event_types.keys.join("\n")}", error.backtrace
       end
 
       private
