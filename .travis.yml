@@ -1,8 +1,5 @@
 sudo: false
 
-before_install:
-  - gem update simplecov
-
 rvm:
   - ruby-head
   - 2.4.0
@@ -15,6 +12,7 @@ rvm:
 matrix:
   allow_failures:
     - rvm: ruby-head
+    - rvm: 2.4.0
   fast_finish: true
 
 # whitelist
