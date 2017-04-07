@@ -1,4 +1,4 @@
-#cucumber-core
+# cucumber-core
 
 [![Chat with us](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cucumber/cucumber-ruby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://secure.travis-ci.org/cucumber/cucumber-ruby-core.svg)](http://travis-ci.org/cucumber/cucumber-ruby-core)
@@ -10,7 +10,7 @@ Cucumber Core is the [inner hexagon](http://alistair.cockburn.us/Hexagonal+archi
 
 It contains the core domain logic to execute Cucumber features. It has no user interface, just a Ruby API. If you're interested in how Cucumber works, or in building other tools that work with Gherkin documents, you've come to the right place.
 
-##An overview
+## An overview
 
 The entry-point is a single method on the module [`Cucumber::Core`](Cucumber/Core.html) called [`#execute`](Cucumber/Core.html#execute-instance_method). Here's what it does:
 
@@ -21,13 +21,13 @@ The entry-point is a single method on the module [`Cucumber::Core`](Cucumber/Cor
 
 We've introduced a number of concepts here, so let's go through them in detail.
 
-###The AST
+### The AST
 
 The Abstract Syntax Tree or [AST](Cucumber/Core/Ast.html) is an object graph that represents the Gherkin documents you've passed into the core. Things like [Feature](Cucumber/Core/Ast/Feature.html), [Scenario](Cucumber/Core/Ast/Scenario.html) and [ExamplesTable](Cucumber/Core/Ast/ExamplesTable.html).
 
 These are immutable value objects.
 
-###Test cases
+### Test cases
 
 Your gherkin might contain scenarios, as well as examples from tables beneath a scenario outline.
 
@@ -35,11 +35,11 @@ Test cases represent the general case of both of these. We compile the AST down 
 
 Test cases and their test steps are also immutable value objects.
 
-###Filters
+### Filters
 
 Once we have the test cases, and they've been activated by the mappings, you may want to pass them through a filter or two. Filters can be used to do things like activate, sort, replace or remove some of the test cases or their steps before they're executed.
 
-###Events
+### Events
 
 Events are how you find out what is happening during your test run. As the test cases and steps are executed, the runner emits events to signal what's going on.
 
@@ -52,7 +52,7 @@ The following events are emitted during a run:
 
 That's probably best illustrated with an example.
 
-##Example
+## Example
 
 Here's an example of how you might use [`Cucumber::Core#execute`](Cucumber/Core#execute-instance_method)
 
