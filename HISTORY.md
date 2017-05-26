@@ -17,6 +17,9 @@
 
 * Remove support for Ruby v1.9.3. ([112](https://github.com/cucumber/cucumber-ruby-core/pull/112) @brasmusson)
 
+## Refactoring
+* Travis: jruby-9.1.10.0 ([#130](https://github.com/cucumber/cucumber-ruby-core/pull/130) @olleolleolle)
+
 ## [v1.5.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.5.0)
 
 ### New Features
