@@ -94,7 +94,7 @@
 
   * Calculate actual keyword for snippets (@brasmusson)
 
-### Bugfixes
+### Bugfixes
 
   * Remove keyword from `Test::Case#name` [82](https://github.com/cucumber/cucumber-ruby-core/pull/82) (@richarda)
 
