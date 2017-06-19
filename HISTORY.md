@@ -19,6 +19,7 @@
 
 ### Refactoring
 * Travis: jruby-9.1.10.0 ([#130](https://github.com/cucumber/cucumber-ruby-core/pull/130) @olleolleolle)
+* Travis: jruby-9.1.12.0 ([#133](https://github.com/cucumber/cucumber-ruby-core/pull/132) @olleolleolle)
 
 ## [v1.5.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.5.0)
 
