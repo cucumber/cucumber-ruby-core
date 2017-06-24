@@ -139,7 +139,7 @@ module Cucumber::Core
           expect( visitor ).to receive(:test_step) do |test_step|
             visit_source(test_step) do |source_visitor|
               expect( source_visitor ).to receive(:step) do |step|
-                expect(step.name).to eq 'passing 1 with 2'
+                expect(step.text).to eq 'passing 1 with 2'
               end
             end
           end.once.ordered
@@ -147,7 +147,7 @@ module Cucumber::Core
           expect( visitor ).to receive(:test_step) do |test_step|
             visit_source(test_step) do |source_visitor|
               expect( source_visitor ).to receive(:step) do |step|
-                expect(step.name).to eq 'as well as 3'
+                expect(step.text).to eq 'as well as 3'
               end
             end
           end.once.ordered

@@ -9,9 +9,9 @@ module Cucumber
     module Ast
       describe Step do
         let(:step) do
-          language, location, comments, keyword, name = *double
+          language, location, comments, keyword, text = *double
           multiline_arg = EmptyMultilineArgument.new
-          Step.new(language, location, comments, keyword, name, multiline_arg)
+          Step.new(language, location, comments, keyword, text, multiline_arg)
         end
 
         describe "describing itself" do
@@ -109,10 +109,10 @@ module Cucumber
       describe ExpandedOutlineStep do
         let(:outline_step) { double }
         let(:step) do
-          language, location, keyword, name = *double
+          language, location, keyword, text = *double
           multiline_arg = EmptyMultilineArgument.new
           comments = []
-          ExpandedOutlineStep.new(outline_step, language, location, comments, keyword, name, multiline_arg)
+          ExpandedOutlineStep.new(outline_step, language, location, comments, keyword, text, multiline_arg)
         end
 
         describe "describing itself" do

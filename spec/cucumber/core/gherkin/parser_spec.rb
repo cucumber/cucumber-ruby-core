@@ -197,7 +197,7 @@ module Cucumber
             allow( visitor ).to receive(:scenario_outline).and_yield(visitor)
             allow( visitor ).to receive(:examples_table)
             expect( visitor ).to receive(:outline_step) do |step|
-              expect( step.name ).to eq 'passing <arg>'
+              expect( step.text ).to eq 'passing <arg>'
             end
             feature.describe_to(visitor)
           end

@@ -99,7 +99,7 @@ module Cucumber::Core::Test
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
               expect( result ).to be_undefined
             end
-            allow( undefined.source.last ).to receive(:name)
+            allow( undefined.source.last ).to receive(:text)
             test_case.describe_to runner
           end
 
@@ -107,7 +107,7 @@ module Cucumber::Core::Test
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
               expect( result.message ).to eq("Undefined step: \"step name\"")
             end
-            expect( undefined.source.last ).to receive(:name).and_return("step name")
+            expect( undefined.source.last ).to receive(:text).and_return("step name")
             test_case.describe_to runner
           end
 
@@ -116,7 +116,7 @@ module Cucumber::Core::Test
               expect( result.backtrace ).to eq(["step line"])
             end
             expect( undefined.source.last ).to receive(:backtrace_line).and_return("step line")
-            allow( undefined.source.last ).to receive(:name)
+            allow( undefined.source.last ).to receive(:text)
             test_case.describe_to runner
           end
         end

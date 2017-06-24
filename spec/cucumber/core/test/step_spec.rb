@@ -74,10 +74,10 @@ module Cucumber::Core::Test
     end
 
     it "exposes the name and location of the AST step or hook as attributes" do
-      name, location = double, double
-      step_or_hook = double(name: name, location: location)
+      text, location = double, double
+      step_or_hook = double(text: text, location: location)
       test_step = Step.new([step_or_hook])
-      expect( test_step.name     ).to eq name
+      expect( test_step.text     ).to eq text
       expect( test_step.location ).to eq location
     end
 
