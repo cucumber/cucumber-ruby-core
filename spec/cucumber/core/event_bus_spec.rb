@@ -136,6 +136,18 @@ module Cucumber
           expect(handler.received_payload.some_attribute).to eq :some_attribute
         end
 
+        it "sends events that were broadcast before you subscribed" do
+          event_bus.test_event :some_attribute
+          event_bus.another_test_event
+
+          received_payload = nil
+          event_bus.on(:test_event) do |event|
+            received_payload = event
+          end
+
+          expect(received_payload.some_attribute).to eq(:some_attribute)
+        end
+
       end
 
       it "will let you inspect the registry" do
