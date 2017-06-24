@@ -8,7 +8,7 @@ require 'cucumber/core/test/runner'
 module Cucumber
   module Core
 
-    def execute(gherkin_documents, filters = [], event_bus = EventBus.new)
+    def execute(gherkin_documents, filters = [], event_bus = create_and_start_event_bus)
       yield event_bus if block_given?
       receiver = Test::Runner.new(event_bus)
       compile gherkin_documents, receiver, filters
@@ -39,5 +39,10 @@ module Cucumber
       end
     end
 
+    def create_and_start_event_bus
+      event_bus = EventBus.new
+      event_bus.start
+      event_bus
+    end
   end
 end

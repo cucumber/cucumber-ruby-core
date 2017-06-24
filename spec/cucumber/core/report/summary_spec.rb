@@ -16,7 +16,10 @@ module Cucumber::Core::Report
     let(:duration) { double }
     let(:exception) { double }
 
-    before(:each) { @summary = Summary.new(event_bus) }
+    before(:each) do
+      @summary = Summary.new(event_bus)
+      event_bus.start
+    end
 
     context "test case summary" do
       let(:test_case) { double }
