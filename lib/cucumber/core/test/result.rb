@@ -16,7 +16,7 @@ module Cucumber
               result_type
             end
 
-            [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_result_type|
+            [:passed, :failed, :undefined, :unknown, :skipped, :pending, :ambiguous].each do |possible_result_type|
               define_method("#{possible_result_type}?") do
                 possible_result_type == to_sym
               end
@@ -174,6 +174,24 @@ module Cucumber
 
           def ok?(be_strict = false)
             true
+          end
+        end
+
+        class Ambiguous < Raisable
+          include Result.query_methods :ambiguous
+
+          def describe_to(visitor, *args)
+            visitor.failed(*args)
+            visitor.duration(duration, *args)
+            self
+          end
+
+          def to_s
+            "F"
+          end
+
+          def ok?(be_strict = false)
+            !be_strict
           end
         end
 
