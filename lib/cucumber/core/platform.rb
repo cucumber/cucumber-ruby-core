@@ -9,7 +9,7 @@ module Cucumber
     IRONRUBY       = defined?(RUBY_ENGINE) && RUBY_ENGINE == "ironruby"
     WINDOWS        = RbConfig::CONFIG['host_os'] =~ /mswin|mingw/
     OS_X           = RbConfig::CONFIG['host_os'] =~ /darwin/
-    WINDOWS_MODERN = begin
+    WINDOWS_MODERN = WINDOWS && begin
                        ver = /^Microsoft Windows \[Version (\d+)\.(\d+)\.(\d+).*/.match(`ver`)
                        major_ver = ver[1].to_i
                        minor_ver = ver[2].to_i
