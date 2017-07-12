@@ -11,6 +11,10 @@ module Cucumber
           subscribe_to(event_bus)
         end
 
+        def ok?(be_strict = false)
+          test_cases.ok?(be_strict)
+        end
+
         private
 
         def subscribe_to(event_bus)

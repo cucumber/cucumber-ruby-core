@@ -123,5 +123,41 @@ module Cucumber::Core::Report
         end
       end
     end
+
+    context "ok? result" do
+      let(:test_case) { double }
+
+      it "passed test case is ok" do
+        event_bus.send(:test_case_finished, test_case, passed_result)
+
+        expect( @summary.ok? ).to eq true
+      end
+
+      it "skipped test case is ok" do
+        event_bus.send(:test_case_finished, test_case, skipped_result)
+
+        expect( @summary.ok? ).to eq true
+      end
+
+      it "failed test case is not ok" do
+        event_bus.send(:test_case_finished, test_case, failed_result)
+
+        expect( @summary.ok? ).to eq false
+      end
+
+      it "pending test case is ok if not strict" do
+        event_bus.send(:test_case_finished, test_case, pending_result)
+
+        expect( @summary.ok? ).to eq true
+        expect( @summary.ok?(true) ).to eq false
+      end
+
+      it "undefined test case is ok if not strict" do
+        event_bus.send(:test_case_finished, test_case, undefined_result)
+
+        expect( @summary.ok? ).to eq true
+        expect( @summary.ok?(true) ).to eq false
+      end
+    end
   end
 end
