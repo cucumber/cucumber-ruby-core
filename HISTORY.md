@@ -2,6 +2,7 @@
 
 ### New Features
 
+* Make the Summary report able to say if the total result is ok ([#140](https://github.com/cucumber/cucumber-ruby-core/pull/140) @brasmusson)
 * Replay previous events to new subscribers ([#136](https://github.com/cucumber/cucumber-ruby-core/pull/136) @mattwynne)
 * Ruby 2.4.0 compatability ([#120](https://github.com/cucumber/cucumber-ruby-core/pull/120) @junaruga)
 * Implement equality for test cases ([#111](https://github.com/cucumber/cucumber-ruby-core/pull/111) @mattwynne)

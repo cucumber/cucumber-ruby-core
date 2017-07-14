@@ -253,6 +253,7 @@ module Cucumber::Core::Test
       let(:passed)    { Result::Passed.new(Result::Duration.new(11)) }
       let(:skipped)   { Result::Skipped.new }
       let(:unknown)   { Result::Unknown.new }
+      let(:pending)   { Result::Pending.new }
       let(:undefined) { Result::Undefined.new }
       let(:exception) { StandardError.new }
 
@@ -327,6 +328,35 @@ module Cucumber::Core::Test
       it "records exceptions" do
         [passed, failed].each { |r| r.describe_to summary }
         expect( summary.exceptions ).to eq [exception]
+      end
+
+      context "ok? result" do
+        it "passed result is ok" do
+          passed.describe_to summary
+          expect( summary.ok? ).to be true
+        end
+
+        it "skipped result is ok" do
+          skipped.describe_to summary
+          expect( summary.ok? ).to be true
+        end
+
+        it "failed result is not ok" do
+          failed.describe_to summary
+          expect( summary.ok? ).to be false
+        end
+
+        it "pending result is ok if not strict" do
+          pending.describe_to summary
+          expect( summary.ok? ).to be true
+          expect( summary.ok?(true) ).to be false
+        end
+
+        it "undefined result is ok if not strict" do
+          undefined.describe_to summary
+          expect( summary.ok? ).to be true
+          expect( summary.ok?(true) ).to be false
+        end
       end
     end
 

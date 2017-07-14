@@ -1,10 +1,17 @@
-# encoding: UTF-8
+# encoding: utf-8
 # frozen_string_literal: true
 
 module Cucumber
   module Core
     module Test
       module Result
+        TYPES = [:failed, :skipped, :undefined, :pending, :passed, :unknown].freeze
+
+        def self.ok?(type, be_strict = false)
+          private
+          class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)
+          const_get(class_name).ok?(be_strict)
+        end
 
         # Defines to_sym on a result class for the given result type
         #
@@ -16,7 +23,7 @@ module Cucumber
               result_type
             end
 
-            [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_result_type|
+            TYPES.each do |possible_result_type|
               define_method("#{possible_result_type}?") do
                 possible_result_type == to_sym
               end
@@ -41,6 +48,10 @@ module Cucumber
           include Result.query_methods :passed
           attr_accessor :duration
 
+          def self.ok?(be_strict = false)
+            true
+          end
+
           def initialize(duration)
             raise ArgumentError unless duration
             @duration = duration
@@ -57,7 +68,7 @@ module Cucumber
           end
 
           def ok?(be_strict = false)
-            true
+            self.class.ok?(be_strict)
           end
 
           def with_appended_backtrace(step)
@@ -72,6 +83,10 @@ module Cucumber
         class Failed
           include Result.query_methods :failed
           attr_reader :duration, :exception
+
+          def self.ok?(be_strict = false)
+            false
+          end
 
           def initialize(duration, exception)
             raise ArgumentError unless duration
@@ -92,7 +107,7 @@ module Cucumber
           end
 
           def ok?(be_strict = false)
-            false
+            self.class.ok?(be_strict)
           end
 
           def with_duration(new_duration)
@@ -139,10 +154,18 @@ module Cucumber
             return self unless backtrace
             filter.new(dup).exception
           end
+
+          def ok?(be_strict = false)
+            self.class.ok?(be_strict)
+          end
         end
 
         class Undefined < Raisable
           include Result.query_methods :undefined
+
+          def self.ok?(be_strict = false)
+            !be_strict
+          end
 
           def describe_to(visitor, *args)
             visitor.undefined(*args)
@@ -153,14 +176,14 @@ module Cucumber
           def to_s
             "?"
           end
-
-          def ok?(be_strict = false)
-            !be_strict
-          end
         end
 
         class Skipped < Raisable
           include Result.query_methods :skipped
+
+          def self.ok?(be_strict = false)
+            true
+          end
 
           def describe_to(visitor, *args)
             visitor.skipped(*args)
@@ -171,14 +194,14 @@ module Cucumber
           def to_s
             "-"
           end
-
-          def ok?(be_strict = false)
-            true
-          end
         end
 
         class Pending < Raisable
           include Result.query_methods :pending
+
+          def self.ok?(be_strict = false)
+            !be_strict
+          end
 
           def describe_to(visitor, *args)
             visitor.pending(self, *args)
@@ -188,10 +211,6 @@ module Cucumber
 
           def to_s
             "P"
-          end
-
-          def ok?(be_strict = false)
-            !be_strict
           end
         end
 
@@ -220,6 +239,15 @@ module Cucumber
             else
               increment_total(name)
             end
+          end
+
+          def ok?(be_strict = false)
+            TYPES.each do |type|
+              if get_total(type) > 0
+                return false unless Result.ok?(type, be_strict)
+              end
+            end
+            true
           end
 
           def exception(exception)
