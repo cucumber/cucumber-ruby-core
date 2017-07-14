@@ -109,7 +109,7 @@ module Cucumber
           end
         end
 
-        # Base class for exceptions that can be raised in a step defintion causing
+        # Base class for exceptions that can be raised in a step definition causing
         # the step to have that result.
         class Raisable < StandardError
           attr_reader :message, :duration
