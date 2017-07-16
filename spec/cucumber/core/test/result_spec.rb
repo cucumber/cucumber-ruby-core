@@ -46,6 +46,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
+      specify { expect( result ).not_to be_flaky     }
 
       specify { expect( result ).to be_ok }
       specify { expect( result.ok?(false) ).to be_truthy }
@@ -105,6 +106,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
+      specify { expect( result ).not_to be_flaky     }
 
       specify { expect( result ).to_not be_ok }
       specify { expect( result.ok?(false) ).to be_falsey }
@@ -130,6 +132,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_undefined }
       specify { expect( result ).to     be_unknown   }
       specify { expect( result ).not_to be_skipped   }
+      specify { expect( result ).not_to be_flaky     }
     end
 
     describe Result::Raisable do
@@ -196,6 +199,7 @@ module Cucumber::Core::Test
       specify { expect( result ).to     be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
+      specify { expect( result ).not_to be_flaky     }
 
       specify { expect( result ).to be_ok }
       specify { expect( result.ok?(false) ).to be_truthy }
@@ -218,6 +222,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).to     be_skipped   }
+      specify { expect( result ).not_to be_flaky     }
 
       specify { expect( result ).to be_ok }
       specify { expect( result.ok?(false) ).to be_truthy }
@@ -240,11 +245,17 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_undefined }
       specify { expect( result ).not_to be_unknown   }
       specify { expect( result ).not_to be_skipped   }
+      specify { expect( result ).not_to be_flaky     }
       specify { expect( result ).to     be_pending   }
 
       specify { expect( result ).to be_ok }
       specify { expect( result.ok?(false) ).to be_truthy }
       specify { expect( result.ok?(true) ).to be_falsey }
+    end
+
+    describe Result::Flaky do
+      specify { expect( Result::Flaky.ok?(false) ).to be_truthy }
+      specify { expect( Result::Flaky.ok?(true) ).to be_falsey }
     end
 
     describe Result::Summary do
@@ -354,6 +365,12 @@ module Cucumber::Core::Test
 
         it "undefined result is ok if not strict" do
           undefined.describe_to summary
+          expect( summary.ok? ).to be true
+          expect( summary.ok?(true) ).to be false
+        end
+
+        it "flaky result is ok if not strict" do
+          summary.flaky
           expect( summary.ok? ).to be true
           expect( summary.ok?(true) ).to be false
         end

@@ -6,6 +6,7 @@ module Cucumber
         attr_reader :test_cases, :test_steps
 
         def initialize(event_bus)
+          @previous_test_case = nil
           @test_cases = Test::Result::Summary.new
           @test_steps = Test::Result::Summary.new
           subscribe_to(event_bus)
@@ -19,7 +20,13 @@ module Cucumber
 
         def subscribe_to(event_bus)
           event_bus.on(:test_case_finished) do |event|
-            event.result.describe_to test_cases
+            if event.test_case != @previous_test_case
+              @previous_test_case = event.test_case
+              event.result.describe_to test_cases
+            elsif event.result.passed?
+              test_cases.flaky
+              test_cases.decrement_failed
+            end
           end
           event_bus.on(:test_step_finished) do |event|
             event.result.describe_to test_steps if is_step?(event.test_step)

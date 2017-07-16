@@ -55,6 +55,16 @@ module Cucumber::Core::Report
         expect( @summary.test_cases.total(:undefined) ).to eq(1)
         expect( @summary.test_cases.total ).to eq(1)
       end
+
+      it "handles flaky test cases" do
+        allow(test_case).to receive(:==).and_return(false, true)
+        event_bus.send(:test_case_finished, test_case, failed_result)
+        event_bus.send(:test_case_finished, test_case, passed_result)
+
+        expect( @summary.test_cases.total(:failed) ).to eq(0)
+        expect( @summary.test_cases.total(:flaky) ).to eq(1)
+        expect( @summary.test_cases.total ).to eq(1)
+      end
     end
 
     context "test step summary" do

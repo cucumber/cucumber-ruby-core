@@ -5,7 +5,7 @@ module Cucumber
   module Core
     module Test
       module Result
-        TYPES = [:failed, :skipped, :undefined, :pending, :passed, :unknown].freeze
+        TYPES = [:failed, :flaky, :skipped, :undefined, :pending, :passed, :unknown].freeze
 
         def self.ok?(type, be_strict = false)
           private
@@ -121,6 +121,15 @@ module Cucumber
 
           def with_filtered_backtrace(filter)
             self.class.new(duration, filter.new(exception.dup).exception)
+          end
+        end
+
+        # Flaky is not used directly as an execution result, but is used as a
+        # reporting result type for test cases that fails and the passes on
+        # retry, therefore only the class method self.ok? is needed.
+        class Flaky
+          def self.ok?(be_strict = false)
+            !be_strict
           end
         end
 
@@ -268,6 +277,10 @@ module Cucumber
             end
           end
 
+          def decrement_failed
+            @totals[:failed] -= 1
+          end
+          
           private
 
           def get_total(method_name)
