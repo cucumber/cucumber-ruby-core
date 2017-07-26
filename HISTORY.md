@@ -1,16 +1,41 @@
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v1.5.0...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/3.0.0.pre.2...master)
+
+### New Features
+### Bugfixes
+### Removed Features
+### Refactoring
+
+## [3.0.0.pre.2](https://github.com/cucumber/cucumber-ruby-core/compare/v2.0.0...3.0.0.pre.2) (2017-07-26)
 
 ### New Features
 
 * Add a flaky result type to be used for flaky scenarios ([#141](https://github.com/cucumber/cucumber-ruby-core/pull/141), [cucumber/cucumber-ruby#1044](https://github.com/cucumber/cucumber-ruby/issues/1044) @brasmusson)
 * Make the Summary report able to say if the total result is ok ([#140](https://github.com/cucumber/cucumber-ruby-core/pull/140) @brasmusson)
 * Replay previous events to new subscribers ([#136](https://github.com/cucumber/cucumber-ruby-core/pull/136) @mattwynne)
-* Ruby 2.4.0 compatability ([#120](https://github.com/cucumber/cucumber-ruby-core/pull/120) @junaruga)
+* Ruby 2.4.0 compatibility ([#120](https://github.com/cucumber/cucumber-ruby-core/pull/120) @junaruga)
+* Use tag expressions ([#116](https://github.com/cucumber/cucumber-ruby-core/pull/116) @brasmusson)
+* Access example table row data by param name ([#118](https://github.com/cucumber/cucumber-ruby-core/pull/118) @enkessler)
+
+### Bugfixes
+
+N/A
+
+### Removed Features
+
+N/A
+
+### Refactoring
+
+* Travis: jruby-9.1.10.0 ([#130](https://github.com/cucumber/cucumber-ruby-core/pull/130) @olleolleolle)
+* Travis: jruby-9.1.12.0 ([#133](https://github.com/cucumber/cucumber-ruby-core/pull/132) @olleolleolle)
+
+## [2.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.5.0...2.0.0)
+
+### New Features
+
 * Implement equality for test cases ([#111](https://github.com/cucumber/cucumber-ruby-core/pull/111) @mattwynne)
 * Implement an event bus (moved from Cucumber-Ruby) ([#106](https://github.com/cucumber/cucumber-ruby-core/pull/106) @mattwynne)
 * Use frozen string literals ([#105](https://github.com/cucumber/cucumber-ruby-core/pull/105) @twalpole)
-* Use tag expressions ([#116](https://github.com/cucumber/cucumber-ruby-core/pull/116) @brasmusson)
-* Access example table row data by param name ([#118](https://github.com/cucumber/cucumber-ruby-core/pull/118) @enkessler)
 
 ### Bugfixes
 
@@ -22,10 +47,10 @@
 * Remove support for Ruby v1.9.3. ([112](https://github.com/cucumber/cucumber-ruby-core/pull/112) @brasmusson)
 
 ### Refactoring
-* Travis: jruby-9.1.10.0 ([#130](https://github.com/cucumber/cucumber-ruby-core/pull/130) @olleolleolle)
-* Travis: jruby-9.1.12.0 ([#133](https://github.com/cucumber/cucumber-ruby-core/pull/132) @olleolleolle)
 
-## [v1.5.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.5.0)
+N/A
+
+## [1.5.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.5.0)
 
 ### New Features
 
@@ -35,7 +60,7 @@
 
  * Use monotonic time ([#103](https://github.com/cucumber/cucumber-ruby-core/pull/103) @mikz)
 
-## [v1.4.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.1...v1.4.0)
+## [1.4.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.1...v1.4.0)
 
 ### New Features
 
@@ -43,7 +68,7 @@
 
 ### Bugfixes
 
-## [v1.3.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.0...v1.3.1)
+## [1.3.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.0...v1.3.1)
 
 ### New Features
 
@@ -51,7 +76,7 @@
 
  * Speed up location filtering ([#99](https://github.com/cucumber/cucumber-ruby-core/issues/99) @mattwynne @akostadinov @brasmusson)
 
-## [v1.3.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.2.0...v1.3.0)
+## [1.3.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.2.0...v1.3.0)
 
 ### New Features
 
@@ -63,7 +88,7 @@
  * Make sure that `after_test_step` is sent also when a test step is interrupted by (a timeout in) an around hook ([cucumber/cucumber-ruby#909](https://github.com/cucumber/cucumber-ruby/issues/909) @brasmusson)
  * Improve the check that a test_step quacks like a Cucumber::Core::Test::Step ([95](https://github.com/cucumber/cucumber-ruby-core/issues/95) @brasmusson)
 
-## [v1.2.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.3...v1.2.0)
+## [1.2.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.3...v1.2.0)
 
 ### New Features
 
@@ -75,13 +100,13 @@
 
 ### Bugfixes
 
-## [v1.1.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.2...v1.1.3)
+## [1.1.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.2...v1.1.3)
 
 ### New Features
 
   * Added custom `inspect` methods for AST Nodes (@tooky)
 
-## [v1.1.2](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...v1.1.2)
+## [1.1.2](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...v1.1.2)
 
 ### New Features
 
@@ -91,7 +116,7 @@
   * Fail test case if around hook fails (@mattwynne, @tooky)
   * Expose `Test::Case#around_hooks` (@tooky)
 
-## [v1.1.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.0...v1.1.1)
+## [1.1.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.0...v1.1.1)
 
 
 ### New Features
@@ -102,13 +127,13 @@
 
   * Remove keyword from `Test::Case#name` [82](https://github.com/cucumber/cucumber-ruby-core/pull/82) (@richarda)
 
-## [v1.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0...v1.1.0)
+## [1.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0...v1.1.0)
 
 ### New features
 
   * LocationsFilter now sorts test cases as well as filtering them (@mattwynne)
 
-## [v1.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.4...v1.0.0)
+## [1.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.4...v1.0.0)
 
 ### Features Removed
 
@@ -119,7 +144,7 @@
 
   * Added dynamic filter class constructor (@mattwynne)
 
-## [v1.0.0.beta.4](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.3...v1.0.0.beta.4)
+## [1.0.0.beta.4](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.3...v1.0.0.beta.4)
 
 ### New Features
 
@@ -132,10 +157,10 @@
  * Handle empty feature files (#[77](https://github.com/cucumber/cucumber-ruby-core/pull/77), [cucumber/cucumber-ruby#771](https://github.com/cucumber/cucumber-ruby/issues/771) [@brasmusson](https://github.com/brasmusson))
  * Run after hooks in reverse order (#[69](https://github.com/cucumber/cucumber-ruby-core/pull/69) [@erran](https://github.com/erran))
 
-## [v1.0.0.beta.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.2...v1.0.0.beta.3)
+## [1.0.0.beta.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.2...v1.0.0.beta.3)
 
 Changes were not logged.
 
-## [v1.0.0.beta.2](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2)
+## [1.0.0.beta.2](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2)
 
 Changes were not logged.
