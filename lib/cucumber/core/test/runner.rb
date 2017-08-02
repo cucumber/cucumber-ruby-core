@@ -15,7 +15,7 @@ module Cucumber
         def test_case(test_case, &descend)
           @running_test_case = RunningTestCase.new
           @running_test_step = nil
-          event_bus.test_case_starting(test_case)
+          event_bus.test_case_started(test_case)
           descend.call(self)
           event_bus.test_case_finished(test_case, running_test_case.result)
           self
@@ -23,7 +23,7 @@ module Cucumber
 
         def test_step(test_step)
           @running_test_step = test_step
-          event_bus.test_step_starting test_step
+          event_bus.test_step_started test_step
           step_result = running_test_case.execute(test_step)
           event_bus.test_step_finished test_step, step_result
           @running_test_step = nil

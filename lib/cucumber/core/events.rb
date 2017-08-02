@@ -5,7 +5,7 @@ module Cucumber
     module Events
 
       # Signals that a {Test::Case} is about to be executed
-      class TestCaseStarting < Event.new(:test_case)
+      class TestCaseStarted < Event.new(:test_case)
 
         # @return [Test::Case] the test case to be executed
         attr_reader :test_case
@@ -13,7 +13,7 @@ module Cucumber
       end
 
       # Signals that a {Test::Step} is about to be executed
-      class TestStepStarting < Event.new(:test_step)
+      class TestStepStarted < Event.new(:test_step)
 
         # @return [Test::Step] the test step to be executed
         attr_reader :test_step
@@ -47,8 +47,8 @@ module Cucumber
       # that will be used by the {EventBus} by default.
       def self.registry
         build_registry(
-          TestCaseStarting,
-          TestStepStarting,
+          TestCaseStarted,
+          TestStepStarted,
           TestStepFinished,
           TestCaseFinished,
         )

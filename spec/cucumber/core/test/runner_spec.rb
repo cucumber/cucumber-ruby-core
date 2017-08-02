@@ -19,7 +19,7 @@ module Cucumber::Core::Test
     let(:exception) { StandardError.new('test error') }
 
     before do
-      allow(event_bus).to receive(:test_case_starting)
+      allow(event_bus).to receive(:test_case_started)
       allow(source).to receive(:location)
     end
 
@@ -66,8 +66,8 @@ module Cucumber::Core::Test
       context "without steps" do
         let(:test_steps) { [] }
 
-        it "emits a test_case_starting event before running the test case" do
-          expect(event_bus).to receive(:test_case_starting).with(test_case)
+        it "emits a test_case_started event before running the test case" do
+          expect(event_bus).to receive(:test_case_started).with(test_case)
           test_case.describe_to runner
         end
 
