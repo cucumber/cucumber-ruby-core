@@ -49,8 +49,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_flaky     }
 
       specify { expect( result ).to be_ok }
-      specify { expect( result.ok?(false) ).to be_truthy }
-      specify { expect( result.ok?(true) ).to be_truthy }
+      specify { expect( result.ok? ).to be_truthy }
     end
 
     describe Result::Failed do
@@ -109,8 +108,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_flaky     }
 
       specify { expect( result ).to_not be_ok }
-      specify { expect( result.ok?(false) ).to be_falsey }
-      specify { expect( result.ok?(true) ).to be_falsey }
+      specify { expect( result.ok? ).to be_falsey }
     end
 
     describe Result::Unknown do
@@ -202,8 +200,9 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_flaky     }
 
       specify { expect( result ).to be_ok }
-      specify { expect( result.ok?(false) ).to be_truthy }
-      specify { expect( result.ok?(true) ).to be_falsey }
+      specify { expect( result.ok? ).to be_truthy }
+      be_strict = Result::StrictConfiguration.new([:undefined])
+      specify { expect( result.ok?(be_strict) ).to be_falsey }
     end
 
     describe Result::Skipped do
@@ -225,8 +224,7 @@ module Cucumber::Core::Test
       specify { expect( result ).not_to be_flaky     }
 
       specify { expect( result ).to be_ok }
-      specify { expect( result.ok?(false) ).to be_truthy }
-      specify { expect( result.ok?(true) ).to be_truthy }
+      specify { expect( result.ok? ).to be_truthy }
     end
 
     describe Result::Pending do
@@ -249,13 +247,85 @@ module Cucumber::Core::Test
       specify { expect( result ).to     be_pending   }
 
       specify { expect( result ).to be_ok }
-      specify { expect( result.ok?(false) ).to be_truthy }
-      specify { expect( result.ok?(true) ).to be_falsey }
+      specify { expect( result.ok? ).to be_truthy }
+      be_strict = Result::StrictConfiguration.new([:pending])
+      specify { expect( result.ok?(be_strict) ).to be_falsey }
     end
 
     describe Result::Flaky do
       specify { expect( Result::Flaky.ok?(false) ).to be_truthy }
       specify { expect( Result::Flaky.ok?(true) ).to be_falsey }
+    end
+
+    describe Result::StrictConfiguration do
+      subject(:strict_configuration) { Result::StrictConfiguration.new}
+      
+      describe '#set_strict' do
+        context 'no type argument' do
+          it 'sets all result types to the setting argument' do
+            strict_configuration.set_strict(true)
+            expect( strict_configuration.strict?(:undefined) ).to be_truthy
+            expect( strict_configuration.strict?(:pending) ).to be_truthy
+            expect( strict_configuration.strict?(:flaky) ).to be_truthy
+
+            strict_configuration.set_strict(false)
+            expect( strict_configuration.strict?(:undefined) ).to be_falsey
+            expect( strict_configuration.strict?(:pending) ).to be_falsey
+            expect( strict_configuration.strict?(:flaky) ).to be_falsey
+          end
+        end
+        context 'with type argument' do
+          it 'sets the specified result type to the setting argument' do
+            strict_configuration.set_strict(true, :undefined)
+            expect( strict_configuration.strict?(:undefined) ).to be_truthy
+            expect( strict_configuration.set?(:pending) ).to be_falsey
+            expect( strict_configuration.set?(:flaky) ).to be_falsey
+
+            strict_configuration.set_strict(false, :undefined)
+            expect( strict_configuration.strict?(:undefined) ).to be_falsey
+            expect( strict_configuration.set?(:pending) ).to be_falsey
+            expect( strict_configuration.set?(:flaky) ).to be_falsey
+          end
+        end
+      end
+
+      describe '#strict?' do
+        context 'no type argument' do
+          it 'returns true if any result type is set to strict' do
+            strict_configuration.set_strict(false, :pending)
+            expect( strict_configuration.strict? ).to be_falsey
+
+            strict_configuration.set_strict(true, :flaky)
+            expect( strict_configuration.strict? ).to be_truthy
+          end
+        end
+        context 'with type argument' do
+          it 'returns true if the specified result type is set to strict' do
+            strict_configuration.set_strict(false, :pending)
+            strict_configuration.set_strict(true, :flaky)
+
+            expect( strict_configuration.strict?(:undefined) ).to be_falsey
+            expect( strict_configuration.strict?(:pending) ).to be_falsey
+            expect( strict_configuration.strict?(:flaky) ).to be_truthy
+          end
+        end
+      end
+
+      describe '#merge!' do
+        let(:merged_configuration) { Result::StrictConfiguration.new }
+        it 'sets the not default values from the argument accordingly' do
+            strict_configuration.set_strict(false, :undefined)
+            strict_configuration.set_strict(false, :pending)
+            strict_configuration.set_strict(true, :flaky)
+            merged_configuration.set_strict(true, :pending)
+            merged_configuration.set_strict(false, :flaky)
+            strict_configuration.merge!(merged_configuration)
+
+            expect( strict_configuration.strict?(:undefined) ).to be_falsey
+            expect( strict_configuration.strict?(:pending) ).to be_truthy
+            expect( strict_configuration.strict?(:flaky) ).to be_falsey
+        end
+      end
     end
 
     describe Result::Summary do
@@ -360,19 +430,22 @@ module Cucumber::Core::Test
         it "pending result is ok if not strict" do
           pending.describe_to summary
           expect( summary.ok? ).to be true
-          expect( summary.ok?(true) ).to be false
+          be_strict = Result::StrictConfiguration.new([:pending])
+          expect( summary.ok?(be_strict) ).to be false
         end
 
         it "undefined result is ok if not strict" do
           undefined.describe_to summary
           expect( summary.ok? ).to be true
-          expect( summary.ok?(true) ).to be false
+          be_strict = Result::StrictConfiguration.new([:undefined])
+          expect( summary.ok?(be_strict) ).to be false
         end
 
         it "flaky result is ok if not strict" do
           summary.flaky
           expect( summary.ok? ).to be true
-          expect( summary.ok?(true) ).to be false
+          be_strict = Result::StrictConfiguration.new([:flaky])
+          expect( summary.ok?(be_strict) ).to be false
         end
       end
     end
