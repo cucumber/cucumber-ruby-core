@@ -96,8 +96,6 @@ module Cucumber::Core
                 Given a table
                   | a | b |
                   | 1 | 2 |
-
-              Scenario: empty
           END
         end
 
@@ -110,13 +108,6 @@ module Cucumber::Core
           filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
           expect(receiver.test_case_locations).to eq [test_case_named('two').location]
-        end
-
-        it 'matches the precise location of an empty scenario' do
-          location = test_case_named('empty').location
-          filter = Test::LocationsFilter.new([location])
-          compile [doc], receiver, [filter]
-          expect(receiver.test_case_locations).to eq [test_case_named('empty').location]
         end
 
         it 'matches multiple locations' do

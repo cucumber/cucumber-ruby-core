@@ -157,6 +157,23 @@ module Cucumber::Core
       end
     end
 
+    context 'empty scenarios' do
+      it 'does not create test cases for them' do
+        gherkin_documents = [
+          gherkin do
+            feature do
+              scenario do
+              end
+            end
+          end
+        ]
+        compile(gherkin_documents) do |visitor|
+          expect( visitor ).to receive(:test_case).never
+          expect( visitor ).to receive(:done).once.ordered
+        end
+      end
+    end
+
     describe Compiler::FeatureCompiler do
       let(:receiver) { double('receiver') }
       let(:compiler) { Compiler::FeatureCompiler.new(receiver) }
