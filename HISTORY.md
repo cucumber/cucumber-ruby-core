@@ -1,7 +1,8 @@
 ## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/3.0.0.pre.2...master)
 
 ### New Features
-* Handle selective strict settings. ([#143](https://github.com/cucumber/cucumber-ruby-core/pull/143) @brasmusson)
+* Do not create test cases for scenarios with no steps ([#144](https://github.com/cucumber/cucumber-ruby-core/pull/144) @brasmusson)
+* Handle selective strict settings ([#143](https://github.com/cucumber/cucumber-ruby-core/pull/143) @brasmusson)
 
 ### Bugfixes
 
