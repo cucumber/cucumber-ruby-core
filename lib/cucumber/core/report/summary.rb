@@ -12,7 +12,7 @@ module Cucumber
           subscribe_to(event_bus)
         end
 
-        def ok?(be_strict = false)
+        def ok?(be_strict = Test::Result::StrictConfiguration.new)
           test_cases.ok?(be_strict)
         end
 

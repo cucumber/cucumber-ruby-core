@@ -6,11 +6,12 @@ module Cucumber
     module Test
       module Result
         TYPES = [:failed, :flaky, :skipped, :undefined, :pending, :passed, :unknown].freeze
+        STRICT_AFFECTED_TYPES = [:flaky, :undefined, :pending].freeze
 
-        def self.ok?(type, be_strict = false)
+        def self.ok?(type, be_strict = StrictConfiguration.new)
           private
           class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)
-          const_get(class_name).ok?(be_strict)
+          const_get(class_name).ok?(be_strict.strict?(type))
         end
 
         # Defines to_sym on a result class for the given result type
@@ -67,8 +68,8 @@ module Cucumber
             "✓"
           end
 
-          def ok?(be_strict = false)
-            self.class.ok?(be_strict)
+          def ok?(be_strict = nil)
+            self.class.ok?
           end
 
           def with_appended_backtrace(step)
@@ -106,8 +107,8 @@ module Cucumber
             "✗"
           end
 
-          def ok?(be_strict = false)
-            self.class.ok?(be_strict)
+          def ok?(be_strict = nil)
+            self.class.ok?
           end
 
           def with_duration(new_duration)
@@ -164,8 +165,8 @@ module Cucumber
             filter.new(dup).exception
           end
 
-          def ok?(be_strict = false)
-            self.class.ok?(be_strict)
+          def ok?(be_strict = StrictConfiguration.new)
+            self.class.ok?(be_strict.strict?(to_sym))
           end
         end
 
@@ -223,6 +224,54 @@ module Cucumber
           end
         end
 
+        # Handles the strict settings for the result types that are
+        # affected by the strict options (that is the STRICT_AFFECTED_TYPES).
+        class StrictConfiguration
+          attr_accessor :settings
+          private :settings
+          
+          def initialize(strict_types = [])
+            @settings = Hash[STRICT_AFFECTED_TYPES.map { |t| [t, :default] }]
+            strict_types.each do |type|
+              set_strict(true, type)
+            end
+          end
+
+          def strict?(type = nil)
+            if type.nil?
+              settings.each do |_key, value|
+                return true if value == true
+              end
+              false
+            else
+              return false unless settings.key?(type)
+              return false unless set?(type)
+              settings[type]
+            end
+          end
+
+          def set_strict(setting, type = nil)
+            if type.nil?
+              STRICT_AFFECTED_TYPES.each do |t|
+                set_strict(setting, t)
+              end
+            else
+              settings[type] = setting
+            end
+          end
+
+          def merge!(other)
+            settings.keys.each do |type|
+              set_strict(other.strict?(type), type) if other.set?(type)
+            end
+            self
+          end
+
+          def set?(type)
+            settings[type] != :default
+          end
+        end
+
         #
         # An object that responds to the description protocol from the results
         # and collects summary information.
@@ -250,7 +299,7 @@ module Cucumber
             end
           end
 
-          def ok?(be_strict = false)
+          def ok?(be_strict = StrictConfiguration.new)
             TYPES.each do |type|
               if get_total(type) > 0
                 return false unless Result.ok?(type, be_strict)

@@ -1,8 +1,12 @@
 ## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/3.0.0.pre.2...master)
 
 ### New Features
+* Handle selective strict settings. ([#143](https://github.com/cucumber/cucumber-ruby-core/pull/143) @brasmusson)
+
 ### Bugfixes
+
 ### Removed Features
+
 ### Refactoring
 * Use past tense in event names (`xStarting` -> `xStarted`) (see [cucumber/cucumber-ruby#1166](https://github.com/cucumber/cucumber-ruby/issues/1166) @brasmusson). 
 
