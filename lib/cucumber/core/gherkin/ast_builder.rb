@@ -373,6 +373,12 @@ module Cucumber
           def rows
             attributes[:rows] = attributes[:rows].map { |r| r[:cells].map { |c| c[:value] } }
           end
+
+          def location
+            first_line = attributes[:location][:line]
+            last_line = first_line + attributes[:rows].length - 1
+            Ast::Location.new(file, first_line..last_line)
+          end
         end
 
         class DocStringBuilder < Builder
