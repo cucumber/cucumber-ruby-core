@@ -5,6 +5,7 @@
 * Handle selective strict settings ([#143](https://github.com/cucumber/cucumber-ruby-core/pull/143) @brasmusson)
 
 ### Bugfixes
+* Fix DataTable's Location to be aware of all of its lines ([#142](https://github.com/cucumber/cucumber-ruby-core/pull/142) @botandrose)
 
 ### Removed Features
 
