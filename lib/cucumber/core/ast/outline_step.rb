@@ -18,7 +18,7 @@ module Cucumber
         end
 
         def to_step(row)
-          Ast::ExpandedOutlineStep.new(self, language, row.location, comments, keyword, row.expand(name), replace_multiline_arg(row))
+          Ast::ExpandedOutlineStep.new(self, language, self.location, comments, keyword, row.expand(name), replace_multiline_arg(row))
         end
 
         def inspect
