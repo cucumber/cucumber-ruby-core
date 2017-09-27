@@ -2,23 +2,23 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/3.0.0.pre.2...master) (targetting 3.0.0)
 
-### Removed
+### Changed
 
-* Nothing yet...
+* Step#name renamed to #text ([#137](https://github.com/cucumber/cucumber-ruby-core/pull/137) [@olleolleolle](https://github.com/olleolleolle))
+* Use past tense in event names (`xStarting` -> `xStarted`) (see [cucumber/cucumber-ruby#1166](https://github.com/cucumber/cucumber-ruby/issues/1166) @brasmusson).
 
 ### Added
 
 * Do not create test cases for scenarios with no steps ([#144](https://github.com/cucumber/cucumber-ruby-core/pull/144) @brasmusson)
 * Handle selective strict settings ([#143](https://github.com/cucumber/cucumber-ruby-core/pull/143) @brasmusson)
 
-### Changed
-
-* As per [#251](https://github.com/cucumber/cucumber/issues/251): renamed History.md to CHANGELOG.md, added contributing message at beginning, and misc formatting. ([#145](https://github.com/cucumber/cucumber-ruby-core/pull/145) [jaysonesmith](https://github.com/jaysonesmith))
-* Use past tense in event names (`xStarting` -> `xStarted`) (see [cucumber/cucumber-ruby#1166](https://github.com/cucumber/cucumber-ruby/issues/1166) @brasmusson).
-
 ### Fixed
 
 * Fix DataTable's Location to be aware of all of its lines ([#142](https://github.com/cucumber/cucumber-ruby-core/pull/142) @botandrose)
+
+### Improved
+
+* As per [#251](https://github.com/cucumber/cucumber/issues/251): renamed History.md to CHANGELOG.md, added contributing message at beginning, and misc formatting. ([#145](https://github.com/cucumber/cucumber-ruby-core/pull/145) [jaysonesmith](https://github.com/jaysonesmith))
 
 ## [3.0.0.pre.2](https://github.com/cucumber/cucumber-ruby-core/compare/v2.0.0...3.0.0.pre.2) (2017-07-26)
 
