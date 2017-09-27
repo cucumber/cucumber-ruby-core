@@ -40,6 +40,10 @@ module Cucumber
           source.last.text
         end
 
+        def to_s
+          text
+        end
+
         def location
           source.last.location
         end

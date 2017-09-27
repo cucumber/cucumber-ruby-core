@@ -73,7 +73,7 @@ module Cucumber::Core::Test
       end
     end
 
-    it "exposes the name and location of the AST step or hook as attributes" do
+    it "exposes the text and location of the AST step or hook as attributes" do
       text, location = double, double
       step_or_hook = double(text: text, location: location)
       test_step = Step.new([step_or_hook])
@@ -86,6 +86,12 @@ module Cucumber::Core::Test
       action = double(location: location)
       test_step = Step.new([double], action)
       expect( test_step.action_location ).to eq location
+    end
+
+    it "returns the text of the AST step when converted to a string" do
+      ast_step = double(text: 'a passing step', location: double)
+      test_step = Step.new([ast_step])
+      expect( test_step.to_s     ).to eq 'a passing step'
     end
 
   end
