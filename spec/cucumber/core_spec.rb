@@ -99,15 +99,15 @@ module Cucumber
 
         observed_events = []
         execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
-          event_bus.on(:test_case_starting) do |event|
+          event_bus.on(:test_case_started) do |event|
             test_case = event.test_case
-            observed_events << [:test_case_starting, test_case.name]
+            observed_events << [:test_case_started, test_case.name]
           end
           event_bus.on(:test_case_finished) do |event|
             test_case, result = *event.attributes
             observed_events << [:test_case_finished, test_case.name, result.to_sym]
           end
-          event_bus.on(:test_step_starting) do |event|
+          event_bus.on(:test_step_started) do |event|
             test_step = event.test_step
             observed_events << [:test_step_starting, test_step.text]
           end
@@ -118,18 +118,18 @@ module Cucumber
         end
 
         expect(observed_events).to eq [
-          [:test_case_starting, 'The one that passes'],
-          [:test_step_starting, 'passing'],
+          [:test_case_started, 'The one that passes'],
+          [:test_step_started, 'passing'],
           [:test_step_finished, 'passing', :passed],
           [:test_case_finished, 'The one that passes', :passed],
-          [:test_case_starting, 'The one that fails'],
-          [:test_step_starting, 'passing'],
+          [:test_case_started, 'The one that fails'],
+          [:test_step_started, 'passing'],
           [:test_step_finished, 'passing', :passed],
-          [:test_step_starting, 'failing'],
+          [:test_step_started, 'failing'],
           [:test_step_finished, 'failing', :failed],
-          [:test_step_starting, 'passing'],
+          [:test_step_started, 'passing'],
           [:test_step_finished, 'passing', :skipped],
-          [:test_step_starting, 'undefined'],
+          [:test_step_started, 'undefined'],
           [:test_step_finished, 'undefined', :undefined],
           [:test_case_finished, 'The one that fails', :failed],
         ]

@@ -77,11 +77,11 @@ module Cucumber
             expect( doc_string.encoding ).to eq Encoding.find('US-ASCII')
           end
 
-          it 'allows implicit convertion to a String' do
+          it 'allows implicit conversion to a String' do
             expect( 'expected content' ).to include(doc_string)
           end
 
-          it 'allows explicit convertion to a String' do
+          it 'allows explicit conversion to a String' do
             expect( doc_string.to_s ).to eq 'content'
           end
 

@@ -55,6 +55,16 @@ module Cucumber::Core::Report
         expect( @summary.test_cases.total(:undefined) ).to eq(1)
         expect( @summary.test_cases.total ).to eq(1)
       end
+
+      it "handles flaky test cases" do
+        allow(test_case).to receive(:==).and_return(false, true)
+        event_bus.send(:test_case_finished, test_case, failed_result)
+        event_bus.send(:test_case_finished, test_case, passed_result)
+
+        expect( @summary.test_cases.total(:failed) ).to eq(0)
+        expect( @summary.test_cases.total(:flaky) ).to eq(1)
+        expect( @summary.test_cases.total ).to eq(1)
+      end
     end
 
     context "test step summary" do
@@ -121,6 +131,44 @@ module Cucumber::Core::Report
 
           expect( @summary.test_steps.total ).to eq(0)
         end
+      end
+    end
+
+    context "ok? result" do
+      let(:test_case) { double }
+
+      it "passed test case is ok" do
+        event_bus.send(:test_case_finished, test_case, passed_result)
+
+        expect( @summary.ok? ).to eq true
+      end
+
+      it "skipped test case is ok" do
+        event_bus.send(:test_case_finished, test_case, skipped_result)
+
+        expect( @summary.ok? ).to eq true
+      end
+
+      it "failed test case is not ok" do
+        event_bus.send(:test_case_finished, test_case, failed_result)
+
+        expect( @summary.ok? ).to eq false
+      end
+
+      it "pending test case is ok if not strict" do
+        event_bus.send(:test_case_finished, test_case, pending_result)
+
+        expect( @summary.ok? ).to eq true
+        be_strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
+        expect( @summary.ok?(be_strict) ).to eq false
+      end
+
+      it "undefined test case is ok if not strict" do
+        event_bus.send(:test_case_finished, test_case, undefined_result)
+
+        expect( @summary.ok? ).to eq true
+        be_strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
+        expect( @summary.ok?(be_strict) ).to eq false
       end
     end
   end

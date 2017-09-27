@@ -1,10 +1,18 @@
-# encoding: UTF-8
+# encoding: utf-8
 # frozen_string_literal: true
 
 module Cucumber
   module Core
     module Test
       module Result
+        TYPES = [:failed, :flaky, :skipped, :undefined, :pending, :passed, :unknown].freeze
+        STRICT_AFFECTED_TYPES = [:flaky, :undefined, :pending].freeze
+
+        def self.ok?(type, be_strict = StrictConfiguration.new)
+          private
+          class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)
+          const_get(class_name).ok?(be_strict.strict?(type))
+        end
 
         # Defines to_sym on a result class for the given result type
         #
@@ -16,7 +24,7 @@ module Cucumber
               result_type
             end
 
-            [:passed, :failed, :undefined, :unknown, :skipped, :pending].each do |possible_result_type|
+            TYPES.each do |possible_result_type|
               define_method("#{possible_result_type}?") do
                 possible_result_type == to_sym
               end
@@ -41,6 +49,10 @@ module Cucumber
           include Result.query_methods :passed
           attr_accessor :duration
 
+          def self.ok?(be_strict = false)
+            true
+          end
+
           def initialize(duration)
             raise ArgumentError unless duration
             @duration = duration
@@ -56,8 +68,8 @@ module Cucumber
             "✓"
           end
 
-          def ok?(be_strict = false)
-            true
+          def ok?(be_strict = nil)
+            self.class.ok?
           end
 
           def with_appended_backtrace(step)
@@ -72,6 +84,10 @@ module Cucumber
         class Failed
           include Result.query_methods :failed
           attr_reader :duration, :exception
+
+          def self.ok?(be_strict = false)
+            false
+          end
 
           def initialize(duration, exception)
             raise ArgumentError unless duration
@@ -91,8 +107,8 @@ module Cucumber
             "✗"
           end
 
-          def ok?(be_strict = false)
-            false
+          def ok?(be_strict = nil)
+            self.class.ok?
           end
 
           def with_duration(new_duration)
@@ -109,7 +125,16 @@ module Cucumber
           end
         end
 
-        # Base class for exceptions that can be raised in a step defintion causing
+        # Flaky is not used directly as an execution result, but is used as a
+        # reporting result type for test cases that fails and the passes on
+        # retry, therefore only the class method self.ok? is needed.
+        class Flaky
+          def self.ok?(be_strict = false)
+            !be_strict
+          end
+        end
+
+        # Base class for exceptions that can be raised in a step definition causing
         # the step to have that result.
         class Raisable < StandardError
           attr_reader :message, :duration
@@ -139,10 +164,18 @@ module Cucumber
             return self unless backtrace
             filter.new(dup).exception
           end
+
+          def ok?(be_strict = StrictConfiguration.new)
+            self.class.ok?(be_strict.strict?(to_sym))
+          end
         end
 
         class Undefined < Raisable
           include Result.query_methods :undefined
+
+          def self.ok?(be_strict = false)
+            !be_strict
+          end
 
           def describe_to(visitor, *args)
             visitor.undefined(*args)
@@ -153,14 +186,14 @@ module Cucumber
           def to_s
             "?"
           end
-
-          def ok?(be_strict = false)
-            !be_strict
-          end
         end
 
         class Skipped < Raisable
           include Result.query_methods :skipped
+
+          def self.ok?(be_strict = false)
+            true
+          end
 
           def describe_to(visitor, *args)
             visitor.skipped(*args)
@@ -171,14 +204,14 @@ module Cucumber
           def to_s
             "-"
           end
-
-          def ok?(be_strict = false)
-            true
-          end
         end
 
         class Pending < Raisable
           include Result.query_methods :pending
+
+          def self.ok?(be_strict = false)
+            !be_strict
+          end
 
           def describe_to(visitor, *args)
             visitor.pending(self, *args)
@@ -189,9 +222,53 @@ module Cucumber
           def to_s
             "P"
           end
+        end
 
-          def ok?(be_strict = false)
-            !be_strict
+        # Handles the strict settings for the result types that are
+        # affected by the strict options (that is the STRICT_AFFECTED_TYPES).
+        class StrictConfiguration
+          attr_accessor :settings
+          private :settings
+          
+          def initialize(strict_types = [])
+            @settings = Hash[STRICT_AFFECTED_TYPES.map { |t| [t, :default] }]
+            strict_types.each do |type|
+              set_strict(true, type)
+            end
+          end
+
+          def strict?(type = nil)
+            if type.nil?
+              settings.each do |_key, value|
+                return true if value == true
+              end
+              false
+            else
+              return false unless settings.key?(type)
+              return false unless set?(type)
+              settings[type]
+            end
+          end
+
+          def set_strict(setting, type = nil)
+            if type.nil?
+              STRICT_AFFECTED_TYPES.each do |t|
+                set_strict(setting, t)
+              end
+            else
+              settings[type] = setting
+            end
+          end
+
+          def merge!(other)
+            settings.keys.each do |type|
+              set_strict(other.strict?(type), type) if other.set?(type)
+            end
+            self
+          end
+
+          def set?(type)
+            settings[type] != :default
           end
         end
 
@@ -222,6 +299,15 @@ module Cucumber
             end
           end
 
+          def ok?(be_strict = StrictConfiguration.new)
+            TYPES.each do |type|
+              if get_total(type) > 0
+                return false unless Result.ok?(type, be_strict)
+              end
+            end
+            true
+          end
+
           def exception(exception)
             @exceptions << exception
             self
@@ -240,6 +326,10 @@ module Cucumber
             end
           end
 
+          def decrement_failed
+            @totals[:failed] -= 1
+          end
+          
           private
 
           def get_total(method_name)

@@ -62,7 +62,7 @@ module Cucumber::Core::Ast
           expect( matching ).to be_match(precise)
         end
 
-        it "does not match a precise location on a differnt line in the same file" do
+        it "does not match a precise location on a different line in the same file" do
           expect( matching ).not_to be_match(same_file_other_line)
         end
 

@@ -96,8 +96,8 @@ module Cucumber::Core
                 Given a table
                   | a | b |
                   | 1 | 2 |
+                  | 3 | 4 |
 
-              Scenario: empty
           END
         end
 
@@ -110,13 +110,6 @@ module Cucumber::Core
           filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
           expect(receiver.test_case_locations).to eq [test_case_named('two').location]
-        end
-
-        it 'matches the precise location of an empty scenario' do
-          location = test_case_named('empty').location
-          filter = Test::LocationsFilter.new([location])
-          compile [doc], receiver, [filter]
-          expect(receiver.test_case_locations).to eq [test_case_named('empty').location]
         end
 
         it 'matches multiple locations' do
@@ -201,9 +194,24 @@ module Cucumber::Core
             test_cases.find { |c| c.name == 'with a table' }
           end
 
-          it "matches a location on the first table row" do
+          it "matches a location at the start of the table" do
             location = Ast::Location.new(file, 23)
             expect( test_case.match_locations?([location]) ).to be_truthy
+          end
+
+          it "matches a location in the middle of the table" do
+            location = Ast::Location.new(file, 24)
+            expect( test_case.match_locations?([location]) ).to be_truthy
+          end
+
+          it "matches a location at the end of the table" do
+            location = Ast::Location.new(file, 25)
+            expect( test_case.match_locations?([location]) ).to be_truthy
+          end
+
+          it "does not match a location after the table" do
+            location = Ast::Location.new(file, 26)
+            expect( test_case.match_locations?([location]) ).to be_falsey
           end
         end
 

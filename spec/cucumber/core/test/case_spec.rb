@@ -277,7 +277,7 @@ module Cucumber
             gherkin = Gherkin::Document.new('features/treasure.feature', %{# language: en-pirate
               Ahoy matey!: Treasure map
                 Heave to: Find the treasure
-                  Gangway!: a map
+                  Gangway! a map
             })
             receiver = double.as_null_object
             expect( receiver ).to receive(:test_case) do |test_case|
