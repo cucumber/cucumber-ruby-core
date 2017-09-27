@@ -15,6 +15,10 @@ module Cucumber
           @language, @location, @comments, @keyword, @text, @multiline_arg = language, location, comments, keyword, text, multiline_arg
         end
 
+        def to_s
+          text
+        end
+
         def to_sexp
           [:step, line, keyword, text, @multiline_arg.to_sexp]
         end

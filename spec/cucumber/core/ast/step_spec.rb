@@ -9,9 +9,17 @@ module Cucumber
     module Ast
       describe Step do
         let(:step) do
-          language, location, comments, keyword, text = *double
+          text = "a passing step"
+          keyword = "Given"
+          language, location, comments = *double
           multiline_arg = EmptyMultilineArgument.new
           Step.new(language, location, comments, keyword, text, multiline_arg)
+        end
+
+        describe "to_s" do
+          it("returns the text of the step") do
+            expect(step.to_s).to eq("a passing step")
+          end
         end
 
         describe "describing itself" do
