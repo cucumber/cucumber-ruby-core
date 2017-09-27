@@ -28,6 +28,12 @@ module Cucumber
           end
         end
 
+        describe "to_s" do
+          it "returns the text of the step" do
+            expect(outline_step.to_s).to eq 'anything'
+          end
+        end
+
         describe 'comments' do
           it "has comments" do
             expect( outline_step ).to respond_to(:comments)

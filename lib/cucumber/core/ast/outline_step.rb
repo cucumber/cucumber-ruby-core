@@ -21,6 +21,10 @@ module Cucumber
           Ast::ExpandedOutlineStep.new(self, language, row.location, comments, keyword, row.expand(text), replace_multiline_arg(row))
         end
 
+        def to_s
+          text
+        end
+
         def inspect
           keyword_and_text = [keyword, text].join(": ")
           %{#<#{self.class} "#{keyword_and_text}" (#{location})>}
