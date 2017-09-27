@@ -31,16 +31,6 @@ module Cucumber
           raw_steps
         end
 
-        def to_sexp
-          sexp = [:scenario, line, keyword, name]
-          comment = comment.to_sexp
-          sexp += [comment] if comment
-          tags = tags.to_sexp
-          sexp += tags if tags.any?
-          sexp += step_invocations.to_sexp if step_invocations.any?
-          sexp
-        end
-
         private
 
         def description_for_visitors

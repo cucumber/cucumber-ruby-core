@@ -19,10 +19,6 @@ module Cucumber
           text
         end
 
-        def to_sexp
-          [:step, line, keyword, text, @multiline_arg.to_sexp]
-        end
-
         def backtrace_line
           "#{location}:in `#{keyword}#{text}'"
         end
