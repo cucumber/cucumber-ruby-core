@@ -109,11 +109,11 @@ module Cucumber
           end
           event_bus.on(:test_step_started) do |event|
             test_step = event.test_step
-            observed_events << [:test_step_started, test_step.name]
+            observed_events << [:test_step_starting, test_step.text]
           end
           event_bus.on(:test_step_finished) do |event|
             test_step, result = *event.attributes
-            observed_events << [:test_step_finished, test_step.name, result.to_sym]
+            observed_events << [:test_step_finished, test_step.text, result.to_sym]
           end
         end
 

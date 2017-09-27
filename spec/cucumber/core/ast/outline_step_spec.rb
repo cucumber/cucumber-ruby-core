@@ -9,12 +9,12 @@ module Cucumber
   module Core
     module Ast
       describe OutlineStep do
-        let(:outline_step) { OutlineStep.new(language, location, comments, keyword, name, multiline_arg) }
+        let(:outline_step) { OutlineStep.new(language, location, comments, keyword, text, multiline_arg) }
         let(:language) { double }
         let(:location) { double }
         let(:comments)  { double }
         let(:keyword)  { double }
-        let(:name)     { 'anything' }
+        let(:text)     { 'anything' }
         let(:multiline_arg) { EmptyMultilineArgument.new }
 
         describe 'location' do
@@ -36,18 +36,18 @@ module Cucumber
 
         describe "converting to a Step" do
           context "a single argument in the name" do
-            let(:name) { 'a <color> cucumber' }
+            let(:text) { 'a <color> cucumber' }
 
             it "replaces the argument" do
               row = ExamplesTable::Row.new({'color' => 'green'}, 1, location, language, comments)
-              expect( outline_step.to_step(row).name ).to eq 'a green cucumber'
+              expect( outline_step.to_step(row).text ).to eq 'a green cucumber'
             end
 
           end
 
           context "when the step has a DataTable" do
-            let(:outline_step) { OutlineStep.new(language, location, comments, keyword, name, table) }
-            let(:name)  { "anything" }
+            let(:outline_step) { OutlineStep.new(language, location, comments, keyword, text, table) }
+            let(:text)  { "anything" }
             let(:table) { DataTable.new([['x', 'y'],['a', 'a <arg>']], Location.new('foo.feature', 23)) }
 
             it "replaces the arguments in the DataTable" do
@@ -64,9 +64,9 @@ module Cucumber
 
           context "when the step has a DocString" do
             let(:location) { double }
-            let(:outline_step) { OutlineStep.new(language, location, comments, keyword, name, doc_string) }
+            let(:outline_step) { OutlineStep.new(language, location, comments, keyword, text, doc_string) }
             let(:doc_string) { DocString.new('a <arg> that needs replacing', '', location) }
-            let(:name) { 'anything' }
+            let(:text) { 'anything' }
 
             it "replaces the arguments in the DocString" do
               visitor = double

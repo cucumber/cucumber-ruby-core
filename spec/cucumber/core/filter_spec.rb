@@ -30,7 +30,7 @@ module Cucumber::Core
         my_filter = my_filter_class.new
         expect(receiver).to receive(:test_case) { |test_case|
           expect(test_case.test_steps.length).to eq 1
-          expect(test_case.test_steps.first.name).to eq 'a step'
+          expect(test_case.test_steps.first.text).to eq 'a step'
         }.exactly(2).times
         compile [doc], receiver, [my_filter]
       end

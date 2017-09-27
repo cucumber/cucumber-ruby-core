@@ -36,8 +36,8 @@ module Cucumber
           self.class.new(source, Test::Action.new(location, &block))
         end
 
-        def name
-          source.last.name
+        def text
+          source.last.text
         end
 
         def location

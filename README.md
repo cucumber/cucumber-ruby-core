@@ -75,7 +75,7 @@ class ActivateSteps < Cucumber::Core::Filter.new
   private
 
   def activate(step)
-    case step.name
+    case step.text
     when /fail/
       step.with_action { raise Failure }
     when /pass/
@@ -105,7 +105,7 @@ end
 MyRunner.new.execute([feature], [ActivateSteps.new]) do |events|
   events.on(:test_step_finished) do |event|
     test_step, result = event.test_step, event.result
-    puts "#{test_step.name} #{result}"
+    puts "#{test_step.text} #{result}"
   end
 end
 ```

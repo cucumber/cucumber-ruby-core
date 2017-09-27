@@ -9,18 +9,18 @@ module Cucumber
         include HasLocation
         include DescribesItself
 
-        attr_reader :keyword, :name, :language, :comments, :exception, :multiline_arg
+        attr_reader :keyword, :text, :language, :comments, :exception, :multiline_arg
 
-        def initialize(language, location, comments, keyword, name, multiline_arg)
-          @language, @location, @comments, @keyword, @name, @multiline_arg = language, location, comments, keyword, name, multiline_arg
+        def initialize(language, location, comments, keyword, text, multiline_arg)
+          @language, @location, @comments, @keyword, @text, @multiline_arg = language, location, comments, keyword, text, multiline_arg
         end
 
         def to_sexp
-          [:step, line, keyword, name, @multiline_arg.to_sexp]
+          [:step, line, keyword, text, @multiline_arg.to_sexp]
         end
 
         def backtrace_line
-          "#{location}:in `#{keyword}#{name}'"
+          "#{location}:in `#{keyword}#{text}'"
         end
 
         def actual_keyword(previous_step_keyword = nil)
@@ -36,8 +36,8 @@ module Cucumber
         end
 
         def inspect
-          keyword_and_name = [keyword, name].join(": ")
-          %{#<#{self.class} "#{keyword_and_name}" (#{location})>}
+          keyword_and_text = [keyword, text].join(": ")
+          %{#<#{self.class} "#{keyword_and_text}" (#{location})>}
         end
 
         private
@@ -53,8 +53,8 @@ module Cucumber
 
       class ExpandedOutlineStep < Step
 
-        def initialize(outline_step, language, location, comments, keyword, name, multiline_arg)
-          @outline_step, @language, @location, @comments, @keyword, @name, @multiline_arg = outline_step, language, location, comments, keyword, name, multiline_arg
+        def initialize(outline_step, language, location, comments, keyword, text, multiline_arg)
+          @outline_step, @language, @location, @comments, @keyword, @text, @multiline_arg = outline_step, language, location, comments, keyword, text, multiline_arg
         end
 
         def all_locations
@@ -65,7 +65,7 @@ module Cucumber
 
         def backtrace_line
           "#{step_backtrace_line}\n" +
-          "#{@outline_step.location}:in `#{@outline_step.keyword}#{@outline_step.name}'"
+          "#{@outline_step.location}:in `#{@outline_step.keyword}#{@outline_step.text}'"
         end
 
       end
