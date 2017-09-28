@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://cukes.info"
   s.platform    = Gem::Platform::RUBY
   s.license     = "MIT"
-  s.required_ruby_version = ">= 1.9.3"
+  s.required_ruby_version = '>= 2.1' # Keep in sync with .travis.yml
 
   s.add_dependency 'gherkin', '>= 4.1.3'
   s.add_dependency 'cucumber-tag_expressions', '>= 1.0.1'
