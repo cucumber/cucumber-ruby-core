@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'cucumber/core/events'
 
 module Cucumber
@@ -33,6 +34,12 @@ module Cucumber
         raise ArgumentError, "Event type #{event.class} is not registered. Try one of these:\n#{event_types.values.join("\n")}" unless is_registered_type?(event.class)
         handlers_for(event.class).each { |handler| handler.call(event) }
         @event_queue << event
+      end
+
+      # Query whether at least one handler exist for an event id
+      def handlers_exist_for?(event_id)
+        event_class = event_types.fetch(event_id)
+        !handlers_for(event_class).empty?
       end
 
       def method_missing(event_id, *args)

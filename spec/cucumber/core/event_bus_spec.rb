@@ -158,6 +158,25 @@ module Cucumber
         expect { event_bus.event_types[:foo] = :bar }.to raise_error(RuntimeError)
       end
 
+      context "querying if handlers exist for event id" do
+        context "no handler exist" do
+          it "query returns false" do
+            expect(event_bus.handlers_exist_for?(:test_event)).to be false
+          end
+        end
+
+        context "a handler exist" do
+          before(:each) do
+            event_bus.on(:test_event) do |event|
+            end
+          end
+
+          it "query returns true" do
+            expect(event_bus.handlers_exist_for?(:test_event)).to be true
+          end
+        end
+      end
+
     end
   end
 end
