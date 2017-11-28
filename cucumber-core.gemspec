@@ -9,18 +9,18 @@ Gem::Specification.new do |s|
   s.description = 'Core library for the Cucumber BDD app'
   s.summary     = "cucumber-core-#{s.version}"
   s.email       = 'cukes@googlegroups.com'
-  s.homepage    = "http://cukes.info"
+  s.homepage    = "https://cucumber.io"
   s.platform    = Gem::Platform::RUBY
   s.license     = "MIT"
   s.required_ruby_version = '>= 2.1' # Keep in sync with .travis.yml
 
-  s.add_dependency 'gherkin', '>= 4.1.3'
-  s.add_dependency 'cucumber-tag_expressions', '>= 1.0.1'
+  s.add_dependency 'gherkin', '>= 5.0.0'
+  s.add_dependency 'cucumber-tag_expressions', '~> 1.1.0'
   s.add_dependency 'backports', '>= 3.8.0'
 
-  s.add_development_dependency 'bundler',   '>= 1.3.5'
+  s.add_development_dependency 'bundler', '~> 1.16.0'
   s.add_development_dependency 'rake',      '>= 0.9.2'
-  s.add_development_dependency 'rspec',     '~> 3'
+  s.add_development_dependency 'rspec',     '~> 3.6'
   s.add_development_dependency 'unindent',  '>= 1.0'
   s.add_development_dependency 'kramdown',  '~> 1.4.2'
   s.add_development_dependency 'yard'
@@ -29,8 +29,13 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'coveralls', '~> 0.7'
 
   s.rubygems_version = ">= 1.6.1"
-  s.files            = `git ls-files`.split("\n").reject {|path| path =~ /\.gitignore$/ }
-  s.test_files       = `git ls-files -- spec/*`.split("\n")
+  s.files            = Dir[
+    'CHANGELOG.md',
+    'CONTRIBUTING.md',
+    'README.md',
+    'LICENSE',
+    'lib/**/*'
+  ]
   s.rdoc_options     = ["--charset=UTF-8"]
   s.require_path     = "lib"
 end
