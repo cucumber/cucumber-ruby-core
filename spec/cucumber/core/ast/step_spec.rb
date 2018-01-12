@@ -22,6 +22,12 @@ module Cucumber
           end
         end
 
+        describe "original_location" do
+          it("return the location of the step") do
+            expect(step.original_location).to be(step.location)
+          end
+        end
+
         describe "describing itself" do
           let(:visitor) { double }
 
@@ -123,6 +129,13 @@ module Cucumber
           ExpandedOutlineStep.new(outline_step, language, location, comments, keyword, text, multiline_arg)
         end
 
+        describe "original_location" do
+          it("return the location of the outline step") do
+            allow(outline_step).to receive(:location).and_return(double)
+            expect(step.original_location).to be(outline_step.location)
+          end
+        end
+
         describe "describing itself" do
           let(:visitor) { double }
 
@@ -171,4 +184,3 @@ module Cucumber
     end
   end
 end
-
