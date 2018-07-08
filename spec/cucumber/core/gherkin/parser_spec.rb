@@ -7,9 +7,14 @@ module Cucumber
   module Core
     module Gherkin
       describe Parser do
-        let(:receiver) { double }
-        let(:parser)   { Parser.new(receiver) }
-        let(:visitor)  { double }
+        let(:receiver)  { double }
+        let(:event_bus) { double }
+        let(:parser)    { Parser.new(receiver, event_bus) }
+        let(:visitor)   { double }
+
+        before do
+          allow( event_bus ).to receive(:gherkin_source_parsed)
+        end
 
         def parse
           parser.document(source)
@@ -24,6 +29,17 @@ module Cucumber
               expect( error.message ).to match(/not gherkin/)
               expect( error.message ).to match(/#{path}/)
             end
+          end
+        end
+
+        context "for valid gherkin" do
+          let(:source) { Gherkin::Document.new(path, 'Feature:') }
+          let(:path)   { 'path_to/the.feature' }
+
+          it "issues a gherkin_source_parsed event" do
+            allow( receiver ).to receive(:feature)
+            expect( event_bus ).to receive(:gherkin_source_parsed)
+            parse
           end
         end
 
@@ -55,6 +71,18 @@ module Cucumber
           allow( receiver ).to receive(:feature) { |feature| result = feature }
           parse
           result
+        end
+
+        context "for valid gherkin" do
+          source do
+            feature
+          end
+
+          it "issues a gherkin_source_parsed event" do
+            allow( receiver ).to receive(:feature)
+            expect(event_bus).to receive(:gherkin_source_parsed)
+            parse
+          end
         end
 
         context "when the Gherkin has a language header" do

@@ -11,11 +11,12 @@ module Cucumber
       ParseError = Class.new(StandardError)
 
       class Parser
-        attr_reader :receiver
-        private     :receiver
+        attr_reader :receiver, :event_bus
+        private     :receiver, :event_bus
 
-        def initialize(receiver)
+        def initialize(receiver, event_bus)
           @receiver = receiver
+          @event_bus = event_bus
         end
 
         def document(document)
@@ -26,6 +27,7 @@ module Cucumber
 
           begin
             result = parser.parse(scanner, token_matcher)
+            event_bus.gherkin_source_parsed(document.uri, result.dup)
 
             receiver.feature core_builder.feature(result)
           rescue *PARSER_ERRORS => e
