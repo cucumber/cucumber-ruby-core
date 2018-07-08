@@ -48,6 +48,10 @@ module Cucumber
           source.last.location
         end
 
+        def original_location
+          source.last.original_location
+        end
+
         def action_location
           @action.location
         end

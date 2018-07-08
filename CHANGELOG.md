@@ -8,7 +8,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Added
 
-* N/A
+* Add #original_location to Cucumber::Core::Ast::Step and Cucumber::Core::Test::Step ([#150](https://github.com/cucumber/cucumber-ruby-core/pull/150), [#149](https://github.com/cucumber/cucumber-ruby-core/issues/149) @brasmusson)
 
 ### Fixed
 

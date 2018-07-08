@@ -35,10 +35,15 @@ module Cucumber
           end
         end
 
+        def original_location
+          location
+        end
+
         def inspect
           keyword_and_text = [keyword, text].join(": ")
           %{#<#{self.class} "#{keyword_and_text}" (#{location})>}
         end
+
 
         private
 
@@ -59,6 +64,10 @@ module Cucumber
 
         def all_locations
           @outline_step.all_locations
+        end
+
+        def original_location
+          @outline_step.location
         end
 
         alias :step_backtrace_line :backtrace_line
