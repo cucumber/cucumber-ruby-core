@@ -126,7 +126,12 @@ module Cucumber
 
             class Failing < Base
               def execute(test_step, monitor, &continue)
-                test_step.skip(monitor.result)
+                result = test_step.skip(monitor.result)
+                if result.undefined?
+                  result = result.with_message(%(Undefined step: "#{test_step.text}"))
+                  result = result.with_appended_backtrace(test_step.source.last)
+                end
+                result
               end
 
               def result(duration)

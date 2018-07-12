@@ -205,7 +205,7 @@ module Cucumber::Core::Test
 
           it 'skips, rather than executing the second step' do
             expect( passing ).not_to receive(:execute)
-            expect( passing ).to receive(:skip)
+            expect( passing ).to receive(:skip).and_return(Result::Skipped.new)
             test_case.describe_to runner
           end
         end
