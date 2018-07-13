@@ -1,8 +1,19 @@
+# coding: utf-8
 require 'cucumber/core/event'
 
 module Cucumber
   module Core
     module Events
+
+      # Signals that a gherkin source has been parsed
+      class GherkinSourceParsed < Event.new(:uri, :gherkin_document)
+        # The uri of the file
+        attr_reader :uri
+
+        # @return [GherkinDocument] the GherkinDocument Ast Node
+        attr_reader :gherkin_document
+
+      end
 
       # Signals that a {Test::Case} is about to be executed
       class TestCaseStarted < Event.new(:test_case)
@@ -43,10 +54,11 @@ module Cucumber
 
       end
 
-      # The registry contains all the events registered in the core, 
+      # The registry contains all the events registered in the core,
       # that will be used by the {EventBus} by default.
       def self.registry
         build_registry(
+          GherkinSourceParsed,
           TestCaseStarted,
           TestStepStarted,
           TestStepFinished,
