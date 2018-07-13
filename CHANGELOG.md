@@ -1,10 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v3.1.0...master)
-
-### Changed
-
-* N/A
+## [3.2.0](https://github.com/cucumber/cucumber-ruby-core/compare/v3.1.0...v3.2.0)
 
 ### Added
 
@@ -13,11 +9,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
-* N/A
-
-### Improved
-
-* N/A
+* Set message and backtrace for undefined result also when skipping (@brasmusson)
 
 ## [3.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v3.0.0...3.1.0)
 
