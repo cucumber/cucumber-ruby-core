@@ -1,12 +1,12 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require 'cucumber/core/ast/data_table'
+require 'cucumber/core/test/data_table'
 
 module Cucumber
   module Core
-    module Ast
+    module Test
       describe DataTable do
-        let(:location) { Location.new('foo.feature', 9..12) }
+        let(:location) { Test::Location.new('foo.feature', 9..12) }
 
         before do
           @table = DataTable.new([

@@ -1,27 +1,29 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/action'
+require 'cucumber/core/test/empty_multiline_argument'
 
 module Cucumber
   module Core
     module Test
       class Step
-        attr_reader :source
+        attr_reader :text, :location, :multiline_arg
 
-        def initialize(source, action = Test::UndefinedAction.new(source.last.location))
-          raise ArgumentError if source.any?(&:nil?)
-          @source, @action = source, action
+        def initialize(text, location, multiline_arg = Test::EmptyMultilineArgument.new, action = Test::UndefinedAction.new(location))
+          raise ArgumentError if text.nil? || text.empty?
+          @text = text
+          @location = location
+          @multiline_arg = multiline_arg
+          @action = action
         end
 
         def describe_to(visitor, *args)
           visitor.test_step(self, *args)
         end
 
-        def describe_source_to(visitor, *args)
-          source.reverse.each do |node|
-            node.describe_to(visitor, *args)
-          end
-          self
+        def hook?
+          false
         end
 
         def skip(*args)
@@ -32,24 +34,16 @@ module Cucumber
           @action.execute(*args)
         end
 
-        def with_action(location = nil, &block)
-          self.class.new(source, Test::Action.new(location, &block))
+        def with_action(action_location = nil, &block)
+          self.class.new(text, location, multiline_arg, Test::Action.new(action_location, &block))
         end
 
-        def text
-          source.last.text
+        def backtrace_line
+          "#{location}:in `#{text}'"
         end
 
         def to_s
           text
-        end
-
-        def location
-          source.last.location
-        end
-
-        def original_location
-          source.last.original_location
         end
 
         def action_location
@@ -59,25 +53,15 @@ module Cucumber
         def inspect
           "#<#{self.class}: #{location}>"
         end
-
       end
 
-      class IsStepVisitor
-        def initialize(test_step)
-          @is_step = false
-          test_step.describe_to(self)
+      class HookStep < Step
+        def initialize(text, location, action)
+          super(text, location, Test::EmptyMultilineArgument.new, action)
         end
 
-        def step?
-          @is_step
-        end
-
-        def test_step(*)
-          @is_step = true
-        end
-
-        def method_missing(*)
-          self
+        def hook?
+          true
         end
       end
     end

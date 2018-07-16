@@ -13,9 +13,11 @@ module Cucumber
         include Core
         include Core::Gherkin::Writer
 
-        let(:test_case) { Test::Case.new(test_steps, [feature, scenario]) }
-        let(:feature) { double(location: "features/test.feature:1") }
-        let(:scenario) { double(location: "features/test.feature:2") }
+        let(:name) { double }
+        let(:location) { double }
+        let(:tags) { double }
+        let(:language) { double }
+        let(:test_case) { Test::Case.new(name, test_steps, location, tags, language) }
         let(:test_steps) { [double, double] }
 
         context 'describing itself' do
@@ -43,247 +45,70 @@ module Cucumber
             expect( first_hook ).to receive(:describe_to).ordered.and_yield
             expect( second_hook ).to receive(:describe_to).ordered.and_yield
             around_hooks = [first_hook, second_hook]
-            Test::Case.new([], [], around_hooks).describe_to(visitor, double)
-          end
-
-          it "describes its source to a visitor" do
-            visitor = double
-            args = double
-            expect( feature ).to receive(:describe_to).with(visitor, args)
-            expect( scenario ).to receive(:describe_to).with(visitor, args)
-            test_case.describe_source_to(visitor, args)
+            Test::Case.new(name, [], location, tags, language, around_hooks).describe_to(visitor, double)
           end
 
         end
 
         describe "#name" do
-          context "created from a scenario" do
-            it "takes its name from the name of a scenario" do
-              gherkin = gherkin do
-                feature do
-                  scenario 'Scenario name' do
-                    step 'passing'
-                  end
-                end
-              end
-              receiver = double.as_null_object
-
-              expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'Scenario name'
-                expect( test_case.keyword ).to eq 'Scenario'
-              end
-              compile([gherkin], receiver)
-            end
-          end
-
-          context "created from a scenario outline example" do
-            it "takes its name from the name of the scenario outline and examples table" do
-              gherkin = gherkin do
-                feature do
-                  scenario_outline 'outline name' do
-                    step 'passing with arg'
-
-                    examples 'examples name' do
-                      row 'arg'
-                      row 'a'
-                      row 'b'
-                    end
-
-                    examples '' do
-                      row 'arg'
-                      row 'c'
-                    end
-                  end
-                end
-              end
-              receiver = double.as_null_object
-              expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'outline name, examples name (#1)'
-                expect( test_case.keyword ).to eq 'Scenario Outline'
-              end.once.ordered
-              expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'outline name, examples name (#2)'
-              end.once.ordered
-              expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.name ).to eq 'outline name, Examples (#1)'
-              end.once.ordered
-              compile [gherkin], receiver
-            end
+          it "the name is passed when creating the test case" do
+            expect( test_case.name ).to eq(name)
           end
         end
 
         describe "#location" do
-          context "created from a scenario" do
-            it "takes its location from the location of the scenario" do
-              gherkin = gherkin('features/foo.feature') do
-                feature do
-                  scenario do
-                    step
-                  end
-                end
-              end
-              receiver = double.as_null_object
-              expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.location.to_s ).to eq 'features/foo.feature:3'
-              end
-              compile([gherkin], receiver)
-            end
-          end
-
-          context "created from a scenario outline example" do
-            it "takes its location from the location of the scenario outline example row" do
-              gherkin = gherkin('features/foo.feature') do
-                feature do
-                  scenario_outline do
-                    step 'passing with arg'
-
-                    examples do
-                      row 'arg'
-                      row '1'
-                      row '2'
-                    end
-                  end
-                end
-              end
-              receiver = double.as_null_object
-              expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.location.to_s ).to eq 'features/foo.feature:8'
-              end.once.ordered
-              expect( receiver ).to receive(:test_case) do |test_case|
-                expect( test_case.location.to_s ).to eq 'features/foo.feature:9'
-              end.once.ordered
-              compile [gherkin], receiver
-            end
+          it "the location is passed when creating the test case" do
+            expect( test_case.location ).to eq(location)
           end
         end
 
         describe "#tags" do
-          it "includes all tags from the parent feature" do
-            gherkin = gherkin do
-              feature tags: ['@a', '@b'] do
-                scenario tags: ['@c'] do
-                  step
-                end
-                scenario_outline tags: ['@d'] do
-                  step 'passing with arg'
-                  examples tags: ['@e'] do
-                    row 'arg'
-                    row 'x'
-                  end
-                end
-              end
-            end
-            receiver = double.as_null_object
-            expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.tags.map(&:name) ).to eq ['@a', '@b', '@c']
-            end.once.ordered
-            expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.tags.map(&:name) ).to eq ['@a', '@b', '@d', '@e']
-            end.once.ordered
-            compile [gherkin], receiver
+          it "the tags are passed when creating the test case" do
+            expect( test_case.tags ).to eq(tags)
           end
         end
 
         describe "matching tags" do
+          let(:tags) { ['@a', '@b', '@c'].map { |value| Tag.new(location, value) } }
           it "matches tags using tag expressions" do
-            gherkin = gherkin do
-              feature tags: ['@a', '@b'] do
-                scenario tags: ['@c'] do
-                  step
-                end
-              end
-            end
-            receiver = double.as_null_object
-            expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.match_tags?(['@a and @b']) ).to be_truthy
-              expect( test_case.match_tags?(['@a or @d']) ).to be_truthy
-              expect( test_case.match_tags?(['not @d']) ).to be_truthy
-              expect( test_case.match_tags?(['@a and @d']) ).to be_falsy
-            end
-            compile [gherkin], receiver
+            expect( test_case.match_tags?(['@a and @b']) ).to be_truthy
+            expect( test_case.match_tags?(['@a or @d']) ).to be_truthy
+            expect( test_case.match_tags?(['not @d']) ).to be_truthy
+            expect( test_case.match_tags?(['@a and @d']) ).to be_falsy
           end
 
           it "matches handles multiple expressions" do
-            gherkin = gherkin do
-              feature tags: ['@a', '@b'] do
-                scenario tags: ['@c'] do
-                  step
-                end
-              end
-            end
-            receiver = double.as_null_object
-            expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.match_tags?(['@a and @b', 'not @d']) ).to be_truthy
-              expect( test_case.match_tags?(['@a and @b', 'not @c']) ).to be_falsy
-            end
-            compile [gherkin], receiver
+            expect( test_case.match_tags?(['@a and @b', 'not @d']) ).to be_truthy
+            expect( test_case.match_tags?(['@a and @b', 'not @c']) ).to be_falsy
           end
         end
 
         describe "matching tags (old style)" do
+          let(:tags) { ['@a', '@b', '@c'].map { |value| Tag.new(location, value) } }
+
           it "matches boolean expressions of tags" do
-            gherkin = gherkin do
-              feature tags: ['@a', '@b'] do
-                scenario tags: ['@c'] do
-                  step
-                end
-              end
-            end
-            receiver = double.as_null_object
-            expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.match_tags?(['@a', '@b']) ).to be_truthy
-              expect( test_case.match_tags?(['@a, @d']) ).to be_truthy
-              expect( test_case.match_tags?(['~@d']) ).to be_truthy
-              expect( test_case.match_tags?(['@a', '@d']) ).to be_falsy
-            end
-            compile [gherkin], receiver
+            expect( test_case.match_tags?(['@a', '@b']) ).to be_truthy
+            expect( test_case.match_tags?(['@a, @d']) ).to be_truthy
+            expect( test_case.match_tags?(['~@d']) ).to be_truthy
+            expect( test_case.match_tags?(['@a', '@d']) ).to be_falsy
           end
 
           it "handles mixing old and new style expressions" do
-            gherkin = gherkin do
-              feature tags: ['@a', '@b'] do
-                scenario tags: ['@c'] do
-                  step
-                end
-              end
-            end
-            receiver = double.as_null_object
-            expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.match_tags?(['@a and @b', '~@d']) ).to be_truthy
-            end
-            compile [gherkin], receiver
+            expect( test_case.match_tags?(['@a and @b', '~@d']) ).to be_truthy
           end
         end
 
         describe "matching names" do
+          let(:name) { 'scenario' }
           it "matches names against regexp" do
-            gherkin = gherkin do
-              feature 'first feature' do
-                scenario 'scenario' do
-                  step 'missing'
-                end
-              end
-            end
-            receiver = double.as_null_object
-            expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.match_name?(/feature/) ).to be_truthy
-            end
-            compile [gherkin], receiver
+            expect( test_case.match_name?(/scenario/) ).to be_truthy
           end
         end
 
         describe "#language" do
-          it 'takes its language from the feature' do
-            gherkin = Gherkin::Document.new('features/treasure.feature', %{# language: en-pirate
-              Ahoy matey!: Treasure map
-                Heave to: Find the treasure
-                  Gangway! a map
-            })
-            receiver = double.as_null_object
-            expect( receiver ).to receive(:test_case) do |test_case|
-              expect( test_case.language.iso_code ).to eq 'en-pirate'
-            end
-            compile([gherkin], receiver)
+          let(:language) { 'en-pirate' }
+          it "the language is passed when creating the test case" do
+            expect( test_case.language ).to eq 'en-pirate'
           end
         end
 
@@ -292,7 +117,7 @@ module Cucumber
             gherkin = gherkin('features/foo.feature') do
               feature do
                 scenario do
-                  step
+                  step 'text'
                 end
               end
             end

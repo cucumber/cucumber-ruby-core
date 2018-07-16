@@ -30,7 +30,7 @@ module Cucumber
 
             it "returns the location of the block passed to the constructor" do
               action = Action.new(&block)
-              expect( action.location ).to eq Ast::Location.new(*block.source_location)
+              expect( action.location ).to eq Test::Location.new(*block.source_location)
             end
           end
 

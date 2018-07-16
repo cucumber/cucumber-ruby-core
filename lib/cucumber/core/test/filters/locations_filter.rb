@@ -25,8 +25,8 @@ module Cucumber
 
         def sorted_test_cases
           filter_locations.map { |filter_location|
-            test_cases[filter_location.file].select { |test_case| 
-              test_case.all_locations.any? { |location| filter_location.match?(location) }
+            test_cases[filter_location.file].select { |test_case|
+              filter_location.match?(test_case.location)
             }
           }.flatten.uniq
         end

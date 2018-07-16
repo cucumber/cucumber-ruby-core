@@ -3,7 +3,7 @@ require 'forwardable'
 require 'cucumber/core/platform'
 module Cucumber
   module Core
-    module Ast
+    module Test
       IncompatibleLocations = Class.new(StandardError)
 
       module Location
@@ -35,12 +35,6 @@ module Cucumber
             Precise.new(file, Lines.new(raw_lines))
           else
             Wildcard.new(file)
-          end
-        end
-
-        def self.merge(*locations)
-          locations.reduce do |a, b|
-            a + b
           end
         end
 
@@ -88,11 +82,6 @@ module Cucumber
             Location.new(file, new_line)
           end
 
-          def +(other)
-            raise IncompatibleLocations if file != other.file
-            Precise.new(file, lines + other.lines)
-          end
-
           def inspect
             "<#{self.class}: #{to_s}>"
           end
@@ -108,6 +97,14 @@ module Cucumber
 
           def first
             data.first
+          end
+
+          def min
+            data.min
+          end
+
+          def max
+            data.max
           end
 
           def include?(other)
@@ -155,10 +152,6 @@ module Cucumber
           @location
         end
 
-        def all_locations
-          @all_locations ||= Location.merge([location] + attributes.map { |node| node.all_locations }.flatten)
-        end
-
         def attributes
           [tags, comments, multiline_arg].flatten
         end
@@ -175,7 +168,7 @@ module Cucumber
 
         def multiline_arg
           # will be overriden by nodes that actually have a multiline_argument
-          EmptyMultilineArgument.new
+          Test::EmptyMultilineArgument.new
         end
 
       end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
-require 'cucumber/core/ast/location'
-require 'cucumber/core/ast/doc_string'
+require 'cucumber/core/test/location'
+require 'cucumber/core/test/doc_string'
 require 'unindent'
 
 module Cucumber
   module Core
-    module Ast
+    module Test
       describe DocString do
         let(:location) { double }
         let(:doc_string) { DocString.new(content, content_type, location) }
@@ -96,13 +96,13 @@ module Cucumber
       end
 
       context "inspect" do
-        let(:location) { Location.new("features/feature.feature", 8) }
+        let(:location) { Test::Location.new("features/feature.feature", 8) }
         let(:content_type) { 'text/plain' }
 
         it "provides a useful inspect method" do
           doc_string = DocString.new("some text", content_type, location)
           expect(doc_string.inspect).to eq <<-END.chomp.unindent
-          #<Cucumber::Core::Ast::DocString (features/feature.feature:8)
+          #<Cucumber::Core::Test::DocString (features/feature.feature:8)
             """text/plain
             some text
             """>

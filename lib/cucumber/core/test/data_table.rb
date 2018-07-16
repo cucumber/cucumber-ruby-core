@@ -1,10 +1,9 @@
 # frozen_string_literal: true
-require 'cucumber/core/ast/describes_itself'
-require 'cucumber/core/ast/location'
+require 'cucumber/core/test/location'
 
 module Cucumber
   module Core
-    module Ast
+    module Test
       # Step Definitions that match a plain text Step with a multiline argument table
       # will receive it as an instance of DataTable. A DataTable object holds the data of a
       # table parsed from a feature file and lets you access and manipulate the data
@@ -25,7 +24,6 @@ module Cucumber
       # This will store <tt>[['a', 'b'], ['c', 'd']]</tt> in the <tt>data</tt> variable.
       #
       class DataTable
-        include DescribesItself
         include HasLocation
 
         # Creates a new instance. +raw+ should be an Array of Array of String
@@ -40,6 +38,10 @@ module Cucumber
           @location = location
         end
         attr_reader :raw
+
+        def describe_to(visitor, *args)
+          visitor.data_table(self, *args)
+        end
 
         def to_step_definition_arg
           dup
@@ -107,10 +109,6 @@ module Cucumber
         def hashes_to_array(hashes)
           header = hashes[0].keys.sort
           [header] + hashes.map{|hash| header.map{|key| hash[key]}}
-        end
-
-        def description_for_visitors
-          :data_table
         end
 
       end

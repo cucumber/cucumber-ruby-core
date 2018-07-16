@@ -3,43 +3,34 @@ require 'cucumber/core/test/step'
 
 module Cucumber::Core::Test
   describe Step do
+    let(:text) { 'step text' }
+    let(:location) { double }
 
     describe "describing itself" do
-      let(:step_or_hook) { double }
-      before(:each) do
-        allow( step_or_hook ).to receive(:location)
-      end
-
       it "describes itself to a visitor" do
         visitor = double
         args = double
-        test_step = Step.new([step_or_hook])
+        test_step = Step.new(text, location)
         expect( visitor ).to receive(:test_step).with(test_step, args)
         test_step.describe_to(visitor, args)
       end
+    end
 
-      it "describes its source to a visitor" do
-        feature, scenario = double, double
-        visitor = double
-        args = double
-        expect( feature      ).to receive(:describe_to).with(visitor, args)
-        expect( scenario     ).to receive(:describe_to).with(visitor, args)
-        expect( step_or_hook ).to receive(:describe_to).with(visitor, args)
-        test_step = Step.new([feature, scenario, step_or_hook])
-        test_step.describe_source_to(visitor, args)
+    describe "backtrace line" do
+      let(:text) { 'this step passes' }
+      let(:location)  { Location.new('path/file.feature', 10) }
+      let(:test_step) { Step.new(text, location) }
+
+      it "knows how to form the backtrace line" do
+        expect( test_step.backtrace_line ).to eq("path/file.feature:10:in `this step passes'")
       end
     end
 
     describe "executing" do
-      let(:ast_step) { double }
-      before(:each) do
-        allow( ast_step ).to receive(:location)
-      end
-
       it "passes arbitrary arguments to the action's block" do
         args_spy = nil
         expected_args = [double, double]
-        test_step = Step.new([ast_step]).with_action do |*actual_args|
+        test_step = Step.new(text, location).with_action do |*actual_args|
           args_spy = actual_args
         end
         test_step.execute(*expected_args)
@@ -48,7 +39,7 @@ module Cucumber::Core::Test
 
       context "when a passing action exists" do
         it "returns a passing result" do
-          test_step = Step.new([ast_step]).with_action {}
+          test_step = Step.new(text, location).with_action {}
           expect( test_step.execute ).to be_passed
         end
       end
@@ -57,7 +48,7 @@ module Cucumber::Core::Test
         let(:exception) { StandardError.new('oops') }
 
         it "returns a failing result" do
-          test_step = Step.new([ast_step]).with_action { raise exception }
+          test_step = Step.new(text, location).with_action { raise exception }
           result = test_step.execute
           expect( result           ).to be_failed
           expect( result.exception ).to eq exception
@@ -66,32 +57,29 @@ module Cucumber::Core::Test
 
       context "with no action" do
         it "returns an Undefined result" do
-          test_step = Step.new([ast_step])
+          test_step = Step.new(text, location)
           result = test_step.execute
           expect( result           ).to be_undefined
         end
       end
     end
 
-    it "exposes the text, location and original location of the AST step or hook as attributes" do
-      text, location, original_location = double, double, double
-      step_or_hook = double(text: text, location: location, original_location: original_location)
-      test_step = Step.new([step_or_hook])
+    it "exposes the text and location of as attributes" do
+      test_step = Step.new(text, location)
       expect( test_step.text              ).to eq text
       expect( test_step.location          ).to eq location
-      expect( test_step.original_location ).to eq original_location
     end
 
     it "exposes the location of the action as attribute" do
       location = double
       action = double(location: location)
-      test_step = Step.new([double], action)
+      test_step = Step.new(text, location, action)
       expect( test_step.action_location ).to eq location
     end
 
-    it "returns the text of the AST step when converted to a string" do
-      ast_step = double(text: 'a passing step', location: double)
-      test_step = Step.new([ast_step])
+    it "returns the text when converted to a string" do
+      text = 'a passing step'
+      test_step = Step.new(text, location)
       expect( test_step.to_s     ).to eq 'a passing step'
     end
 

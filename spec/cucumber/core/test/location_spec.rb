@@ -1,12 +1,12 @@
 # frozen_string_literal: true
-require 'cucumber/core/ast/location'
+require 'cucumber/core/test/location'
 
-module Cucumber::Core::Ast
+module Cucumber::Core::Test
   RSpec::Matchers.define :be_included_in do |expected|
     match do |actual|
       expected.include? actual
     end
-  end  
+  end
 
   describe Location do
     let(:line) { 12 }
@@ -83,56 +83,6 @@ module Cucumber::Core::Ast
           expect( wildcard ).not_to be_match(not_matching)
         end
       end
-
-      context 'a range wildcard' do
-        let(:range) { Location.new("foo.feature", 13..17) }
-
-        it "matches the first line in the same file" do
-          other = Location.new("foo.feature", 13)
-          expect( range ).to be_match(other)
-        end
-
-        it "matches a line within the docstring in the same file" do
-          other = Location.new("foo.feature", 15)
-          expect( range ).to be_match(other)
-        end
-
-        it "is matched by a line within the docstring in the same file" do
-          other = Location.new("foo.feature", 15)
-          expect( other ).to be_match(range)
-        end
-
-        it "matches a wildcard in the same file" do
-          wildcard = Location.new("foo.feature")
-          expect( range ).to be_match(wildcard)
-        end
-
-        it "does not match a location outside of the range" do
-          other = Location.new("foo.feature", 18)
-          expect( range ).not_to be_match(other)
-        end
-
-        it "does not match a location in another file" do
-          other = Location.new("bar.feature", 13)
-          expect( range ).not_to be_match(other)
-        end
-      end
-
-      context "an arbitrary list of lines" do
-        let(:location) { Location.new("foo.feature", [1,5,6,7]) }
-
-        it "matches any of the given lines" do
-          [1,5,6,7].each do |line|
-            other = Location.new("foo.feature", line)
-            expect(location).to be_match(other)
-          end
-        end
-
-        it "does not match another line" do
-          other = Location.new("foo.feature", 2)
-          expect(location).not_to be_match(other)
-        end
-      end
     end
 
     describe "created from source location" do
@@ -166,34 +116,11 @@ module Cucumber::Core::Ast
         expect( Location.of_caller.to_s ).to be_included_in caller[0]
       end
 
-      context "when specifying additional caller depth"do      
+      context "when specifying additional caller depth"do
         it "use the location of the n:th caller" do
           expect( Location.of_caller(1).to_s ).to be_included_in caller[1]
         end
       end
     end
-
-    describe ".merge" do
-      it "merges locations from the same file" do
-        file = "test.feature"
-        location = Location.merge(
-          Location.new(file, 1),
-          Location.new(file, 6),
-          Location.new(file, 7)
-        )
-        expect(location.to_s).to eq "test.feature:1:6:7"
-      end
-
-      it "raises an error when the locations are from different files" do
-        expect {
-          Location.merge(
-            Location.new("one.feature", 1),
-            Location.new("two.feature", 1)
-          )
-        }.to raise_error(IncompatibleLocations)
-      end
-    end
-
   end
 end
-

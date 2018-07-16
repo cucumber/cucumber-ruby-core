@@ -29,31 +29,9 @@ module Cucumber
             end
           end
           event_bus.on(:test_step_finished) do |event|
-            event.result.describe_to test_steps if is_step?(event.test_step)
+            event.result.describe_to test_steps unless event.test_step.hook?
           end
           self
-        end
-
-        def is_step?(test_step)
-          StepQueryVisitor.new(test_step).is_step?
-        end
-      end
-
-      class StepQueryVisitor
-        def initialize(test_step)
-          @step = false
-          test_step.source.last.describe_to(self)
-        end
-
-        def is_step?
-          @step
-        end
-
-        def step(*)
-          @step = true
-        end
-        
-        def method_missing(*)
         end
       end
     end

@@ -22,14 +22,14 @@ module Cucumber
           gherkin do
             feature do
               background do
-                step
+                step 'text'
               end
               scenario do
-                step
+                step 'text'
               end
               scenario do
-                step
-                step
+                step 'text'
+                step 'text'
               end
             end
           end
@@ -50,13 +50,13 @@ module Cucumber
       it "filters out test cases based on a tag expression" do
         visitor = double.as_null_object
         expect( visitor ).to receive(:test_case) do |test_case|
-          expect( test_case.name ).to eq 'foo, bar (#1)'
+          expect( test_case.name ).to eq 'foo'
         end.exactly(1).times
 
         gherkin = gherkin do
           feature do
             scenario tags: '@b' do
-              step
+              step 'text'
             end
 
             scenario_outline 'foo' do
@@ -170,7 +170,7 @@ module Cucumber
       context "with around hooks" do
         class WithAroundHooks < Core::Filter.new(:logger)
           def test_case(test_case)
-            base_step = Core::Test::Step.new(test_case.source)
+            base_step = Core::Test::Step.new('text', nil, nil, nil)
             test_steps = [
               base_step.with_action { logger << :step },
             ]
@@ -190,7 +190,7 @@ module Cucumber
           gherkin = gherkin do
             feature do
               scenario do
-                step
+                step 'text'
               end
             end
           end
@@ -218,15 +218,15 @@ module Cucumber
         gherkin = gherkin do
           feature do
             scenario do
-              step
+              step 'text'
             end
 
             scenario tags: '@a @b' do
-              step
+              step 'text'
             end
 
             scenario tags: '@a' do
-              step
+              step 'text'
             end
           end
         end

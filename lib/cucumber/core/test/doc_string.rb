@@ -1,9 +1,8 @@
 # frozen_string_literal: true
-require 'cucumber/core/ast/describes_itself'
 require 'delegate'
 module Cucumber
   module Core
-    module Ast
+    module Test
       # Represents an inline argument in a step. Example:
       #
       #   Given the message
@@ -22,7 +21,6 @@ module Cucumber
       #
       class DocString < SimpleDelegator
         include HasLocation
-        include DescribesItself
 
         attr_reader :content_type, :content
 
@@ -31,6 +29,10 @@ module Cucumber
           @content_type = content_type
           @location = location
           super @content
+        end
+
+        def describe_to(visitor, *args)
+          visitor.doc_string(self, *args)
         end
 
         def data_table?
@@ -68,12 +70,6 @@ module Cucumber
             %{  #{@content}},
             %{  """>}
           ].join("\n")
-        end
-
-        private
-
-        def description_for_visitors
-          :doc_string
         end
 
       end

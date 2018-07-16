@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Cucumber
   module Core
-    module Ast
+    module Test
       class EmptyMultilineArgument
         def describe_to(*)
           self
@@ -30,4 +30,3 @@ module Cucumber
     end
   end
 end
-
