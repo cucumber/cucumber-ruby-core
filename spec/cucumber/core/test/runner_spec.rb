@@ -78,7 +78,7 @@ module Cucumber::Core::Test
         it "emits the test_case_finished event after running the the test case" do
           expect(event_bus).to receive(:test_case_finished) do |reported_test_case, result|
             expect( reported_test_case ).to eq test_case
-            expect( result ).to be_unknown
+            expect( result ).to be_undefined
           end
           test_case.describe_to runner
         end
