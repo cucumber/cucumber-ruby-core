@@ -2,8 +2,7 @@
 require 'gherkin/parser'
 require 'gherkin/token_scanner'
 require 'gherkin/errors'
-require 'cucumber/core/gherkin/ast_builder'
-require 'cucumber/core/ast'
+require 'gherkin/pickles/compiler'
 
 module Cucumber
   module Core
@@ -20,16 +19,17 @@ module Cucumber
         end
 
         def document(document)
-          parser        = ::Gherkin::Parser.new
-          scanner       = ::Gherkin::TokenScanner.new(document.body)
-          token_matcher = ::Gherkin::TokenMatcher.new(document.language)
-          core_builder  = AstBuilder.new(document.uri)
+          parser            = ::Gherkin::Parser.new
+          scanner           = ::Gherkin::TokenScanner.new(document.body)
+          token_matcher     = ::Gherkin::TokenMatcher.new(document.language)
+          compiler          = ::Gherkin::Pickles::Compiler.new
 
           begin
             result = parser.parse(scanner, token_matcher)
             event_bus.gherkin_source_parsed(document.uri, result.dup)
+            pickles = compiler.compile(result)
 
-            receiver.feature core_builder.feature(result)
+            receiver.pickles(pickles, document.uri)
           rescue *PARSER_ERRORS => e
             raise Core::Gherkin::ParseError.new("#{document.uri}: #{e.message}")
           end

@@ -2,7 +2,7 @@
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/timer'
 require 'cucumber/core/test/result'
-require 'cucumber/core/ast/location'
+require 'cucumber/core/test/location'
 
 module Cucumber
   module Core
@@ -10,7 +10,7 @@ module Cucumber
       class Action
         def initialize(location = nil, &block)
           raise ArgumentError, "Passing a block to execute the action is mandatory." unless block
-          @location = location ? location : Ast::Location.new(*block.source_location)
+          @location = location ? location : Test::Location.new(*block.source_location)
           @block = block
           @timer = Timer.new
         end

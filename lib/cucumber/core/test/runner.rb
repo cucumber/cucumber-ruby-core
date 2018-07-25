@@ -103,7 +103,7 @@ module Cucumber
               def execute(test_step, monitor, &continue)
                 result = test_step.execute(monitor.result, &continue)
                 result = result.with_message(%(Undefined step: "#{test_step.text}")) if result.undefined?
-                result = result.with_appended_backtrace(test_step.source.last) if IsStepVisitor.new(test_step).step?
+                result = result.with_appended_backtrace(test_step) unless test_step.hook?
                 result.describe_to(monitor, result)
               end
 
@@ -129,7 +129,7 @@ module Cucumber
                 result = test_step.skip(monitor.result)
                 if result.undefined?
                   result = result.with_message(%(Undefined step: "#{test_step.text}"))
-                  result = result.with_appended_backtrace(test_step.source.last)
+                  result = result.with_appended_backtrace(test_step)
                 end
                 result
               end

@@ -1,11 +1,15 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
+require 'cucumber/core/test/tag'
+require 'cucumber/core/test/doc_string'
+require 'cucumber/core/test/data_table'
+require 'cucumber/core/test/empty_multiline_argument'
 
 module Cucumber
   module Core
-
-    # Compiles the AST into test cases
+    # Compiles the Pickles into test cases
     class Compiler
       attr_reader :receiver
       private     :receiver
@@ -14,10 +18,11 @@ module Cucumber
         @receiver = receiver
       end
 
-      def feature(feature)
-        compiler = FeatureCompiler.new(TestCaseBuilder.new(receiver))
-        feature.describe_to(compiler)
-        self
+      def pickles(pickles, uri)
+        pickles.each do |pickle|
+          test_case = create_test_case(pickle, uri)
+          test_case.describe_to(receiver)
+        end
       end
 
       def done
@@ -25,152 +30,41 @@ module Cucumber
         self
       end
 
-      # @private
-      class TestCaseBuilder
-        attr_reader :receiver
-        private     :receiver
+      private
 
-        def initialize(receiver)
-          @receiver = receiver
-        end
-
-        def on_background_step(source)
-          background_test_steps << Test::Step.new(source)
-          self
-        end
-
-        def on_step(source)
-          test_steps << Test::Step.new(source)
-          self
-        end
-
-        def on_test_case(source)
-          Test::Case.new(test_steps, source).describe_to(receiver) if test_steps.count > 0
-          @test_steps = nil
-          self
-        end
-
-        private
-
-        def background_test_steps
-          @background_test_steps ||= []
-        end
-
-        def test_steps
-          @test_steps ||= background_test_steps.dup
-        end
+      def create_test_case(pickle, uri)
+        test_steps = pickle[:steps].map { |step| create_test_step(step, uri) }
+        lines = pickle[:locations].map { |location| location[:line] }
+        tags = pickle[:tags].map { |tag| Test::Tag.new(Test::Location.new(uri, tag[:location][:line]), tag[:name]) }
+        Test::Case.new(pickle[:name], test_steps, Test::Location.new(uri, lines), tags, pickle[:language])
       end
 
-      # @private
-      class FeatureCompiler
-        attr_reader :receiver
-        private     :receiver
-
-        def initialize(receiver)
-          @receiver = receiver
-        end
-
-        def feature(feature, &descend)
-          @feature = feature
-          descend.call(self)
-          self
-        end
-
-        def background(background, &descend)
-          source = [@feature, background]
-          compiler = BackgroundCompiler.new(source, receiver)
-          descend.call(compiler)
-          self
-        end
-
-        def scenario(scenario, &descend)
-          source = [@feature, scenario]
-          scenario_compiler = ScenarioCompiler.new(source, receiver)
-          descend.call(scenario_compiler)
-          receiver.on_test_case(source)
-          self
-        end
-
-        def scenario_outline(scenario_outline, &descend)
-          source = [@feature, scenario_outline]
-          compiler = ScenarioOutlineCompiler.new(source, receiver)
-          descend.call(compiler)
-          self
-        end
+      def create_test_step(pickle_step, uri)
+        lines = pickle_step[:locations].map { |location| location[:line] }
+        multiline_arg = create_multiline_arg(pickle_step[:arguments], uri)
+        Test::Step.new(pickle_step[:text], Test::Location.new(uri, lines), multiline_arg)
       end
 
-      # @private
-      class ScenarioOutlineCompiler
-        attr_reader :source, :receiver
-        private     :source, :receiver
-
-        def initialize(source, receiver)
-          @source   = source
-          @receiver = receiver
-        end
-
-        def outline_step(outline_step)
-          outline_steps << outline_step
-          self
-        end
-
-        def examples_table(examples_table, &descend)
-          @examples_table = examples_table
-          descend.call(self)
-          self
-        end
-
-        def examples_table_row(row)
-          steps(row).each do |step|
-            receiver.on_step(source + [@examples_table, row, step])
+      def create_multiline_arg(pickle_step_arguments, uri)
+        if pickle_step_arguments.empty?
+          Test::EmptyMultilineArgument.new
+        else
+          argument = pickle_step_arguments.first
+          if argument[:content]
+            Test::DocString.new(
+              argument[:content],
+              argument[:content_type],
+              Test::Location.new(uri, argument[:location][:line])
+            )
+          else
+            first_cell = argument[:rows].first[:cells].first
+            Test::DataTable.new(
+              argument[:rows].map { |row| row[:cells].map { |cell| cell[:value] } },
+              Test::Location.new(uri, first_cell[:location][:line])
+            )
           end
-          receiver.on_test_case(source + [@examples_table, row])
-          self
-        end
-
-        private
-
-        def steps(row)
-          outline_steps.map { |s| s.to_step(row) }
-        end
-
-        def outline_steps
-          @outline_steps ||= []
         end
       end
-
-      # @private
-      class ScenarioCompiler
-        attr_reader :source, :receiver
-        private     :source, :receiver
-
-        def initialize(source, receiver)
-          @source   = source
-          @receiver = receiver
-        end
-
-        def step(step)
-          receiver.on_step(source + [step])
-          self
-        end
-      end
-
-      # @private
-      class BackgroundCompiler
-        attr_reader :source, :receiver
-        private     :source, :receiver
-
-        def initialize(source, receiver)
-          @source   = source
-          @receiver = receiver
-        end
-
-        def step(step)
-          receiver.on_background_step(source + [step])
-          self
-        end
-      end
-
     end
   end
 end

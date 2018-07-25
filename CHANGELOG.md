@@ -1,10 +1,10 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v3.2.0...master)
+## [In Git (targeting 4.0.0)](https://github.com/cucumber/cucumber-ruby-core/compare/v3.2.0...master)
 
 ### Changed
 
-* N/A
+* Convert to use the Gherkin compiler and Pickles ([#156](https://github.com/cucumber/cucumber-ruby-core/pull/156) @brasmusson)
 
 ### Added
 

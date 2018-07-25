@@ -12,6 +12,10 @@ module Cucumber
           visitor.around_hook(self, *args, &continue)
         end
 
+        def hook?
+          true
+        end
+
         def execute(*args, &continue)
           @timer.start
           @block.call(continue)

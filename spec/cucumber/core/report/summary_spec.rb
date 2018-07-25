@@ -71,12 +71,8 @@ module Cucumber::Core::Report
       context "with test steps from gherkin steps" do
         let(:test_step) { double }
 
-        before(:each) do 
-          step = double
-          expect( step ).to receive(:describe_to) do |visitor|
-            visitor.step
-          end
-          expect( test_step ).to receive(:source).and_return([step])
+        before(:each) do
+          expect( test_step ).to receive(:hook?).and_return(false)
         end
 
         it "counts passed test steps" do
@@ -118,12 +114,8 @@ module Cucumber::Core::Report
       context "with test steps not from gherkin steps" do
         let(:test_step) { double }
 
-        before(:each) do 
-          step = double
-          expect( step ).to receive(:describe_to) do |visitor|
-            visitor.not_step
-          end
-          expect( test_step ).to receive(:source).and_return([step])
+        before(:each) do
+          expect( test_step ).to receive(:hook?).and_return(true)
         end
 
         it "ignores test steps not defined by gherkin steps" do

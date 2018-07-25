@@ -1,19 +1,22 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/result'
 require 'cucumber/tag_expressions'
 require 'cucumber/core/gherkin/tag_expression'
-require 'cucumber/core/ast/location'
 
 module Cucumber
   module Core
     module Test
       class Case
-        attr_reader :source, :test_steps, :around_hooks
+        attr_reader :name, :test_steps, :location, :tags, :language, :around_hooks
 
-        def initialize(test_steps, source, around_hooks = [])
-          raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.kind_of?(Array)
+        def initialize(name, test_steps, location, tags, language, around_hooks = [])
+          raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.is_a?(Array)
+          @name = name
           @test_steps = test_steps
-          @source = source
+          @location = location
+          @tags = tags
+          @language = language
           @around_hooks = around_hooks
         end
 
@@ -32,31 +35,12 @@ module Cucumber
           self
         end
 
-        def describe_source_to(visitor, *args)
-          source.reverse.each do |node|
-            node.describe_to(visitor, *args)
-          end
-          self
-        end
-
         def with_steps(test_steps)
-          self.class.new(test_steps, source, around_hooks)
+          self.class.new(name, test_steps, location, tags, language, around_hooks)
         end
 
         def with_around_hooks(around_hooks)
-          self.class.new(test_steps, source, around_hooks)
-        end
-
-        def name
-          @name ||= NameBuilder.new(self).result
-        end
-        
-        def keyword
-          @keyword ||= NameBuilder.new(self).keyword
-        end
-
-        def tags
-          @tags ||= TagCollector.new(self).result
+          self.class.new(name, test_steps, location, tags, language, around_hooks)
         end
 
         def match_tags?(*expressions)
@@ -64,41 +48,17 @@ module Cucumber
         end
 
         def match_name?(name_regexp)
-          source.any? { |node| node.respond_to?(:name) && node.name =~ name_regexp }
-        end
-
-        def language
-          feature.language
-        end
-
-        def location
-          source.last.location
+          name =~ name_regexp
         end
 
         def match_locations?(queried_locations)
-          queried_locations.any? { |queried_location|
-            all_source.any? { |node|
-              node.all_locations.any? { |location|
-                queried_location.match? location
-              }
-            }
-          }
-        end
-
-        def all_locations
-          @all_locations ||= Ast::Location.merge(all_source.map(&:all_locations).flatten)
-        end
-
-        def all_source
-          @all_source ||= (source + test_steps.map(&:source)).flatten.uniq
+          queried_locations.any? do |queried_location|
+            queried_location.match? location
+          end
         end
 
         def inspect
           "#<#{self.class}: #{location}>"
-        end
-
-        def feature
-          source.first
         end
 
         def hash
@@ -132,63 +92,6 @@ module Cucumber
         def old_style_tag_expression?(expression)
           expression.include?(',') || expression.include?('~')
         end
-
-        class NameBuilder
-          attr_reader :result
-          attr_reader :keyword
-
-          def initialize(test_case)
-            test_case.describe_source_to self
-          end
-
-          def feature(*)
-            self
-          end
-
-          def scenario(scenario)
-            @result = scenario.name
-            @keyword = scenario.keyword
-            self
-          end
-
-          def scenario_outline(outline)
-            @result = outline.name + @result
-            @keyword = outline.keyword
-            self
-          end
-
-          def examples_table(table)
-            name = table.name.strip
-            name = table.keyword if name.length == 0
-            @result = ", #{name}" + @result
-            self
-          end
-
-          def examples_table_row(row)
-            @result = " (##{row.number})"
-            self
-          end
-        end
-
-        class TagCollector
-          attr_reader :result
-
-          def initialize(test_case)
-            @result = []
-            test_case.describe_source_to self
-          end
-
-          [:feature, :scenario, :scenario_outline, :examples_table].each do |node_name|
-            define_method(node_name) do |node|
-              @result = node.tags + @result
-              self
-            end
-          end
-
-          def examples_table_row(*)
-          end
-        end
-
       end
     end
   end

@@ -7,20 +7,24 @@ require 'cucumber/core/test/duration_matcher'
 module Cucumber::Core::Test
   describe Runner do
 
-    let(:test_case) { Case.new(test_steps, source) }
-    let(:source)    { [double('ast node', location: double)] }
+    let(:name)      { double }
+    let(:location)  { double }
+    let(:tags)      { double }
+    let(:language)  { double }
+    let(:test_case) { Case.new(name, test_steps, location, tags, language) }
+    let(:text)      { double }
     let(:runner)    { Runner.new(event_bus) }
-    let(:event_bus)    { double.as_null_object }
-    let(:passing)   { Step.new([source]).with_action {} }
-    let(:failing)   { Step.new([source]).with_action { raise exception } }
-    let(:pending)   { Step.new([source]).with_action { raise Result::Pending.new("TODO") } }
-    let(:skipping)  { Step.new([source]).with_action { raise Result::Skipped.new } }
-    let(:undefined) { Step.new([source]) }
+    let(:event_bus) { double.as_null_object }
+    let(:passing)   { Step.new(text, location, location).with_action {} }
+    let(:failing)   { Step.new(text, location, location).with_action { raise exception } }
+    let(:pending)   { Step.new(text, location, location).with_action { raise Result::Pending.new("TODO") } }
+    let(:skipping)  { Step.new(text, location, location).with_action { raise Result::Skipped.new } }
+    let(:undefined) { Step.new(text, location, location) }
     let(:exception) { StandardError.new('test error') }
 
     before do
-      allow(event_bus).to receive(:test_case_started)
-      allow(source).to receive(:location)
+      allow( event_bus ).to receive(:test_case_started)
+      allow( text ).to receive(:empty?)
     end
 
     context "reporting the duration of a test case" do
@@ -99,7 +103,7 @@ module Cucumber::Core::Test
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
               expect( result ).to be_undefined
             end
-            allow( undefined.source.last ).to receive(:text)
+
             test_case.describe_to runner
           end
 
@@ -107,7 +111,8 @@ module Cucumber::Core::Test
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
               expect( result.message ).to eq("Undefined step: \"step name\"")
             end
-            expect( undefined.source.last ).to receive(:text).and_return("step name")
+            allow( undefined ).to receive(:text).and_return('step name')
+
             test_case.describe_to runner
           end
 
@@ -115,8 +120,8 @@ module Cucumber::Core::Test
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
               expect( result.backtrace ).to eq(["step line"])
             end
-            expect( undefined.source.last ).to receive(:backtrace_line).and_return("step line")
-            allow( undefined.source.last ).to receive(:text)
+            expect( undefined ).to receive(:backtrace_line).and_return('step line')
+
             test_case.describe_to runner
           end
         end
@@ -135,7 +140,8 @@ module Cucumber::Core::Test
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
               expect( result.backtrace.last ).to eq("step line")
             end
-            expect( pending.source.last ).to receive(:backtrace_line).and_return("step line")
+            expect( pending ).to receive(:backtrace_line).and_return('step line')
+
             test_case.describe_to runner
           end
         end
@@ -154,7 +160,8 @@ module Cucumber::Core::Test
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
               expect( result.backtrace.last ).to eq("step line")
             end
-            expect( skipping.source.last ).to receive(:backtrace_line).and_return("step line")
+            expect( skipping ).to receive(:backtrace_line).and_return('step line')
+
             test_case.describe_to runner
           end
         end
@@ -173,7 +180,8 @@ module Cucumber::Core::Test
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
               expect( result.exception.backtrace.last ).to eq("step line")
             end
-            expect( failing.source.last ).to receive(:backtrace_line).and_return("step line")
+            expect( failing ).to receive(:backtrace_line).and_return('step line')
+
             test_case.describe_to runner
           end
         end
@@ -215,8 +223,8 @@ module Cucumber::Core::Test
 
     context 'with multiple test cases' do
       context 'when the first test case fails' do
-        let(:first_test_case) { Case.new([failing], source) }
-        let(:last_test_case)  { Case.new([passing], source) }
+        let(:first_test_case) { Case.new(name, [failing], location, tags, language) }
+        let(:last_test_case)  { Case.new(name, [passing], location, tags, language) }
         let(:test_cases)      { [first_test_case, last_test_case] }
 
         it 'reports the results correctly for the following test case' do
@@ -236,9 +244,9 @@ module Cucumber::Core::Test
         hook_mapping = UnskippableAction.new do |last_result|
           result_spy = last_result
         end
-        after_hook = Step.new([source], hook_mapping)
-        failing_step = Step.new([source]).with_action { fail }
-        test_case = Case.new([failing_step, after_hook], source)
+        after_hook = HookStep.new(text, location, hook_mapping)
+        failing_step = Step.new(text, location).with_action { fail }
+        test_case = Case.new(name, [failing_step, after_hook], location, tags, language)
         test_case.describe_to runner
         expect(result_spy).to be_failed
       end
@@ -248,8 +256,8 @@ module Cucumber::Core::Test
     context "with around hooks" do
       it "passes normally when around hooks don't fail" do
         around_hook = AroundHook.new { |block| block.call }
-        passing_step = Step.new([source]).with_action {}
-        test_case = Case.new([passing_step], source, [around_hook])
+        passing_step = Step.new(text, location, location).with_action {}
+        test_case = Case.new(name, [passing_step], location, tags, language, [around_hook])
         expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_passed
         end
@@ -258,8 +266,8 @@ module Cucumber::Core::Test
 
       it "gets a failed result if the Around hook fails before the test case is run" do
         around_hook = AroundHook.new { |block| raise exception }
-        passing_step = Step.new([source]).with_action {}
-        test_case = Case.new([passing_step], source, [around_hook])
+        passing_step = Step.new(text, location, location).with_action {}
+        test_case = Case.new(name, [passing_step], location, tags, language, [around_hook])
         expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
           expect(result.exception).to eq exception
@@ -269,8 +277,8 @@ module Cucumber::Core::Test
 
       it "gets a failed result if the Around hook fails after the test case is run" do
         around_hook = AroundHook.new { |block| block.call; raise exception }
-        passing_step = Step.new([source]).with_action {}
-        test_case = Case.new([passing_step], source, [around_hook])
+        passing_step = Step.new(text, location, location).with_action {}
+        test_case = Case.new(name, [passing_step], location, tags, language, [around_hook])
         expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
           expect(result.exception).to eq exception
@@ -280,8 +288,8 @@ module Cucumber::Core::Test
 
       it "fails when a step fails if the around hook works" do
         around_hook = AroundHook.new { |block| block.call }
-        failing_step = Step.new([source]).with_action { raise exception }
-        test_case = Case.new([failing_step], source, [around_hook])
+        failing_step = Step.new(text, location, location).with_action { raise exception }
+        test_case = Case.new(name, [failing_step], location, tags, language, [around_hook])
         expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
           expect(result.exception).to eq exception
@@ -291,8 +299,8 @@ module Cucumber::Core::Test
 
       it "sends after_test_step for a step interrupted by (a timeout in) the around hook" do
         around_hook = AroundHook.new { |block| block.call; raise exception }
-        passing_step = Step.new([source]).with_action {}
-        test_case = Case.new([], source, [around_hook])
+        passing_step = Step.new(text, location, location).with_action {}
+        test_case = Case.new(name, [], location, tags, language, [around_hook])
         allow(runner).to receive(:running_test_step).and_return(passing_step)
         expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |reported_test_case, result|
           expect(result).to be_failed

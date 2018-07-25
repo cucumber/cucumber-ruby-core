@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Cucumber
   module Core
-    module Ast
+    module Test
       class Tag
         include HasLocation
 

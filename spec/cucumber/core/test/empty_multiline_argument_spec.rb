@@ -1,10 +1,10 @@
 # frozen_string_literal: true
-require 'cucumber/core/ast/location'
-require 'cucumber/core/ast/empty_multiline_argument'
+require 'cucumber/core/test/location'
+require 'cucumber/core/test/empty_multiline_argument'
 
 module Cucumber
   module Core
-    module Ast
+    module Test
       describe EmptyMultilineArgument do
 
         let(:location) { double }
