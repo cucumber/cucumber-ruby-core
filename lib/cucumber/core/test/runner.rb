@@ -17,7 +17,9 @@ module Cucumber
           @running_test_step = nil
           event_bus.test_case_started(test_case)
           descend.call(self)
-          event_bus.test_case_finished(test_case, running_test_case.result)
+          result = running_test_case.result
+          result = Result::Undefined.new('The test case has no steps', Result::UnknownDuration.new, ["#{test_case.location}:in `#{test_case.name}'"]) if result.unknown?
+          event_bus.test_case_finished(test_case, result)
           self
         end
 

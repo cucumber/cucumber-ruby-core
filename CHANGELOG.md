@@ -4,6 +4,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Changed
 
+* Let Scenarios with no Steps get the result status Undefined ([#157](https://github.com/cucumber/cucumber-ruby-core/pull/157) @brasmusson)
 * Convert to use the Gherkin compiler and Pickles ([#156](https://github.com/cucumber/cucumber-ruby-core/pull/156) @brasmusson)
 
 ### Added
