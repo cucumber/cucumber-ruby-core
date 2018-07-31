@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
   s.required_ruby_version = '>= 2.2' # Keep in sync with .travis.yml
 
-  s.add_dependency 'gherkin', '~> 5.1'
+  s.add_dependency 'gherkin', '~> 6.0'
   s.add_dependency 'cucumber-tag_expressions', '~> 1.1.0'
   s.add_dependency 'backports', '>= 3.8.0'
 

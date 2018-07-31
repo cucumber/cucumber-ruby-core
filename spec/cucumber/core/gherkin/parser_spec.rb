@@ -37,13 +37,7 @@ module Cucumber
           let(:path)   { 'path_to/the.feature' }
 
           it "issues a gherkin_source_parsed event" do
-            allow( receiver ).to receive(:pickles)
             expect( event_bus ).to receive(:gherkin_source_parsed)
-            parse
-          end
-
-          it "passes on the uri" do
-            expect( receiver ).to receive(:pickles).with(anything, path)
             parse
           end
         end
@@ -52,8 +46,8 @@ module Cucumber
           let(:source) { Gherkin::Document.new(path, '') }
           let(:path)   { 'path_to/the.feature' }
 
-          it "passes on an empty list of pickles" do
-            expect( receiver ).to receive(:pickles).with([], anything)
+          it "passes on no pickles" do
+            expect( receiver ).not_to receive(:pickle)
             parse
           end
         end
@@ -63,23 +57,21 @@ module Cucumber
           let(:source) { gherkin(&block) }
         end
 
-        RSpec::Matchers.define :pickles_with_language do |language|
-          match { |actual| actual.each { |pickle| pickle[:language] == language } }
+        RSpec::Matchers.define :pickle_with_language do |language|
+          match { |actual| actual[:language] == language }
         end
 
         context "when the Gherkin has a language header" do
           source do
-            feature(language: 'ja', keyword: '機能')
+            feature(language: 'ja', keyword: '機能') do
+              scenario(keyword: 'シナリオ')
+            end
           end
 
           it "the pickles have the correct language" do
-            expect( receiver ).to receive(:pickles).with(pickles_with_language('ja'), anything)
+            expect( receiver ).to receive(:pickle).with(pickle_with_language('ja'))
             parse
           end
-        end
-
-        RSpec::Matchers.define :a_list_of_one_pickle do
-          match { |actual| actual.length == 1 }
         end
 
         context "when the Gherkin produces one pickle" do
@@ -91,8 +83,8 @@ module Cucumber
             end
           end
 
-          it "passes on a list with the pickle" do
-            expect( receiver ).to receive(:pickles).with(a_list_of_one_pickle, anything)
+          it "passes on the pickle" do
+            expect( receiver ).to receive(:pickle)
             parse
           end
         end
