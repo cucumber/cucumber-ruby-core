@@ -2,7 +2,6 @@
 
 require 'cucumber/core/test/result'
 require 'cucumber/tag_expressions'
-require 'cucumber/core/gherkin/tag_expression'
 
 module Cucumber
   module Core
@@ -82,15 +81,7 @@ module Cucumber
         end
 
         def match_single_tag_expression?(expression)
-          if old_style_tag_expression?(expression)
-            Cucumber::Core::Gherkin::TagExpression.new([expression]).evaluate(tags)
-          else
-            Cucumber::TagExpressions::Parser.new.parse(expression).evaluate(tags.map(&:name))
-          end
-        end
-
-        def old_style_tag_expression?(expression)
-          expression.include?(',') || expression.include?('~')
+          Cucumber::TagExpressions::Parser.new.parse(expression).evaluate(tags.map(&:name))
         end
       end
     end

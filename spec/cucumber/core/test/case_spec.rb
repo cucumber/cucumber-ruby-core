@@ -83,21 +83,6 @@ module Cucumber
           end
         end
 
-        describe "matching tags (old style)" do
-          let(:tags) { ['@a', '@b', '@c'].map { |value| Tag.new(location, value) } }
-
-          it "matches boolean expressions of tags" do
-            expect( test_case.match_tags?(['@a', '@b']) ).to be_truthy
-            expect( test_case.match_tags?(['@a, @d']) ).to be_truthy
-            expect( test_case.match_tags?(['~@d']) ).to be_truthy
-            expect( test_case.match_tags?(['@a', '@d']) ).to be_falsy
-          end
-
-          it "handles mixing old and new style expressions" do
-            expect( test_case.match_tags?(['@a and @b', '~@d']) ).to be_truthy
-          end
-        end
-
         describe "matching names" do
           let(:name) { 'scenario' }
           it "matches names against regexp" do

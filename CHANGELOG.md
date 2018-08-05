@@ -15,6 +15,10 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 * N/A
 
+### Removed
+
+* Remove the support for old style tag expressions ([#159](https://github.com/cucumber/cucumber-ruby-core/pull/159) @brasmusson)
+
 ### Improved
 
 * N/A
