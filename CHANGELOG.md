@@ -23,6 +23,12 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 * N/A
 
+## [3.2.1](https://github.com/cucumber/cucumber-ruby-core/compare/v3.2.0...v3.2.1)
+
+### Fixed
+
+* Switched `gherkin` in Gemspec to use _pessimistic_ versioning. (These two commits aren't merged into `master`, as they already exist in newer commits. This is a 'backported' patch to resolve [#160](https://github.com/cucumber/cucumber-ruby-core/issues/160)).
+
 ## [3.2.0](https://github.com/cucumber/cucumber-ruby-core/compare/v3.1.0...v3.2.0)
 
 ### Added
