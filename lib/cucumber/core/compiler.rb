@@ -18,11 +18,9 @@ module Cucumber
         @receiver = receiver
       end
 
-      def pickles(pickles, uri)
-        pickles.each do |pickle|
-          test_case = create_test_case(pickle, uri)
-          test_case.describe_to(receiver)
-        end
+      def pickle(pickle)
+        test_case = create_test_case(pickle)
+        test_case.describe_to(receiver)
       end
 
       def done
@@ -32,37 +30,37 @@ module Cucumber
 
       private
 
-      def create_test_case(pickle, uri)
+      def create_test_case(pickle)
+        uri = pickle[:uri]
         test_steps = pickle[:steps].map { |step| create_test_step(step, uri) }
-        lines = pickle[:locations].map { |location| location[:line] }
+        lines = pickle[:locations].map { |location| location[:line] }.sort.reverse
         tags = pickle[:tags].map { |tag| Test::Tag.new(Test::Location.new(uri, tag[:location][:line]), tag[:name]) }
         Test::Case.new(pickle[:name], test_steps, Test::Location.new(uri, lines), tags, pickle[:language])
       end
 
       def create_test_step(pickle_step, uri)
-        lines = pickle_step[:locations].map { |location| location[:line] }
-        multiline_arg = create_multiline_arg(pickle_step[:arguments], uri)
+        lines = pickle_step[:locations].map { |location| location[:line] }.sort.reverse
+        multiline_arg = create_multiline_arg(pickle_step, uri)
         Test::Step.new(pickle_step[:text], Test::Location.new(uri, lines), multiline_arg)
       end
 
-      def create_multiline_arg(pickle_step_arguments, uri)
-        if pickle_step_arguments.empty?
-          Test::EmptyMultilineArgument.new
+      def create_multiline_arg(pickle_step, uri)
+        if !pickle_step[:doc_string].nil?
+          argument = pickle_step[:doc_string]
+          Test::DocString.new(
+            argument[:content],
+            argument[:content_type],
+            Test::Location.new(uri, argument[:location][:line])
+          )
+        elsif !pickle_step[:data_table].nil?
+          argument = pickle_step[:data_table]
+          first_cell = argument[:rows].first[:cells].first
+          Test::DataTable.new(
+            argument[:rows].map { |row| row[:cells].map { |cell| cell[:value] } },
+            Test::Location.new(uri, first_cell[:location][:line])
+          )
         else
-          argument = pickle_step_arguments.first
-          if argument[:content]
-            Test::DocString.new(
-              argument[:content],
-              argument[:content_type],
-              Test::Location.new(uri, argument[:location][:line])
-            )
-          else
-            first_cell = argument[:rows].first[:cells].first
-            Test::DataTable.new(
-              argument[:rows].map { |row| row[:cells].map { |cell| cell[:value] } },
-              Test::Location.new(uri, first_cell[:location][:line])
-            )
-          end
+          Test::EmptyMultilineArgument.new
         end
       end
     end
