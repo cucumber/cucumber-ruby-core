@@ -1,6 +1,28 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In Git (targeting 4.0.0)](https://github.com/cucumber/cucumber-ruby-core/compare/v3.2.0...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v4.0.0...master)
+
+### Changed
+
+* N/A
+
+### Added
+
+* N/A
+
+### Fixed
+
+* N/A
+
+### Removed
+
+* N/A
+
+### Improved
+
+* N/A
+
+## [4.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v3.2.0...v4.0.0)
 
 ### Changed
 
