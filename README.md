@@ -4,7 +4,6 @@
 [![Build Status](https://secure.travis-ci.org/cucumber/cucumber-ruby-core.svg)](http://travis-ci.org/cucumber/cucumber-ruby-core)
 [![Code Climate](https://codeclimate.com/github/cucumber/cucumber-ruby-core.svg)](https://codeclimate.com/github/cucumber/cucumber-ruby-core)
 [![Coverage Status](https://coveralls.io/repos/cucumber/cucumber-ruby-core/badge.svg?branch=master)](https://coveralls.io/r/cucumber/cucumber-ruby-core?branch=master)
-[![Dependency Status](https://gemnasium.com/cucumber/cucumber-ruby-core.svg)](https://gemnasium.com/cucumber/cucumber-ruby-core)
 
 Cucumber Core is the [inner hexagon](http://alistair.cockburn.us/Hexagonal+architecture) for the [Ruby flavour of Cucumber](https://github.com/cucumber/cucumber-ruby).
 
