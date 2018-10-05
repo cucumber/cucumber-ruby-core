@@ -14,6 +14,14 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
   s.required_ruby_version = '>= 2.2' # Keep in sync with .travis.yml
 
+  s.metadata    = {
+                    'bug_tracker_uri' => 'https://github.com/cucumber/cucumber-ruby-core/issues',
+                    'changelog_uri'   => 'https://github.com/cucumber/cucumber-ruby-core/blob/master/CHANGELOG.md',
+                    'documentation_uri' => 'https://www.rubydoc.info/github/cucumber/cucumber-ruby-core',
+                    'mailing_list_uri'  => 'https://groups.google.com/forum/#!forum/cukes',
+                    'source_code_uri' => 'https://github.com/cucumber/cucumber-ruby-core',
+                  }
+
   s.add_dependency 'gherkin', '~> 6.0'
   s.add_dependency 'cucumber-tag_expressions', '~> 1.1.0'
   s.add_dependency 'backports', '>= 3.8.0'
