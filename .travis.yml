@@ -8,7 +8,7 @@ matrix:
     - rvm: 2.4
     - rvm: 2.3
     - rvm: 2.2
-    - rvm: jruby-9.2.0.0
+    - rvm: jruby-9.2.5.0
       env:
         - JRUBY_OPTS="--debug"
         - LC_ALL=en_US.UTF-8
