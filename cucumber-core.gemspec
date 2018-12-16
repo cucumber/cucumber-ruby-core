@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cucumber-tag_expressions', '~> 1.1.0'
   s.add_dependency 'backports', '>= 3.8.0'
 
-  s.add_development_dependency 'bundler', '~> 1.16.0'
+  s.add_development_dependency 'bundler', '>= 1.16.0'
   s.add_development_dependency 'rake',      '>= 0.9.2'
   s.add_development_dependency 'rspec',     '~> 3.6'
   s.add_development_dependency 'unindent',  '>= 1.0'
