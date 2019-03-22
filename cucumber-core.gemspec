@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
                   }
 
   s.add_dependency 'gherkin', '~> 6.0'
-  s.add_dependency 'cucumber-tag_expressions', '~> 1.1.0'
+  s.add_dependency 'cucumber-tag_expressions', '~> 1.1.1'
   s.add_dependency 'backports', '>= 3.8.0'
 
   s.add_development_dependency 'bundler', '>= 1.16.0'
