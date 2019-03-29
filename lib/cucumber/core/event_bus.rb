@@ -11,7 +11,7 @@ module Cucumber
     class EventBus
       attr_reader :event_types
 
-      # @param [Hash{Symbol => Class}] a hash of event types to use on the bus
+      # @param registry [Hash{Symbol => Class}] a hash of event types to use on the bus
       def initialize(registry = Events.registry)
         @event_types = registry.freeze
         @handlers = {}
