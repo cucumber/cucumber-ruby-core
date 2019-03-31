@@ -21,8 +21,3 @@ matrix:
 branches:
   only:
     - master
-
-notifications:
-  webhooks:
-    urls: # gitter
-      - https://webhooks.gitter.im/e/dc010332f9d40fcc21c4
