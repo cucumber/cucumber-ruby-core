@@ -37,6 +37,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'coveralls', '~> 0.7'
 
   s.rubygems_version = ">= 1.6.1"
+  s.test_files            = Dir[
+    'spec/**/*'
+  ]
   s.files            = Dir[
     'CHANGELOG.md',
     'CONTRIBUTING.md',
