@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
                     'source_code_uri' => 'https://github.com/cucumber/cucumber-ruby-core',
                   }
 
-  s.add_dependency 'gherkin', '~> 6.0'
+  s.add_dependency 'gherkin', '~> 6.0.17'
   s.add_dependency 'cucumber-tag_expressions', '~> 1.1.1'
   s.add_dependency 'backports', '>= 3.8.0'
 
