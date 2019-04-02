@@ -58,7 +58,7 @@ module Cucumber
         end
 
         RSpec::Matchers.define :pickle_with_language do |language|
-          match { |actual| actual[:language] == language }
+          match { |actual| actual.language == language }
         end
 
         context "when the Gherkin has a language header" do

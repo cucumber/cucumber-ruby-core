@@ -19,9 +19,9 @@ module Cucumber
           messages = ::Gherkin::Gherkin.from_source(document.uri, document.body, {default_dialect: document.language, include_source: false})
           messages.each do |message|
             if !message.gherkinDocument.nil?
-              event_bus.gherkin_source_parsed(message.gherkinDocument.to_hash)
+              event_bus.gherkin_source_parsed(message.gherkinDocument)
             elsif !message.pickle.nil?
-              receiver.pickle(message.pickle.to_hash)
+              receiver.pickle(message.pickle)
             elsif !message.attachment.nil?
               raise message.attachment.data
             else
