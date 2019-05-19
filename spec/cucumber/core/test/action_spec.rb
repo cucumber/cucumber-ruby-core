@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'cucumber/core/test/action'
 require 'cucumber/core/test/duration_matcher'
+require 'cucumber/core/test/invoke_result'
 
 module Cucumber
   module Core
@@ -46,15 +47,18 @@ module Cucumber
 
           it "returns a passed result if the block doesn't fail" do
             action = Action.new {}
-            expect( action.execute ).to be_passed
+            result = action.execute
+            expect( result            ).to be_passed
+            expect( result.embeddings ).to be_empty
           end
 
           it "returns a failed result when the block raises an error" do
             exception = StandardError.new
             action = Action.new { raise exception }
             result = action.execute
-            expect( result ).to be_failed
-            expect( result.exception ).to eq exception
+            expect( result            ).to be_failed
+            expect( result.exception  ).to eq exception
+            expect( result.embeddings ).to be_empty
           end
 
           it "yields the args passed to #execute to the block" do
@@ -87,6 +91,24 @@ module Cucumber
             result = action.execute
             expect( result ).to be_undefined
             expect( result.message ).to eq "new step"
+          end
+
+          it "returns a passed result if the block returns a PassedInvokeResult" do
+            embeddings = [double]
+            action = Action.new { PassedInvokeResult.new(embeddings) }
+            result = action.execute
+            expect( result            ).to be_passed
+            expect( result.embeddings ).to eq embeddings
+          end
+
+          it "returns a failed result when the block returns a FailedInvokeResult" do
+            exception = StandardError.new
+            embeddings = [double]
+            action = Action.new { FailedInvokeResult.new(exception, embeddings) }
+            result = action.execute
+            expect( result            ).to be_failed
+            expect( result.exception  ).to eq exception
+            expect( result.embeddings ).to eq embeddings
           end
 
           context "recording the duration" do

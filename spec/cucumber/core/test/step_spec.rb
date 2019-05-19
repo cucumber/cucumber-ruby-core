@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'cucumber/core/test/step'
+require 'cucumber/core/test/invoke_result'
 
 module Cucumber::Core::Test
   describe Step do
@@ -38,18 +39,30 @@ module Cucumber::Core::Test
         expect(args_spy).to eq expected_args
       end
 
-      context "when a passing action exists" do
-        it "returns a passing result" do
+      context "passing action" do
+        it "returns a passing result when the step invocation doesn't fail" do
           test_step = Step.new(id, text, location).with_action {}
+          expect( test_step.execute ).to be_passed
+        end
+
+        it "returns a passing result when the step invocation returns a PassedInvokeResult" do
+          test_step = Step.new(id, text, location).with_action { PassedInvokeResult.new }
           expect( test_step.execute ).to be_passed
         end
       end
 
-      context "when a failing action exists" do
+      context "failing action" do
         let(:exception) { StandardError.new('oops') }
 
-        it "returns a failing result" do
+        it "returns a failing result when the step invocation raises an error" do
           test_step = Step.new(id, text, location).with_action { raise exception }
+          result = test_step.execute
+          expect( result           ).to be_failed
+          expect( result.exception ).to eq exception
+        end
+
+        it "returns a failing result when the step invocation returns a FailedInvokeResult" do
+          test_step = Step.new(id, text, location).with_action { FailedInvokeResult.new(exception) }
           result = test_step.execute
           expect( result           ).to be_failed
           expect( result.exception ).to eq exception

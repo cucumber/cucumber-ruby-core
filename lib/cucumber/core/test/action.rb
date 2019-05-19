@@ -3,6 +3,7 @@ require 'cucumber/core/test/result'
 require 'cucumber/core/test/timer'
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/location'
+require 'cucumber/core/test/invoke_result'
 
 module Cucumber
   module Core
@@ -21,8 +22,13 @@ module Cucumber
 
         def execute(*args)
           @timer.start
-          @block.call(*args)
-          passed
+          invoke_result = @block.call(*args)
+
+          case invoke_result
+          when PassedInvokeResult; then passed(invoke_result.embeddings)
+          when FailedInvokeResult; then failed(invoke_result.exception, invoke_result.embeddings)
+          else passed
+          end
         rescue Result::Raisable => exception
           exception.with_duration(@timer.duration)
         rescue Exception => exception
@@ -39,12 +45,12 @@ module Cucumber
 
         private
 
-        def passed
-          Result::Passed.new(@timer.duration)
+        def passed(embeddings = [])
+          Result::Passed.new(@timer.duration, embeddings)
         end
 
-        def failed(exception)
-          Result::Failed.new(@timer.duration, exception)
+        def failed(exception, embeddings = [])
+          Result::Failed.new(@timer.duration, exception, embeddings)
         end
 
         def skipped

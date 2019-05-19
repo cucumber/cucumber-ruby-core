@@ -54,14 +54,16 @@ module Cucumber
         class Passed
           include Result.query_methods :passed
           attr_accessor :duration
+          attr_reader :embeddings
 
           def self.ok?(be_strict = false)
             true
           end
 
-          def initialize(duration)
+          def initialize(duration, embeddings = [])
             raise ArgumentError unless duration
             @duration = duration
+            @embeddings = embeddings
           end
 
           def describe_to(visitor, *args)
@@ -98,16 +100,18 @@ module Cucumber
           include Result.query_methods :failed
 
           attr_reader :duration, :exception
+          attr_reader :embeddings
 
           def self.ok?(be_strict = false)
             false
           end
 
-          def initialize(duration, exception)
+          def initialize(duration, exception, embeddings = [])
             raise ArgumentError unless duration
             raise ArgumentError unless exception
             @duration = duration
             @exception = exception
+            @embeddings = embeddings
           end
 
           def describe_to(visitor, *args)
@@ -140,7 +144,7 @@ module Cucumber
           end
 
           def with_duration(new_duration)
-            self.class.new(new_duration, exception)
+            self.class.new(new_duration, exception, embeddings)
           end
 
           def with_appended_backtrace(step)
@@ -149,7 +153,7 @@ module Cucumber
           end
 
           def with_filtered_backtrace(filter)
-            self.class.new(duration, filter.new(exception.dup).exception)
+            self.class.new(duration, filter.new(exception.dup).exception, embeddings)
           end
         end
 

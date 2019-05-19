@@ -10,8 +10,11 @@ module Cucumber::Core::Test
     let(:args)    { double('args')    }
 
     describe Result::Passed do
-      subject(:result) { Result::Passed.new(duration) }
+      subject(:result) { Result::Passed.new(duration, embeddings) }
       let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
+      let(:embedding1) { {'src' => 'src1', 'mime_type' => 'mime_type1', 'label' => 'label1'} }
+      let(:embedding2) { {'src' => 'src2', 'mime_type' => 'mime_type2', 'label' => 'label2'} }
+      let(:embeddings) { [embedding1, embedding2] }
 
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:passed).with(args)
@@ -32,7 +35,11 @@ module Cucumber::Core::Test
         expect( result.duration ).to eq duration
       end
 
-      it "requires the constructor argument" do
+      it "has embeddings" do
+        expect( result.embeddings ).to eq embeddings
+      end
+
+      it "requires the first constructor argument" do
         expect { Result::Passed.new }.to raise_error(ArgumentError)
       end
 
@@ -58,9 +65,12 @@ module Cucumber::Core::Test
     end
 
     describe Result::Failed do
-      subject(:result) { Result::Failed.new(duration, exception) }
+      subject(:result) { Result::Failed.new(duration, exception, embeddings) }
       let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
       let(:exception)  { StandardError.new("error message") }
+      let(:embedding1) { {'src' => 'src1', 'mime_type' => 'mime_type1', 'label' => 'label1'} }
+      let(:embedding2) { {'src' => 'src2', 'mime_type' => 'mime_type2', 'label' => 'label2'} }
+      let(:embeddings) { [embedding1, embedding2] }
 
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:failed).with(args)
@@ -76,6 +86,10 @@ module Cucumber::Core::Test
       it "converts to a Cucumber::Message::TestResult" do
         message = result.to_message
         expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::FAILED)
+      end
+
+      it "has embeddings" do
+        expect( result.embeddings ).to eq embeddings
       end
 
       it "requires both constructor arguments" do
