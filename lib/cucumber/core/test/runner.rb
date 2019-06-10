@@ -90,6 +90,10 @@ module Cucumber
             self
           end
 
+          def embed(*)
+            self
+          end
+
           attr_reader :status
           private :status
 

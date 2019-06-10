@@ -69,6 +69,7 @@ module Cucumber
           def describe_to(visitor, *args)
             visitor.passed(*args)
             visitor.duration(duration, *args)
+            @embeddings.each { |e| visitor.embed(e['src'], e['mime_type'], e['label']) }
             self
           end
 
@@ -118,6 +119,7 @@ module Cucumber
             visitor.failed(*args)
             visitor.duration(duration, *args)
             visitor.exception(exception, *args) if exception
+            @embeddings.each { |e| visitor.embed(e['src'], e['mime_type'], e['label']) }
             self
           end
 
@@ -368,6 +370,10 @@ module Cucumber
 
           def duration(duration)
             @durations << duration
+            self
+          end
+
+          def embed(*)
             self
           end
 

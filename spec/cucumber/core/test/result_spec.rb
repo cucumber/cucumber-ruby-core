@@ -19,6 +19,8 @@ module Cucumber::Core::Test
       it "describes itself to a visitor" do
         expect( visitor ).to receive(:passed).with(args)
         expect( visitor ).to receive(:duration).with(duration, args)
+        expect( visitor ).to receive(:embed).with(embedding1['src'], embedding1['mime_type'], embedding1['label']).ordered
+        expect( visitor ).to receive(:embed).with(embedding2['src'], embedding2['mime_type'], embedding2['label']).ordered
         result.describe_to(visitor, args)
       end
 
@@ -76,6 +78,8 @@ module Cucumber::Core::Test
         expect( visitor ).to receive(:failed).with(args)
         expect( visitor ).to receive(:duration).with(duration, args)
         expect( visitor ).to receive(:exception).with(exception, args)
+        expect( visitor ).to receive(:embed).with(embedding1['src'], embedding1['mime_type'], embedding1['label']).ordered
+        expect( visitor ).to receive(:embed).with(embedding2['src'], embedding2['mime_type'], embedding2['label']).ordered
         result.describe_to(visitor, args)
       end
 
