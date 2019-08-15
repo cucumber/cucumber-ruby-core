@@ -26,15 +26,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'cucumber-tag_expressions', '~> 2.0', '>= 2.0.2'
   s.add_dependency 'backports', '~> 3.15', '>= 3.15.0'
 
-  s.add_development_dependency 'bundler', '>= 1.16.0'
-  s.add_development_dependency 'rake',      '>= 0.9.2'
-  s.add_development_dependency 'rspec',     '~> 3.6'
-  s.add_development_dependency 'unindent',  '>= 1.0'
-  s.add_development_dependency 'kramdown',  '~> 1.4.2'
-  s.add_development_dependency 'yard'
-
-  # For coverage reports
-  s.add_development_dependency 'coveralls', '~> 0.7'
+  s.add_development_dependency 'bundler', '~> 2.0', '>= 2.0.2'
+  s.add_development_dependency 'rake', '~> 12.3', '>= 12.3.3'
+  s.add_development_dependency 'rspec', '~> 3.8', '>= 3.8.0'
+  s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
   s.rubygems_version = ">= 1.6.1"
   s.test_files            = Dir[
