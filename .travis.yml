@@ -15,8 +15,3 @@ matrix:
     - rvm: jruby-9.2.7.0
 
   fast_finish: true
-
-# whitelist
-branches:
-  only:
-    - master
