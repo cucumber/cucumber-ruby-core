@@ -45,20 +45,22 @@ module Cucumber
       end
 
       def create_multiline_arg(pickle_step, uri)
-        if !pickle_step.doc_string.nil?
-          argument = pickle_step.doc_string
-          Test::DocString.new(
-            argument.content,
-            argument.contentType,
-            Test::Location.new(uri, argument.location.line)
-          )
-        elsif !pickle_step.data_table.nil?
-          argument = pickle_step.data_table
-          first_cell = argument.rows.first.cells.first
-          Test::DataTable.new(
-            argument.rows.map { |row| row.cells.map { |cell| cell.value } },
-            Test::Location.new(uri, first_cell.location.line)
-          )
+        if pickle_step.argument
+          if pickle_step.argument.doc_string
+            doc_string = pickle_step.argument.doc_string
+            Test::DocString.new(
+              doc_string.content,
+              doc_string.contentType,
+              Test::Location.new(uri, doc_string.location.line)
+            )
+          elsif pickle_step.argument.data_table
+            data_table = pickle_step.argument.data_table
+            first_cell = data_table.rows.first.cells.first
+            Test::DataTable.new(
+              data_table.rows.map { |row| row.cells.map { |cell| cell.value } },
+              Test::Location.new(uri, first_cell.location.line)
+            )
+          end
         else
           Test::EmptyMultilineArgument.new
         end
