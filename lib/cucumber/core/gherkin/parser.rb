@@ -23,13 +23,12 @@ module Cucumber
             elsif !message.pickle.nil?
               receiver.pickle(message.pickle)
             elsif !message.attachment.nil?
-              raise message.attachment.data
+              # Parse error
+              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.data}")
             else
               raise "Unknown message: #{message.to_hash}"
             end
           end
-        rescue RuntimeError => e
-          raise Core::Gherkin::ParseError.new("#{document.uri}: #{e.message}")
         end
 
         def done
