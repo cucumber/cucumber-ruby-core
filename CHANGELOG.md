@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v4.0.0...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.0...master)
 
 ### Changed
 
@@ -21,6 +21,12 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Improved
 
 * N/A
+
+## [5.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v4.0.0...v5.0.0)
+
+### Changed
+
+* Update to use Gherkin v7
 
 ## [4.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v3.2.0...v4.0.0)
 
