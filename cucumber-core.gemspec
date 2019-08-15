@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'backports', '~> 3.15', '>= 3.15.0'
 
   s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.23'
-  s.add_development_dependency 'bundler', '~> 1.17', '>= 1.17.2'
+  s.add_development_dependency 'bundler', '~> 1.16', '>= 1.16.2'
   s.add_development_dependency 'rake', '~> 12.3', '>= 12.3.3'
   s.add_development_dependency 'rspec', '~> 3.8', '>= 3.8.0'
   s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
