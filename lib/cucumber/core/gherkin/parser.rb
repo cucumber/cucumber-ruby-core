@@ -19,17 +19,16 @@ module Cucumber
           messages = ::Gherkin::Gherkin.from_source(document.uri, document.body, {default_dialect: document.language, include_source: false})
           messages.each do |message|
             if !message.gherkinDocument.nil?
-              event_bus.gherkin_source_parsed(message.gherkinDocument.to_hash)
+              event_bus.gherkin_source_parsed(message.gherkinDocument)
             elsif !message.pickle.nil?
-              receiver.pickle(message.pickle.to_hash)
+              receiver.pickle(message.pickle)
             elsif !message.attachment.nil?
-              raise message.attachment.data
+              # Parse error
+              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.data}")
             else
               raise "Unknown message: #{message.to_hash}"
             end
           end
-        rescue RuntimeError => e
-          raise Core::Gherkin::ParseError.new("#{document.uri}: #{e.message}")
         end
 
         def done
