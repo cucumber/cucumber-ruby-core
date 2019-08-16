@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.0...master)
+## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.1...master)
 
 ### Changed
 
@@ -21,6 +21,12 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Improved
 
 * N/A
+
+## [5.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.0...v5.0.1)
+
+### Removed
+
+* Remove support for ruby 2.2 and below. 2.3 or higher is required now. 
 
 ## [5.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v4.0.0...v5.0.0)
 
