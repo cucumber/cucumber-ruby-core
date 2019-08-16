@@ -7,5 +7,4 @@
 *.swo
 .ruby-version
 /doc
-.yardoc
 .bundle
