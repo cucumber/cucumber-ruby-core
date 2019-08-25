@@ -10,133 +10,206 @@ module Cucumber::Core::Test
     let(:args)    { double('args')    }
 
     describe Result::Passed do
-      subject(:result) { Result::Passed.new(duration, embeddings) }
-      let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
-      let(:embedding1) { {'src' => 'src1', 'mime_type' => 'mime_type1', 'label' => 'label1'} }
-      let(:embedding2) { {'src' => 'src2', 'mime_type' => 'mime_type2', 'label' => 'label2'} }
-      let(:embeddings) { [embedding1, embedding2] }
-
-      it "describes itself to a visitor" do
-        expect( visitor ).to receive(:passed).with(args)
-        expect( visitor ).to receive(:duration).with(duration, args)
-        expect( visitor ).to receive(:embed).with(embedding1['src'], embedding1['mime_type'], embedding1['label']).ordered
-        expect( visitor ).to receive(:embed).with(embedding2['src'], embedding2['mime_type'], embedding2['label']).ordered
-        result.describe_to(visitor, args)
-      end
-
-      it "converts to a string" do
-        expect( result.to_s ).to eq "✓"
-      end
-
-      it "converts to a Cucumber::Message::TestResult" do
-        message = result.to_message
-        expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::PASSED)
-      end
-
-      it "has a duration" do
-        expect( result.duration ).to eq duration
-      end
-
-      it "has embeddings" do
-        expect( result.embeddings ).to eq embeddings
-      end
-
       it "requires the first constructor argument" do
         expect { Result::Passed.new }.to raise_error(ArgumentError)
       end
 
-      it "does nothing when appending the backtrace" do
-        expect( result.with_appended_backtrace(double) ).to equal result
+      shared_examples "a Result::Passed object" do
+        it "describes itself to a visitor" do
+          expect( visitor ).to receive(:passed).with(args)
+          expect( visitor ).to receive(:duration).with(duration, args)
+          allow( visitor ).to receive(:embed) # Will be verified later
+          result.describe_to(visitor, args)
+        end
+
+        it "converts to a string" do
+          expect( result.to_s ).to eq "✓"
+        end
+
+        it "converts to a Cucumber::Message::TestResult" do
+          message = result.to_message
+          expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::PASSED)
+        end
+
+        it "has a duration" do
+          expect( result.duration ).to eq duration
+        end
+
+        it "does nothing when appending the backtrace" do
+          expect( result.with_appended_backtrace(double) ).to equal result
+        end
+
+        it "does nothing when filtering the backtrace" do
+          expect( result.with_filtered_backtrace(double) ).to equal result
+        end
+
+        specify { expect( result.to_sym ).to eq :passed }
+
+        specify { expect( result ).to     be_passed    }
+        specify { expect( result ).not_to be_failed    }
+        specify { expect( result ).not_to be_undefined }
+        specify { expect( result ).not_to be_unknown   }
+        specify { expect( result ).not_to be_skipped   }
+        specify { expect( result ).not_to be_flaky     }
+
+        specify { expect( result ).to be_ok }
+        specify { expect( result.ok? ).to be_truthy }
       end
 
-      it "does nothing when filtering the backtrace" do
-        expect( result.with_filtered_backtrace(double) ).to equal result
+      context "initialized without embeddings" do
+        let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
+        subject(:result) { Result::Passed.new(duration) }
+
+        include_examples "a Result::Passed object"
+
+        it "does not contain embeddings" do
+          expect( result.embeddings ).to be_empty
+        end
+
+        it "does not describe any embeddings to a visitor" do
+          # Already verified
+          allow( visitor ).to receive(:passed)
+          allow( visitor ).to receive(:duration)
+
+          expect( visitor ).not_to receive(:embed)
+          result.describe_to(visitor, args)
+        end
       end
 
-      specify { expect( result.to_sym ).to eq :passed }
+      context "initialized with embeddings" do
+        let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
+        let(:embedding1) { {'src' => 'src1', 'mime_type' => 'mime_type1', 'label' => 'label1'} }
+        let(:embedding2) { {'src' => 'src2', 'mime_type' => 'mime_type2', 'label' => 'label2'} }
+        let(:embeddings) { [embedding1, embedding2] }
+        subject(:result) { Result::Passed.new(duration, embeddings) }
 
-      specify { expect( result ).to     be_passed    }
-      specify { expect( result ).not_to be_failed    }
-      specify { expect( result ).not_to be_undefined }
-      specify { expect( result ).not_to be_unknown   }
-      specify { expect( result ).not_to be_skipped   }
-      specify { expect( result ).not_to be_flaky     }
+        include_examples "a Result::Passed object"
 
-      specify { expect( result ).to be_ok }
-      specify { expect( result.ok? ).to be_truthy }
+        it "contains embeddings" do
+          expect( result.embeddings ).to eq embeddings
+        end
+
+        it "describes its embeddings to a visitor" do
+          # Already verified
+          allow( visitor ).to receive(:passed)
+          allow( visitor ).to receive(:duration)
+
+          expect( visitor ).to receive(:embed).with(embedding1['src'], embedding1['mime_type'], embedding1['label']).ordered
+          expect( visitor ).to receive(:embed).with(embedding2['src'], embedding2['mime_type'], embedding2['label']).ordered
+          result.describe_to(visitor, args)
+        end
+      end
     end
 
     describe Result::Failed do
-      subject(:result) { Result::Failed.new(duration, exception, embeddings) }
-      let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
-      let(:exception)  { StandardError.new("error message") }
-      let(:embedding1) { {'src' => 'src1', 'mime_type' => 'mime_type1', 'label' => 'label1'} }
-      let(:embedding2) { {'src' => 'src2', 'mime_type' => 'mime_type2', 'label' => 'label2'} }
-      let(:embeddings) { [embedding1, embedding2] }
-
-      it "describes itself to a visitor" do
-        expect( visitor ).to receive(:failed).with(args)
-        expect( visitor ).to receive(:duration).with(duration, args)
-        expect( visitor ).to receive(:exception).with(exception, args)
-        expect( visitor ).to receive(:embed).with(embedding1['src'], embedding1['mime_type'], embedding1['label']).ordered
-        expect( visitor ).to receive(:embed).with(embedding2['src'], embedding2['mime_type'], embedding2['label']).ordered
-        result.describe_to(visitor, args)
-      end
-
-      it "has a duration" do
-        expect( result.duration ).to eq duration
-      end
-
-      it "converts to a Cucumber::Message::TestResult" do
-        message = result.to_message
-        expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::FAILED)
-      end
-
-      it "has embeddings" do
-        expect( result.embeddings ).to eq embeddings
-      end
-
       it "requires both constructor arguments" do
         expect { Result::Failed.new }.to raise_error(ArgumentError)
-        expect { Result::Failed.new(duration) }.to raise_error(ArgumentError)
+        expect { Result::Failed.new(Result::Duration.new(1)) }.to raise_error(ArgumentError)
       end
 
-      it "does nothing if step has no backtrace line" do
-        result.exception.set_backtrace("exception backtrace")
-        step = "does not respond_to?(:backtrace_line)"
+      shared_examples "a Result::Failed object" do
+        it "describes itself to a visitor" do
+          expect( visitor ).to receive(:failed).with(args)
+          expect( visitor ).to receive(:duration).with(duration, args)
+          expect( visitor ).to receive(:exception).with(exception, args)
+          allow( visitor ).to receive(:embed) # Will be verified later
+          result.describe_to(visitor, args)
+        end
 
-        expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(["exception backtrace"])
+        it "has a duration" do
+          expect( result.duration ).to eq duration
+        end
+
+        it "converts to a Cucumber::Message::TestResult" do
+          message = result.to_message
+          expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::FAILED)
+        end
+
+        it "does nothing if step has no backtrace line" do
+          result.exception.set_backtrace("exception backtrace")
+          step = "does not respond_to?(:backtrace_line)"
+
+          expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(["exception backtrace"])
+        end
+
+        it "appends the backtrace line of the step" do
+          result.exception.set_backtrace("exception backtrace")
+          step = double
+          expect( step ).to receive(:backtrace_line).and_return("step_line")
+
+          expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(["exception backtrace", "step_line"])
+        end
+
+        it "apply filters to the exception" do
+          filter_class = double
+          filter = double
+          filtered_exception = double
+          expect( filter_class ).to receive(:new).with(result.exception).and_return(filter)
+          expect( filter ).to receive(:exception).and_return(filtered_exception)
+
+          expect( result.with_filtered_backtrace(filter_class).exception ).to equal filtered_exception
+        end
+
+        specify { expect( result.to_sym ).to eq :failed }
+
+        specify { expect( result ).not_to be_passed    }
+        specify { expect( result ).to     be_failed    }
+        specify { expect( result ).not_to be_undefined }
+        specify { expect( result ).not_to be_unknown   }
+        specify { expect( result ).not_to be_skipped   }
+        specify { expect( result ).not_to be_flaky     }
+
+        specify { expect( result ).to_not be_ok }
+        specify { expect( result.ok? ).to be_falsey }
       end
 
-      it "appends the backtrace line of the step" do
-        result.exception.set_backtrace("exception backtrace")
-        step = double
-        expect( step ).to receive(:backtrace_line).and_return("step_line")
+      context "initialized without embeddings" do
+        let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
+        let(:exception)  { StandardError.new("error message") }
+        subject(:result) { Result::Failed.new(duration, exception) }
 
-        expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(["exception backtrace", "step_line"])
+        include_examples "a Result::Failed object"
+
+        it "does not contain embeddings" do
+          expect( result.embeddings ).to be_empty
+        end
+
+        it "does not describe any embeddings to a visitor" do
+          # Already verified
+          allow( visitor ).to receive(:failed)
+          allow( visitor ).to receive(:duration)
+          allow( visitor ).to receive(:exception)
+
+          expect( visitor ).not_to receive(:embed)
+          result.describe_to(visitor, args)
+        end
       end
 
-      it "apply filters to the exception" do
-        filter_class = double
-        filter = double
-        filtered_exception = double
-        expect( filter_class ).to receive(:new).with(result.exception).and_return(filter)
-        expect( filter ).to receive(:exception).and_return(filtered_exception)
+      context "initialized with embeddings" do
+        let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
+        let(:exception)  { StandardError.new("error message") }
+        let(:embedding1) { {'src' => 'src1', 'mime_type' => 'mime_type1', 'label' => 'label1'} }
+        let(:embedding2) { {'src' => 'src2', 'mime_type' => 'mime_type2', 'label' => 'label2'} }
+        let(:embeddings) { [embedding1, embedding2] }
+        subject(:result) { Result::Failed.new(duration, exception, embeddings) }
 
-        expect( result.with_filtered_backtrace(filter_class).exception ).to equal filtered_exception
+        include_examples "a Result::Failed object"
+
+        it "contains embeddings" do
+          expect( result.embeddings ).to eq embeddings
+        end
+
+        it "describes its embeddings to a visitor" do
+          # Already verified
+          allow( visitor ).to receive(:failed)
+          allow( visitor ).to receive(:duration)
+          allow( visitor ).to receive(:exception)
+
+          expect( visitor ).to receive(:embed).with(embedding1['src'], embedding1['mime_type'], embedding1['label']).ordered
+          expect( visitor ).to receive(:embed).with(embedding2['src'], embedding2['mime_type'], embedding2['label']).ordered
+          result.describe_to(visitor, args)
+        end
       end
-
-      specify { expect( result.to_sym ).to eq :failed }
-
-      specify { expect( result ).not_to be_passed    }
-      specify { expect( result ).to     be_failed    }
-      specify { expect( result ).not_to be_undefined }
-      specify { expect( result ).not_to be_unknown   }
-      specify { expect( result ).not_to be_skipped   }
-      specify { expect( result ).not_to be_flaky     }
-
-      specify { expect( result ).to_not be_ok }
-      specify { expect( result.ok? ).to be_falsey }
     end
 
     describe Result::Unknown do
