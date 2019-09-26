@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require 'gherkin/gherkin'
+require 'gherkin'
 
 module Cucumber
   module Core
@@ -16,7 +16,7 @@ module Cucumber
         end
 
         def document(document)
-          messages = ::Gherkin::Gherkin.from_source(document.uri, document.body, {default_dialect: document.language, include_source: false})
+          messages = ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
           messages.each do |message|
             if !message.gherkinDocument.nil?
               event_bus.gherkin_source_parsed(message.gherkinDocument)
@@ -29,6 +29,15 @@ module Cucumber
               raise "Unknown message: #{message.to_hash}"
             end
           end
+        end
+
+        def gherkin_options(document)
+          {
+            default_dialect: document.language,
+            include_source: false,
+            include_gherkin_document: true,
+            include_pickles: true
+          }
         end
 
         def done
