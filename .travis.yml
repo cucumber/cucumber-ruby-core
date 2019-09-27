@@ -3,17 +3,17 @@ language: ruby
 matrix:
   include:
     - rvm: ruby-head
-      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby" CUCUMBER_MESSAGES_RUBY_REPO="https://github.com/cucumber/cucumber-messages-ruby.git"
+      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby"
     - rvm: 2.6
-      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby" CUCUMBER_MESSAGES_RUBY_REPO="https://github.com/cucumber/cucumber-messages-ruby.git"
+      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby"
     - rvm: 2.5
-      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby" CUCUMBER_MESSAGES_RUBY_REPO="https://github.com/cucumber/cucumber-messages-ruby.git"
+      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby"
     - rvm: 2.4
-      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby" CUCUMBER_MESSAGES_RUBY_REPO="https://github.com/cucumber/cucumber-messages-ruby.git"
+      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby"
     - rvm: 2.3
-      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby" CUCUMBER_MESSAGES_RUBY_REPO="https://github.com/cucumber/cucumber-messages-ruby.git"
+      env: GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby"
     - rvm: jruby-9.2.8.0
-      env: JRUBY_OPTS="--debug" LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby" CUCUMBER_MESSAGES_RUBY_REPO="https://github.com/cucumber/cucumber-messages-ruby.git"
+      env: JRUBY_OPTS="--debug" LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 GHERKIN_RUBY_REPO="https://github.com/cucumber/gherkin-ruby"
   allow_failures:
     - rvm: ruby-head
     # https://github.com/cucumber/cucumber-ruby/issues/1336
