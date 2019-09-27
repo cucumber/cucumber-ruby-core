@@ -1,15 +1,15 @@
 source "https://rubygems.org"
 
 if ENV['GHERKIN_RUBY_REPO']
-  gem 'gherkin', git: ENV['GHERKIN_RUBY_REPO'] if ENV['GHERKIN_RUBY_REPO']
-else
-  gem 'gherkin', path: ENV['GHERKIN_RUBY'] if ENV['GHERKIN_RUBY']
+  gem 'gherkin', git: ENV['GHERKIN_RUBY_REPO']
+elsif ENV['GHERKIN_RUBY']
+  gem 'gherkin', path: ENV['GHERKIN_RUBY']
 end
 
 if ENV['CUCUMBER_MESSAGES_RUBY_REPO']
-  gem 'cucumber-messages', git: ENV['CUCUMBER_MESSAGES_RUBY_REPO'] if ENV['CUCUMBER_MESSAGES_RUBY_REPO']
-else
-  gem 'cucumber-messages', path: ENV['CUCUMBER_MESSAGES_RUBY'] if ENV['CUCUMBER_MESSAGES_RUBY']
+  gem 'cucumber-messages', git: ENV['CUCUMBER_MESSAGES_RUBY_REPO']
+elsif ENV['CUCUMBER_MESSAGES_RUBY']
+  gem 'cucumber-messages', path: ENV['CUCUMBER_MESSAGES_RUBY']
 end
 
 
