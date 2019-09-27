@@ -1,5 +1,9 @@
 language: ruby
 
+env:
+  - GHERKIN_RUBY_REPO: https://github.com/cucumber/gherkin-ruby
+  - CUCUMBER_MESSAGES_RUBY_REPO: https://github.com/cucumber/cucumber-messages-ruby.git
+
 matrix:
   include:
     - rvm: ruby-head
