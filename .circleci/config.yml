@@ -8,7 +8,7 @@ commands:
       - checkout
       - restore_cache:
           keys:
-          - bundle-{{ checksum "cucumber.gemspec" }}
+          - bundle-{{ checksum "cucumber-core.gemspec" }}
       - run:
           name: install dependencies
           command: |
@@ -16,7 +16,7 @@ commands:
       - save_cache:
           paths:
             - ./vendor/bundle
-          key: bundle-{{ checksum "cucumber.gemspec" }}
+          key: bundle-{{ checksum "cucumber-core.gemspec" }}
 
   test:
     description: "Run tests"
