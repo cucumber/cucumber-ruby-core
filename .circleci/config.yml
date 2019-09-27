@@ -1,7 +1,7 @@
 version: 2.1
 
 commands:
-  build_and_test:
+  build:
     description: "Build and run the tests"
 
     steps:
@@ -11,10 +11,23 @@ commands:
           command: |
             bundle install --jobs=4 --retry=3 --path vendor/bundle
 
+  test:
+    description: "Run tests"
+    steps:
       - run:
           name: run tests
           command: |
             bundle exec rspec
+
+  test_allow_failure:
+    description: "Run tests (allow failure so workflow is not marked as failed)"
+    steps:
+      - run:
+          name: run tests with allowed failure
+          command: |
+            set -o errexit
+            bundle exec rspec
+            set -o errexit
 
   export_jruby_env:
     description: "Export needed ENV for JRuby"
@@ -35,7 +48,8 @@ jobs:
 
     working_directory: ~/repo
     steps:
-      - build_and_test
+      - build
+      - test
 
   build-ruby-2_4:
     docker:
@@ -43,7 +57,8 @@ jobs:
 
     working_directory: ~/repo
     steps:
-      - build_and_test
+      - build
+      - test
 
   build-ruby-2_5:
     docker:
@@ -51,7 +66,8 @@ jobs:
 
     working_directory: ~/repo
     steps:
-      - build_and_test
+      - build
+      - test
 
   build-ruby-2_6:
     docker:
@@ -59,7 +75,8 @@ jobs:
 
     working_directory: ~/repo
     steps:
-      - build_and_test
+      - build
+      - test
 
   build-jruby:
     docker:
@@ -68,7 +85,8 @@ jobs:
     working_directory: ~/repo
     steps:
       - export_jruby_env
-      - build_and_test
+      - build
+      - test_allow_failure
 
   build-ruby-latest:
     docker:
@@ -76,7 +94,8 @@ jobs:
 
     working_directory: ~/repo
     steps:
-      - build_and_test
+      - build
+      - test_allow_failure
 
 workflows:
   version: 2
