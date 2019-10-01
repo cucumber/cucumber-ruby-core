@@ -100,7 +100,8 @@ module Cucumber::Core::Test
 
       context "when the location is neither below pwd nor in an installed gem" do
         it "use the absolute path to the file" do
-          # Use File.expand on expectation to ensure cross-platform tests
+          # Use File.expand on expectation to ensure tests work on multiple platform.
+          # On Windows, it will return "C:/path/file.rb" as an absolute path while it will return "/path/file.rb" on Linux.
           expect( Location.from_source_location("/path/file.rb", 1).file ).to eq File.expand_path("/path/file.rb")
         end
       end
