@@ -1,0 +1,119 @@
+version: 2.1
+
+commands:
+  build:
+    description: "Build and run the tests"
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - bundle-{{ checksum "cucumber-core.gemspec" }}
+      - run:
+          name: install dependencies
+          command: |
+            bundle install --jobs=4 --retry=3 --path vendor/bundle
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: bundle-{{ checksum "cucumber-core.gemspec" }}
+
+  test:
+    description: "Run tests"
+    steps:
+      - run:
+          name: run tests
+          command: |
+            bundle exec rspec
+
+  test_allow_failure:
+    description: "Run tests (allow failure so workflow is not marked as failed)"
+    steps:
+      - run:
+          name: run tests with allowed failure
+          command: |
+            set -o errexit
+            bundle exec rspec
+            set -o errexit
+
+  export_jruby_env:
+    description: "Export needed ENV for JRuby"
+
+    steps:
+      - run:
+          name: "Export JRurby ENV"
+          command: |
+            export JRUBY_OPTS="--debug"
+            export LC_ALL=en_US.UTF-8
+            export LANG=en_US.UTF-8
+            export LANGUAGE=en_US.UTF-8
+
+jobs:
+  build-ruby-2_3:
+    docker:
+      - image: circleci/ruby:2.3.8
+
+    working_directory: ~/repo
+    steps:
+      - build
+      - test
+
+  build-ruby-2_4:
+    docker:
+      - image: circleci/ruby:2.4.5
+
+    working_directory: ~/repo
+    steps:
+      - build
+      - test
+
+  build-ruby-2_5:
+    docker:
+      - image: circleci/ruby:2.5.5
+
+    working_directory: ~/repo
+    steps:
+      - build
+      - test
+
+  build-ruby-2_6:
+    docker:
+      - image: circleci/ruby:2.6.4
+
+    working_directory: ~/repo
+    steps:
+      - build
+      - test
+
+  build-jruby:
+    docker:
+      - image: circleci/jruby:9.2.8.0
+
+    working_directory: ~/repo
+    steps:
+      - export_jruby_env
+      - build
+      - test_allow_failure
+
+  build-ruby-latest:
+    docker:
+      - image: circleci/ruby:latest
+
+    working_directory: ~/repo
+    steps:
+      - build
+      - test_allow_failure
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-ruby-2_3
+      - build-ruby-2_4
+      - build-ruby-2_5
+      - build-ruby-2_6
+      - build-ruby-latest
+      - build-jruby
+
+
+
