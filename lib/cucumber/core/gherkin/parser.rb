@@ -38,7 +38,7 @@ module Cucumber
             include_gherkin_document: true,
             include_pickles: true
           }
-         end
+        end
 
         def done
           receiver.done
