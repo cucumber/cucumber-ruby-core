@@ -92,7 +92,7 @@ module Cucumber
         context "when scenario is inside a rule" do
           source do
             feature do
-              rule description: "My castle, my rules" do
+              rule do
                 scenario name: "My scenario"
               end
             end
@@ -107,7 +107,7 @@ module Cucumber
         context "when example is inside a rule" do
           source do
             feature do
-              rule description: "My castle, my rules" do
+              rule do
                 example name: "My example"
               end
             end
