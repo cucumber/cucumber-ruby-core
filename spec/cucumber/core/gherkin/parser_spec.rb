@@ -92,10 +92,8 @@ module Cucumber
         context "when scenario is inside a rule" do
           source do
             feature do
-              rule do
-                scenario do
-                  step 'text'
-                end
+              rule description: "My castle, my rules" do
+                scenario name: "My scenario"
               end
             end
           end
@@ -106,16 +104,31 @@ module Cucumber
           end
         end
 
-        context "when there are multiple rules and scenarios" do
+        context "when example is inside a rule" do
           source do
             feature do
-              rule do
-                scenario do
+              rule description: "My castle, my rules" do
+                example name: "My example"
+              end
+            end
+          end
+
+          it "passes on the pickle" do
+            expect( receiver ).to receive(:pickle)
+            parse
+          end
+        end
+
+        context "when there are multiple rules and scenarios or examples" do
+          source do
+            feature do
+              rule description: "First rule" do
+                scenario name: "Do not talk about the fight club" do
                   step 'text'
                 end
               end
-              rule do
-                scenario do
+              rule description: "Second rule"do
+                example name: "Do not talk about the fight club" do
                   step 'text'
                 end
               end

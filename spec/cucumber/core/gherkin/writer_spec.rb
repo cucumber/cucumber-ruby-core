@@ -233,27 +233,6 @@ module Cucumber::Core::Gherkin
           end
         end
       end
-
-      context 'with rules' do
-        xit 'can have a description' do
-          source = gherkin do
-            feature do
-              rule name: "Simple", description: "My castle, my rule" do
-                scenario name: "My scenario"
-              end
-            end
-          end
-
-          expect( source.body ).to eq <<-END.unindent
-          Feature:
-
-            Rule: Simple
-              My castle, my rules
-
-              Scenario: My scenario
-          END
-        end
-      end
     end
 
     it 'generates a complex feature' do

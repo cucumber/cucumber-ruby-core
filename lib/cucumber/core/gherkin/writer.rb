@@ -85,7 +85,10 @@ module Cucumber
 
           private
           def statements
-            prepare_statements comments_statement, tag_statement, name_statement, description_statement
+            prepare_statements comments_statement,
+              tag_statement,
+              name_statement,
+              description_statement
           end
         end
 
@@ -97,13 +100,14 @@ module Cucumber
 
           default_keyword 'Rule'
 
-          elements :scenario
+          elements :example, :scenario
 
           private
           def statements
             prepare_statements comments_statement,
               name_statement,
-              description_statement
+              description_statement,
+              NEW_LINE
           end
         end
 
@@ -124,6 +128,12 @@ module Cucumber
               name_statement,
               description_statement
           end
+        end
+
+        class Example < Scenario
+          include Indentation.level 4
+
+          default_keyword 'Example'
         end
 
         class ScenarioOutline
