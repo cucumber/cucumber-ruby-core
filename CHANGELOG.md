@@ -4,29 +4,13 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Changed
 
-* N/A
-
-### Added
-
-* N/A
-
-### Fixed
-
-* N/A
-
-### Removed
-
-* N/A
-
-### Improved
-
-* N/A
+* Update to use Gherkin v8
 
 ## [5.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.0...v5.0.1)
 
 ### Removed
 
-* Remove support for ruby 2.2 and below. 2.3 or higher is required now. 
+* Remove support for ruby 2.2 and below. 2.3 or higher is required now.
 
 ## [5.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v4.0.0...v5.0.0)
 
