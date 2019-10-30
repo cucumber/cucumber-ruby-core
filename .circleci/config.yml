@@ -24,7 +24,7 @@ commands:
       - run:
           name: run tests
           command: |
-            bundle exec rspec
+            bundle exec rake
 
   test_allow_failure:
     description: "Run tests (allow failure so workflow is not marked as failed)"
@@ -33,7 +33,7 @@ commands:
           name: run tests with allowed failure
           command: |
             set -o errexit
-            bundle exec rspec
+            bundle exec rake
             set -o errexit
 
   export_jruby_env:
@@ -106,6 +106,22 @@ jobs:
 
 workflows:
   version: 2
+
+  nightly-build:
+    triggers:
+      - schedule:
+          cron: "0 5 * * *"
+          filters:
+            branches:
+              only:
+                - master
+
+    jobs:
+      - build-ruby-2_3
+      - build-ruby-2_4
+      - build-ruby-2_5
+      - build-ruby-2_6
+
   build:
     jobs:
       - build-ruby-2_3
