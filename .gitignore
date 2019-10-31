@@ -8,3 +8,4 @@
 .ruby-version
 /doc
 .bundle
+vendor/

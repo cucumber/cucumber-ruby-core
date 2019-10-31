@@ -6,7 +6,7 @@ module CaptureWarnings
   def report_warnings(&block)
     current_dir = Dir.pwd
     warnings, errors = capture_error(&block).partition { |line| line.include?('warning') }
-    project_warnings, other_warnings = warnings.uniq.partition { |line| line.include?(current_dir) }
+    project_warnings, other_warnings = warnings.uniq.partition { |line| line.include?(current_dir) && !line.include?('/vendor/') }
 
     if errors.any?
       puts errors.join("\n")
