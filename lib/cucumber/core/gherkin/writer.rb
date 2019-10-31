@@ -48,7 +48,7 @@ module Cucumber
 
           default_keyword 'Feature'
 
-          elements :background, :scenario, :scenario_outline
+          elements :background, :rule, :scenario, :scenario_outline
 
           def build(source = [])
             elements.inject(source + statements) { |acc, el| el.build(acc) + [NEW_LINE] }
@@ -85,7 +85,29 @@ module Cucumber
 
           private
           def statements
-            prepare_statements comments_statement, tag_statement, name_statement, description_statement
+            prepare_statements comments_statement,
+              tag_statement,
+              name_statement,
+              description_statement
+          end
+        end
+
+        class Rule
+          include HasElements
+          include HasOptionsInitializer
+          include HasDescription
+          include Indentation.level 2
+
+          default_keyword 'Rule'
+
+          elements :example, :scenario
+
+          private
+          def statements
+            prepare_statements comments_statement,
+              name_statement,
+              description_statement,
+              NEW_LINE
           end
         end
 
@@ -106,6 +128,12 @@ module Cucumber
               name_statement,
               description_statement
           end
+        end
+
+        class Example < Scenario
+          include Indentation.level 4
+
+          default_keyword 'Example'
         end
 
         class ScenarioOutline
