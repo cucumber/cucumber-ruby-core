@@ -21,7 +21,8 @@ module Cucumber
             if !message.gherkinDocument.nil?
               event_bus.gherkin_source_parsed(message.gherkinDocument)
             elsif !message.pickle.nil?
-              receiver.pickle(message.pickle)
+              test_case = receiver.pickle(message.pickle)
+              event_bus.pickle(message.pickle, test_case)
             elsif !message.attachment.nil?
               # Parse error
               raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.data}")

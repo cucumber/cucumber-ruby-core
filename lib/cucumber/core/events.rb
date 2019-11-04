@@ -12,6 +12,15 @@ module Cucumber
 
       end
 
+      # Signals a Pickle has been computed from a Gherkin document
+      class Pickle < Core::Event.new(:pickle, :test_case)
+        # @return Cucumber::Messages::Pickle, the parsed pickle.
+        attr_reader :pickle
+
+        # The {Test::Case} associated to the Pickle
+        attr_reader :test_case
+      end
+
       # Signals that a {Test::Case} is about to be executed
       class TestCaseStarted < Event.new(:test_case)
 
@@ -20,7 +29,7 @@ module Cucumber
 
       end
 
-      # Signals that a {Test::Step} is about to be executed
+      # Signals that a {Test::Step} is about to be executed
       class TestStepStarted < Event.new(:test_step)
 
         # @return [Test::Step] the test step to be executed
@@ -56,6 +65,7 @@ module Cucumber
       def self.registry
         build_registry(
           GherkinSourceParsed,
+          Pickle,
           TestCaseStarted,
           TestStepStarted,
           TestStepFinished,
