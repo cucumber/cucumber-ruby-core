@@ -18,8 +18,8 @@ module Cucumber
         @receiver = receiver
       end
 
-      def pickle(pickle)
-        test_case = create_test_case(pickle)
+      def pickle(pickle, location_query)
+        test_case = create_test_case(pickle, location_query)
         test_case.describe_to(receiver)
       end
 
@@ -30,35 +30,50 @@ module Cucumber
 
       private
 
-      def create_test_case(pickle)
+      def create_test_case(pickle, location_query)
         uri = pickle.uri
-        test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
-        lines = pickle.locations.map { |location| location.line }.sort.reverse
-        tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, tag.location.line), tag.name) }
+        test_steps = pickle.steps.map { |step| create_test_step(step, uri, location_query) }
+
+        lines = location_query.pickle_locations(pickle).map do |location|
+          location.line
+        end.sort.reverse
+
+        tags = pickle.tags.map do |tag|
+          Test::Tag.new(
+            Test::Location.new(uri, location_query.pickle_tag_location(tag).line),
+            tag.name
+          )
+        end
+
         Test::Case.new(pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
       end
 
-      def create_test_step(pickle_step, uri)
-        lines = pickle_step.locations.map { |location| location.line }.sort.reverse
-        multiline_arg = create_multiline_arg(pickle_step, uri)
+      def create_test_step(pickle_step, uri, location_query)
+        lines = location_query.pickle_step_locations(pickle_step).map do |location|
+          location.line
+        end.sort.reverse
+
+        multiline_arg = create_multiline_arg(pickle_step, uri, location_query)
         Test::Step.new(pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
       end
 
-      def create_multiline_arg(pickle_step, uri)
+      def create_multiline_arg(pickle_step, uri, location_query)
+        argumentLocation = location_query.pickle_step_argument_location(pickle_step)
+        line = argumentLocation ? argumentLocation.line : 0
+
         if pickle_step.argument
           if pickle_step.argument.doc_string
             doc_string = pickle_step.argument.doc_string
             Test::DocString.new(
               doc_string.content,
               doc_string.contentType,
-              Test::Location.new(uri, doc_string.location.line)
+              Test::Location.new(uri, line)
             )
           elsif pickle_step.argument.data_table
             data_table = pickle_step.argument.data_table
-            first_cell = data_table.rows.first.cells.first
             Test::DataTable.new(
               data_table.rows.map { |row| row.cells.map { |cell| cell.value } },
-              Test::Location.new(uri, first_cell.location.line)
+              Test::Location.new(uri, line)
             )
           end
         else

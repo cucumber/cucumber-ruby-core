@@ -19,23 +19,29 @@ module Cucumber
         end
 
         def pickle_locations(pickle)
-          scenario = scenario_by_id[pickle.sourceIds[0]]
-          table_row = table_row_by_id[pickle.sourceIds[1]]
-          locations = []
-
-          locations << scenario.location if scenario
-          locations << table_row.location if table_row
-          locations
+          [
+            scenario_by_id[pickle.sourceIds[0]],
+            table_row_by_id[pickle.sourceIds[1]]
+          ].compact.map(&:location)
         end
 
         def pickle_step_locations(pickle_step)
-          scenario_step = scenario_step_by_id[pickle_step.sourceIds[0]]
-          table_row = table_row_by_id[pickle_step.sourceIds[1]]
-          locations = []
+          [
+            scenario_step_by_id[pickle_step.sourceIds[0]],
+            table_row_by_id[pickle_step.sourceIds[1]]
+          ].compact.map(&:location)
+        end
 
-          locations << scenario_step.location if scenario_step
-          locations << table_row.location if table_row
-          locations
+        def pickle_step_argument_location(pickle_step)
+          scenario_step = scenario_step_by_id[pickle_step.sourceIds[0]]
+          if scenario_step
+            case scenario_step.argument
+            when :doc_string
+              return scenario_step.doc_string.location
+            when :data_table
+              return scenario_step.data_table.location
+            end
+          end
         end
 
         def pickle_tag_location(pickle_tag)
@@ -54,7 +60,7 @@ module Cucumber
         def process_children(children)
           children.each do |children|
             process_scenario(children.scenario) if children.scenario
-            process_children(children.rule.children) if children.rule
+            process_children(children.rule.children) if children.respond_to?(:rule) && children.rule
           end
         end
 

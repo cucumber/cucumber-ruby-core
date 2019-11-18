@@ -98,6 +98,51 @@ module Cucumber
           end
         end
 
+        describe 'pickle_step_argument_location' do
+          let(:pickle_step) { pickle.steps.first }
+
+          context 'when there is a docstring argument' do
+            let(:content) {
+              <<-FEATURE
+                Feature: my simple feature
+
+                Scenario: A scenario
+                  Given a passed step
+                    """
+                    This is my DocString
+                    """
+                FEATURE
+            }
+
+            it 'returns the location of the doc string' do
+              expect(subject.pickle_step_argument_location(pickle_step).line).to eq(5)
+            end
+          end
+
+          context 'when there is a datatable argument' do
+            let(:content) {
+              <<-FEATURE
+                Feature: my simple feature
+
+                Scenario: A scenario
+                  Given a passed step
+                  | name | value |
+                  | plic | ploc  |
+                FEATURE
+            }
+
+            it 'returns the location of the datatable' do
+              expect(subject.pickle_step_argument_location(pickle_step).line).to eq(5)
+            end
+          end
+
+          context 'when there is no argument' do
+            it 'returns nil' do
+              expect(subject.pickle_step_argument_location(pickle_step)).to be_nil
+            end
+          end
+        end
+
         describe 'pickle_tag_location' do
           let(:content) {
             <<-FEATURE
