@@ -58,9 +58,9 @@ module Cucumber
         end
 
         def process_children(children)
-          children.each do |children|
-            process_scenario(children.scenario) if children.scenario
-            process_children(children.rule.children) if children.respond_to?(:rule) && children.rule
+          children.each do |child|
+            process_scenario(child.scenario) if child.scenario
+            process_children(child.rule.children) if child.respond_to?(:rule) && child.rule
           end
         end
 
