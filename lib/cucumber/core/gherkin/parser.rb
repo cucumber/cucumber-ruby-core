@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'gherkin'
+require 'cucumber/core/gherkin/location_query'
 
 module Cucumber
   module Core
@@ -13,15 +14,17 @@ module Cucumber
         def initialize(receiver, event_bus)
           @receiver = receiver
           @event_bus = event_bus
+          @location_query = LocationQuery.new
         end
 
         def document(document)
           messages = ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
           messages.each do |message|
+            @location_query.process(message)
             if !message.gherkinDocument.nil?
               event_bus.gherkin_source_parsed(message.gherkinDocument)
             elsif !message.pickle.nil?
-              test_case = receiver.pickle(message.pickle)
+              test_case =  receiver.pickle(message.pickle, @location_query)
               event_bus.pickle(message.pickle, test_case)
             elsif !message.attachment.nil?
               # Parse error

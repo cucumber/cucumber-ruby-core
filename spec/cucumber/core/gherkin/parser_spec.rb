@@ -70,7 +70,9 @@ module Cucumber
           end
 
           it "the pickles have the correct language" do
-            expect( receiver ).to receive(:pickle).with(pickle_with_language('ja'))
+            expect( receiver )
+              .to receive(:pickle)
+              .with(pickle_with_language('ja'), kind_of(LocationQuery))
             parse
           end
         end
