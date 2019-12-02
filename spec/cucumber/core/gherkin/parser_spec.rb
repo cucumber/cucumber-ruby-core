@@ -14,7 +14,7 @@ module Cucumber
 
         before do
           allow( event_bus ).to receive(:gherkin_source_parsed)
-          allow( event_bus ).to receive(:pickle)
+          allow( event_bus ).to receive(:envelope)
         end
 
         def parse
@@ -91,9 +91,10 @@ module Cucumber
             parse
           end
 
-          it "the pickle is sent through the event bus" do
+          it "passes the pickle through the envelope event" do
             expect( receiver ).to receive(:pickle)
-            expect( event_bus ).to receive(:pickle)
+            expect( event_bus ).to receive(:envelope)
+
             parse
           end
         end

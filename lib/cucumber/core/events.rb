@@ -5,20 +5,16 @@ module Cucumber
   module Core
     module Events
 
+      # Signals an envelope from Cucumber::Messages
+      class Envelope < Event.new(:gherkin_document)
+        attr_reader :envelope
+      end
+
       # Signals that a gherkin source has been parsed
       class GherkinSourceParsed < Event.new(:gherkin_document)
         # @return [GherkinDocument] the GherkinDocument Ast Node
         attr_reader :gherkin_document
 
-      end
-
-      # Signals a Pickle has been computed from a Gherkin document
-      class Pickle < Core::Event.new(:pickle, :test_case)
-        # @return Cucumber::Messages::Pickle, the parsed pickle.
-        attr_reader :pickle
-
-        # The {Test::Case} associated to the Pickle
-        attr_reader :test_case
       end
 
       # Signals that a {Test::Case} is about to be executed
@@ -64,8 +60,8 @@ module Cucumber
       # that will be used by the {EventBus} by default.
       def self.registry
         build_registry(
+          Envelope,
           GherkinSourceParsed,
-          Pickle,
           TestCaseStarted,
           TestStepStarted,
           TestStepFinished,

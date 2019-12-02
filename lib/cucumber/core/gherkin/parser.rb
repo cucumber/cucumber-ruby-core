@@ -23,9 +23,10 @@ module Cucumber
             @location_query.process(message)
             if !message.gherkinDocument.nil?
               event_bus.gherkin_source_parsed(message.gherkinDocument)
+              event_bus.envelope(message)
             elsif !message.pickle.nil?
-              test_case =  receiver.pickle(message.pickle, @location_query)
-              event_bus.pickle(message.pickle, test_case)
+              receiver.pickle(message.pickle, @location_query)
+              event_bus.envelope(message)
             elsif !message.attachment.nil?
               # Parse error
               raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.data}")
