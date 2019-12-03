@@ -11,9 +11,9 @@ module Cucumber
       class Step
         attr_reader :id, :text, :location, :multiline_arg
 
-        def initialize(text, location, multiline_arg, action)
+        def initialize(pickle_step_id, text, location, multiline_arg, action)
           raise ArgumentError if text.nil? || text.empty?
-
+          @pickle_step_id = pickle_step_id
           @id = SecureRandom.uuid
           @text = text
           @location = location
@@ -31,7 +31,8 @@ module Cucumber
 
         def to_message
           Cucumber::Messages::TestCase::TestStep.new(
-            id: @id
+            id: @id,
+            pickleStepId: @pickle_step_id
           )
         end
 
@@ -44,7 +45,7 @@ module Cucumber
         end
 
         def with_action(action_location = nil, &block)
-          self.class.new(text, location, multiline_arg, Test::Action.new(action_location, &block))
+          self.class.new(@pickle_step_id, text, location, multiline_arg, Test::Action.new(action_location, &block))
         end
 
         def backtrace_line
@@ -66,7 +67,7 @@ module Cucumber
 
       class HookStep < Step
         def initialize(text, location, action)
-          super(text, location, Test::EmptyMultilineArgument.new, action)
+          super(nil, text, location, Test::EmptyMultilineArgument.new, action)
         end
 
         def hook?

@@ -61,7 +61,13 @@ module Cucumber
         end.sort.reverse
 
         multiline_arg = create_multiline_arg(pickle_step, uri, location_query)
-        Test::Step.new(pickle_step.text, Test::Location.new(uri, lines), multiline_arg, nil)
+        Test::Step.new(
+          pickle_step.id,
+          pickle_step.text,
+          Test::Location.new(uri, lines),
+          multiline_arg,
+          nil
+        )
       end
 
       def create_multiline_arg(pickle_step, uri, location_query)
