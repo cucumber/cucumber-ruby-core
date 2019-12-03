@@ -6,6 +6,11 @@ module Cucumber::Core::Test
     let(:text) { 'step text' }
     let(:location) { double }
 
+    it 'has a unique id' do
+      test_step = Step.new(text, location)
+      expect(test_step.id).not_to be_nil
+    end
+
     describe "describing itself" do
       it "describes itself to a visitor" do
         visitor = double
@@ -82,6 +87,5 @@ module Cucumber::Core::Test
       test_step = Step.new(text, location)
       expect( test_step.to_s     ).to eq 'a passing step'
     end
-
   end
 end

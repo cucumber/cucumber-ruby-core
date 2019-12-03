@@ -68,6 +68,12 @@ module Cucumber
           end
         end
 
+        describe '#id' do
+          it "is generated on test case creation" do
+            expect( test_case.id ).not_to be_nil
+          end
+        end
+
         describe "matching tags" do
           let(:tags) { ['@a', '@b', '@c'].map { |value| Tag.new(location, value) } }
           it "matches tags using tag expressions" do

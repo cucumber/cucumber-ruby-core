@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'securerandom'
 require 'cucumber/core/test/result'
 require 'cucumber/tag_expressions'
 
@@ -7,10 +7,11 @@ module Cucumber
   module Core
     module Test
       class Case
-        attr_reader :name, :test_steps, :location, :tags, :language, :around_hooks
+        attr_reader :id, :name, :test_steps, :location, :tags, :language, :around_hooks
 
         def initialize(name, test_steps, location, tags, language, around_hooks = [])
           raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.is_a?(Array)
+          @id = SecureRandom.uuid
           @name = name
           @test_steps = test_steps
           @location = location
