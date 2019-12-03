@@ -23,6 +23,7 @@ module Cucumber
           p
         }
         let(:test_case) { Test::Case.new(
+          pickle.id,
           name,
           test_steps,
           location,
@@ -57,7 +58,7 @@ module Cucumber
             expect( first_hook ).to receive(:describe_to).ordered.and_yield
             expect( second_hook ).to receive(:describe_to).ordered.and_yield
             around_hooks = [first_hook, second_hook]
-            Test::Case.new(name, [], location, tags, language, around_hooks).describe_to(visitor, double)
+            Test::Case.new("pickle-id", name, [], location, tags, language, around_hooks).describe_to(visitor, double)
           end
 
         end

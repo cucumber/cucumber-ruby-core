@@ -9,9 +9,10 @@ module Cucumber
       class Case
         attr_reader :id, :name, :test_steps, :location, :tags, :language, :around_hooks
 
-        def initialize(name, test_steps, location, tags, language, around_hooks)
+        def initialize(pickle_id ,name, test_steps, location, tags, language, around_hooks)
           raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.is_a?(Array)
           @id = SecureRandom.uuid
+          @pickle_id = pickle_id
           @name = name
           @test_steps = test_steps
           @location = location
@@ -45,11 +46,11 @@ module Cucumber
         end
 
         def with_steps(test_steps)
-          self.class.new(name, test_steps, location, tags, language, around_hooks)
+          self.class.new(@pickle_id, name, test_steps, location, tags, language, around_hooks)
         end
 
         def with_around_hooks(around_hooks)
-          self.class.new(name, test_steps, location, tags, language, around_hooks)
+          self.class.new(@pickle_id, name, test_steps, location, tags, language, around_hooks)
         end
 
         def match_tags?(*expressions)

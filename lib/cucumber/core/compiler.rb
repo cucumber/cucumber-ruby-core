@@ -46,6 +46,7 @@ module Cucumber
         end
 
         Test::Case.new(
+          pickle.id,
           pickle.name,
           test_steps,
           Test::Location.new(uri, lines),
