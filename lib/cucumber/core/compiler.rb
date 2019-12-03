@@ -32,11 +32,11 @@ module Cucumber
 
       def create_test_case(pickle, location_query)
         uri = pickle.uri
-        test_steps = pickle.steps.map { |step| create_test_step(step, uri, location_query) }
-
         lines = location_query.pickle_locations(pickle).map do |location|
           location.line
         end.sort.reverse
+
+        test_steps = pickle.steps.map { |step| create_test_step(step, uri, location_query) }
 
         tags = pickle.tags.map do |tag|
           Test::Tag.new(

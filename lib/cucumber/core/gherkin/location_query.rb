@@ -21,19 +21,19 @@ module Cucumber
         def pickle_locations(pickle)
           [
             scenario_by_id[pickle.sourceIds[0]],
-            table_row_by_id[pickle.sourceIds[1]]
+            pickle.sourceIds.length > 1 ? table_row_by_id[pickle.sourceIds[1]] : nil
           ].compact.map(&:location)
         end
 
         def pickle_step_locations(pickle_step)
           [
-            scenario_step_by_id[pickle_step.sourceIds[0]],
-            table_row_by_id[pickle_step.sourceIds[1]]
+            gherkin_steps_by_id[pickle_step.sourceIds[0]],
+            pickle_step.sourceIds.length > 1 ? table_row_by_id[pickle_step.sourceIds[1]] : nil
           ].compact.map(&:location)
         end
 
         def pickle_step_argument_location(pickle_step)
-          scenario_step = scenario_step_by_id[pickle_step.sourceIds[0]]
+          scenario_step = gherkin_steps_by_id[pickle_step.sourceIds[0]]
           if scenario_step
             case scenario_step.argument
             when :doc_string
@@ -51,16 +51,28 @@ module Cucumber
         private
 
         def process_gherkin_document(document)
-          if document.feature
-            process_children(document.feature.children)
-            process_tags(document.feature.tags)
+          process_feature(document.feature) if document.feature
+        end
+
+        def process_feature(feature)
+          feature.children.each do |child|
+            process_rule(child.rule) if child.rule
+            process_background(child.background) if child.background
+            process_scenario(child.scenario) if child.scenario
+          end
+          process_tags(feature.tags)
+        end
+
+        def process_rule(rule)
+          rule.children.each do |child|
+            process_background(child.background) if child.background
+            process_scenario(child.scenario) if child.scenario
           end
         end
 
-        def process_children(children)
-          children.each do |child|
-            process_scenario(child.scenario) if child.scenario
-            process_children(child.rule.children) if child.respond_to?(:rule) && child.rule
+        def process_background(background)
+          background.steps.each do |step|
+            gherkin_steps_by_id[step.id] = step
           end
         end
 
@@ -68,7 +80,7 @@ module Cucumber
           scenario_by_id[scenario.id] = scenario
           process_tags(scenario.tags)
           scenario.steps.each do |step|
-            scenario_step_by_id[step.id] = step
+            gherkin_steps_by_id[step.id] = step
           end
           process_examples(scenario.examples) if scenario.examples
         end
@@ -93,19 +105,27 @@ module Cucumber
         end
 
         def scenario_by_id
-          @scenario_by_id ||= {}
+          @scenario_by_id ||= Hash.new { |hash, key|
+            raise StandardError, "No scenario found for #{key.inspect}, available: #{hash.keys}"
+          }
         end
 
-        def scenario_step_by_id
-          @scenario_step_by_id ||= {}
+        def gherkin_steps_by_id
+          @gherkin_steps_by_id ||= Hash.new { |hash, key|
+            raise StandardError, "No scenario step found for #{key.inspect}, available: #{hash.keys}"
+          }
         end
 
         def table_row_by_id
-          @table_row_by_id ||= {}
+          @table_row_by_id ||= Hash.new { |hash, key|
+            raise StandardError, "No table row found for #{key.inspect}, available: #{hash.keys}"
+          }
         end
 
         def tag_by_id
-          @tag_by_id ||= {}
+          @tag_by_id ||= Hash.new { |hash, key|
+            raise StandardError, "No tag found for #{key.inspect}, available: #{hash.keys}"
+          }
         end
       end
     end

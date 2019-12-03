@@ -93,6 +93,7 @@ module Cucumber
 
           def initialize(raw_data)
             super Array(raw_data).to_set
+            raise StandardError, "Raw data can't be empty" if data.empty?
           end
 
           def first
