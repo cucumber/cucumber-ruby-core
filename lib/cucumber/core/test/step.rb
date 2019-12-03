@@ -11,13 +11,14 @@ module Cucumber
       class Step
         attr_reader :id, :text, :location, :multiline_arg
 
-        def initialize(text, location, multiline_arg = Test::EmptyMultilineArgument.new, action = Test::UndefinedAction.new(location))
+        def initialize(text, location, multiline_arg, action)
           raise ArgumentError if text.nil? || text.empty?
+
           @id = SecureRandom.uuid
           @text = text
           @location = location
-          @multiline_arg = multiline_arg
-          @action = action
+          @multiline_arg = multiline_arg || Test::EmptyMultilineArgument.new
+          @action = action || Test::UndefinedAction.new(location)
         end
 
         def describe_to(visitor, *args)
@@ -26,6 +27,12 @@ module Cucumber
 
         def hook?
           false
+        end
+
+        def to_message
+          Cucumber::Messages::TestCase::TestStep.new(
+            id: @id
+          )
         end
 
         def skip(*args)

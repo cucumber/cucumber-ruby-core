@@ -25,7 +25,8 @@ module Cucumber
           Cucumber::Messages::Envelope.new(
             testCase: Cucumber::Messages::TestCase.new(
               id: @id,
-              pickleId: @pickle_id
+              pickleId: @pickle_id,
+              testSteps: @test_steps.map(&:to_message)
             )
           )
         end
