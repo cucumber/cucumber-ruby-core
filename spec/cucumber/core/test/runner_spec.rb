@@ -11,7 +11,7 @@ module Cucumber::Core::Test
     let(:location)  { double }
     let(:tags)      { double }
     let(:language)  { double }
-    let(:test_case) { Case.new(name, test_steps, location, tags, language) }
+    let(:test_case) { Case.new(name, test_steps, location, tags, language, []) }
     let(:text)      { double }
     let(:runner)    { Runner.new(event_bus) }
     let(:event_bus) { double.as_null_object }
@@ -223,8 +223,8 @@ module Cucumber::Core::Test
 
     context 'with multiple test cases' do
       context 'when the first test case fails' do
-        let(:first_test_case) { Case.new(name, [failing], location, tags, language) }
-        let(:last_test_case)  { Case.new(name, [passing], location, tags, language) }
+        let(:first_test_case) { Case.new(name, [failing], location, tags, language, []) }
+        let(:last_test_case)  { Case.new(name, [passing], location, tags, language, []) }
         let(:test_cases)      { [first_test_case, last_test_case] }
 
         it 'reports the results correctly for the following test case' do
@@ -246,7 +246,7 @@ module Cucumber::Core::Test
         end
         after_hook = HookStep.new(text, location, hook_mapping)
         failing_step = Step.new(text, location).with_action { fail }
-        test_case = Case.new(name, [failing_step, after_hook], location, tags, language)
+        test_case = Case.new(name, [failing_step, after_hook], location, tags, language, [])
         test_case.describe_to runner
         expect(result_spy).to be_failed
       end

@@ -17,7 +17,19 @@ module Cucumber
         let(:location) { double }
         let(:tags) { double }
         let(:language) { double }
-        let(:test_case) { Test::Case.new(name, test_steps, location, tags, language) }
+        let(:pickle) {
+          p = double
+          allow(p).to receive(:id).and_return('pickle-id')
+          p
+        }
+        let(:test_case) { Test::Case.new(
+          name,
+          test_steps,
+          location,
+          tags,
+          language,
+          []
+        ) }
         let(:test_steps) { [double, double] }
 
         context 'describing itself' do
@@ -48,6 +60,14 @@ module Cucumber
             Test::Case.new(name, [], location, tags, language, around_hooks).describe_to(visitor, double)
           end
 
+        end
+
+        describe '#to_envelope' do
+          let(:envelope) { test_case.to_envelope }
+
+          it 'includes the pickle id' do
+            expect(envelope.testCase.pickleId).to eq(pickle.id)
+          end
         end
 
         describe "#name" do

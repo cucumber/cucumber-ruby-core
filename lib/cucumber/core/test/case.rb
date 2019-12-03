@@ -9,7 +9,7 @@ module Cucumber
       class Case
         attr_reader :id, :name, :test_steps, :location, :tags, :language, :around_hooks
 
-        def initialize(name, test_steps, location, tags, language, around_hooks = [])
+        def initialize(name, test_steps, location, tags, language, around_hooks)
           raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.is_a?(Array)
           @id = SecureRandom.uuid
           @name = name
@@ -18,6 +18,15 @@ module Cucumber
           @tags = tags
           @language = language
           @around_hooks = around_hooks
+        end
+
+        def to_envelope
+          Cucumber::Messages::Envelope.new(
+            testCase: Cucumber::Messages::TestCase.new(
+              id: @id,
+              pickleId: @pickle_id
+            )
+          )
         end
 
         def step_count
