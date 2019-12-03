@@ -245,7 +245,7 @@ module Cucumber::Core::Test
         hook_mapping = UnskippableAction.new do |last_result|
           result_spy = last_result
         end
-        after_hook = HookStep.new(text, location, hook_mapping)
+        after_hook = HookStep.new('', text, location, hook_mapping)
         failing_step = Step.new('', text, location, nil, nil).with_action { fail }
         test_case = Case.new(pickle_id, name, [failing_step, after_hook], location, tags, language, [])
         test_case.describe_to runner

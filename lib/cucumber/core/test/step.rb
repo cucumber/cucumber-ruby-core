@@ -66,12 +66,20 @@ module Cucumber
       end
 
       class HookStep < Step
-        def initialize(text, location, action)
+        def initialize(hook_id, text, location, action)
           super(nil, text, location, Test::EmptyMultilineArgument.new, action)
+          @hook_id = hook_id
         end
 
         def hook?
           true
+        end
+
+        def to_message
+          Cucumber::Messages::TestCase::TestStep.new(
+            id: @id,
+            hookId: @hook_id
+          )
         end
       end
     end

@@ -97,4 +97,15 @@ module Cucumber::Core::Test
       expect( test_step.to_s     ).to eq 'a passing step'
     end
   end
+
+  describe HookStep do
+    context '#to_message' do
+      let(:step) { HookStep.new('hook-id', 'some-text', nil, nil) }
+      let(:message) { step.to_message}
+
+      it 'provides the Hook id' do
+        expect(message.hookId).to eq('hook-id')
+      end
+    end
+  end
 end
