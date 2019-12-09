@@ -23,10 +23,10 @@ module Cucumber
 
         def to_envelope
           Cucumber::Messages::Envelope.new(
-            testCase: Cucumber::Messages::TestCase.new(
+            test_case: Cucumber::Messages::TestCase.new(
               id: @id,
-              pickleId: @pickle_id,
-              testSteps: @test_steps.map(&:to_message)
+              pickle_id: @pickle_id,
+              test_steps: @test_steps.map(&:to_message)
             )
           )
         end

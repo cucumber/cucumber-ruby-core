@@ -21,8 +21,8 @@ module Cucumber
           messages = ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
           messages.each do |message|
             @location_query.process(message)
-            if !message.gherkinDocument.nil?
-              event_bus.gherkin_source_parsed(message.gherkinDocument)
+            if !message.gherkin_document.nil?
+              event_bus.gherkin_source_parsed(message.gherkin_document)
               event_bus.envelope(message)
             elsif !message.pickle.nil?
               receiver.pickle(message.pickle, @location_query)

@@ -7,8 +7,8 @@ module Cucumber
     module Gherkin
       class LocationQuery
         def process(message)
-          if message.gherkinDocument
-            process_gherkin_document(message.gherkinDocument)
+          if message.gherkin_document
+            process_gherkin_document(message.gherkin_document)
           elsif message.pickle
             process_pickle(message.pickle)
           end
@@ -20,20 +20,20 @@ module Cucumber
 
         def pickle_locations(pickle)
           [
-            scenario_by_id[pickle.sourceIds[0]],
-            pickle.sourceIds.length > 1 ? table_row_by_id[pickle.sourceIds[1]] : nil
+            scenario_by_id[pickle.ast_node_ids[0]],
+            pickle.ast_node_ids.length > 1 ? table_row_by_id[pickle.ast_node_ids[1]] : nil
           ].compact.map(&:location)
         end
 
         def pickle_step_locations(pickle_step)
           [
-            gherkin_steps_by_id[pickle_step.sourceIds[0]],
-            pickle_step.sourceIds.length > 1 ? table_row_by_id[pickle_step.sourceIds[1]] : nil
+            gherkin_steps_by_id[pickle_step.ast_node_ids[0]],
+            pickle_step.ast_node_ids.length > 1 ? table_row_by_id[pickle_step.ast_node_ids[1]] : nil
           ].compact.map(&:location)
         end
 
         def pickle_step_argument_location(pickle_step)
-          scenario_step = gherkin_steps_by_id[pickle_step.sourceIds[0]]
+          scenario_step = gherkin_steps_by_id[pickle_step.ast_node_ids[0]]
           if scenario_step
             case scenario_step.argument
             when :doc_string
@@ -45,7 +45,7 @@ module Cucumber
         end
 
         def pickle_tag_location(pickle_tag)
-          tag_by_id[pickle_tag.sourceId].location
+          tag_by_id[pickle_tag.ast_node_id].location
         end
 
         private

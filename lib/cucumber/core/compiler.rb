@@ -79,7 +79,7 @@ module Cucumber
             doc_string = pickle_step.argument.doc_string
             Test::DocString.new(
               doc_string.content,
-              doc_string.contentType,
+              doc_string.content_type,
               Test::Location.new(uri, line)
             )
           elsif pickle_step.argument.data_table

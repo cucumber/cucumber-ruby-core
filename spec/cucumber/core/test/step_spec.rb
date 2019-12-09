@@ -16,7 +16,7 @@ module Cucumber::Core::Test
       end
 
       it 'outputs the pickleStepId' do
-        expect(message.pickleStepId).to eq('pickle-step-id')
+        expect(message.pickle_step_id).to eq('pickle-step-id')
       end
     end
 

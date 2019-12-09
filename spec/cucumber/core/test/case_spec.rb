@@ -68,7 +68,7 @@ module Cucumber
           let(:test_steps) { [] }
 
           it 'includes the pickle id' do
-            expect(envelope.testCase.pickleId).to eq(pickle.id)
+            expect(envelope.test_case.pickle_id).to eq(pickle.id)
           end
         end
 

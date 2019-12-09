@@ -32,7 +32,7 @@ module Cucumber
         def to_message
           Cucumber::Messages::TestCase::TestStep.new(
             id: @id,
-            pickleStepId: @pickle_step_id
+            pickle_step_id: @pickle_step_id
           )
         end
 
