@@ -100,7 +100,7 @@ module Cucumber
         end
 
         observed_events = []
-        execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], Core::EventBus.new do |event_bus|
+        execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], Core::EventBus.new, id_generator do |event_bus|
           event_bus.on(:test_case_started) do |event|
             test_case = event.test_case
             observed_events << [:test_case_started, test_case.name]
@@ -156,7 +156,7 @@ module Cucumber
 
           event_bus = Core::EventBus.new
           report = Core::Report::Summary.new(event_bus)
-          execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus
+          execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus, id_generator
 
           expect( report.test_cases.total           ).to eq 2
           expect( report.test_cases.total_passed    ).to eq 1
@@ -201,7 +201,7 @@ module Cucumber
 
           event_bus = Core::EventBus.new
           report = Core::Report::Summary.new(event_bus)
-          execute [gherkin], [WithAroundHooks.new(logger)], event_bus
+          execute [gherkin], [WithAroundHooks.new(logger)], event_bus, id_generator
 
           expect( report.test_cases.total        ).to eq 1
           expect( report.test_cases.total_passed ).to eq 1
@@ -236,7 +236,7 @@ module Cucumber
 
         event_bus = Core::EventBus.new
         report = Core::Report::Summary.new(event_bus)
-        execute [gherkin], [ Cucumber::Core::Test::TagFilter.new(['@a']) ], event_bus
+        execute [gherkin], [ Cucumber::Core::Test::TagFilter.new(['@a']) ], event_bus, id_generator
 
         expect( report.test_cases.total ).to eq 2
       end
@@ -255,7 +255,7 @@ module Cucumber
 
         event_bus = Core::EventBus.new
         report = Core::Report::Summary.new(event_bus)
-        execute [gherkin], [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ], event_bus
+        execute [gherkin], [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ], event_bus, id_generator
 
         expect( report.test_cases.total ).to eq 1
       end
