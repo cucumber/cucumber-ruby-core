@@ -143,7 +143,7 @@ module Cucumber
             allow(receiver).to receive(:test_case) do |test_case|
               test_case_instances << test_case
             end
-            2.times { compile([gherkin], receiver, [], EventBus.new) }
+            2.times { compile([gherkin], receiver, [], EventBus.new, id_generator) }
             expect(test_case_instances.length).to eq 2
             expect(test_case_instances.uniq.length).to eq 1
             expect(test_case_instances[0]).to be_eql test_case_instances[1]

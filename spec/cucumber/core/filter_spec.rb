@@ -8,6 +8,8 @@ module Cucumber::Core
     include Cucumber::Core::Gherkin::Writer
     include Cucumber::Core
 
+    let(:id_generator) { Cucumber::Messages::IdGenerator::Incrementing.new }
+
     describe ".new" do
       let(:receiver) { double.as_null_object }
 
@@ -32,7 +34,7 @@ module Cucumber::Core
           expect(test_case.test_steps.length).to eq 1
           expect(test_case.test_steps.first.text).to eq 'a step'
         }.exactly(2).times
-        compile [doc], receiver, [my_filter], EventBus.new
+        compile [doc], receiver, [my_filter], EventBus.new, id_generator
       end
 
       context "customizing by subclassing" do
@@ -94,7 +96,7 @@ module Cucumber::Core
       end
 
       def run(filter)
-        compile [doc], receiver, [filter], EventBus.new
+        compile [doc], receiver, [filter], EventBus.new, id_generator
       end
     end
   end

@@ -14,9 +14,9 @@ module Cucumber
       attr_reader :receiver
       private     :receiver
 
-      def initialize(receiver)
+      def initialize(receiver, id_generator)
         @receiver = receiver
-        @id_generator = Cucumber::Messages::IdGenerator::Incrementing.new
+        @id_generator = id_generator
       end
 
       def pickle(pickle, location_query)

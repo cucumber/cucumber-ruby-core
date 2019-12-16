@@ -13,6 +13,8 @@ module Cucumber
     include Core
     include Core::Gherkin::Writer
 
+    let(:id_generator) { Cucumber::Messages::IdGenerator::Incrementing.new }
+
     describe "compiling features to a test suite" do
 
       it "compiles two scenarios into two test cases" do
@@ -33,7 +35,7 @@ module Cucumber
               end
             end
           end
-        ], visitor, [], Core::EventBus.new)
+        ], visitor, [], Core::EventBus.new, id_generator)
 
         expect( visitor.messages ).to eq [
           :test_case,
@@ -75,7 +77,7 @@ module Cucumber
           end
         end
 
-        compile [gherkin], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])], Core::EventBus.new
+        compile [gherkin], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])], Core::EventBus.new, id_generator
       end
     end
 

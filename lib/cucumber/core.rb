@@ -11,13 +11,13 @@ module Cucumber
     def execute(gherkin_documents, filters = [], event_bus = EventBus.new)
       yield event_bus if block_given?
       receiver = Test::Runner.new(event_bus)
-      compile gherkin_documents, receiver, filters, event_bus
+      compile gherkin_documents, receiver, filters, event_bus, Cucumber::Messages::IdGenerator::Incrementing.new
       self
     end
 
-    def compile(gherkin_documents, last_receiver, filters, event_bus)
+    def compile(gherkin_documents, last_receiver, filters, event_bus, id_generator)
       first_receiver = compose(filters, last_receiver)
-      compiler = Compiler.new(first_receiver)
+      compiler = Compiler.new(first_receiver, id_generator)
       parse gherkin_documents, compiler, event_bus
       self
     end

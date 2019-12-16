@@ -8,6 +8,8 @@ module Cucumber::Core
     include Gherkin::Writer
     include Cucumber::Core
 
+    let(:id_generator) { Cucumber::Messages::IdGenerator::Incrementing.new }
+
     def self.stubs(*names)
       names.each do |name|
         let(name) { double(name.to_s) }
@@ -171,8 +173,7 @@ module Cucumber::Core
       allow( visitor ).to receive(:test_suite).and_yield(visitor)
       allow( visitor ).to receive(:test_case).and_yield(visitor)
       yield visitor
-      super(gherkin_documents, visitor, [], EventBus.new)
+      super(gherkin_documents, visitor, [], EventBus.new, id_generator)
     end
-
   end
 end
