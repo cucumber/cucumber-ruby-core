@@ -16,6 +16,7 @@ module Cucumber
 
       def initialize(receiver)
         @receiver = receiver
+        @id_generator = Cucumber::Messages::IdGenerator::Incrementing.new
       end
 
       def pickle(pickle, location_query)
@@ -46,6 +47,7 @@ module Cucumber
         end
 
         Test::Case.new(
+          @id_generator.new_id,
           pickle.id,
           pickle.name,
           test_steps,
@@ -62,6 +64,7 @@ module Cucumber
 
         multiline_arg = create_multiline_arg(pickle_step, uri, location_query)
         Test::Step.new(
+          @id_generator.new_id,
           pickle_step.id,
           pickle_step.text,
           Test::Location.new(uri, lines),
@@ -79,7 +82,7 @@ module Cucumber
             doc_string = pickle_step.argument.doc_string
             Test::DocString.new(
               doc_string.content,
-              doc_string.content_type,
+              doc_string.media_type,
               Test::Location.new(uri, line)
             )
           elsif pickle_step.argument.data_table

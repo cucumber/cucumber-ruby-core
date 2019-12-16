@@ -29,7 +29,7 @@ module Cucumber
               event_bus.envelope(message)
             elsif !message.attachment.nil?
               # Parse error
-              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.data}")
+              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.text}")
             else
               raise "Unknown message: #{message.to_hash}"
             end

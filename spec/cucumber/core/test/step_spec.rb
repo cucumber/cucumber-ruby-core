@@ -1,18 +1,20 @@
 # frozen_string_literal: true
 require 'cucumber/core/test/step'
+require 'cucumber/messages/id_generator'
 
 module Cucumber::Core::Test
   describe Step do
     let(:text) { 'step text' }
     let(:location) { double }
+    let(:id_generator) { Cucumber::Messages::IdGenerator::Incrementing.new }
+    let(:pickle_step_id) { "pickle-step-id" }
 
     describe '#to_message' do
-      let(:step) { Step.new("pickle-step-id", text, location, nil, nil) }
+      let(:step) { Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil) }
       let(:message) { step.to_message }
-      let(:uuid_regex) { /[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}/ }
 
       it 'outputs the step ID' do
-        expect(message.id).to match(uuid_regex)
+        expect(message.id).to eq('0')
       end
 
       it 'outputs the pickleStepId' do
@@ -24,7 +26,7 @@ module Cucumber::Core::Test
       it "describes itself to a visitor" do
         visitor = double
         args = double
-        test_step = Step.new('', text, location, nil, nil)
+        test_step = Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil)
         expect( visitor ).to receive(:test_step).with(test_step, args)
         test_step.describe_to(visitor, args)
       end
@@ -33,7 +35,7 @@ module Cucumber::Core::Test
     describe "backtrace line" do
       let(:text) { 'this step passes' }
       let(:location)  { Location.new('path/file.feature', 10) }
-      let(:test_step) { Step.new('', text, location, nil, nil) }
+      let(:test_step) { Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil) }
 
       it "knows how to form the backtrace line" do
         expect( test_step.backtrace_line ).to eq("path/file.feature:10:in `this step passes'")
@@ -44,7 +46,7 @@ module Cucumber::Core::Test
       it "passes arbitrary arguments to the action's block" do
         args_spy = nil
         expected_args = [double, double]
-        test_step = Step.new('', text, location, nil, nil).with_action do |*actual_args|
+        test_step = Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil).with_action do |*actual_args|
           args_spy = actual_args
         end
         test_step.execute(*expected_args)
@@ -53,7 +55,7 @@ module Cucumber::Core::Test
 
       context "when a passing action exists" do
         it "returns a passing result" do
-          test_step = Step.new('', text, location, nil, nil).with_action {}
+          test_step = Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil).with_action {}
           expect( test_step.execute ).to be_passed
         end
       end
@@ -62,7 +64,7 @@ module Cucumber::Core::Test
         let(:exception) { StandardError.new('oops') }
 
         it "returns a failing result" do
-          test_step = Step.new('', text, location, nil, nil).with_action { raise exception }
+          test_step = Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil).with_action { raise exception }
           result = test_step.execute
           expect( result           ).to be_failed
           expect( result.exception ).to eq exception
@@ -71,7 +73,7 @@ module Cucumber::Core::Test
 
       context "with no action" do
         it "returns an Undefined result" do
-          test_step = Step.new('', text, location, nil, nil)
+          test_step = Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil)
           result = test_step.execute
           expect( result           ).to be_undefined
         end
@@ -79,7 +81,7 @@ module Cucumber::Core::Test
     end
 
     it "exposes the text and location of as attributes" do
-      test_step = Step.new('', text, location, nil, nil)
+      test_step = Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil)
       expect( test_step.text              ).to eq text
       expect( test_step.location          ).to eq location
     end
@@ -87,20 +89,21 @@ module Cucumber::Core::Test
     it "exposes the location of the action as attribute" do
       location = double
       action = double(location: location)
-      test_step = Step.new('', text, location, nil, action)
+      test_step = Step.new(id_generator.new_id, pickle_step_id, text, location, nil, action)
       expect( test_step.action_location ).to eq location
     end
 
     it "returns the text when converted to a string" do
       text = 'a passing step'
-      test_step = Step.new('', text, location, nil, nil)
+      test_step = Step.new(id_generator.new_id, pickle_step_id, text, location, nil, nil)
       expect( test_step.to_s     ).to eq 'a passing step'
     end
   end
 
   describe HookStep do
     context '#to_message' do
-      let(:step) { HookStep.new('hook-id', 'some-text', nil, nil) }
+      let(:id_generator) { Cucumber::Messages::IdGenerator::Incrementing.new }
+      let(:step) { HookStep.new(id_generator.new_id, 'hook-id', 'some-text', nil, nil) }
       let(:message) { step.to_message}
 
       it 'provides the Hook id' do

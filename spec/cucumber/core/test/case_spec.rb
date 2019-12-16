@@ -5,6 +5,7 @@ require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
 require 'cucumber/core/test/case'
 require 'unindent'
+require 'cucumber/messages/id_generator'
 
 module Cucumber
   module Core
@@ -22,7 +23,10 @@ module Cucumber
           allow(p).to receive(:id).and_return('pickle-id')
           p
         }
+        let(:id_generator) { Cucumber::Messages::IdGenerator::Incrementing.new }
+
         let(:test_case) { Test::Case.new(
+          id_generator.new_id,
           pickle.id,
           name,
           test_steps,
@@ -58,7 +62,7 @@ module Cucumber
             expect( first_hook ).to receive(:describe_to).ordered.and_yield
             expect( second_hook ).to receive(:describe_to).ordered.and_yield
             around_hooks = [first_hook, second_hook]
-            Test::Case.new("pickle-id", name, [], location, tags, language, around_hooks).describe_to(visitor, double)
+            Test::Case.new(id_generator.new_id, "pickle-id", name, [], location, tags, language, around_hooks).describe_to(visitor, double)
           end
 
         end
