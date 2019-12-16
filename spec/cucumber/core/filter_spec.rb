@@ -11,7 +11,7 @@ module Cucumber::Core
     describe ".new" do
       let(:receiver) { double.as_null_object }
 
-      let(:doc) { 
+      let(:doc) {
         gherkin do
           feature do
             scenario 'x' do
@@ -32,7 +32,7 @@ module Cucumber::Core
           expect(test_case.test_steps.length).to eq 1
           expect(test_case.test_steps.first.text).to eq 'a step'
         }.exactly(2).times
-        compile [doc], receiver, [my_filter]
+        compile [doc], receiver, [my_filter], EventBus.new
       end
 
       context "customizing by subclassing" do
@@ -46,7 +46,7 @@ module Cucumber::Core
           end
         end
 
-        # You can pass the names of attributes when building a 
+        # You can pass the names of attributes when building a
         # filter, allowing you to have custom attributes.
         class NamedBlankingFilter < Filter.new(:name_pattern)
           def test_case(test_case)
@@ -94,7 +94,7 @@ module Cucumber::Core
       end
 
       def run(filter)
-        compile [doc], receiver, [filter]
+        compile [doc], receiver, [filter], EventBus.new
       end
     end
   end

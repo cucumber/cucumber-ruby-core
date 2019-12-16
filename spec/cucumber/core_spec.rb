@@ -33,7 +33,7 @@ module Cucumber
               end
             end
           end
-        ], visitor)
+        ], visitor, [], Core::EventBus.new)
 
         expect( visitor.messages ).to eq [
           :test_case,
@@ -75,7 +75,7 @@ module Cucumber
           end
         end
 
-        compile [gherkin], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])]
+        compile [gherkin], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])], Core::EventBus.new
       end
     end
 

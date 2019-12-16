@@ -11,11 +11,11 @@ module Cucumber
     def execute(gherkin_documents, filters = [], event_bus = EventBus.new)
       yield event_bus if block_given?
       receiver = Test::Runner.new(event_bus)
-      compile gherkin_documents, receiver, filters
+      compile gherkin_documents, receiver, filters, event_bus
       self
     end
 
-    def compile(gherkin_documents, last_receiver, filters = [], event_bus = EventBus.new)
+    def compile(gherkin_documents, last_receiver, filters, event_bus)
       first_receiver = compose(filters, last_receiver)
       compiler = Compiler.new(first_receiver)
       parse gherkin_documents, compiler, event_bus

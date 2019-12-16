@@ -171,7 +171,7 @@ module Cucumber::Core
       allow( visitor ).to receive(:test_suite).and_yield(visitor)
       allow( visitor ).to receive(:test_case).and_yield(visitor)
       yield visitor
-      super(gherkin_documents, visitor)
+      super(gherkin_documents, visitor, [], EventBus.new)
     end
 
   end

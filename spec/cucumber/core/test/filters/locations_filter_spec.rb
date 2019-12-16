@@ -33,7 +33,7 @@ module Cucumber::Core
         Test::Location.new('features/test.feature', 3)
       ]
       filter = Test::LocationsFilter.new(locations)
-      compile [doc], receiver, [filter]
+      compile [doc], receiver, [filter], EventBus.new
       expect(receiver.test_case_locations).to eq locations
     end
 
@@ -42,7 +42,7 @@ module Cucumber::Core
         Test::Location.new('features/test.feature')
       ]
       filter = Test::LocationsFilter.new(locations)
-      compile [doc], receiver, [filter]
+      compile [doc], receiver, [filter], EventBus.new
       expect(receiver.test_case_locations).to eq [
         Test::Location.new('features/test.feature', 3),
         Test::Location.new('features/test.feature', 6)
@@ -54,7 +54,7 @@ module Cucumber::Core
         Test::Location.new('features/test.feature', 3)
       ]
       filter = Test::LocationsFilter.new(locations)
-      compile [doc], receiver, [filter]
+      compile [doc], receiver, [filter], EventBus.new
       expect(receiver.test_case_locations).to eq locations
     end
 
@@ -65,7 +65,7 @@ module Cucumber::Core
         receiver = double.as_null_object
         result = []
         allow(receiver).to receive(:test_case) { |test_case| result << test_case }
-        compile [doc], receiver
+        compile [doc], receiver, [], EventBus.new
         result
       end
 
@@ -108,7 +108,7 @@ module Cucumber::Core
         it 'matches the precise location of the scenario' do
           location = test_case_named('two').location
           filter = Test::LocationsFilter.new([location])
-          compile [doc], receiver, [filter]
+          compile [doc], receiver, [filter], EventBus.new
           expect(receiver.test_case_locations).to eq [test_case_named('two').location]
         end
 
@@ -116,21 +116,21 @@ module Cucumber::Core
           good_location = Test::Location.new(file, 8)
           bad_location = Test::Location.new(file, 5)
           filter = Test::LocationsFilter.new([good_location, bad_location])
-          compile [doc], receiver, [filter]
+          compile [doc], receiver, [filter], EventBus.new
           expect(receiver.test_case_locations).to eq [test_case_named('two').location]
         end
 
         it "doesn't match a location after the scenario line" do
           location = Test::Location.new(file, 9)
           filter = Test::LocationsFilter.new([location])
-          compile [doc], receiver, [filter]
+          compile [doc], receiver, [filter], EventBus.new
           expect(receiver.test_case_locations).to eq []
         end
 
         it "doesn't match a location before the scenario line" do
           location = Test::Location.new(file, 7)
           filter = Test::LocationsFilter.new([location])
-          compile [doc], receiver, [filter]
+          compile [doc], receiver, [filter], EventBus.new
           expect(receiver.test_case_locations).to eq []
         end
 
@@ -140,7 +140,7 @@ module Cucumber::Core
             location_tc_one = test_case_named('one').location
             location_last_step_tc_two = Test::Location.new(file, 10)
             filter = Test::LocationsFilter.new([location_tc_two, location_tc_one, location_last_step_tc_two])
-            compile [doc], receiver, [filter]
+            compile [doc], receiver, [filter], EventBus.new
             expect(receiver.test_case_locations).to eq [test_case_named('two').location, location_tc_one = test_case_named('one').location]
           end
         end
@@ -188,7 +188,7 @@ module Cucumber::Core
             Test::Location.new(file, 19),
           ]
           filter = Test::LocationsFilter.new(locations)
-          compile [doc], receiver, [filter]
+          compile [doc], receiver, [filter], EventBus.new
           expect(receiver.test_case_locations).to eq [test_case.location]
         end
 
@@ -197,14 +197,14 @@ module Cucumber::Core
             Test::Location.new(file, 8),
           ]
           filter = Test::LocationsFilter.new(locations)
-          compile [doc], receiver, [filter]
+          compile [doc], receiver, [filter], EventBus.new
           expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
         end
 
         it "doesn't match the location of the examples line" do
           location = Test::Location.new(file, 17)
           filter = Test::LocationsFilter.new([location])
-          compile [doc], receiver, [filter]
+          compile [doc], receiver, [filter], EventBus.new
           expect(receiver.test_case_locations).to eq []
         end
       end
@@ -243,7 +243,7 @@ module Cucumber::Core
       it "filters #{num_features * num_scenarios_per_feature} test cases within #{max_duration_ms}ms" do
         filter = Test::LocationsFilter.new(locations)
         Timeout.timeout(max_duration_ms / 1000.0) do
-          compile docs, receiver, [filter]
+          compile docs, receiver, [filter], EventBus.new
         end
         expect(receiver.test_cases.length).to eq num_features * num_scenarios_per_feature
       end
