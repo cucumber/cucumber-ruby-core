@@ -8,7 +8,7 @@ require 'cucumber/core/test/runner'
 module Cucumber
   module Core
 
-    def execute(gherkin_documents, filters = [], event_bus = EventBus.new)
+    def execute(gherkin_documents, filters, event_bus)
       yield event_bus if block_given?
       receiver = Test::Runner.new(event_bus)
       compile gherkin_documents, receiver, filters, event_bus, Cucumber::Messages::IdGenerator::Incrementing.new

@@ -100,7 +100,7 @@ module Cucumber
         end
 
         observed_events = []
-        execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
+        execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], Core::EventBus.new do |event_bus|
           event_bus.on(:test_case_started) do |event|
             test_case = event.test_case
             observed_events << [:test_case_started, test_case.name]
