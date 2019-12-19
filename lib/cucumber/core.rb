@@ -18,14 +18,14 @@ module Cucumber
     def compile(gherkin_documents, last_receiver, filters, event_bus, id_generator)
       first_receiver = compose(filters, last_receiver)
       compiler = Compiler.new(first_receiver, id_generator)
-      parse gherkin_documents, compiler, event_bus
+      parse gherkin_documents, compiler, event_bus, id_generator
       self
     end
 
     private
 
-    def parse(gherkin_documents, compiler, event_bus)
-      parser = Core::Gherkin::Parser.new(compiler, event_bus)
+    def parse(gherkin_documents, compiler, event_bus, id_generator)
+      parser = Core::Gherkin::Parser.new(compiler, event_bus, { id_generator: id_generator })
       gherkin_documents.each do |document|
         parser.document document
       end

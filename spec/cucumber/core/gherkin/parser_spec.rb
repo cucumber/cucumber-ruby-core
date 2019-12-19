@@ -9,7 +9,7 @@ module Cucumber
       describe Parser do
         let(:receiver)  { double }
         let(:event_bus) { double }
-        let(:parser)    { Parser.new(receiver, event_bus) }
+        let(:parser)    { Parser.new(receiver, event_bus, {}) }
         let(:visitor)   { double }
 
         before do

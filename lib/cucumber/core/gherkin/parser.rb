@@ -11,10 +11,11 @@ module Cucumber
         attr_reader :receiver, :event_bus
         private     :receiver, :event_bus
 
-        def initialize(receiver, event_bus)
+        def initialize(receiver, event_bus, gherkin_options)
           @receiver = receiver
           @event_bus = event_bus
           @location_query = LocationQuery.new
+          @gherkin_options = gherkin_options
         end
 
         def document(document)
@@ -42,7 +43,7 @@ module Cucumber
             include_source: false,
             include_gherkin_document: true,
             include_pickles: true
-          }
+          }.merge(@gherkin_options)
         end
 
         def done
