@@ -9,6 +9,10 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Added
 
 * Added rubocop (with todo file), and removed backports gems
+  ([#186](https://github.com/cucumber/cucumber-ruby-core/pull/186),
+  [#182](https://github.com/cucumber/cucumber-ruby-core/issues/182)
+  [tas50](https://github.com/tas50),
+  [luke-hill](https://github.com/luke-hill))
 
 ### Fixed
 
