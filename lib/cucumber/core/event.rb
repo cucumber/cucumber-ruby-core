@@ -1,5 +1,3 @@
-require 'backports/2.1.0/array/to_h'
-
 module Cucumber
   module Core
     class Event

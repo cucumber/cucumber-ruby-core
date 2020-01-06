@@ -25,11 +25,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'gherkin', '~> 8.1', '>= 8.1.1'
   s.add_dependency 'cucumber-messages', '~> 6.0'
   s.add_dependency 'cucumber-tag_expressions', '~> 2.0', '>= 2.0.2'
-  s.add_dependency 'backports', '~> 3.15', '>= 3.15.0'
 
   s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.23'
-  s.add_development_dependency 'rake', '~> 12.3', '>= 12.3.3'
-  s.add_development_dependency 'rspec', '~> 3.8', '>= 3.8.0'
+  s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.0'
+  s.add_development_dependency 'rubocop', '~> 0.78', '>= 0.78.0'
+  s.add_development_dependency 'rspec', '~> 3.9', '>= 3.9.0'
   s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
   s.rubygems_version = ">= 1.6.1"

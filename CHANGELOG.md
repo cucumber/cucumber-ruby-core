@@ -8,7 +8,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Added
 
-* N/A
+* Added rubocop (with todo file), and removed backports gems
 
 ### Fixed
 
@@ -21,7 +21,6 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Improved
 
 * N/A
-
 
 ## [5.0.2](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.1...v5.0.2)
 
