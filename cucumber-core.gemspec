@@ -25,7 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'gherkin', '~> 8.1', '>= 8.1.1'
   s.add_dependency 'cucumber-messages', '~> 6.0'
   s.add_dependency 'cucumber-tag_expressions', '~> 2.0', '>= 2.0.2'
-  s.add_dependency 'backports', '~> 3.15', '>= 3.15.0'
 
   s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.23'
   s.add_development_dependency 'rake', '~> 12.3', '>= 12.3.3'

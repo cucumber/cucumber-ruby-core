@@ -1,5 +1,3 @@
-require 'backports/2.1.0/array/to_h'
-
 module Cucumber
   module Core
     class Event
@@ -24,7 +22,7 @@ module Cucumber
           end
 
           define_method(:to_h) do
-            attributes.reduce({}) { |result, attribute| 
+            attributes.reduce({}) { |result, attribute|
               value = self.send(attribute)
               result[attribute] = value
               result
