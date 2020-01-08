@@ -7,24 +7,26 @@ module Cucumber
       ParseError = Class.new(StandardError)
 
       class Parser
-        attr_reader :receiver, :event_bus
-        private     :receiver, :event_bus
+        attr_reader :receiver, :event_bus, :gherkin_query
+        private     :receiver, :event_bus, :gherkin_query
 
-        def initialize(receiver, event_bus)
+        def initialize(receiver, event_bus, gherkin_query)
           @receiver = receiver
           @event_bus = event_bus
+          @gherkin_query = gherkin_query
         end
 
         def document(document)
           messages = ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
           messages.each do |message|
-            if !message.gherkinDocument.nil?
-              event_bus.gherkin_source_parsed(message.gherkinDocument)
+            gherkin_query.update(message)
+            if !message.gherkin_document.nil?
+              event_bus.gherkin_source_parsed(message.gherkin_document)
             elsif !message.pickle.nil?
               receiver.pickle(message.pickle)
             elsif !message.attachment.nil?
               # Parse error
-              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.data}")
+              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.text}")
             else
               raise "Unknown message: #{message.to_hash}"
             end

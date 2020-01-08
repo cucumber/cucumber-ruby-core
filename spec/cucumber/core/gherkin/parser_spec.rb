@@ -9,11 +9,13 @@ module Cucumber
       describe Parser do
         let(:receiver)  { double }
         let(:event_bus) { double }
-        let(:parser)    { Parser.new(receiver, event_bus) }
+        let(:gherkin_query) { double }
+        let(:parser)    { Parser.new(receiver, event_bus, gherkin_query) }
         let(:visitor)   { double }
 
         before do
           allow( event_bus ).to receive(:gherkin_source_parsed)
+          allow( gherkin_query ).to receive(:update)
         end
 
         def parse

@@ -11,11 +11,12 @@ module Cucumber
   module Core
     # Compiles the Pickles into test cases
     class Compiler
-      attr_reader :receiver
-      private     :receiver
+      attr_reader :receiver, :gherkin_query
+      private     :receiver, :gherkin_query
 
-      def initialize(receiver)
+      def initialize(receiver, gherkin_query)
         @receiver = receiver
+        @gherkin_query = gherkin_query
       end
 
       def pickle(pickle)
@@ -33,37 +34,57 @@ module Cucumber
       def create_test_case(pickle)
         uri = pickle.uri
         test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
-        lines = pickle.locations.map { |location| location.line }.sort.reverse
-        tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, tag.location.line), tag.name) }
+        lines = source_lines_for_pickle(pickle).sort.reverse
+        tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, source_line_for_pickle_tag(tag)), tag.name) } # TODO: don't hardcode tag location
         Test::Case.new(pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
       end
 
       def create_test_step(pickle_step, uri)
-        lines = pickle_step.locations.map { |location| location.line }.sort.reverse
+        lines = source_lines_for_pickle_step(pickle_step).sort.reverse
         multiline_arg = create_multiline_arg(pickle_step, uri)
         Test::Step.new(pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
       end
 
       def create_multiline_arg(pickle_step, uri)
         if pickle_step.argument
+          argument_line =source_line_for_pickle_step_argument(pickle_step)
           if pickle_step.argument.doc_string
             doc_string = pickle_step.argument.doc_string
             Test::DocString.new(
               doc_string.content,
-              doc_string.contentType,
-              Test::Location.new(uri, doc_string.location.line)
+              doc_string.media_type,
+              Test::Location.new(uri, argument_line)
             )
           elsif pickle_step.argument.data_table
             data_table = pickle_step.argument.data_table
-            first_cell = data_table.rows.first.cells.first
             Test::DataTable.new(
               data_table.rows.map { |row| row.cells.map { |cell| cell.value } },
-              Test::Location.new(uri, first_cell.location.line)
+              Test::Location.new(uri, argument_line)
             )
           end
         else
           Test::EmptyMultilineArgument.new
         end
+      end
+
+      def source_lines_for_pickle(pickle)
+        pickle.ast_node_ids.map { |id| source_line(id) }
+      end
+
+      def source_lines_for_pickle_step(pickle_step)
+        pickle_step.ast_node_ids.map { |id| source_line(id) }
+      end
+
+      def source_line_for_pickle_tag(tag)
+        source_line(tag.ast_node_id)
+      end
+
+      def source_line_for_pickle_step_argument(pickle_step)
+        gherkin_query.argument_location(pickle_step.ast_node_ids[0])
+      end
+
+      def source_line(id)
+        gherkin_query.location(id).line
       end
     end
   end
