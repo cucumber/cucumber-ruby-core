@@ -15,11 +15,11 @@ module Cucumber::Core::Test
     let(:text)      { double }
     let(:runner)    { Runner.new(event_bus) }
     let(:event_bus) { double.as_null_object }
-    let(:passing)   { Step.new(text, location, location).with_action {} }
-    let(:failing)   { Step.new(text, location, location).with_action { raise exception } }
-    let(:pending)   { Step.new(text, location, location).with_action { raise Result::Pending.new("TODO") } }
-    let(:skipping)  { Step.new(text, location, location).with_action { raise Result::Skipped.new } }
-    let(:undefined) { Step.new(text, location, location) }
+    let(:passing)   { Step.new('some-random-uid', text, location, location).with_action {} }
+    let(:failing)   { Step.new('some-random-uid', text, location, location).with_action { raise exception } }
+    let(:pending)   { Step.new('some-random-uid', text, location, location).with_action { raise Result::Pending.new("TODO") } }
+    let(:skipping)  { Step.new('some-random-uid', text, location, location).with_action { raise Result::Skipped.new } }
+    let(:undefined) { Step.new('some-random-uid', text, location, location) }
     let(:exception) { StandardError.new('test error') }
 
     before do
@@ -244,8 +244,8 @@ module Cucumber::Core::Test
         hook_mapping = UnskippableAction.new do |last_result|
           result_spy = last_result
         end
-        after_hook = HookStep.new(text, location, hook_mapping)
-        failing_step = Step.new(text, location).with_action { fail }
+        after_hook = HookStep.new('some-random-uid', text, location, hook_mapping)
+        failing_step = Step.new('some-random-uid', text, location).with_action { fail }
         test_case = Case.new(name, [failing_step, after_hook], location, tags, language)
         test_case.describe_to runner
         expect(result_spy).to be_failed
@@ -256,7 +256,7 @@ module Cucumber::Core::Test
     context "with around hooks" do
       it "passes normally when around hooks don't fail" do
         around_hook = AroundHook.new { |block| block.call }
-        passing_step = Step.new(text, location, location).with_action {}
+        passing_step = Step.new('some-random-uid', text, location, location).with_action {}
         test_case = Case.new(name, [passing_step], location, tags, language, [around_hook])
         expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_passed
@@ -266,7 +266,7 @@ module Cucumber::Core::Test
 
       it "gets a failed result if the Around hook fails before the test case is run" do
         around_hook = AroundHook.new { |block| raise exception }
-        passing_step = Step.new(text, location, location).with_action {}
+        passing_step = Step.new('some-random-uid', text, location, location).with_action {}
         test_case = Case.new(name, [passing_step], location, tags, language, [around_hook])
         expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
@@ -277,7 +277,7 @@ module Cucumber::Core::Test
 
       it "gets a failed result if the Around hook fails after the test case is run" do
         around_hook = AroundHook.new { |block| block.call; raise exception }
-        passing_step = Step.new(text, location, location).with_action {}
+        passing_step = Step.new('some-random-uid', text, location, location).with_action {}
         test_case = Case.new(name, [passing_step], location, tags, language, [around_hook])
         expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
@@ -288,7 +288,7 @@ module Cucumber::Core::Test
 
       it "fails when a step fails if the around hook works" do
         around_hook = AroundHook.new { |block| block.call }
-        failing_step = Step.new(text, location, location).with_action { raise exception }
+        failing_step = Step.new('some-random-uid', text, location, location).with_action { raise exception }
         test_case = Case.new(name, [failing_step], location, tags, language, [around_hook])
         expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |reported_test_case, result|
           expect(result).to be_failed
@@ -299,7 +299,7 @@ module Cucumber::Core::Test
 
       it "sends after_test_step for a step interrupted by (a timeout in) the around hook" do
         around_hook = AroundHook.new { |block| block.call; raise exception }
-        passing_step = Step.new(text, location, location).with_action {}
+        passing_step = Step.new('some-random-uid', text, location, location).with_action {}
         test_case = Case.new(name, [], location, tags, language, [around_hook])
         allow(runner).to receive(:running_test_step).and_return(passing_step)
         expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |reported_test_case, result|

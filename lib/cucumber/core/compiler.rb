@@ -11,11 +11,12 @@ module Cucumber
   module Core
     # Compiles the Pickles into test cases
     class Compiler
-      attr_reader :receiver
-      private     :receiver
+      attr_reader :receiver, :id_generator
+      private     :receiver, :id_generator
 
-      def initialize(receiver)
+      def initialize(receiver, id_generator)
         @receiver = receiver
+        @id_generator = id_generator
       end
 
       def pickle(pickle)
@@ -41,7 +42,7 @@ module Cucumber
       def create_test_step(pickle_step, uri)
         lines = pickle_step.locations.map { |location| location.line }.sort.reverse
         multiline_arg = create_multiline_arg(pickle_step, uri)
-        Test::Step.new(pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
+        Test::Step.new(id_generator.new_id, pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
       end
 
       def create_multiline_arg(pickle_step, uri)

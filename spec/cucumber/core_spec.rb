@@ -170,7 +170,7 @@ module Cucumber
       context "with around hooks" do
         class WithAroundHooks < Core::Filter.new(:logger)
           def test_case(test_case)
-            base_step = Core::Test::Step.new('text', nil, nil, nil)
+            base_step = Core::Test::Step.new('some-random-uid', 'text', nil, nil, nil)
             test_steps = [
               base_step.with_action { logger << :step },
             ]
