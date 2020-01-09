@@ -36,7 +36,7 @@ module Cucumber
         test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
         lines = pickle.locations.map { |location| location.line }.sort.reverse
         tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, tag.location.line), tag.name) }
-        Test::Case.new(pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
+        Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
       end
 
       def create_test_step(pickle_step, uri)
