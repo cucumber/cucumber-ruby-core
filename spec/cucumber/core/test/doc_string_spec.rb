@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'cucumber/core/test/location'
 require 'cucumber/core/test/doc_string'
 require 'unindent'
 
@@ -7,11 +6,10 @@ module Cucumber
   module Core
     module Test
       describe DocString do
-        let(:location) { double }
-        let(:doc_string) { DocString.new(content, content_type, location) }
+        let(:doc_string) { DocString.new(content, content_type) }
 
         describe "#data_table?" do
-          let(:doc_string) { DocString.new("test", "text/plain" , location) }
+          let(:doc_string) { DocString.new("test", "text/plain" ) }
 
           it "returns false" do
             expect(doc_string).not_to be_data_table
@@ -19,7 +17,7 @@ module Cucumber
         end
 
         describe "#doc_string" do
-          let(:doc_string) { DocString.new("test", "text/plain" , location) }
+          let(:doc_string) { DocString.new("test", "text/plain" ) }
 
           it "returns true" do
             expect(doc_string).to be_doc_string
@@ -48,15 +46,15 @@ module Cucumber
           let(:content_type) { 'text/plain' }
 
           it 'is equal to another DocString with the same content and content_type' do
-            expect( doc_string ).to eq DocString.new(content, content_type, location)
+            expect( doc_string ).to eq DocString.new(content, content_type)
           end
 
           it 'is not equal to another DocString with different content' do
-            expect( doc_string ).not_to eq DocString.new('bar', content_type, location)
+            expect( doc_string ).not_to eq DocString.new('bar', content_type)
           end
 
           it 'is not equal to another DocString with different content_type' do
-            expect( doc_string ).not_to eq DocString.new(content, 'text/html', location)
+            expect( doc_string ).not_to eq DocString.new(content, 'text/html')
           end
 
           it 'is equal to a string with the same content' do
@@ -96,13 +94,12 @@ module Cucumber
       end
 
       context "inspect" do
-        let(:location) { Test::Location.new("features/feature.feature", 8) }
         let(:content_type) { 'text/plain' }
 
         it "provides a useful inspect method" do
-          doc_string = DocString.new("some text", content_type, location)
+          doc_string = DocString.new("some text", content_type)
           expect(doc_string.inspect).to eq <<-END.chomp.unindent
-          #<Cucumber::Core::Test::DocString (features/feature.feature:8)
+          #<Cucumber::Core::Test::DocString
             """text/plain
             some text
             """>

@@ -20,14 +20,11 @@ module Cucumber
       # Note how the indentation from the source is stripped away.
       #
       class DocString < SimpleDelegator
-        include HasLocation
-
         attr_reader :content_type, :content
 
-        def initialize(content, content_type, location)
+        def initialize(content, content_type)
           @content = content
           @content_type = content_type
-          @location = location
           super @content
         end
 
@@ -46,7 +43,7 @@ module Cucumber
         def map
           raise ArgumentError, "No block given" unless block_given?
           new_content = yield content
-          self.class.new(new_content, content_type, location)
+          self.class.new(new_content, content_type)
         end
 
         def to_step_definition_arg
@@ -65,7 +62,7 @@ module Cucumber
 
         def inspect
           [
-            %{#<#{self.class} (#{location})},
+            %{#<#{self.class}},
             %{  """#{content_type}},
             %{  #{@content}},
             %{  """>}
