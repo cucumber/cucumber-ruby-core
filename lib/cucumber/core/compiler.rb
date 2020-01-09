@@ -47,19 +47,16 @@ module Cucumber
 
       def create_multiline_arg(pickle_step, uri)
         if pickle_step.argument
-          argument_line =source_line_for_pickle_step_argument(pickle_step)
           if pickle_step.argument.doc_string
             doc_string = pickle_step.argument.doc_string
             Test::DocString.new(
               doc_string.content,
-              doc_string.media_type,
-              Test::Location.new(uri, argument_line)
+              doc_string.media_type
             )
           elsif pickle_step.argument.data_table
             data_table = pickle_step.argument.data_table
             Test::DataTable.new(
-              data_table.rows.map { |row| row.cells.map { |cell| cell.value } },
-              Test::Location.new(uri, argument_line)
+              data_table.rows.map { |row| row.cells.map { |cell| cell.value } }
             )
           end
         else
@@ -77,10 +74,6 @@ module Cucumber
 
       def source_line_for_pickle_tag(tag)
         source_line(tag.ast_node_id)
-      end
-
-      def source_line_for_pickle_step_argument(pickle_step)
-        gherkin_query.argument_location(pickle_step.ast_node_ids[0])
       end
 
       def source_line(id)
