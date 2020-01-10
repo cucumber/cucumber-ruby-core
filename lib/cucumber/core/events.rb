@@ -12,6 +12,24 @@ module Cucumber
 
       end
 
+      # Signals that a Test::Step was created from a PickleStep
+      class TestStepCreated < Event.new(:test_step, :pickle_step)
+        # The created test step
+        attr_reader :test_step
+
+        # The source pickle step
+        attr_reader :pickle_step
+      end
+
+      # Signals that a Test::Case was created from a Pickle
+      class TestCaseCreated < Event.new(:test_case, :pickle)
+        # The created test step
+        attr_reader :test_case
+
+        # The source pickle step
+        attr_reader :pickle
+      end
+
       # Signals that a {Test::Case} is about to be executed
       class TestCaseStarted < Event.new(:test_case)
 
@@ -56,6 +74,8 @@ module Cucumber
       def self.registry
         build_registry(
           GherkinSourceParsed,
+          TestStepCreated,
+          TestCaseCreated,
           TestCaseStarted,
           TestStepStarted,
           TestStepFinished,

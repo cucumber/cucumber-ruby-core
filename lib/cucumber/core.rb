@@ -20,7 +20,7 @@ module Cucumber
     def compile(gherkin_documents, last_receiver, filters = [], event_bus = EventBus.new, id_generator = Cucumber::Messages::IdGenerator::Incrementing.new)
       first_receiver = compose(filters, last_receiver)
       gherkin_query = ::Gherkin::Query.new
-      compiler = Compiler.new(first_receiver, gherkin_query, id_generator)
+      compiler = Compiler.new(first_receiver, gherkin_query, id_generator, event_bus)
       parse gherkin_documents, compiler, event_bus, gherkin_query, id_generator
       self
     end

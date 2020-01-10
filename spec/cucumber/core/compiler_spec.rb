@@ -31,6 +31,57 @@ module Cucumber::Core
       end
     end
 
+    context "when the event_bus is provided" do
+      let(:event_bus) { double }
+
+      before do
+        allow( event_bus ).to receive(:gherkin_source_parsed).and_return(nil)
+        allow( event_bus ).to receive(:test_case_created).and_return(nil)
+        allow( event_bus ).to receive(:test_step_created).and_return(nil)
+      end
+
+      it "emits a TestCaseCreated event with the created Test::Case and Pickle" do
+        gherkin_documents = [
+          gherkin do
+            feature do
+              scenario do
+                step 'passing'
+              end
+            end
+          end
+        ]
+
+        compile(gherkin_documents, event_bus) do | visitor |
+          allow( visitor ).to receive(:test_case)
+          allow( visitor ).to receive(:test_step)
+          allow( visitor ).to receive(:done)
+
+          expect( event_bus ).to receive(:test_case_created).once
+        end
+      end
+
+      it "emits a TestStepCreated event with the created Test::Step and PickleStep" do
+        gherkin_documents = [
+          gherkin do
+            feature do
+              scenario do
+                step 'passing'
+                step 'passing'
+              end
+            end
+          end
+        ]
+
+        compile(gherkin_documents, event_bus) do |visitor|
+          allow( visitor ).to receive(:test_case)
+          allow( visitor ).to receive(:test_step)
+          allow( visitor ).to receive(:done)
+
+          expect( event_bus ).to receive(:test_step_created).twice
+        end
+      end
+    end
+
     it "compiles a feature with a background" do
       gherkin_documents = [
         gherkin do
@@ -166,13 +217,20 @@ module Cucumber::Core
       end
     end
 
-    def compile(gherkin_documents)
+    def compile(gherkin_documents, event_bus = nil)
       visitor = double
       allow( visitor ).to receive(:test_suite).and_yield(visitor)
       allow( visitor ).to receive(:test_case).and_yield(visitor)
-      yield visitor
-      super(gherkin_documents, visitor)
-    end
 
+      if event_bus.nil?
+        event_bus = double
+        allow( event_bus ).to receive(:gherkin_source_parsed).and_return(nil)
+        allow( event_bus ).to receive(:test_case_created).and_return(nil)
+        allow( event_bus ).to receive(:test_step_created).and_return(nil)
+      end
+
+      yield visitor
+      super(gherkin_documents, visitor, [], event_bus)
+    end
   end
 end
