@@ -14,9 +14,10 @@ module Cucumber
       attr_reader :receiver, :id_generator
       private     :receiver, :id_generator
 
-      def initialize(receiver, id_generator)
+      def initialize(receiver, id_generator, event_bus = nil)
         @receiver = receiver
         @id_generator = id_generator
+        @event_bus = event_bus
       end
 
       def pickle(pickle)
@@ -36,13 +37,17 @@ module Cucumber
         test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
         lines = pickle.locations.map { |location| location.line }.sort.reverse
         tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, tag.location.line), tag.name) }
-        Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
+        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
+        @event_bus.broadcast(Events::TestCaseCreated.new(test_case, pickle)) unless @event_bus.nil?
+        test_case
       end
 
       def create_test_step(pickle_step, uri)
         lines = pickle_step.locations.map { |location| location.line }.sort.reverse
         multiline_arg = create_multiline_arg(pickle_step, uri)
-        Test::Step.new(id_generator.new_id, pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
+        step = Test::Step.new(id_generator.new_id, pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
+        @event_bus.broadcast(Events::TestStepCreated.new(step, pickle_step)) unless @event_bus.nil?
+        step
       end
 
       def create_multiline_arg(pickle_step, uri)
