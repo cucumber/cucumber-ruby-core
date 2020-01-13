@@ -4,7 +4,7 @@ require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/gherkin/document'
 require 'cucumber/core/compiler'
 require 'cucumber/core/test/runner'
-require 'cucumber/core/id_generator'
+require 'cucumber/messages'
 require 'gherkin/query'
 
 module Cucumber
@@ -20,7 +20,7 @@ module Cucumber
     def compile(gherkin_documents, last_receiver, filters = [], event_bus = EventBus.new)
       first_receiver = compose(filters, last_receiver)
       gherkin_query = ::Gherkin::Query.new
-      compiler = Compiler.new(first_receiver, gherkin_query, IdGenerator::Incrementing.new)
+      compiler = Compiler.new(first_receiver, gherkin_query, Cucumber::Messages::IdGenerator::Incrementing.new)
       parse gherkin_documents, compiler, event_bus, gherkin_query
       self
     end
