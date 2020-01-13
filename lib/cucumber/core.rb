@@ -10,17 +10,16 @@ require 'gherkin/query'
 module Cucumber
   module Core
 
-    def execute(gherkin_documents, filters = [], event_bus = EventBus.new)
+    def execute(gherkin_documents, filters = [], event_bus = EventBus.new, id_generator = Cucumber::Messages::IdGenerator::Incrementing.new)
       yield event_bus if block_given?
       receiver = Test::Runner.new(event_bus)
-      compile gherkin_documents, receiver, filters
+      compile gherkin_documents, receiver, filters, event_bus, id_generator
       self
     end
 
-    def compile(gherkin_documents, last_receiver, filters = [], event_bus = EventBus.new)
+    def compile(gherkin_documents, last_receiver, filters = [], event_bus = EventBus.new, id_generator = Cucumber::Messages::IdGenerator::Incrementing.new)
       first_receiver = compose(filters, last_receiver)
       gherkin_query = ::Gherkin::Query.new
-      id_generator = Cucumber::Messages::IdGenerator::Incrementing.new
       compiler = Compiler.new(first_receiver, gherkin_query, id_generator)
       parse gherkin_documents, compiler, event_bus, gherkin_query, id_generator
       self
