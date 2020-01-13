@@ -9,7 +9,6 @@ module Cucumber
         STRICT_AFFECTED_TYPES = [:flaky, :undefined, :pending].freeze
 
         def self.ok?(type, be_strict = StrictConfiguration.new)
-          private
           class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)
           const_get(class_name).ok?(be_strict.strict?(type))
         end
