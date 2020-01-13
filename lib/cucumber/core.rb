@@ -20,15 +20,16 @@ module Cucumber
     def compile(gherkin_documents, last_receiver, filters = [], event_bus = EventBus.new)
       first_receiver = compose(filters, last_receiver)
       gherkin_query = ::Gherkin::Query.new
-      compiler = Compiler.new(first_receiver, gherkin_query, Cucumber::Messages::IdGenerator::Incrementing.new)
-      parse gherkin_documents, compiler, event_bus, gherkin_query
+      id_generator = Cucumber::Messages::IdGenerator::Incrementing.new
+      compiler = Compiler.new(first_receiver, gherkin_query, id_generator)
+      parse gherkin_documents, compiler, event_bus, gherkin_query, id_generator
       self
     end
 
     private
 
-    def parse(gherkin_documents, compiler, event_bus, gherkin_query)
-      parser = Core::Gherkin::Parser.new(compiler, event_bus, gherkin_query)
+    def parse(gherkin_documents, compiler, event_bus, gherkin_query, id_generator)
+      parser = Core::Gherkin::Parser.new(compiler, event_bus, gherkin_query, id_generator)
       gherkin_documents.each do |document|
         parser.document document
       end

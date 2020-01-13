@@ -10,12 +10,14 @@ module Cucumber
         let(:receiver)  { double }
         let(:event_bus) { double }
         let(:gherkin_query) { double }
-        let(:parser)    { Parser.new(receiver, event_bus, gherkin_query) }
+        let(:id_generator) { double }
+        let(:parser)    { Parser.new(receiver, event_bus, gherkin_query, id_generator) }
         let(:visitor)   { double }
 
         before do
           allow( event_bus ).to receive(:gherkin_source_parsed)
           allow( gherkin_query ).to receive(:update)
+          allow( id_generator ).to receive(:new_id)
         end
 
         def parse
