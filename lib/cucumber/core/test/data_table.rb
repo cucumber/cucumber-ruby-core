@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-require 'cucumber/core/test/location'
 
 module Cucumber
   module Core
@@ -24,18 +23,15 @@ module Cucumber
       # This will store <tt>[['a', 'b'], ['c', 'd']]</tt> in the <tt>data</tt> variable.
       #
       class DataTable
-        include HasLocation
-
         # Creates a new instance. +raw+ should be an Array of Array of String
         # or an Array of Hash
         # You don't typically create your own DataTable objects - Cucumber will do
         # it internally and pass them to your Step Definitions.
         #
-        def initialize(rows, location)
+        def initialize(rows)
           raw = ensure_array_of_array(rows)
           verify_rows_are_same_length(raw)
           @raw = raw.freeze
-          @location = location
         end
         attr_reader :raw
 
@@ -58,7 +54,7 @@ module Cucumber
         # Creates a copy of this table
         #
         def dup
-          self.class.new(raw.dup, location)
+          self.class.new(raw.dup)
         end
 
         # Returns a new, transposed table. Example:
@@ -73,7 +69,7 @@ module Cucumber
         #   | 4 | 2 |
         #
         def transpose
-          self.class.new(raw.transpose, location)
+          self.class.new(raw.transpose)
         end
 
         def map(&block)
@@ -81,7 +77,7 @@ module Cucumber
             row.map(&block)
           end
 
-          self.class.new(new_raw, location)
+          self.class.new(new_raw)
         end
 
         def ==(other)
@@ -89,7 +85,7 @@ module Cucumber
         end
 
         def inspect
-          %{#<#{self.class} #{raw.inspect} (#{location})>}
+          %{#<#{self.class} #{raw.inspect})>}
         end
 
         private
