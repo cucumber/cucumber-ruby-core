@@ -15,6 +15,7 @@ module Cucumber
 
         before do
           allow( event_bus ).to receive(:gherkin_source_parsed)
+          allow( event_bus).to receive(:envelope)
           allow( gherkin_query ).to receive(:update)
         end
 
