@@ -43,6 +43,12 @@ module Cucumber
             expect( event_bus ).to receive(:gherkin_source_parsed)
             parse
           end
+
+          it "emits an 'envelope' event for every message produced by Gherkin" do
+            # Only one message emited, there's no pickles generated
+            expect( event_bus ).to receive(:envelope).once
+            parse
+          end
         end
 
         context "for empty files" do
@@ -88,6 +94,13 @@ module Cucumber
 
           it "passes on the pickle" do
             expect( receiver ).to receive(:pickle)
+            parse
+          end
+
+          it "emits an 'envelope' event containing the pickle" do
+            allow( receiver ).to receive(:pickle)
+            # Once for the gherkin document, once with the pickle
+            expect( event_bus ).to receive(:envelope).twice
             parse
           end
         end
