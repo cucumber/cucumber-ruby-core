@@ -20,6 +20,7 @@ module Cucumber
         def document(document)
           messages = ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
           messages.each do |message|
+            event_bus.envelope(message)
             gherkin_query.update(message)
             if !message.gherkin_document.nil?
               event_bus.gherkin_source_parsed(message.gherkin_document)

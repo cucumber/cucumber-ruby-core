@@ -5,6 +5,10 @@ module Cucumber
   module Core
     module Events
 
+      class Envelope < Event.new(:envelope)
+        attr_reader :envelope
+      end
+
       # Signals that a gherkin source has been parsed
       class GherkinSourceParsed < Event.new(:gherkin_document)
         # @return [GherkinDocument] the GherkinDocument Ast Node
@@ -73,6 +77,7 @@ module Cucumber
       # that will be used by the {EventBus} by default.
       def self.registry
         build_registry(
+          Envelope,
           GherkinSourceParsed,
           TestStepCreated,
           TestCaseCreated,
