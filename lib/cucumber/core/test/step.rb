@@ -8,10 +8,11 @@ module Cucumber
   module Core
     module Test
       class Step
-        attr_reader :text, :location, :multiline_arg
+        attr_reader :id, :text, :location, :multiline_arg
 
-        def initialize(text, location, multiline_arg = Test::EmptyMultilineArgument.new, action = Test::UndefinedAction.new(location))
+        def initialize(id, text, location, multiline_arg = Test::EmptyMultilineArgument.new, action = Test::UndefinedAction.new(location))
           raise ArgumentError if text.nil? || text.empty?
+          @id = id
           @text = text
           @location = location
           @multiline_arg = multiline_arg
@@ -35,7 +36,7 @@ module Cucumber
         end
 
         def with_action(action_location = nil, &block)
-          self.class.new(text, location, multiline_arg, Test::Action.new(action_location, &block))
+          self.class.new(id, text, location, multiline_arg, Test::Action.new(action_location, &block))
         end
 
         def backtrace_line
@@ -56,8 +57,8 @@ module Cucumber
       end
 
       class HookStep < Step
-        def initialize(text, location, action)
-          super(text, location, Test::EmptyMultilineArgument.new, action)
+        def initialize(id, text, location, action)
+          super(id, text, location, Test::EmptyMultilineArgument.new, action)
         end
 
         def hook?
