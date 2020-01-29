@@ -23,6 +23,11 @@ module Cucumber::Core::Test
         expect( result.to_s ).to eq "✓"
       end
 
+      it "converts to a Cucumber::Message::TestResult" do
+        message = result.to_message
+        expect(message.status).to eq(Cucumber::Messages::TestResult::Status::PASSED)
+      end
+
       it "has a duration" do
         expect( result.duration ).to eq duration
       end
@@ -66,6 +71,11 @@ module Cucumber::Core::Test
 
       it "has a duration" do
         expect( result.duration ).to eq duration
+      end
+
+      it "converts to a Cucumber::Message::TestResult" do
+        message = result.to_message
+        expect(message.status).to eq(Cucumber::Messages::TestResult::Status::FAILED)
       end
 
       it "requires both constructor arguments" do
@@ -131,6 +141,11 @@ module Cucumber::Core::Test
       specify { expect( result ).to     be_unknown   }
       specify { expect( result ).not_to be_skipped   }
       specify { expect( result ).not_to be_flaky     }
+
+      it "converts to a Cucumber::Message::TestResult" do
+        message = result.to_message
+        expect(message.status).to eq(Cucumber::Messages::TestResult::Status::UNKNOWN)
+      end
     end
 
     describe Result::Raisable do
@@ -190,6 +205,11 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
+      it "converts to a Cucumber::Message::TestResult" do
+        message = result.to_message
+        expect(message.status).to eq(Cucumber::Messages::TestResult::Status::UNDEFINED)
+      end
+
       specify { expect( result.to_sym ).to eq :undefined }
 
       specify { expect( result ).not_to be_passed    }
@@ -214,6 +234,11 @@ module Cucumber::Core::Test
         result.describe_to(visitor, args)
       end
 
+      it "converts to a Cucumber::Message::TestResult" do
+        message = result.to_message
+        expect(message.status).to eq(Cucumber::Messages::TestResult::Status::SKIPPED)
+      end
+
       specify { expect( result.to_sym ).to eq :skipped }
 
       specify { expect( result ).not_to be_passed    }
@@ -234,6 +259,11 @@ module Cucumber::Core::Test
         expect( visitor ).to receive(:pending).with(result, args)
         expect( visitor ).to receive(:duration).with(an_unknown_duration, args)
         result.describe_to(visitor, args)
+      end
+
+      it "converts to a Cucumber::Message::TestResult" do
+        message = result.to_message
+        expect(message.status).to eq(Cucumber::Messages::TestResult::Status::PENDING)
       end
 
       specify { expect( result.to_sym ).to eq :pending }
@@ -259,7 +289,7 @@ module Cucumber::Core::Test
 
     describe Result::StrictConfiguration do
       subject(:strict_configuration) { Result::StrictConfiguration.new}
-      
+
       describe '#set_strict' do
         context 'no type argument' do
           it 'sets all result types to the setting argument' do

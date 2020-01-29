@@ -42,6 +42,12 @@ module Cucumber
           def with_filtered_backtrace(filter)
             self
           end
+
+          def to_message
+            Cucumber::Messages::TestResult.new(
+              status: Cucumber::Messages::TestResult::Status::UNKNOWN
+            )
+          end
         end
 
         class Passed
@@ -65,6 +71,12 @@ module Cucumber
 
           def to_s
             "✓"
+          end
+
+          def to_message
+            Cucumber::Messages::TestResult.new(
+              status: Cucumber::Messages::TestResult::Status::PASSED
+            )
           end
 
           def ok?(be_strict = nil)
@@ -104,6 +116,12 @@ module Cucumber
 
           def to_s
             "✗"
+          end
+
+          def to_message
+            Cucumber::Messages::TestResult.new(
+              status: Cucumber::Messages::TestResult::Status::FAILED
+            )
           end
 
           def ok?(be_strict = nil)
@@ -185,6 +203,12 @@ module Cucumber
           def to_s
             "?"
           end
+
+          def to_message
+            Cucumber::Messages::TestResult.new(
+              status: Cucumber::Messages::TestResult::Status::UNDEFINED
+            )
+          end
         end
 
         class Skipped < Raisable
@@ -202,6 +226,12 @@ module Cucumber
 
           def to_s
             "-"
+          end
+
+          def to_message
+            Cucumber::Messages::TestResult.new(
+              status: Cucumber::Messages::TestResult::Status::SKIPPED
+            )
           end
         end
 
@@ -221,6 +251,12 @@ module Cucumber
           def to_s
             "P"
           end
+
+          def to_message
+            Cucumber::Messages::TestResult.new(
+              status: Cucumber::Messages::TestResult::Status::PENDING
+            )
+          end
         end
 
         # Handles the strict settings for the result types that are
@@ -228,7 +264,7 @@ module Cucumber
         class StrictConfiguration
           attr_accessor :settings
           private :settings
-          
+
           def initialize(strict_types = [])
             @settings = Hash[STRICT_AFFECTED_TYPES.map { |t| [t, :default] }]
             strict_types.each do |type|
@@ -328,7 +364,7 @@ module Cucumber
           def decrement_failed
             @totals[:failed] -= 1
           end
-          
+
           private
 
           def get_total(method_name)
