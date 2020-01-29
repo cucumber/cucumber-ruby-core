@@ -35,6 +35,7 @@ module Cucumber::Core
       let(:event_bus) { double }
 
       before do
+        allow( event_bus ).to receive(:envelope)
         allow( event_bus ).to receive(:gherkin_source_parsed).and_return(nil)
         allow( event_bus ).to receive(:test_case_created).and_return(nil)
         allow( event_bus ).to receive(:test_step_created).and_return(nil)
@@ -226,6 +227,7 @@ module Cucumber::Core
 
       if event_bus.nil?
         event_bus = double
+        allow( event_bus ).to receive(:envelope).and_return(nil)
         allow( event_bus ).to receive(:gherkin_source_parsed).and_return(nil)
         allow( event_bus ).to receive(:test_case_created).and_return(nil)
         allow( event_bus ).to receive(:test_step_created).and_return(nil)
