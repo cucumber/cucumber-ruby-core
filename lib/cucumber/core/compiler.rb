@@ -11,12 +11,14 @@ module Cucumber
   module Core
     # Compiles the Pickles into test cases
     class Compiler
-      attr_reader :receiver, :gherkin_query
-      private     :receiver, :gherkin_query
+      attr_reader :receiver, :gherkin_query, :id_generator
+      private     :receiver, :gherkin_query, :id_generator
 
-      def initialize(receiver, gherkin_query)
+      def initialize(receiver, gherkin_query, id_generator, event_bus = nil)
         @receiver = receiver
+        @id_generator = id_generator
         @gherkin_query = gherkin_query
+        @event_bus = event_bus
       end
 
       def pickle(pickle)
@@ -35,14 +37,18 @@ module Cucumber
         uri = pickle.uri
         test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
         lines = source_lines_for_pickle(pickle).sort.reverse
-        tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, source_line_for_pickle_tag(tag)), tag.name) } # TODO: don't hardcode tag location
-        Test::Case.new(pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
+        tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, source_line_for_pickle_tag(tag)), tag.name) }
+        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
+        @event_bus.test_case_created(test_case, pickle) unless @event_bus.nil?
+        test_case
       end
 
       def create_test_step(pickle_step, uri)
         lines = source_lines_for_pickle_step(pickle_step).sort.reverse
         multiline_arg = create_multiline_arg(pickle_step, uri)
-        Test::Step.new(pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
+        step = Test::Step.new(id_generator.new_id, pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
+        @event_bus.test_step_created(step, pickle_step) unless @event_bus.nil?
+        step
       end
 
       def create_multiline_arg(pickle_step, uri)
