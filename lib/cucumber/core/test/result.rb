@@ -45,7 +45,8 @@ module Cucumber
 
           def to_message
             Cucumber::Messages::TestResult.new(
-              status: Cucumber::Messages::TestResult::Status::UNKNOWN
+              status: Cucumber::Messages::TestResult::Status::UNKNOWN,
+              duration: duration.to_message_duration
             )
           end
         end
@@ -75,7 +76,8 @@ module Cucumber
 
           def to_message
             Cucumber::Messages::TestResult.new(
-              status: Cucumber::Messages::TestResult::Status::PASSED
+              status: Cucumber::Messages::TestResult::Status::PASSED,
+              duration: duration.to_message_duration
             )
           end
 
@@ -94,6 +96,7 @@ module Cucumber
 
         class Failed
           include Result.query_methods :failed
+
           attr_reader :duration, :exception
 
           def self.ok?(be_strict = false)
@@ -120,7 +123,8 @@ module Cucumber
 
           def to_message
             Cucumber::Messages::TestResult.new(
-              status: Cucumber::Messages::TestResult::Status::FAILED
+              status: Cucumber::Messages::TestResult::Status::FAILED,
+              duration: duration.to_message_duration
             )
           end
 
@@ -206,7 +210,8 @@ module Cucumber
 
           def to_message
             Cucumber::Messages::TestResult.new(
-              status: Cucumber::Messages::TestResult::Status::UNDEFINED
+              status: Cucumber::Messages::TestResult::Status::UNDEFINED,
+              duration: duration.to_message_duration
             )
           end
         end
@@ -230,7 +235,8 @@ module Cucumber
 
           def to_message
             Cucumber::Messages::TestResult.new(
-              status: Cucumber::Messages::TestResult::Status::SKIPPED
+              status: Cucumber::Messages::TestResult::Status::SKIPPED,
+              duration: duration.to_message_duration
             )
           end
         end
@@ -254,7 +260,8 @@ module Cucumber
 
           def to_message
             Cucumber::Messages::TestResult.new(
-              status: Cucumber::Messages::TestResult::Status::PENDING
+              status: Cucumber::Messages::TestResult::Status::PENDING,
+              duration: duration.to_message_duration
             )
           end
         end
@@ -379,10 +386,16 @@ module Cucumber
         end
 
         class Duration
+          include Cucumber::Messages::TimeConversion
+
           attr_reader :nanoseconds
 
           def initialize(nanoseconds)
             @nanoseconds = nanoseconds
+          end
+
+          def to_message_duration
+            seconds_to_duration(nanoseconds / NANOSECONDS_PER_SECOND)
           end
         end
 
