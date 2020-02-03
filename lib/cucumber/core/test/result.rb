@@ -395,7 +395,7 @@ module Cucumber
           end
 
           def to_message_duration
-            seconds_to_duration(nanoseconds / NANOSECONDS_PER_SECOND)
+            seconds_to_duration(nanoseconds.to_f / NANOSECONDS_PER_SECOND)
           end
         end
 
