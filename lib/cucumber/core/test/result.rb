@@ -122,9 +122,12 @@ module Cucumber
           end
 
           def to_message
+            message = exception.backtrace.join("\n") if exception
+
             Cucumber::Messages::TestResult.new(
               status: Cucumber::Messages::TestResult::Status::FAILED,
-              duration: duration.to_message_duration
+              duration: duration.to_message_duration,
+              message: message
             )
           end
 
@@ -400,12 +403,18 @@ module Cucumber
         end
 
         class UnknownDuration
+          include Cucumber::Messages::TimeConversion
+
           def tap(&block)
             self
           end
 
           def nanoseconds
             raise "#nanoseconds only allowed to be used in #tap block"
+          end
+
+          def to_message_duration
+            seconds_to_duration(0)
           end
         end
       end
