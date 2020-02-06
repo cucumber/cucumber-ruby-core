@@ -46,7 +46,7 @@ module Cucumber
           def to_message
             Cucumber::Messages::TestResult.new(
               status: Cucumber::Messages::TestResult::Status::UNKNOWN,
-              duration: duration.to_message_duration
+              duration: UnknownDuration.new.to_message_duration
             )
           end
         end
@@ -122,7 +122,11 @@ module Cucumber
           end
 
           def to_message
-            message = exception.backtrace.join("\n") if exception
+            begin
+              message = exception.backtrace.join("\n")
+            rescue NoMethodError
+              message = ""
+            end
 
             Cucumber::Messages::TestResult.new(
               status: Cucumber::Messages::TestResult::Status::FAILED,
