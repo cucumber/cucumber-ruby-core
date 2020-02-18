@@ -4,9 +4,11 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Changed
 
-* N/A
+* Update to Gherkin 10
 
 ### Added
+
+* Add `envelope` event, which are used when emitting `Cucumber::Messages`
 
 * Added rubocop (with todo file), and removed backports gems
   ([#186](https://github.com/cucumber/cucumber-ruby-core/pull/186),

@@ -42,6 +42,13 @@ module Cucumber
           def with_filtered_backtrace(filter)
             self
           end
+
+          def to_message
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResult::Status::UNKNOWN,
+              duration: UnknownDuration.new.to_message_duration
+            )
+          end
         end
 
         class Passed
@@ -67,6 +74,13 @@ module Cucumber
             "✓"
           end
 
+          def to_message
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResult::Status::PASSED,
+              duration: duration.to_message_duration
+            )
+          end
+
           def ok?(be_strict = nil)
             self.class.ok?
           end
@@ -82,6 +96,7 @@ module Cucumber
 
         class Failed
           include Result.query_methods :failed
+
           attr_reader :duration, :exception
 
           def self.ok?(be_strict = false)
@@ -104,6 +119,20 @@ module Cucumber
 
           def to_s
             "✗"
+          end
+
+          def to_message
+            begin
+              message = exception.backtrace.join("\n")
+            rescue NoMethodError
+              message = ""
+            end
+
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResult::Status::FAILED,
+              duration: duration.to_message_duration,
+              message: message
+            )
           end
 
           def ok?(be_strict = nil)
@@ -185,6 +214,13 @@ module Cucumber
           def to_s
             "?"
           end
+
+          def to_message
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResult::Status::UNDEFINED,
+              duration: duration.to_message_duration
+            )
+          end
         end
 
         class Skipped < Raisable
@@ -202,6 +238,13 @@ module Cucumber
 
           def to_s
             "-"
+          end
+
+          def to_message
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResult::Status::SKIPPED,
+              duration: duration.to_message_duration
+            )
           end
         end
 
@@ -221,6 +264,13 @@ module Cucumber
           def to_s
             "P"
           end
+
+          def to_message
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResult::Status::PENDING,
+              duration: duration.to_message_duration
+            )
+          end
         end
 
         # Handles the strict settings for the result types that are
@@ -228,7 +278,7 @@ module Cucumber
         class StrictConfiguration
           attr_accessor :settings
           private :settings
-          
+
           def initialize(strict_types = [])
             @settings = Hash[STRICT_AFFECTED_TYPES.map { |t| [t, :default] }]
             strict_types.each do |type|
@@ -328,7 +378,7 @@ module Cucumber
           def decrement_failed
             @totals[:failed] -= 1
           end
-          
+
           private
 
           def get_total(method_name)
@@ -343,20 +393,32 @@ module Cucumber
         end
 
         class Duration
+          include Cucumber::Messages::TimeConversion
+
           attr_reader :nanoseconds
 
           def initialize(nanoseconds)
             @nanoseconds = nanoseconds
           end
+
+          def to_message_duration
+            seconds_to_duration(nanoseconds.to_f / NANOSECONDS_PER_SECOND)
+          end
         end
 
         class UnknownDuration
+          include Cucumber::Messages::TimeConversion
+
           def tap(&block)
             self
           end
 
           def nanoseconds
             raise "#nanoseconds only allowed to be used in #tap block"
+          end
+
+          def to_message_duration
+            seconds_to_duration(0)
           end
         end
       end

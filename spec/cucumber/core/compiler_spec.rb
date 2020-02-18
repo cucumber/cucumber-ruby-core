@@ -56,6 +56,7 @@ module Cucumber::Core
           allow( visitor ).to receive(:test_case)
           allow( visitor ).to receive(:test_step)
           allow( visitor ).to receive(:done)
+          allow( event_bus ).to receive(:envelope)
 
           expect( event_bus ).to receive(:test_case_created).once
         end
@@ -77,6 +78,7 @@ module Cucumber::Core
           allow( visitor ).to receive(:test_case)
           allow( visitor ).to receive(:test_step)
           allow( visitor ).to receive(:done)
+          allow( event_bus ).to receive(:envelope)
 
           expect( event_bus ).to receive(:test_step_created).twice
         end
@@ -229,6 +231,7 @@ module Cucumber::Core
         allow( event_bus ).to receive(:gherkin_source_parsed).and_return(nil)
         allow( event_bus ).to receive(:test_case_created).and_return(nil)
         allow( event_bus ).to receive(:test_step_created).and_return(nil)
+        allow( event_bus ).to receive(:envelope).and_return(nil)
       end
 
       yield visitor
