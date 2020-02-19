@@ -7,14 +7,13 @@ module Cucumber
       ParseError = Class.new(StandardError)
 
       class Parser
-        attr_reader :receiver, :event_bus, :gherkin_query, :id_generator
-        private     :receiver, :event_bus, :gherkin_query, :id_generator
+        attr_reader :receiver, :event_bus, :gherkin_query
+        private     :receiver, :event_bus, :gherkin_query
 
-        def initialize(receiver, event_bus, gherkin_query, id_generator)
+        def initialize(receiver, event_bus, gherkin_query)
           @receiver = receiver
           @event_bus = event_bus
           @gherkin_query = gherkin_query
-          @id_generator = id_generator
         end
 
         def document(document)
@@ -40,8 +39,7 @@ module Cucumber
             default_dialect: document.language,
             include_source: false,
             include_gherkin_document: true,
-            include_pickles: true,
-            id_generator: id_generator
+            include_pickles: true
           }
         end
 
