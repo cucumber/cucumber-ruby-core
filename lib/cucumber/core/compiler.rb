@@ -6,6 +6,7 @@ require 'cucumber/core/test/tag'
 require 'cucumber/core/test/doc_string'
 require 'cucumber/core/test/data_table'
 require 'cucumber/core/test/empty_multiline_argument'
+require 'cucumber/messages'
 
 module Cucumber
   module Core
@@ -14,9 +15,9 @@ module Cucumber
       attr_reader :receiver, :gherkin_query, :id_generator
       private     :receiver, :gherkin_query, :id_generator
 
-      def initialize(receiver, gherkin_query, id_generator, event_bus = nil)
+      def initialize(receiver, gherkin_query, event_bus = nil)
         @receiver = receiver
-        @id_generator = id_generator
+        @id_generator = Cucumber::Messages::IdGenerator::UUID.new
         @gherkin_query = gherkin_query
         @event_bus = event_bus
       end
