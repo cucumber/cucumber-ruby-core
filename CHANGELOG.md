@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In Git](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.2...master)
+## [6.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.2...v6.0.0)
 
 ### Changed
 
