@@ -9,24 +9,18 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Added
 
 * Add `envelope` event, which are used when emitting `Cucumber::Messages`
-
+* Add `TestCaseCreated` and `TestStepCreated` events, emitted when compiling a `Pickle`
+* Add `Id` field to `TestCase` and `TestStep`
 * Added rubocop (with todo file), and removed backports gems
   ([#186](https://github.com/cucumber/cucumber-ruby-core/pull/186),
   [#182](https://github.com/cucumber/cucumber-ruby-core/issues/182)
   [tas50](https://github.com/tas50),
   [luke-hill](https://github.com/luke-hill))
 
-### Fixed
-
-* N/A
-
 ### Removed
 
-* N/A
+* Remove location for MultiLine arguments
 
-### Improved
-
-* N/A
 
 ## [5.0.2](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.1...v5.0.2)
 
