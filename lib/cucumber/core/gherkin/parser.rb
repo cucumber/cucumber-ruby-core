@@ -27,7 +27,7 @@ module Cucumber
               receiver.pickle(message.pickle)
             elsif !message.attachment.nil?
               # Parse error
-              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.text}")
+              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.body}")
             else
               raise "Unknown message: #{message.to_hash}"
             end
