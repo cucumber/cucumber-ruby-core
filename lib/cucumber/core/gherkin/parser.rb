@@ -25,9 +25,8 @@ module Cucumber
               event_bus.gherkin_source_parsed(message.gherkin_document)
             elsif !message.pickle.nil?
               receiver.pickle(message.pickle)
-            elsif !message.attachment.nil?
-              # Parse error
-              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.attachment.body}")
+            elsif message.parse_error
+              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.parse_error.message}")
             else
               raise "Unknown message: #{message.to_hash}"
             end

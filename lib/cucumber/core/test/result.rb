@@ -44,8 +44,8 @@ module Cucumber
           end
 
           def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResult::Status::UNKNOWN,
+            Cucumber::Messages::TestStepFinished::TestStepResult.new(
+              status: Cucumber::Messages::TestStepFinished::TestStepResult::Status::UNKNOWN,
               duration: UnknownDuration.new.to_message_duration
             )
           end
@@ -75,8 +75,8 @@ module Cucumber
           end
 
           def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResult::Status::PASSED,
+            Cucumber::Messages::TestStepFinished::TestStepResult.new(
+              status: Cucumber::Messages::TestStepFinished::TestStepResult::Status::PASSED,
               duration: duration.to_message_duration
             )
           end
@@ -128,8 +128,8 @@ module Cucumber
               message = ""
             end
 
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResult::Status::FAILED,
+            Cucumber::Messages::TestStepFinished::TestStepResult.new(
+              status: Cucumber::Messages::TestStepFinished::TestStepResult::Status::FAILED,
               duration: duration.to_message_duration,
               message: message
             )
@@ -216,8 +216,8 @@ module Cucumber
           end
 
           def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResult::Status::UNDEFINED,
+            Cucumber::Messages::TestStepFinished::TestStepResult.new(
+              status: Cucumber::Messages::TestStepFinished::TestStepResult::Status::UNDEFINED,
               duration: duration.to_message_duration
             )
           end
@@ -241,8 +241,8 @@ module Cucumber
           end
 
           def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResult::Status::SKIPPED,
+            Cucumber::Messages::TestStepFinished::TestStepResult.new(
+              status: Cucumber::Messages::TestStepFinished::TestStepResult::Status::SKIPPED,
               duration: duration.to_message_duration
             )
           end
@@ -266,8 +266,8 @@ module Cucumber
           end
 
           def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResult::Status::PENDING,
+            Cucumber::Messages::TestStepFinished::TestStepResult.new(
+              status: Cucumber::Messages::TestStepFinished::TestStepResult::Status::PENDING,
               duration: duration.to_message_duration
             )
           end
