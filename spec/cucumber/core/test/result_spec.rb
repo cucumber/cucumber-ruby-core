@@ -25,7 +25,7 @@ module Cucumber::Core::Test
 
       it "converts to a Cucumber::Message::TestResult" do
         message = result.to_message
-        expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::PASSED)
+        expect(message.status).to eq(Cucumber::Messages::TestStepFinished::TestStepResult::Status::PASSED)
       end
 
       it "has a duration" do
@@ -75,7 +75,7 @@ module Cucumber::Core::Test
 
       it "converts to a Cucumber::Message::TestResult" do
         message = result.to_message
-        expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::FAILED)
+        expect(message.status).to eq(Cucumber::Messages::TestStepFinished::TestStepResult::Status::FAILED)
       end
 
       it "requires both constructor arguments" do
@@ -144,7 +144,7 @@ module Cucumber::Core::Test
 
       it "converts to a Cucumber::Message::TestResult" do
         message = result.to_message
-        expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::UNKNOWN)
+        expect(message.status).to eq(Cucumber::Messages::TestStepFinished::TestStepResult::Status::UNKNOWN)
       end
     end
 
@@ -207,7 +207,7 @@ module Cucumber::Core::Test
 
       it "converts to a Cucumber::Message::TestResult" do
         message = result.to_message
-        expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::UNDEFINED)
+        expect(message.status).to eq(Cucumber::Messages::TestStepFinished::TestStepResult::Status::UNDEFINED)
       end
 
       specify { expect( result.to_sym ).to eq :undefined }
@@ -236,7 +236,7 @@ module Cucumber::Core::Test
 
       it "converts to a Cucumber::Message::TestResult" do
         message = result.to_message
-        expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::SKIPPED)
+        expect(message.status).to eq(Cucumber::Messages::TestStepFinished::TestStepResult::Status::SKIPPED)
       end
 
       specify { expect( result.to_sym ).to eq :skipped }
@@ -263,7 +263,7 @@ module Cucumber::Core::Test
 
       it "converts to a Cucumber::Message::TestResult" do
         message = result.to_message
-        expect(message.status).to eq(Cucumber::Messages::TestStepResult::Status::PENDING)
+        expect(message.status).to eq(Cucumber::Messages::TestStepFinished::TestStepResult::Status::PENDING)
       end
 
       specify { expect( result.to_sym ).to eq :pending }
