@@ -9,8 +9,8 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Changed
 
 * Updated monorepo libraries:
-  - cucumber-gherkin ~> 12
-  - cucumber-messages ~> 11
+  - cucumber-gherkin ~> 13
+  - cucumber-messages ~> 12
 
 ### Removed
 
