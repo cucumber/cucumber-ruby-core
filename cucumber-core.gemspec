@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
                   }
 
   s.add_dependency 'cucumber-gherkin', '~> 13.0', '>= 13.0.0'
-  s.add_dependency 'cucumber-messages', '~> 12.0', '>= 12.0.0'
+  s.add_dependency 'cucumber-messages', '~> 12.1', '>= 12.1.1'
   s.add_dependency 'cucumber-tag-expressions', '~> 2.0', '>= 2.0.4'
 
   s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.23'
