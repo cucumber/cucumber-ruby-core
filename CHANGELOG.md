@@ -1,25 +1,12 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v6.0.0...master)
-
-### Added
-
-* N/A
+## [7.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v6.0.0...v7.0.0)
 
 ### Changed
 
 * Updated monorepo libraries:
   - cucumber-gherkin ~> 13
   - cucumber-messages ~> 12
-
-### Removed
-
-* N/A
-
-### Improved
-
-* N/A
-
 
 ## [6.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v5.0.2...v6.0.0)
 
