@@ -18,7 +18,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
   * N/A
 
-## [7.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v7.0.0...v7.0.1)
+## [7.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v7.0.0...v7.1.0)
 
 ### Changed
 
