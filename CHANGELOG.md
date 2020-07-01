@@ -1,5 +1,23 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
+## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v7.1.0...master)
+
+### Added
+
+  * N/A
+
+### Changed
+
+  * N/A
+
+### Removed
+
+  * N/A
+
+### Improved
+
+  * N/A
+
 ## [7.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v7.0.0...v7.0.1)
 
 ### Changed
