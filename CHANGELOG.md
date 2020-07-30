@@ -8,7 +8,9 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Changed
 
-  * N/A
+* Updated gems:
+  * `cucumber-gherkin` ~> 14.1.0
+  * `cucumber-messages` ~> 12.3.2
 
 ### Removed
 
