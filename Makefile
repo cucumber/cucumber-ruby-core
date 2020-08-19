@@ -13,5 +13,5 @@ release:
 		--user 1000 \
 		--rm \
 		-it cucumber/cucumber-build:latest \
-		bundle && bundle exec rake && bundle exec rake release
+		bash -c "rm -f Gemfile.lock && bundle && bundle exec rake && bundle exec rake release"
 .PHONY: release
