@@ -1,6 +1,7 @@
 Release Process
 ===============
 
+* Upgrade gems with `scripts/update-gemspec`
 * Bump the version number in `lib/cucumber/core/version.rb`
 * Update `CHANGELOG.md` with the upcoming version number and create a new `In Git` section
 * Now release it:
