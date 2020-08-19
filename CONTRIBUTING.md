@@ -8,8 +8,6 @@ Release Process
 * Now release it:
 
 ```
-bundle update
-bundle exec rake
 git commit -m "Release X.Y.Z"
 make release
 ```

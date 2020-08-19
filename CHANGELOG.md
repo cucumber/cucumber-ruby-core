@@ -12,15 +12,11 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
-* Make released from docker using secrets from keybase
-
 ## [8.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v8.0.0...v8.0.1)
 
 ### Fixed
 
-* Make released from docker using secrets from keybase
-
-### Dependencies
+* Make releases from docker using secrets from keybase
 
 ## [8.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v7.1.0...v8.0.0)
 
@@ -28,9 +24,7 @@ This release failed
 
 ### Dependencies
 
-* Updated gems: (look at the diff for details)
-  * `cucumber-gherkin`
-  * `cucumber-messages`
+* Updated dependencies (look at the diff for details)
 
 ## [7.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v7.0.0...v7.1.0)
 
