@@ -13,5 +13,5 @@ release:
 	  --user 1000 \
 	  --rm \
 	  -it cucumber/cucumber-build:latest \
-	  rake release
+	  bundle && rake release
 .PHONY: release
