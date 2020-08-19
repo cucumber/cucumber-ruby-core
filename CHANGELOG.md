@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v7.1.1...master)
+## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v8.0.1...master)
 
 ### Added
 
@@ -14,7 +14,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 * Make released from docker using secrets from keybase
 
-## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v7.1.0...v7.1.1)
+## [8.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v8.0.0...v8.0.1)
 
 ### Fixed
 
