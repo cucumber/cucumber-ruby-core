@@ -3,7 +3,7 @@ module Cucumber
   module Core
     class Version
       def self.to_s
-        "7.1.0"
+        "8.0.0"
       end
     end
   end

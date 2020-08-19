@@ -4,21 +4,23 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Added
 
-  * N/A
-
 ### Changed
 
-* Updated gems:
-  * `cucumber-gherkin` ~> 14.1.0
-  * `cucumber-messages` ~> 12.3.2
+### Deprecated
 
 ### Removed
 
-  * N/A
+### Fixed
 
-### Improved
+### Dependencies
 
-  * N/A
+## [8.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v7.1.0...v8.0.0)
+
+### Dependencies
+
+* Updated gems: (look at the diff for details)
+  * `cucumber-gherkin`
+  * `cucumber-messages`
 
 ## [7.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v7.0.0...v7.1.0)
 
