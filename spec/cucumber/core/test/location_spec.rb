@@ -19,9 +19,9 @@ module Cucumber::Core::Test
         expect( one_location ).to eq another_location
       end
 
-       it "is not equal to a wild card of the same file" do
-         expect( Location.new(file, line) ).not_to eq Location.new(file)
-       end
+      it "is not equal to a wild card of the same file" do
+        expect( Location.new(file, line) ).not_to eq Location.new(file)
+      end
 
       context "collections of locations" do
         it "behave as expected with uniq" do
@@ -45,7 +45,7 @@ module Cucumber::Core::Test
       end
 
       it "is file:line:line:line for an arbitrary set of lines" do
-        expect( Location.new("foo.feature", [1,3,5]).to_s ).to eq "foo.feature:1:3:5"
+        expect( Location.new("foo.feature", [1, 3, 5]).to_s ).to eq "foo.feature:1:3:5"
       end
     end
 
@@ -88,7 +88,7 @@ module Cucumber::Core::Test
     describe "created from source location" do
       context "when the location is in the tree below pwd" do
         it "create a relative path from pwd" do
-          expect( Location.from_source_location(Dir.pwd + "/path/file.rb", 1).file ).to eq "path/file.rb"
+          expect( Location.from_source_location("#{Dir.pwd}/path/file.rb", 1).file ).to eq "path/file.rb"
         end
       end
 
@@ -119,7 +119,7 @@ module Cucumber::Core::Test
         expect( Location.of_caller.to_s ).to be_included_in caller[0]
       end
 
-      context "when specifying additional caller depth"do
+      context "when specifying additional caller depth" do
         it "use the location of the n:th caller" do
           expect( Location.of_caller(1).to_s ).to be_included_in caller[1]
         end

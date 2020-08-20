@@ -9,7 +9,7 @@ module Cucumber
       class Case
         attr_reader :id, :name, :test_steps, :location, :tags, :language, :around_hooks
 
-        def initialize(id, name, test_steps, location, tags, language, around_hooks = [])
+        def initialize(id, name, test_steps, location, tags, language, around_hooks = []) # rubocop:disable Metrics/ParameterLists
           raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.is_a?(Array)
           @id = id
           @name = name

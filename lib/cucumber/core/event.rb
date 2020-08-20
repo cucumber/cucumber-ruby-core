@@ -22,7 +22,7 @@ module Cucumber
           end
 
           define_method(:to_h) do
-            attributes.reduce({}) { |result, attribute| 
+            attributes.reduce({}) { |result, attribute|
               value = self.send(attribute)
               result[attribute] = value
               result
@@ -48,8 +48,8 @@ module Cucumber
 
         def underscore(string)
           string.to_s.gsub(/::/, '/').
-          gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
-          gsub(/([a-z\d])([A-Z])/,'\1_\2').
+          gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
+          gsub(/([a-z\d])([A-Z])/, '\1_\2').
           tr("-", "_").
           downcase
         end

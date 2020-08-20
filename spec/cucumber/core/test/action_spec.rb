@@ -17,7 +17,7 @@ module Cucumber
         context "location" do
 
           context "with location passed to the constructor" do
-          let(:location) { double }
+            let(:location) { double }
 
             it "returns the location passed to the constructor" do
               action = Action.new(location) {}
@@ -151,4 +151,3 @@ module Cucumber
     end
   end
 end
-

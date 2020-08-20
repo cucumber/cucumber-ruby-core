@@ -11,7 +11,7 @@ module Cucumber::Core
     describe ".new" do
       let(:receiver) { double.as_null_object }
 
-      let(:doc) { 
+      let(:doc) {
         gherkin do
           feature do
             scenario 'x' do
@@ -46,7 +46,7 @@ module Cucumber::Core
           end
         end
 
-        # You can pass the names of attributes when building a 
+        # You can pass the names of attributes when building a
         # filter, allowing you to have custom attributes.
         class NamedBlankingFilter < Filter.new(:name_pattern)
           def test_case(test_case)

@@ -143,7 +143,7 @@ module Cucumber
                   step 'text'
                 end
               end
-              rule description: "Second rule"do
+              rule description: "Second rule" do
                 example name: "Do not talk about the fight club" do
                   step 'text'
                 end

@@ -344,16 +344,16 @@ module Cucumber::Core::Test
       describe '#merge!' do
         let(:merged_configuration) { Result::StrictConfiguration.new }
         it 'sets the not default values from the argument accordingly' do
-            strict_configuration.set_strict(false, :undefined)
-            strict_configuration.set_strict(false, :pending)
-            strict_configuration.set_strict(true, :flaky)
-            merged_configuration.set_strict(true, :pending)
-            merged_configuration.set_strict(false, :flaky)
-            strict_configuration.merge!(merged_configuration)
+          strict_configuration.set_strict(false, :undefined)
+          strict_configuration.set_strict(false, :pending)
+          strict_configuration.set_strict(true, :flaky)
+          merged_configuration.set_strict(true, :pending)
+          merged_configuration.set_strict(false, :flaky)
+          strict_configuration.merge!(merged_configuration)
 
-            expect( strict_configuration.strict?(:undefined) ).to be_falsey
-            expect( strict_configuration.strict?(:pending) ).to be_truthy
-            expect( strict_configuration.strict?(:flaky) ).to be_falsey
+          expect( strict_configuration.strict?(:undefined) ).to be_falsey
+          expect( strict_configuration.strict?(:pending) ).to be_truthy
+          expect( strict_configuration.strict?(:flaky) ).to be_falsey
         end
       end
     end

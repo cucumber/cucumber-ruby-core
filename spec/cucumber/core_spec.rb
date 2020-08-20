@@ -62,7 +62,7 @@ module Cucumber
             scenario_outline 'foo' do
               step '<arg>'
 
-              examples tags: '@a'do
+              examples tags: '@a' do
                 row 'arg'
                 row 'x'
               end
