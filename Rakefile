@@ -10,7 +10,7 @@ RuboCop::RakeTask.new
 
 require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec) do |t|
-  t.ruby_opts  = %w[-r./spec/coverage]
+  t.ruby_opts = %w[-r./spec/coverage]
 end
 
 namespace :spec do
