@@ -5,7 +5,6 @@ environment:
     - RUBY_VERSION: 24-x64
     - RUBY_VERSION: 25-x64
     - RUBY_VERSION: 26-x64
-    - RUBY_VERSION: 27-x64
 
 
 install:
