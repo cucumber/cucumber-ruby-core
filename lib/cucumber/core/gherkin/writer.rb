@@ -60,12 +60,14 @@ module Cucumber
           end
 
           def statements
-            prepare_statements language_statement,
+            prepare_statements(
+              language_statement,
               comments_statement,
               tag_statement,
               name_statement,
               description_statement,
               NEW_LINE
+            )
           end
 
           def language_statement
@@ -85,10 +87,12 @@ module Cucumber
 
           private
           def statements
-            prepare_statements comments_statement,
+            prepare_statements(
+              comments_statement,
               tag_statement,
               name_statement,
               description_statement
+            )
           end
         end
 
@@ -104,10 +108,12 @@ module Cucumber
 
           private
           def statements
-            prepare_statements comments_statement,
+            prepare_statements(
+              comments_statement,
               name_statement,
               description_statement,
               NEW_LINE
+            )
           end
         end
 
@@ -123,10 +129,12 @@ module Cucumber
 
           private
           def statements
-            prepare_statements comments_statement,
+            prepare_statements(
+              comments_statement,
               tag_statement,
               name_statement,
               description_statement
+            )
           end
         end
 
@@ -235,12 +243,14 @@ module Cucumber
 
           private
           def statements
-            prepare_statements NEW_LINE,
+            prepare_statements(
+              NEW_LINE,
               comments_statement,
               tag_statement,
               name_statement,
               description_statement,
               row_statements(2)
+            )
           end
         end
       end
