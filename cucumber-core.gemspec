@@ -28,8 +28,8 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.23'
   s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.1'
-  s.add_development_dependency 'rubocop', '~> 0.89', '>= 0.89.1'
   s.add_development_dependency 'rspec', '~> 3.9', '>= 3.9.0'
+  s.add_development_dependency 'rubocop', '~> 0.89', '>= 0.89.1'
   s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
   s.rubygems_version = ">= 1.6.1"
