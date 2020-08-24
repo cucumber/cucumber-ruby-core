@@ -340,7 +340,7 @@ module Cucumber
             @durations = []
           end
 
-          def method_missing(name, *args) # rubocop:disable Lint/MissingSuper
+          def method_missing(name, *args)
             if name =~ /^total_/
               get_total(name)
             else
