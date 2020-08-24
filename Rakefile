@@ -5,9 +5,12 @@ Bundler::GemHelper.install_tasks
 
 $:.unshift File.expand_path("../lib", __FILE__)
 
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new
+
 require "rspec/core/rake_task"
 RSpec::Core::RakeTask.new(:spec) do |t|
-  t.ruby_opts  = %w[-r./spec/coverage]
+  t.ruby_opts = %w[-r./spec/coverage]
 end
 
 namespace :spec do
@@ -17,4 +20,4 @@ namespace :spec do
   end
 end
 
-task default: ['spec', 'spec:slow']
+task default: ['spec', 'spec:slow', 'rubocop']

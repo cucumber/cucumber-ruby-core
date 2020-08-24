@@ -310,7 +310,7 @@ module Cucumber
           end
 
           def merge!(other)
-            settings.keys.each do |type|
+            settings.each_key do |type|
               set_strict(other.strict?(type), type) if other.set?(type)
             end
             self
@@ -369,7 +369,7 @@ module Cucumber
 
           def total(for_status = nil)
             if for_status
-              @totals.fetch(for_status) { 0 }
+              @totals.fetch(for_status, 0)
             else
               @totals.reduce(0) { |total, status| total += status[1] }
             end
@@ -383,7 +383,7 @@ module Cucumber
 
           def get_total(method_name)
             status = method_name.to_s.gsub('total_', '').to_sym
-            return @totals.fetch(status) { 0 }
+            return @totals.fetch(status, 0)
           end
 
           def increment_total(status)

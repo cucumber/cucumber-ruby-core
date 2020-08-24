@@ -1,1 +1,202 @@
 inherit_from: .rubocop_todo.yml
+
+AllCops:
+  # Keep this inline with the lowest ruby-* version in circleci/config.yml and
+  # the version in the gemspec
+  TargetRubyVersion: 2.5
+  # Cop names are not displayed in offense messages by default. Change behavior
+  # by overriding DisplayCopNames, or by giving the `-D/--display-cop-names`
+  # option.
+  DisplayCopNames: true
+  # Style guide URLs are not displayed in offense messages by default. Change
+  # behavior by overriding `DisplayStyleGuide`, or by giving the
+  # `-S/--display-style-guide` option.
+  DisplayStyleGuide: true
+
+# Disabling to allow people to install cucumber-core on older rubies
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+# Disabling for appveyor
+Layout/EndOfLine:
+  Enabled: false
+
+# Reviewed: please see PR-1022 for details on why this cop is disabled:
+# https://github.com/cucumber/cucumber-ruby/pull/1022
+Lint/AmbiguousOperator:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 45
+
+Metrics/BlockLength:
+  CountComments: false
+  Exclude:
+    - './cucumber.gemspec'
+    - './spec/**/*'
+
+Metrics/ClassLength:
+  Max: 375
+
+Metrics/CyclomaticComplexity:
+  Max: 9
+
+# A line length of 200 covers most violations in the repo while still being
+# a more up to date length given today's screen sizes
+Layout/LineLength:
+  Max: 200
+
+Metrics/ModuleLength:
+  Max: 150
+  Exclude:
+    - './spec/**/*'
+
+Metrics/MethodLength:
+  Max: 30
+
+# Rubocop doesn't like method names in other languages but as Cucumber supports
+# languages, this cop needs to be disabled.
+Naming/AsciiIdentifiers:
+  Enabled: false
+
+Naming/MethodName:
+  EnforcedStyle: snake_case
+  Enabled: true
+
+# In most cases, being descriptive with parameter names helps a reader understand
+# what the variable is for. In some cases, shorter names are sufficient.
+Naming/MethodParameterName:
+  AllowedNames: _, e, n, v, id, io, gh, pr
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/FormatStringToken:
+  EnforcedStyle: annotated
+
+Style/FloatDivision:
+  Enabled: false
+
+Style/StderrPuts:
+  Enabled: false
+
+# Slashes are by far the most used form of regex values in the project.
+Style/RegexpLiteral:
+  EnforcedStyle: slashes
+
+# on rubocop upgrades, new cops are in a pending state so that CI won't break.
+# A warning is emitted until new cops are explicitly enabled or disabled.
+# See https://docs.rubocop.org/rubocop/versioning.html#pending-cops for details.
+
+### rubocop 0.80 additions
+
+Style/HashEachMethods:
+  Enabled: true
+
+# requires ruby 2.5
+Style/HashTransformKeys:
+  Enabled: false
+
+# requires ruby 2.5
+Style/HashTransformValues:
+  Enabled: false
+
+### rubocop 0.81 additions
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+### rubocop 0.82 additions
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: false
+
+### rubocop 0.83 additions
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
+
+### rubocop 0.84 additions
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+### rubocop 0.85 additions
+
+Lint/MixedRegexpCaptureTypes:
+  Enabled: true
+
+Style/RedundantFetchBlock:
+  Enabled: true
+
+Style/RedundantRegexpCharacterClass:
+  Enabled: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+### rubocop 0.87 additions
+
+Style/BisectedAttrAccessor:
+  Enabled: true
+
+Style/RedundantAssignment:
+  Enabled: true
+
+### rubocop 0.88 additions
+
+Lint/DuplicateElsifCondition:
+  Enabled: true
+
+Style/ArrayCoercion:
+  Enabled: true
+
+Style/CaseLikeIf:
+  Enabled: true
+
+Style/RedundantFileExtensionInRequire:
+  Enabled: true
+
+### rubocop 0.89 additions
+
+Lint/BinaryOperatorWithIdenticalOperands:
+  Enabled: false
+
+Lint/DuplicateRescueException:
+  Enabled: true
+
+Lint/EmptyConditionalBody:
+  Enabled: true
+
+Lint/FloatComparison:
+  Enabled: true
+
+Lint/MissingSuper:
+  Enabled: true
+
+Lint/OutOfRangeRegexpRef:
+  Enabled: true
+
+Lint/SelfAssignment:
+  Enabled: true
+
+Lint/TopLevelReturnWithArgument:
+  Enabled: true
+
+Lint/UnreachableLoop:
+  Enabled: true
+
+Style/StringConcatenation:
+  Enabled: true

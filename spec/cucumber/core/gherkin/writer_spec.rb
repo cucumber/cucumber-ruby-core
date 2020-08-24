@@ -330,4 +330,3 @@ module Cucumber::Core::Gherkin
     end
   end
 end
-

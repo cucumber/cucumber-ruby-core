@@ -52,7 +52,7 @@ module Cucumber::Core
           end
         ]
 
-        compile(gherkin_documents, event_bus) do | visitor |
+        compile(gherkin_documents, event_bus) do |visitor|
           allow( visitor ).to receive(:test_case)
           allow( visitor ).to receive(:test_step)
           allow( visitor ).to receive(:done)

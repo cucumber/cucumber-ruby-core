@@ -40,7 +40,7 @@ module Cucumber
         lines = source_lines_for_pickle(pickle).sort.reverse
         tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, source_line_for_pickle_tag(tag)), tag.name) }
         test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
-        @event_bus.test_case_created(test_case, pickle) unless @event_bus.nil?
+        @event_bus&.test_case_created(test_case, pickle)
         test_case
       end
 
@@ -48,11 +48,11 @@ module Cucumber
         lines = source_lines_for_pickle_step(pickle_step).sort.reverse
         multiline_arg = create_multiline_arg(pickle_step, uri)
         step = Test::Step.new(id_generator.new_id, pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
-        @event_bus.test_step_created(step, pickle_step) unless @event_bus.nil?
+        @event_bus&.test_step_created(step, pickle_step)
         step
       end
 
-      def create_multiline_arg(pickle_step, uri)
+      def create_multiline_arg(pickle_step, _uri)
         if pickle_step.argument
           if pickle_step.argument.doc_string
             doc_string = pickle_step.argument.doc_string
