@@ -32,8 +32,8 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   CountComments: false
   Exclude:
-    - './cucumber.gemspec'
-    - './spec/**/*'
+    - 'cucumber-core.gemspec'
+    - 'spec/**/*'
 
 Metrics/ClassLength:
   Max: 375
@@ -49,7 +49,7 @@ Layout/LineLength:
 Metrics/ModuleLength:
   Max: 150
   Exclude:
-    - './spec/**/*'
+    - 'spec/**/*'
 
 Metrics/MethodLength:
   Max: 30
