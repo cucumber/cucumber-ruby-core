@@ -12,6 +12,10 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
+### Dependencies
+
+* Updated dependencies (look at the diff for details)
+
 ## [8.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v8.0.0...v8.0.1)
 
 ### Fixed
