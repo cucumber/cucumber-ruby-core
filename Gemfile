@@ -1,6 +1,16 @@
 source "https://rubygems.org"
 
-gem 'cucumber-messages', path: ENV['CUCUMBER_MESSAGES_RUBY'] if ENV['CUCUMBER_MESSAGES_RUBY']
-gem 'gherkin', path: ENV['GHERKIN_RUBY'] if ENV['GHERKIN_RUBY']
+def monorepo(name)
+  path = "../../cucumber/#{name}/ruby"
+  if File.directory?(path)
+    { path: File.expand_path(path) }
+  else
+    { git: "https://github.com/cucumber/cucumber.git", glob: "#{name}/ruby/cucumber-#{name}.gemspec" }
+  end
+end
+
+gem 'cucumber-gherkin', monorepo('gherkin')
+gem 'cucumber-messages', monorepo('messages')
+gem 'cucumber-tag-expressions', monorepo('tag-expressions')
 
 gemspec
