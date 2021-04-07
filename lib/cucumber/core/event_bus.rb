@@ -44,7 +44,7 @@ module Cucumber
 
       def broadcast_queued_events_to(handler, event_type)
         @event_queue.select { |event|
-          event.class == event_type
+          event.instance_of?(event_type)
         }.each { |event|
           handler.call(event)
         }

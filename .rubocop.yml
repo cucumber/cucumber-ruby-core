@@ -15,6 +15,7 @@ AllCops:
   # behavior by overriding `DisplayStyleGuide`, or by giving the
   # `-S/--display-style-guide` option.
   DisplayStyleGuide: true
+  NewCops: enable
 
 # Disabling to allow people to install cucumber-core on older rubies
 Gemspec/RequiredRubyVersion:
@@ -203,3 +204,13 @@ Lint/UnreachableLoop:
 
 Style/StringConcatenation:
   Enabled: true
+
+Lint/EmptyBlock:
+  Enabled: false
+
+Lint/ConstantDefinitionInBlock:
+  Exclude:
+    - 'spec/**/*.rb'
+
+Style/SoleNestedConditional:
+  Enabled: false

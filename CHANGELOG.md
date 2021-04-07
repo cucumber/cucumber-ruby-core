@@ -1,12 +1,12 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v8.0.1...master)
+## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.0...master)
 
 ### Added
 
 ### Changed
 
-### Deprecated
+### Deprecate
 
 ### Removed
 
@@ -14,7 +14,12 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Dependencies
 
-* Updated dependencies (look at the diff for details)
+## [9.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v8.0.1...v9.0.0)
+
+### Dependencies
+
+* Upgraded to gherkin v18 and messages v15
+* Updated other dependencies (look at the diff for details)
 
 ## [8.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v8.0.0...v8.0.1)
 
