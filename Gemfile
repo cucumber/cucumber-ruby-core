@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 def monorepo(name)
+  if ENV['CUCUMBER_RELEASED_GEMS'] return {}
   path = "../../cucumber/#{name}/ruby"
   if File.directory?(path)
     { path: File.expand_path(path) }
