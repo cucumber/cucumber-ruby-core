@@ -631,3 +631,6 @@ Style/TrivialAccessors:
 Style/WordArray:
   EnforcedStyle: percent
   MinSize: 4
+
+Style/OptionalBooleanParameter:
+  Enabled: false

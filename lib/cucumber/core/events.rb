@@ -61,7 +61,6 @@ module Cucumber
 
       end
 
-
       # Signals that a {Test::Case} has finished executing
       class TestCaseFinished < Event.new(:test_case, :result)
 

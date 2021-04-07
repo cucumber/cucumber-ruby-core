@@ -109,7 +109,7 @@ module Cucumber::Core::Test
 
     describe "created from file-colon-line" do
       it "handles also Windows paths" do
-        # Note: running this test on Windows will produce "c:/path/file.rb", but "c:\path\file.rb" on Linux.
+        # NOTE: running this test on Windows will produce "c:/path/file.rb", but "c:\path\file.rb" on Linux.
         expect( Location.from_file_colon_line("c:\\path\\file.rb:123").file ).to match(/c:(\\|\/)path(\\|\/)file.rb/)
       end
     end
