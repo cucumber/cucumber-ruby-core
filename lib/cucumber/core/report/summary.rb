@@ -23,7 +23,7 @@ module Cucumber
             if event.test_case != @previous_test_case
               @previous_test_case = event.test_case
               event.result.describe_to test_cases
-            elsif event.result.passed?
+            elsif event.result.passed? || event.result.skipped?
               test_cases.flaky
               test_cases.decrement_failed
             end
