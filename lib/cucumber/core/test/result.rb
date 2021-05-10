@@ -1,6 +1,8 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
+require "cucumber/messages/time_conversion"
+
 module Cucumber
   module Core
     module Test
