@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.0...master)
+## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.0...main)
 
 ### Added
 
@@ -11,6 +11,8 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Removed
 
 ### Fixed
+
+* Fix skip scenario retry ([#218](https://github.com/cucumber/cucumber-ruby-core/pull/218) @eduardrudko)
 
 ### Dependencies
 
