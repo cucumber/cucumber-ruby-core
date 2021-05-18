@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.0...main)
+## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.1...main)
 
 ### Added
 
@@ -12,9 +12,14 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
-* Fix skip scenario retry ([#218](https://github.com/cucumber/cucumber-ruby-core/pull/218) @eduardrudko)
-
 ### Dependencies
+
+## [9.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.0...v9.0.1)
+
+### Fixed
+
+* Skipped scenarios do not affect anymore status of flaky scenarios on retry
+  ([#218](https://github.com/cucumber/cucumber-ruby-core/pull/218) @eduardrudko)
 
 ## [9.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v8.0.1...v9.0.0)
 
