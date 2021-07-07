@@ -14,6 +14,8 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Dependencies
 
+* Updated gems: `cucumber-gherkin` ~> 19.0.3 and `cucumber-messages` ~> 16.0.1
+
 ## [9.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.0...v9.0.1)
 
 ### Fixed
