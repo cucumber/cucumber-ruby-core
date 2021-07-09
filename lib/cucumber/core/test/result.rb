@@ -405,7 +405,11 @@ module Cucumber
 
           def to_message_duration
             duration_hash = seconds_to_duration(nanoseconds.to_f / NANOSECONDS_PER_SECOND)
-            duration_hash.transform_keys! { |key| key.to_sym rescue key }
+            duration_hash.transform_keys! do |key|
+              key.to_sym
+            rescue Error
+              return key
+            end
 
             Cucumber::Messages::Duration.from_h(duration_hash)
           end
