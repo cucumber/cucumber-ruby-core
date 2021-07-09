@@ -14,6 +14,13 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Dependencies
 
+* Upgraded to gherkin v20 and messages v17.
+
+  This removes protocol buffers from the runtime dependencies.
+
+  This deeply impacts the API as the internal representation of messages has changed from
+  Protocol Buffer objects to new auto-generated DTOs.
+
 ## [9.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.0...v9.0.1)
 
 ### Fixed
