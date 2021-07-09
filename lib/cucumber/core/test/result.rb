@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+require "cucumber/messages"
 require "cucumber/messages/time_conversion"
 
 module Cucumber
@@ -45,11 +46,10 @@ module Cucumber
           end
 
           def to_message
-            {
-              status: "UNKNOWN",
-              duration: UnknownDuration.new.to_message_duration,
-              willBeRetried: false
-            }
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::UNKNOWN,
+              duration: UnknownDuration.new.to_message_duration
+            )
           end
         end
 
@@ -77,11 +77,10 @@ module Cucumber
           end
 
           def to_message
-            {
-              status: "PASSED",
-              duration: duration.to_message_duration,
-              willBeRetried: false
-            }
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::PASSED,
+              duration: duration.to_message_duration
+            )
           end
 
           def ok?(be_strict = nil)
@@ -131,12 +130,11 @@ module Cucumber
               message = ""
             end
 
-            {
-              status: "FAILED",
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::FAILED,
               duration: duration.to_message_duration,
-              message: message,
-              willBeRetried: false
-            }
+              message: message
+            )
           end
 
           def ok?(be_strict = nil)
@@ -220,11 +218,10 @@ module Cucumber
           end
 
           def to_message
-            {
-              status: "UNDEFINED",
-              duration: duration.to_message_duration,
-              willBeRetried: false
-            }
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::UNDEFINED,
+              duration: duration.to_message_duration
+            )
           end
         end
 
@@ -246,11 +243,10 @@ module Cucumber
           end
 
           def to_message
-            {
-              status: "SKIPPED",
-              duration: duration.to_message_duration,
-              willBeRetried: false
-            }
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::SKIPPED,
+              duration: duration.to_message_duration
+            )
           end
         end
 
@@ -272,11 +268,10 @@ module Cucumber
           end
 
           def to_message
-            {
-              status: "PENDING",
-              duration: duration.to_message_duration,
-              willBeRetried: false
-            }
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::PENDING,
+              duration: duration.to_message_duration
+            )
           end
         end
 
@@ -409,7 +404,10 @@ module Cucumber
           end
 
           def to_message_duration
-            seconds_to_duration(nanoseconds.to_f / NANOSECONDS_PER_SECOND)
+            duration_hash = seconds_to_duration(nanoseconds.to_f / NANOSECONDS_PER_SECOND)
+            duration_hash.transform_keys! { |key| key.to_sym rescue key }
+
+            Cucumber::Messages::Duration.from_h(duration_hash)
           end
         end
 
@@ -425,7 +423,7 @@ module Cucumber
           end
 
           def to_message_duration
-            seconds_to_duration(0)
+            Cucumber::Messages::Duration.new(seconds: 0, nanos: 0)
           end
         end
       end

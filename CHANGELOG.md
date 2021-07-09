@@ -14,12 +14,12 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Dependencies
 
-* Upgraded to gherkin v19 and messages v16.
+* Upgraded to gherkin v20 and messages v17.
 
   This remove protocol buffer from the dependencies.
 
-  This deeply impact APIs as internal representation of messages is changed from
-  Ruby Objects to Ruby Hashes with camelCase keys instead of snake_case attributes.
+  This deeply impact APIs as internal representation of messages has changed from
+  Protocol Buffer objects to new auto-generated DTOs.
 
 ## [9.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.0...v9.0.1)
 

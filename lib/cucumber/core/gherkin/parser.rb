@@ -21,12 +21,12 @@ module Cucumber
           messages.each do |message|
             event_bus.envelope(message)
             gherkin_query.update(message)
-            if !message[:gherkinDocument].nil?
-              event_bus.gherkin_source_parsed(message[:gherkinDocument])
-            elsif !message[:pickle].nil?
-              receiver.pickle(message[:pickle])
-            elsif message[:parseError]
-              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message[:parseError][:message]}")
+            if !message.gherkin_document.nil?
+              event_bus.gherkin_source_parsed(message.gherkin_document)
+            elsif !message.pickle.nil?
+              receiver.pickle(message.pickle)
+            elsif message.parse_error
+              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.parse_error.message}")
             else
               raise "Unknown message: #{message.to_hash}"
             end
