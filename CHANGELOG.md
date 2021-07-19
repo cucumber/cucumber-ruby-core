@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.0...main)
+## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.1...main)
 
 ### Added
 
@@ -13,6 +13,13 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Fixed
 
 ### Dependencies
+
+
+## [10.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.0...v10.0.1)
+
+### Dependencies
+
+* Patched `cucumber-gherkin` and `cucumber-messages`
 
 ## [10.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v9.0.1...v10.0.0)
 
