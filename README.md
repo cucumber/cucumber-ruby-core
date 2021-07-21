@@ -21,7 +21,7 @@ your team.
   <img src="./.github/img/gherkin-example.png" alt="Cucumber Gherkin Example" width="728" />
 </p>
 
-Cucumber Core is the [inner hexagon](http://alistair.cockburn.us/Hexagonal+architecture)
+Cucumber Core is the [inner hexagon](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))
 for the [Ruby flavour of Cucumber](https://github.com/cucumber/cucumber-ruby).
 
 It contains the core domain logic to execute Cucumber features. It has no user interface,
