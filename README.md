@@ -28,7 +28,7 @@ It contains the core domain logic to execute Cucumber features. It has no user i
 just a Ruby API. If you're interested in how Cucumber works, or in building other
 tools that work with Gherkin documents, you've come to the right place.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for info on contributing to Cucumber(issues,
+See [CONTRIBUTING.md](CONTRIBUTING.md) for info on contributing to Cucumber (issues,
 PRs, etc.).
 
 Everyone interacting in this codebase and issue tracker is expected to follow the

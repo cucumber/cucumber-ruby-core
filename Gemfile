@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem 'cucumber-messages', path: ENV['CUCUMBER_MESSAGES_RUBY'] if ENV['CUCUMBER_MESSAGES_RUBY']
-gem 'gherkin', path: ENV['GHERKIN_RUBY'] if ENV['GHERKIN_RUBY']
-
 gemspec
+
+gem 'cucumber-gherkin', path: ENV['CUCUMBER_GHERKIN_RUBY'] if ENV['CUCUMBER_GHERKIN_RUBY']
+gem 'cucumber-messages', path: ENV['CUCUMBER_MESSAGES_RUBY'] if ENV['CUCUMBER_MESSAGES_RUBY']
