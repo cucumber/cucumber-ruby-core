@@ -18,11 +18,11 @@ These are immutable value objects.
 
 ### Test cases
 
-Your gherkin might contain scenarios, as well as examples from tables beneath a scenario outline.
+Your Gherkin might contain scenarios, as well as examples from tables beneath a scenario outline.
 
 Test cases represent the general case of both of these. We compile the AST down to instances of `Cucumber::Core::Test::Case`, each containing a number of instances of `Cucumber::Core::Test::Step`. It's these that are then filtered and executed.
 
-Test cases and their test steps are also immutable value objects.
+Test cases and their test steps are immutable value objects.
 
 ### Filters
 
