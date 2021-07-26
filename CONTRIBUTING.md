@@ -109,6 +109,42 @@ In the same way, if you want to test your changes to `cucumber-core` with a loca
 ~/cucumber-ruby> CUCUMBER_RUBY_CORE=../cucumber-ruby-core bundle exec rake
 ```
 
+### Using a local Gemfile
+
+A local Gemfile allows you to use your prefer set of gems for your own
+development workflow, like gems dedicated to debugging. Such gems are not part
+of `cucumber-ruby` standard `Gemfile`.
+
+`Gemfile.local`, `Gemfile.local.lock` and `.bundle` have been added to
+`.gitignore` so local changes cannot be accidentaly commited and pushed to the
+repository.
+
+A `Gemfile.local` may look like this:
+
+```ruby
+# Gemfile.local
+
+# Include the regular Gemfile
+eval File.read('Gemfile')
+
+# Include your favorites development gems
+group :development do
+  gem 'byebug'
+  gem 'pry'
+  gem 'pry-byebug'
+
+  gem 'debase', require: false
+  gem 'ruby-debug-ide', require: false
+end
+```
+
+Then you can execute bundler with the `--gemfile` flag:
+`bundle install --gemfile Gemfile.local`, or with an environment variable:
+`BUNDLE_GEMFILE=Gemfile.local bundle [COMMAND]`.
+
+To use your local Gemfile per default, you can also execute
+`bundle config set --local gemfile Gemfile.local`.
+
 ### First timer? Welcome!
 
 Looking for something simple to begin with? Look at issues with the label

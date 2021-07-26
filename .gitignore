@@ -1,5 +1,7 @@
 # Exuberant Ctags
 /tags
+Gemfile.local
+Gemfile.local.lock
 /Gemfile.lock
 /tmp/
 /coverage
