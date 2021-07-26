@@ -32,7 +32,7 @@ Once we have the test cases, and they've been activated by the mappings, you may
 
 Events are how you find out what is happening during your test run. As the test cases and steps are executed, the runner emits events to signal what's going on.
 
-The following events are emitted during a run:
+Some of the events that can be emitted during a run are:
 
 - `TestCaseStarting`
 - `TestStepStarting`
