@@ -1,123 +1,128 @@
-# cucumber-core
+<p align="center">
+  <img src="./.github/img/cucumber-open-logo.png" alt="Cucumber Open - Supported by Smartbear" width="428" />
+</p>
 
-[![CircleCI](https://circleci.com/gh/cucumber/cucumber-ruby-core.svg?style=svg)](https://circleci.com/gh/cucumber/cucumber-ruby-core)
-[![Code Climate](https://codeclimate.com/github/cucumber/cucumber-ruby-core.svg)](https://codeclimate.com/github/cucumber/cucumber-ruby-core)
-[![Coverage Status](https://coveralls.io/repos/cucumber/cucumber-ruby-core/badge.svg?branch=master)](https://coveralls.io/r/cucumber/cucumber-ruby-core?branch=master)
+# Cucumber
+
+[![OpenCollective](https://opencollective.com/cucumber/backers/badge.svg)](https://opencollective.com/cucumber)
+[![OpenCollective](https://opencollective.com/cucumber/sponsors/badge.svg)](https://opencollective.com/cucumber)
 [![pull requests](https://oselvar.com/api/badge?label=pull%20requests&csvUrl=https%3A%2F%2Fraw.githubusercontent.com%2Fcucumber%2Foselvar-github-metrics%2Fmain%2Fdata%2Fcucumber%2Fcucumber-ruby-core%2FpullRequests.csv)](https://oselvar.com/github/cucumber/oselvar-github-metrics/main/cucumber/cucumber-ruby-core)
 [![issues](https://oselvar.com/api/badge?label=issues&csvUrl=https%3A%2F%2Fraw.githubusercontent.com%2Fcucumber%2Foselvar-github-metrics%2Fmain%2Fdata%2Fcucumber%2Fcucumber-ruby-core%2Fissues.csv)](https://oselvar.com/github/cucumber/oselvar-github-metrics/main/cucumber/cucumber-ruby-core)
+[![CircleCI](https://circleci.com/gh/cucumber/cucumber-ruby-core/tree/main.svg?style=svg)](https://circleci.com/gh/cucumber/cucumber-ruby-core/tree/main)
+[![Code Climate](https://codeclimate.com/github/cucumber/cucumber-ruby-core.svg)](https://codeclimate.com/github/cucumber/cucumber-ruby-core)
+[![Coverage Status](https://coveralls.io/repos/cucumber/cucumber-ruby-core/badge.svg?branch=main)](https://coveralls.io/r/cucumber/cucumber-ruby-core?branch=main)
 
-Cucumber Core is the [inner hexagon](http://alistair.cockburn.us/Hexagonal+architecture) for the [Ruby flavour of Cucumber](https://github.com/cucumber/cucumber-ruby).
+Cucumber is a tool for running automated tests written in plain language. Because they're
+written in plain language, they can be read by anyone on your team. Because they can be
+read by anyone, you can use them to help improve communication, collaboration and trust on
+your team.
 
-It contains the core domain logic to execute Cucumber features. It has no user interface, just a Ruby API. If you're interested in how Cucumber works, or in building other tools that work with Gherkin documents, you've come to the right place.
+<p align="center">
+  <img src="./.github/img/gherkin-example.png" alt="Cucumber Gherkin Example" width="728" />
+</p>
 
-## An overview
+Cucumber Core is the [inner hexagon](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))
+for the [Ruby flavour of Cucumber](https://github.com/cucumber/cucumber-ruby).
 
-The entry-point is a single method on the module [`Cucumber::Core`](Cucumber/Core.html) called [`#execute`](Cucumber/Core.html#execute-instance_method). Here's what it does:
+It contains the core domain logic to execute Cucumber features. It has no user interface,
+just a Ruby API. If you're interested in how Cucumber works, or in building other
+tools that work with Gherkin documents, you've come to the right place.
 
-1. Parses the plain-text Gherkin documents into an **AST**
-2. Compiles the AST down to **test cases**
-3. Passes the test cases through any **filters**
-4. Executes the test cases, emitting **events** as it goes
+See [CONTRIBUTING.md](CONTRIBUTING.md) for info on contributing to Cucumber (issues,
+PRs, etc.).
 
-We've introduced a number of concepts here, so let's go through them in detail.
+Everyone interacting in this codebase and issue tracker is expected to follow the
+Cucumber [code of conduct](https://cucumber.io/conduct).
 
-### The AST
+## Installation
 
-The Abstract Syntax Tree or [AST](Cucumber/Core/Ast.html) is an object graph that represents the Gherkin documents you've passed into the core. Things like [Feature](Cucumber/Core/Ast/Feature.html), [Scenario](Cucumber/Core/Ast/Scenario.html) and [ExamplesTable](Cucumber/Core/Ast/ExamplesTable.html).
+`cucumber-core` is a Ruby gem. Install it as you would install any gem: add
+`cucumber-core` to your Gemfile:
 
-These are immutable value objects.
+    gem 'cucumber-core'
 
-### Test cases
+then install it:
 
-Your gherkin might contain scenarios, as well as examples from tables beneath a scenario outline.
+    $ bundle
 
-Test cases represent the general case of both of these. We compile the AST down to instances of [`Cucumber::Core::Test::Case`](Cucumber/Core/Test/Case.html), each containing a number of instances of [`Cucumber::Core::Test::Step`](Cucumber/Core/Test/Step.html). It's these that are then filtered and executed.
+or install the gem directly:
 
-Test cases and their test steps are also immutable value objects.
+    $ gem install cucumber-core
 
-### Filters
+### Supported platforms
 
-Once we have the test cases, and they've been activated by the mappings, you may want to pass them through a filter or two. Filters can be used to do things like activate, sort, replace or remove some of the test cases or their steps before they're executed.
+- Ruby 3.0
+- Ruby 2.7
+- Ruby 2.6
+- Ruby 2.5
+- Ruby 2.4
+- Ruby 2.3
+- JRuby 9.2 (with [some limitations](https://github.com/cucumber/cucumber-ruby/blob/main/docs/jruby-limitations.md))
 
-### Events
+## Usage
 
-Events are how you find out what is happening during your test run. As the test cases and steps are executed, the runner emits events to signal what's going on.
-
-The following events are emitted during a run:
-
-- [`TestCaseStarting`](Cucumber/Core/Events/TestCaseStarting.html)
-- [`TestStepStarting`](Cucumber/Core/Events/TestStepStarting.html)
-- [`TestStepFinished`](Cucumber/Core/Events/TestStepFinished.html)
-- [`TestCaseFinished`](Cucumber/Core/Events/TestCaseFinished.html)
-
-That's probably best illustrated with an example.
-
-## Example
-
-Here's an example of how you might use [`Cucumber::Core#execute`](Cucumber/Core#execute-instance_method)
+The following example aims to illustrate how to use `cucumber-core` gem and to
+make sure it is working well within your environment. For more details
+explanation on what it actually does and how to work with it, see
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ```ruby
+# cucumber_core_example.rb
+
 require 'cucumber/core'
 require 'cucumber/core/filter'
 
-# This is the most complex part of the example. The filter takes test cases as input,
-# activates each step with an action block, then passes a new test case with those activated
-# steps in it on to the next filter in the chain.
 class ActivateSteps < Cucumber::Core::Filter.new
   def test_case(test_case)
     test_steps = test_case.test_steps.map do |step|
-      activate(step)
+      step.with_action { print "processing: " }
     end
 
     test_case.with_steps(test_steps).describe_to(receiver)
   end
-
-  private
-
-  def activate(step)
-    case step.text
-    when /fail/
-      step.with_action { raise Failure }
-    when /pass/
-      step.with_action {}
-    else
-      step
-    end
-  end
 end
 
-# Create a Gherkin document to run
 feature = Cucumber::Core::Gherkin::Document.new(__FILE__, <<-GHERKIN)
 Feature:
   Scenario:
-    Given passing
-    And failing
-    And undefined
+    Given some requirements
+    When we do something
+    Then it should pass
 GHERKIN
 
-# Create a runner class that uses the Core's DSL
 class MyRunner
   include Cucumber::Core
 end
 
-# Now execute the feature, using the filter we built, and subscribing to
-# an event so we can print the output.
 MyRunner.new.execute([feature], [ActivateSteps.new]) do |events|
   events.on(:test_step_finished) do |event|
     test_step, result = event.test_step, event.result
-    puts "#{test_step.text} #{result}"
+    print "#{test_step.text} #{result}\n"
   end
 end
 ```
 
-If you run this little Ruby script, you should see the following output:
+If you run this Ruby script:
+
+```shell
+ruby cucumber_core_example.rb
+```
+
+You should see the following output:
 
 ```
-passing ✓
-failing ✗
-undefined ?
+processing: some requirements ✓
+processing: we do something ✓
+processing: it should pass ✓
 ```
+
+## Documentation and support
+
+- Getting started with Cucumber, writing features, step definitions, and more: https://cucumber.io/docs
+- Slack: [register for an account](https://cucumberbdd-slack-invite.herokuapp.com/) then head over to [#intro](https://cucumberbdd.slack.com/messages/C5WD8SA21/)
+- `cucumber-core` overview: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- How to work with local repositories for `cucumber-gherkin`, `cucumber-messages` or `cucumber-ruby`: [CONTRIBUTING.md#working-with-local-cucumber-dependencies](./CONTRIBUTING.md#working-with-local-cucumber-dependencies)
 
 ## Copyright
 
-Copyright (c) Cucumber Limited.
+Copyright (c) Cucumber Ltd. and Contributors. See LICENSE for details.
