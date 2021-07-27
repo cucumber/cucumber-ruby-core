@@ -75,7 +75,7 @@ require 'cucumber/core/filter'
 class ActivateSteps < Cucumber::Core::Filter.new
   def test_case(test_case)
     test_steps = test_case.test_steps.map do |step|
-      step.with_action { Kernel.puts "processing '#{step.text}'" }
+      step.with_action { print "processing: " }
     end
 
     test_case.with_steps(test_steps).describe_to(receiver)
@@ -97,7 +97,7 @@ end
 MyRunner.new.execute([feature], [ActivateSteps.new]) do |events|
   events.on(:test_step_finished) do |event|
     test_step, result = event.test_step, event.result
-    Kernel.puts "  #{test_step.text} #{result}"
+    print "#{test_step.text} #{result}\n"
   end
 end
 ```
@@ -111,12 +111,9 @@ ruby cucumber_core_example.rb
 You should see the following output:
 
 ```
-processing 'some requirements'
-  some requirements ✓
-processing 'we do something'
-  we do something ✓
-processing 'it should pass'
-  it should pass ✓
+processing: some requirements ✓
+processing: we do something ✓
+processing: it should pass ✓
 ```
 
 ## Documentation and support
