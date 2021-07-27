@@ -121,7 +121,7 @@ processing: it should pass ✓
 - Getting started with Cucumber, writing features, step definitions, and more: https://cucumber.io/docs
 - Slack: [register for an account](https://cucumberbdd-slack-invite.herokuapp.com/) then head over to [#intro](https://cucumberbdd.slack.com/messages/C5WD8SA21/)
 - `cucumber-core` overview: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- How to work with both `cucumber-ruby` and `cucumber-ruby-core` repositories: [docs/working-with-cucumber-ruby.md](docs/working-with-cucumber-ruby.md)
+- How to work with both `cucumber-ruby` and `cucumber-ruby-core` repositories: [CONTRIBUTING.md#working-with-local-cucumber-dependencies](./CONTRIBUTING.md#working-with-local-cucumber-dependencies)
 
 ## Copyright
 
