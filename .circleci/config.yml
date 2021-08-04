@@ -115,7 +115,26 @@ workflows:
   build:
     jobs:
       - build-ruby-2_5
+          filters:
+            branches:
+              ignore: move-from-circleci-to-gha
+
       - build-ruby-2_6
+          filters:
+            branches:
+              ignore: move-from-circleci-to-gha
+
       - build-ruby-2_7
+          filters:
+            branches:
+              ignore: move-from-circleci-to-gha
+
       - build-ruby-latest
+          filters:
+            branches:
+              ignore: move-from-circleci-to-gha
+
       - build-jruby
+          filters:
+            branches:
+              ignore: move-from-circleci-to-gha
