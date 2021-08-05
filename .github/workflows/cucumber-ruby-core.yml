@@ -25,12 +25,12 @@ jobs:
         # Due to https://github.com/actions/runner/issues/849, we have to use quotes for '3.0'
         ruby: [2.5, 2.6, 2.7, '3.0']
         include:
-          - ruby: jruby
-            os: ubuntu-latest
-          - ruby: '3.0'
-            os: macos-latest
-          - ruby: '3.0'
-            os: windows-latest
+          - os: ubuntu-latest
+            ruby: jruby
+          - os: macos-latest
+            ruby: '3.0'
+          - os: windows-latest
+            ruby: '3.0'
 
     runs-on: ${{ matrix.os }}
     steps:
