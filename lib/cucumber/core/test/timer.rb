@@ -19,7 +19,7 @@ module Cucumber
         end
 
         def sec
-          nsec / 10**9.0
+          nsec / (10**9.0)
         end
 
         private
@@ -42,7 +42,7 @@ module Cucumber
           else
             def time_in_nanoseconds
               t = Time.now
-              t.to_i * 10**9 + t.nsec
+              (t.to_i * (10**9)) + t.nsec
             end
           end
         end

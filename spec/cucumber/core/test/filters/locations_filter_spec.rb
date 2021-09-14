@@ -232,14 +232,14 @@ module Cucumber::Core
       let(:locations) do
         (1..num_locations).map do |i|
           (1..num_scenarios_per_feature).map do |j|
-            line = 3 + (j - 1) * 3
+            line = 3 + ((j - 1) * 3)
             Test::Location.new("features/test_#{i}.feature", line)
           end
         end.flatten
       end
 
       max_duration_ms = 10000
-      max_duration_ms = max_duration_ms * 2.5 if defined?(JRUBY_VERSION)
+      max_duration_ms *= 2.5 if defined?(JRUBY_VERSION)
       it "filters #{num_features * num_scenarios_per_feature} test cases within #{max_duration_ms}ms" do
         filter = Test::LocationsFilter.new(locations)
         Timeout.timeout(max_duration_ms / 1000.0) do
