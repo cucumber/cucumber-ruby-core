@@ -1,0 +1,17 @@
+name: Release RubyGems
+
+on:
+  push:
+    branches:
+      - release/*
+
+jobs:
+  publish-rubygem:
+    name: Publish Ruby Gem
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    environment: Release
+    steps:
+      - uses: actions/checkout@v2
+      - name: do-the-release
+        run: echo 'releasing'
