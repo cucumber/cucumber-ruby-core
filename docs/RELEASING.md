@@ -19,4 +19,5 @@ To release `cucumber-core`, you'll need to be a member of the core team
   ```shell
   git push origin main:release/vX.Y.Z
   ```
+- Monitor the [github workflow](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/release.yml)
 - Check the release has been successfully pushed to [rubygems](https://rubygems.org/gems/cucumber-core)
