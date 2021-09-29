@@ -5,6 +5,10 @@ on:
     branches:
       - release/*
 
+  pull_request:
+    branches:
+      - main
+
 jobs:
 
   tests:
@@ -42,6 +46,8 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Publish ruby gem
-        uses: cucumber/action-publish-rubygem@v1.0.0
-        with:
-          rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
+        run: echo "publishing!"
+      # - name: Publish ruby gem
+      #   uses: cucumber/action-publish-rubygem@v1.0.0
+      #   with:
+      #     rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
