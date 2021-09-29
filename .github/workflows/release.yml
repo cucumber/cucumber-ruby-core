@@ -11,7 +11,20 @@ on:
 
 jobs:
 
+  pre-release-check:
+    name: Perform checks before releasing
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check commit has been pushed on origin/main
+        run: |
+          git fetch --quiet origin main
+          git merge-base --is-ancestor HEAD origin/main
+
   tests:
+    needs: pre-release-check
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -40,14 +53,12 @@ jobs:
     name: Publish Ruby Gem
     needs: tests
     runs-on: ubuntu-latest
-    # environment: Release
+    environment: Release
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Publish ruby gem
-        run: echo "publishing!"
-      # - name: Publish ruby gem
-      #   uses: cucumber/action-publish-rubygem@v1.0.0
-      #   with:
-      #     rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
+        uses: cucumber/action-publish-rubygem@v1.0.0
+        with:
+          rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
