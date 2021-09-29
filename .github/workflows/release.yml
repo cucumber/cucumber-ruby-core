@@ -58,3 +58,17 @@ jobs:
         uses: cucumber/action-publish-rubygem@v1.0.0
         with:
           rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
+
+  create-github-release:
+    name: Create GitHub Release and Git tag
+    needs: publish-rubygem
+    runs-on: ubuntu-latest
+    environment: Release
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cucumber/action-create-github-release@v1.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
