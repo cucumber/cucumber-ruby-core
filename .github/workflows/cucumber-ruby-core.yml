@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+
   pull_request:
     branches:
       - main
+
   schedule:
     - cron: "0 5 * * *"
 
@@ -16,11 +18,14 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         ruby: ['2.5', '2.6', '2.7', '3.0']
+
         include:
           - os: ubuntu-latest
             ruby: jruby
+
           - os: macos-latest
             ruby: '3.0'
+
           - os: windows-latest
             ruby: '3.0'
 

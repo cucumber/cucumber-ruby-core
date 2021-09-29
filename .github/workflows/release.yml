@@ -10,6 +10,7 @@ jobs:
     name: Publish Ruby Gem
     runs-on: ubuntu-latest
     environment: Release
+
     steps:
       - uses: actions/checkout@v2
 
