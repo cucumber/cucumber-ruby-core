@@ -10,8 +10,6 @@ runs:
   using: "composite"
 
   steps:
-    - uses: actions/checkout@v2
-
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
