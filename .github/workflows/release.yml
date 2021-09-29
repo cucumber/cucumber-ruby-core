@@ -40,7 +40,7 @@ jobs:
     name: Publish Ruby Gem
     needs: tests
     runs-on: ubuntu-latest
-    environment: Release
+    # environment: Release
 
     steps:
       - uses: actions/checkout@v2
