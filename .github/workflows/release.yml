@@ -16,5 +16,7 @@ jobs:
       - name: Run ruby tests
         uses: ./.github/actions/test-ruby
 
-      - name: do-the-release
-        run: echo 'releasing'
+      - name: Publish ruby gem
+        uses: cucumber/action-publish-rubygem@v1.0.0
+        with:
+          rubygems_api_key: ${{ secrets.RUBYGEMS_API_KEY }}
