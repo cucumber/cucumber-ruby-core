@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [In GIT](https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.1...main)
+## [Unreleased]
 
 ### Added
 
@@ -348,3 +348,6 @@ Changes were not logged.
 ## [1.0.0.beta.2](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2)
 
 Changes were not logged.
+
+
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.0...main
