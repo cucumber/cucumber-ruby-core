@@ -14,6 +14,11 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Dependencies
 
+## [10.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.1...v10.1.0)
+
+### Dependencies
+
+* Patched `cucumber-gherkin`, `cucumber-messages` and `cucumber-tag-expressions`
 
 ## [10.0.1](https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.0...v10.0.1)
 
