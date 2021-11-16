@@ -21,6 +21,10 @@ AllCops:
 Gemspec/RequiredRubyVersion:
   Enabled: false
 
+# We do not support MFA at the moment with the new automated release process
+Gemspec/RequireMFA:
+  Enabled: false
+
 # Disabling for appveyor
 Layout/EndOfLine:
   Enabled: false
