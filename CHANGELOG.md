@@ -14,6 +14,12 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Dependencies
 
+## [10.1.1](https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.0...v10.1.1)
+
+### Dependencies
+
+* Patched `cucumber-tag-expressions`
+
 ## [10.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.1...v10.1.0)
 
 ### Dependencies
@@ -350,4 +356,4 @@ Changes were not logged.
 Changes were not logged.
 
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.0...main
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main

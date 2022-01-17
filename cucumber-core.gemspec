@@ -24,12 +24,12 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'cucumber-gherkin', '~> 22.0', '>= 22.0.0'
   s.add_dependency 'cucumber-messages', '~> 17.1', '>= 17.1.1'
-  s.add_dependency 'cucumber-tag-expressions', '~> 4.0', '>= 4.0.2'
+  s.add_dependency 'cucumber-tag-expressions', '~> 4.1', '>= 4.1.0'
 
   s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.23'
   s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   s.add_development_dependency 'rspec', '~> 3.10', '>= 3.10.0'
-  s.add_development_dependency 'rubocop', '~> 1.22', '>= 1.22.1'
+  s.add_development_dependency 'rubocop', '~> 1.24', '>= 1.24.1'
   s.add_development_dependency 'rubocop-packaging', '~> 0.5', '>= 0.5.1'
   s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
