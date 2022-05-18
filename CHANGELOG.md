@@ -1,6 +1,6 @@
 Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) on how to contribute to Cucumber.
 
-## [Unreleased]
+## [Unreleased](https://github.com/cucumber/cucumber-ruby-core/compare/v11.0.0...main)
 
 ### Added
 
@@ -11,6 +11,10 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 ### Removed
 
 ### Fixed
+
+### Dependencies
+
+## [11.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...v11.0.0)
 
 ### Dependencies
 
