@@ -22,7 +22,7 @@ module Cucumber
           pwd = File.expand_path(Dir.pwd)
           pwd.force_encoding(file.encoding)
           if file.index(pwd)
-            file = file[pwd.length+1..-1]
+            file = file[pwd.length + 1..-1]
           elsif file =~ /.*\/gems\/(.*\.rb)$/
             file = $1
           end
@@ -63,6 +63,7 @@ module Cucumber
 
           def match?(other)
             return false unless other.file == file
+
             other.include?(lines)
           end
 
@@ -71,7 +72,7 @@ module Cucumber
           end
 
           def hash
-            self.class.hash ^ to_s.hash
+            [self.class, to_s].hash
           end
 
           def to_str
@@ -111,19 +112,20 @@ module Cucumber
             other.data.subset?(data) || data.subset?(other.data)
           end
 
-          def +(more_lines)
-            new_data = data + more_lines.data
+          def +(other)
+            new_data = data + other.data
             self.class.new(new_data)
           end
 
           def to_s
             return first.to_s if data.length == 1
             return "#{data.min}..#{data.max}" if range?
+
             data.to_a.join(":")
           end
 
           def inspect
-            "<#{self.class}: #{to_s}>"
+            "<#{self.class}: #{self}>"
           end
 
           protected
@@ -149,6 +151,7 @@ module Cucumber
 
         def location
           raise('Please set @location in the constructor') unless defined?(@location)
+
           @location
         end
 
