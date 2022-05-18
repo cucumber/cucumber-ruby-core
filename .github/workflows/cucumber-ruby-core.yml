@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+        fail-fast: false
         ruby: ['2.5', '2.6', '2.7', '3.0']
 
         include:
