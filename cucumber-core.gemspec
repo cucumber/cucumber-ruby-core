@@ -34,9 +34,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
   s.rubygems_version = ">= 1.6.1"
-  s.test_files            = Dir[
-    'spec/**/*'
-  ]
   s.files            = Dir[
     'CHANGELOG.md',
     'CONTRIBUTING.md',

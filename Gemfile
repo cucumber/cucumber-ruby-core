@@ -2,5 +2,6 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'cucumber-gherkin', path: ENV['CUCUMBER_GHERKIN_RUBY'] if ENV['CUCUMBER_GHERKIN_RUBY']
-gem 'cucumber-messages', path: ENV['CUCUMBER_MESSAGES_RUBY'] if ENV['CUCUMBER_MESSAGES_RUBY']
+# To hack on Cucumber together with any of these libraries, uncomment the line below:
+# gem 'cucumber-gherkin', path: '../common/gherkin/ruby'
+# gem 'cucumber-messages', path: '../common/messages/ruby'
