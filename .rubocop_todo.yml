@@ -201,7 +201,6 @@ Layout/SpaceAroundOperators:
 # SupportedStylesForEmptyBrackets: space, no_space
 Layout/SpaceInsideArrayLiteralBrackets:
   Exclude:
-    - 'spec/coverage.rb'
     - 'spec/cucumber/core/test/data_table_spec.rb'
     - 'spec/cucumber/core/test/runner_spec.rb'
     - 'spec/cucumber/core_spec.rb'

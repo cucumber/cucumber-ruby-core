@@ -26,7 +26,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'cucumber-messages', '~> 18.0', '>= 18.0.0'
   s.add_dependency 'cucumber-tag-expressions', '~> 4.1', '>= 4.1.0'
 
-  s.add_development_dependency 'coveralls', '~> 0.8', '>= 0.8.23'
   s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   s.add_development_dependency 'rspec', '~> 3.11', '>= 3.11.0'
   s.add_development_dependency 'rubocop', '~> 1.29', '>= 1.29.1'

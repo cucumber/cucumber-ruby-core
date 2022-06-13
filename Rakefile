@@ -9,9 +9,7 @@ require 'rubocop/rake_task'
 RuboCop::RakeTask.new
 
 require "rspec/core/rake_task"
-RSpec::Core::RakeTask.new(:spec) do |t|
-  t.ruby_opts = %w[-r./spec/coverage]
-end
+RSpec::Core::RakeTask.new
 
 namespace :spec do
   desc "run (slow) performance tests"
