@@ -10,7 +10,6 @@
 [![issues](https://oselvar.com/api/badge?label=issues&csvUrl=https%3A%2F%2Fraw.githubusercontent.com%2Fcucumber%2Foselvar-github-metrics%2Fmain%2Fdata%2Fcucumber%2Fcucumber-ruby-core%2Fissues.csv)](https://oselvar.com/github/cucumber/oselvar-github-metrics/main/cucumber/cucumber-ruby-core)
 [![Test cucumber-core](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/cucumber-ruby-core.yml/badge.svg)](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/cucumber-ruby-core.yml)
 [![Code Climate](https://codeclimate.com/github/cucumber/cucumber-ruby-core.svg)](https://codeclimate.com/github/cucumber/cucumber-ruby-core)
-[![Coverage Status](https://coveralls.io/repos/cucumber/cucumber-ruby-core/badge.svg?branch=main)](https://coveralls.io/r/cucumber/cucumber-ruby-core?branch=main)
 
 Cucumber is a tool for running automated tests written in plain language. Because they're
 written in plain language, they can be read by anyone on your team. Because they can be
