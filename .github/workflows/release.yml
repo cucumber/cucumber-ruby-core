@@ -8,46 +8,14 @@ on:
 jobs:
 
   pre-release-check:
-    name: Perform checks before releasing
-    runs-on: ubuntu-latest
+    uses: cucumber/.github/.github/workflows/prerelease-checks.yml@main
 
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Check commit has been pushed on origin/main
-        run: |
-          git fetch --quiet origin main
-          git merge-base --is-ancestor HEAD origin/main
-
-  tests:
-    needs: pre-release-check
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        ruby: ['2.6', '2.7', '3.0', '3.1']
-
-        include:
-          - os: ubuntu-latest
-            ruby: jruby
-
-          - os: macos-latest
-            ruby: '3.0'
-
-          - os: windows-latest
-            ruby: '3.0'
-
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Run ruby tests
-        uses: ./.github/actions/test-ruby
-        with:
-          ruby-version: ${{ matrix.ruby }}
+  test-ruby:
+    uses: ./.github/workflows/test.yml
 
   publish-rubygem:
     name: Publish Ruby Gem
-    needs: tests
+    needs: [pre-release-check, test-ruby]
     runs-on: ubuntu-latest
     environment: Release
 
