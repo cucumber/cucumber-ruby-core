@@ -29,10 +29,10 @@ module Cucumber
           new(file, line)
         end
 
-        def self.new(file, raw_lines=nil)
+        def self.new(file, raw_lines=nil, matching_lines=nil)
           file || raise(ArgumentError, "file is mandatory")
           if raw_lines
-            Precise.new(file, Lines.new(raw_lines))
+            Precise.new(file, Lines.new(raw_lines), Lines.new(matching_lines || raw_lines))
           else
             Wildcard.new(file)
           end
@@ -53,8 +53,14 @@ module Cucumber
         end
 
         class Precise < Struct.new(:file, :lines)
+          def initialize file, lines=nil, matching_lines=nil
+            super file, lines
+            @matching_lines = matching_lines
+          end
+          attr_reader :matching_lines
+
           def include?(other_lines)
-            lines.include?(other_lines)
+            matching_lines.include?(other_lines)
           end
 
           def line

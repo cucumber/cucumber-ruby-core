@@ -38,8 +38,9 @@ module Cucumber
         uri = pickle.uri
         test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
         lines = source_lines_for_pickle(pickle).sort.reverse
+        matching_lines = matching_source_lines_for_pickle(pickle).sort
         tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, source_line_for_pickle_tag(tag)), tag.name) }
-        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
+        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines, matching_lines), tags, pickle.language)
         @event_bus&.test_case_created(test_case, pickle)
         test_case
       end
@@ -77,6 +78,11 @@ module Cucumber
 
       def source_lines_for_pickle_step(pickle_step)
         pickle_step.ast_node_ids.map { |id| source_line(id) }
+      end
+
+      def matching_source_lines_for_pickle(pickle)
+        source_lines_for_pickle(pickle) +
+          pickle.steps.flat_map { |pickle| source_lines_for_pickle_step(pickle) }
       end
 
       def source_line_for_pickle_tag(tag)

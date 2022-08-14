@@ -120,8 +120,15 @@ module Cucumber::Core
           expect(receiver.test_case_locations).to eq [test_case_named('two').location]
         end
 
-        it "doesn't match a location after the scenario line" do
+        it "matches the location of a step of the scenario" do
           location = Test::Location.new(file, 9)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations).to eq [test_case_named('two').location]
+        end
+
+        it "doesn't match a location after the scenario body" do
+          location = Test::Location.new(file, 11)
           filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
           expect(receiver.test_case_locations).to eq []
