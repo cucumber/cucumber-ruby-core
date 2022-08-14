@@ -53,8 +53,14 @@ module Cucumber
 
         def match_locations?(queried_locations)
           queried_locations.any? do |queried_location|
-            queried_location.match? location
+            matching_locations.any? do |location|
+              queried_location.match? location
+            end
           end
+        end
+
+        def matching_locations
+          [location] + test_steps.map(&:location)
         end
 
         def inspect
