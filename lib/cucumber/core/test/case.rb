@@ -60,7 +60,11 @@ module Cucumber
         end
 
         def matching_locations
-          [location] + test_steps.map(&:location)
+          [
+            location,
+            tags.map(&:location),
+            test_steps.map(&:location),
+          ].flatten
         end
 
         def inspect

@@ -141,7 +141,7 @@ module Cucumber::Core
           expect(receiver.test_case_locations).to eq [test_case_named('two').location]
         end
 
-        xit "matches a location on the scenario's tags" do
+        it "matches a location on the scenario's tags" do
           location = Test::Location.new(file, 7)
           filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
@@ -284,7 +284,7 @@ module Cucumber::Core
           expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
         end
 
-        xit "matches a location on the scenario outline's tags with all test cases of all the tables" do
+        it "matches a location on the scenario outline's tags with all test cases of all the tables" do
           location = Test::Location.new(file, 7)
           filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
