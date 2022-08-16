@@ -127,18 +127,84 @@ module Cucumber::Core
           expect(receiver.test_case_locations).to eq [test_case_named('two').location]
         end
 
-        it "doesn't match a location after the scenario body" do
+        it 'matches a location on the last step of the scenario' do
+          location = Test::Location.new(file, 10)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations).to eq [test_case_named('two').location]
+        end
+
+        xit "matches a location on the scenario's comment" do
+          location = Test::Location.new(file, 6)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations).to eq [test_case_named('two').location]
+        end
+
+        xit "matches a location on the scenario's tags" do
+          location = Test::Location.new(file, 7)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations).to eq [test_case_named('two').location]
+        end
+
+        it "doesn't match a location after the last step of the scenario" do
           location = Test::Location.new(file, 11)
           filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
           expect(receiver.test_case_locations).to eq []
         end
 
-        it "doesn't match a location before the scenario line" do
-          location = Test::Location.new(file, 7)
+        it "doesn't match a location before the scenario" do
+          location = Test::Location.new(file, 5)
           filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
           expect(receiver.test_case_locations).to eq []
+        end
+
+        context "with a docstring" do
+          let(:test_case) do
+            test_cases.find { |c| c.name == 'with docstring' }
+          end
+
+          xit "matches a location at the start the docstring" do
+            location = Test::Location.new(file, 17)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
+          end
+
+          xit "matches a location in the middle of the docstring" do
+            location = Test::Location.new(file, 18)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
+          end
+
+          xit "matches a location at the end of the docstring" do
+            location = Test::Location.new(file, 19)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
+          end
+
+          it "does not match a location after the docstring" do
+            location = Test::Location.new(file, 20)
+            expect( test_case.match_locations?([location]) ).to be_falsy
+          end
+        end
+
+        context "with a table" do
+          let(:test_case) do
+            test_cases.find { |c| c.name == 'with a table' }
+          end
+
+          xit "matches a location on the first table row" do
+            location = Test::Location.new(file, 23)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
+          end
         end
 
         context "with duplicate locations in the filter" do
@@ -191,21 +257,52 @@ module Cucumber::Core
         end
 
         it "matches row location to the test case of the row" do
-          locations = [
-            Test::Location.new(file, 19),
-          ]
-          filter = Test::LocationsFilter.new(locations)
+          location = Test::Location.new(file, 19)
+          filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
           expect(receiver.test_case_locations).to eq [test_case.location]
         end
 
         it "matches outline location with the all test cases of all the tables" do
-          locations = [
-            Test::Location.new(file, 8),
-          ]
-          filter = Test::LocationsFilter.new(locations)
+          location = Test::Location.new(file, 8)
+          filter = Test::LocationsFilter.new([location])
           compile [doc], receiver, [filter]
           expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
+        end
+
+        it "matches a location on a step of the scenario outline with all test cases of all the tables" do
+          location = Test::Location.new(file, 10)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
+        end
+
+        xit "matches a location on the scenario outline's comment with all test cases of all the tables" do
+          location = Test::Location.new(file, 6)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
+        end
+
+        xit "matches a location on the scenario outline's tags with all test cases of all the tables" do
+          location = Test::Location.new(file, 7)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
+        end
+
+        it "doesn't match a location after the last row of the examples table" do
+          location = Test::Location.new(file, 20)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations).to eq []
+        end
+
+        it "doesn't match a location before the scenario outline" do
+          location = Test::Location.new(file, 5)
+          filter = Test::LocationsFilter.new([location])
+          compile [doc], receiver, [filter]
+          expect(receiver.test_case_locations).to eq []
         end
 
         it "doesn't match the location of the examples line" do
