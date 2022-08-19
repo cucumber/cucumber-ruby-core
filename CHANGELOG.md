@@ -12,7 +12,7 @@ Please see [CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CO
 
 ### Fixed
 
-* Restore support for matching a scenario by its tags' and steps' line numbers.
+* Restore support for matching a scenario by tag and step line numbers.
 
 ### Dependencies
 
