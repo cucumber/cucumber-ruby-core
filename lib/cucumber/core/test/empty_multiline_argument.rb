@@ -19,8 +19,8 @@ module Cucumber
           self
         end
 
-        def all_locations
-          []
+        def lines_count
+          0
         end
 
         def inspect

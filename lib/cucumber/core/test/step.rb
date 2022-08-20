@@ -52,17 +52,8 @@ module Cucumber
         end
 
         def matching_locations
-          case multiline_arg
-          when DocString, DataTable
-            length = begin
-              multiline_arg.lines.count + 2
-            rescue NoMethodError
-              multiline_arg.raw.count
-            end
-            lines = (1..length).map do |offset|
-              location.lines.min + offset
-            end
-            [location, Location.new(location.file, lines)]
+          if multiline_arg
+            [location.select_down(multiline_arg.lines_count)]
           else
             [location]
           end

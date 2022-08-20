@@ -80,6 +80,10 @@ module Cucumber
           self.class.new(new_raw)
         end
 
+        def lines_count
+          raw.count
+        end
+
         def ==(other)
           other.class == self.class && raw == other.raw
         end

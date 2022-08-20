@@ -79,6 +79,13 @@ module Cucumber
             to_s
           end
 
+          def select_down(lines_count)
+            new_lines = (0..lines_count).map do |offset|
+              lines.min + offset
+            end
+            Location.new(file, new_lines)
+          end
+
           def on_line(new_line)
             Location.new(file, new_line)
           end
