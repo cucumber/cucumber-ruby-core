@@ -157,6 +157,60 @@ module Cucumber::Core
           expect(receiver.test_case_locations).to eq []
         end
 
+        context "with a docstring" do
+          let(:test_case) do
+            test_cases.find { |c| c.name == 'with docstring' }
+          end
+
+          it "matches a location at the start the docstring" do
+            location = Test::Location.new(file, 17)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
+          end
+
+          it "matches a location in the middle of the docstring" do
+            location = Test::Location.new(file, 18)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
+          end
+
+          it "matches a location at the end of the docstring" do
+            location = Test::Location.new(file, 19)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
+          end
+        end
+
+        context "with a table" do
+          let(:test_case) do
+            test_cases.find { |c| c.name == 'with a table' }
+          end
+
+          it "matches a location at the start of the table" do
+            location = Test::Location.new(file, 23)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
+          end
+
+          it "matches a location at the middle of the table" do
+            location = Test::Location.new(file, 24)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
+          end
+
+          it "matches a location at the end of the table" do
+            location = Test::Location.new(file, 25)
+            filter = Test::LocationsFilter.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
+          end
+        end
+
         context "with duplicate locations in the filter" do
           it "matches each test case only once" do
             location_tc_two = test_case_named('two').location

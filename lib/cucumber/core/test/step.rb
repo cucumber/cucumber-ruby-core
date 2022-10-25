@@ -51,6 +51,10 @@ module Cucumber
           @action.location
         end
 
+        def matching_locations
+          [location.merge(multiline_arg)]
+        end
+
         def inspect
           "#<#{self.class}: #{location}>"
         end

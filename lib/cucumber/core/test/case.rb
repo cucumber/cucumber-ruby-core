@@ -63,7 +63,7 @@ module Cucumber
           [
             location,
             tags.map(&:location),
-            test_steps.map(&:location),
+            test_steps.map(&:matching_locations)
           ].flatten
         end
 

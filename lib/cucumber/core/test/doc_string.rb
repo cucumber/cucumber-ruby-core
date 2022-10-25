@@ -50,6 +50,10 @@ module Cucumber
           self
         end
 
+        def lines_count
+          lines.count + 2
+        end
+
         def ==(other)
           if other.respond_to?(:content_type)
             return false unless content_type == other.content_type
@@ -68,7 +72,6 @@ module Cucumber
             %{  """>}
           ].join("\n")
         end
-
       end
     end
   end

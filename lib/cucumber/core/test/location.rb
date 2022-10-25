@@ -79,6 +79,13 @@ module Cucumber
             to_s
           end
 
+          def merge(multiline_arg)
+            new_lines = (0..multiline_arg.lines_count).map do |offset|
+              lines.min + offset
+            end
+            Location.new(file, new_lines)
+          end
+
           def on_line(new_line)
             Location.new(file, new_line)
           end
