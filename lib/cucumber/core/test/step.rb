@@ -52,11 +52,7 @@ module Cucumber
         end
 
         def matching_locations
-          if multiline_arg
-            [location.select_down(multiline_arg.lines_count)]
-          else
-            [location]
-          end
+          [location.merge(multiline_arg)]
         end
 
         def inspect
