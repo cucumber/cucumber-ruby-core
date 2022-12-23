@@ -31,7 +31,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop-packaging', '~> 0.5', '>= 0.5.1'
   s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
-  s.rubygems_version = ">= 1.6.1"
   s.files            = Dir[
     'CHANGELOG.md',
     'CONTRIBUTING.md',
