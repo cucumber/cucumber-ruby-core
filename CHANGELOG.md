@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 ### Fixed
-- Restore support for matching a scenario by tag and step line numbers.
+- Restore support for matching a scenario by tag and step line numbers. ([#237](https://github.com/cucumber/cucumber-ruby-core/pull/237), [#238](https://github.com/cucumber/cucumber-ruby-core/pull/238), [#239](https://github.com/cucumber/cucumber-ruby-core/pull/239))
 
 ## [11.0.0]
 ### Changed
