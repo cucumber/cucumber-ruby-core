@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [11.1.0] - 2022-12-22
 ### Changed
 - Update gherkin and messsages dependencies
 
@@ -235,6 +237,7 @@
 ## [1.0.0.beta.2]
 
 [Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
+[11.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
 [11.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...v11.0.0
 [10.1.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.0...v10.1.1
 [10.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.1...v10.1.0
@@ -272,9 +275,4 @@
 [1.0.0.beta.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2
 [1.0.0.beta.3]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.2...v1.0.0.beta.3
 [1.0.0.beta.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2
-a.1...v1.0.0.beta.2)
-
-Changes were not logged.
-
-
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
+ore/compare/v10.1.1...main
