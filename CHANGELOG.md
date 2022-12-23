@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- Update gherkin and messsages dependencies
+
 ### Fixed
 - Restore support for matching a scenario by tag and step line numbers. ([#237](https://github.com/cucumber/cucumber-ruby-core/pull/237), [#238](https://github.com/cucumber/cucumber-ruby-core/pull/238), [#239](https://github.com/cucumber/cucumber-ruby-core/pull/239))
 
@@ -227,7 +230,11 @@
 
 ## [1.0.0.beta.2]
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v11.0.0...main
+## [1.0.0.beta.3]
+
+## [1.0.0.beta.2]
+
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
 [11.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...v11.0.0
 [10.1.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.0...v10.1.1
 [10.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.0.1...v10.1.0
@@ -263,13 +270,9 @@
 [1.0.0.beta.4]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.3...v1.0.0.beta.4
 [1.0.0.beta.3]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.2...v1.0.0.beta.3
 [1.0.0.beta.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2
-thub.com/cucumber/cucumber-ruby-core/pull/69) [@erran](https://github.com/erran))
-
-## [1.0.0.beta.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.2...v1.0.0.beta.3)
-
-Changes were not logged.
-
-## [1.0.0.beta.2](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2)
+[1.0.0.beta.3]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.2...v1.0.0.beta.3
+[1.0.0.beta.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2
+a.1...v1.0.0.beta.2)
 
 Changes were not logged.
 
