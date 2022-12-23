@@ -133,21 +133,9 @@ This release failed
 - Let Scenarios with no Steps get the result status Undefined ([#157](https://github.com/cucumber/cucumber-ruby-core/pull/157) @brasmusson)
 - Convert to use the Gherkin compiler and Pickles ([#156](https://github.com/cucumber/cucumber-ruby-core/pull/156) @brasmusson)
 
-### Added
-
-- N/A
-
-### Fixed
-
-- N/A
-
 ### Removed
 
 - Remove the support for old style tag expressions ([#159](https://github.com/cucumber/cucumber-ruby-core/pull/159) @brasmusson)
-
-### Improved
-
-- N/A
 
 ## [3.2.1](https://github.com/cucumber/cucumber-ruby-core/compare/v3.2.0...v3.2.1)
 
@@ -189,13 +177,11 @@ This release failed
 
 - Fix DataTable's Location to be aware of all of its lines ([#142](https://github.com/cucumber/cucumber-ruby-core/pull/142) @botandrose)
 
-### Improved
-
 - As per [#251](https://github.com/cucumber/cucumber/issues/251): renamed History.md to CHANGELOG.md, added contributing message at beginning, and misc formatting. ([#145](https://github.com/cucumber/cucumber-ruby-core/pull/145) [jaysonesmith](https://github.com/jaysonesmith))
 
 ## [3.0.0.pre.2](https://github.com/cucumber/cucumber-ruby-core/compare/v2.0.0...3.0.0.pre.2) (2017-07-26)
 
-### New Features
+### Added
 
 - Add a flaky result type to be used for flaky scenarios ([#141](https://github.com/cucumber/cucumber-ruby-core/pull/141), [cucumber/cucumber-ruby#1044](https://github.com/cucumber/cucumber-ruby/issues/1044) @brasmusson)
 - Make the Summary report able to say if the total result is ok ([#140](https://github.com/cucumber/cucumber-ruby-core/pull/140) @brasmusson)
@@ -204,81 +190,69 @@ This release failed
 - Use tag expressions ([#116](https://github.com/cucumber/cucumber-ruby-core/pull/116) @brasmusson)
 - Access example table row data by param name ([#118](https://github.com/cucumber/cucumber-ruby-core/pull/118) @enkessler)
 
-### Bugfixes
-
-N/A
-
-### Removed Features
-
-N/A
-
-### Refactoring
+### Fixed
 
 - Travis: jruby-9.1.10.0 ([#130](https://github.com/cucumber/cucumber-ruby-core/pull/130) @olleolleolle)
 - Travis: jruby-9.1.12.0 ([#133](https://github.com/cucumber/cucumber-ruby-core/pull/132) @olleolleolle)
 
 ## [2.0.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.5.0...2.0.0)
 
-### New Features
+### Added
 
 - Implement equality for test cases ([#111](https://github.com/cucumber/cucumber-ruby-core/pull/111) @mattwynne)
 - Implement an event bus (moved from Cucumber-Ruby) ([#106](https://github.com/cucumber/cucumber-ruby-core/pull/106) @mattwynne)
 - Use frozen string literals ([#105](https://github.com/cucumber/cucumber-ruby-core/pull/105) @twalpole)
 
-### Bugfixes
+### Fixed
 
 - Handle incomplete examples to scenario outlines. ([109](https://github.com/cucumber/cucumber-ruby-core/pull/109) @brasmusson)
 - Add with_filtered_backtrace method to unknown result ([107](https://github.com/cucumber/cucumber-ruby-core/pull/107) @danascheider)
 
-### Removed Features
+### Removed
 
 - Remove support for Ruby v1.9.3. ([112](https://github.com/cucumber/cucumber-ruby-core/pull/112) @brasmusson)
 
-### Refactoring
-
-N/A
-
 ## [1.5.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.4.0...v1.5.0)
 
-### New Features
+### Added
 
  * Update to Gherkin v4.0 (@brasmusson)
 
-### Bugfixes
+### Fixed
 
  * Use monotonic time ([#103](https://github.com/cucumber/cucumber-ruby-core/pull/103) @mikz)
 
 ## [1.4.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.1...v1.4.0)
 
-### New Features
+### Added
 
  * Update to Gherkin v3.2.0 (@brasmusson)
 
-### Bugfixes
+### Fixed
 
 ## [1.3.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.3.0...v1.3.1)
 
-### New Features
+### Added
 
-### Bugfixes
+### Fixed
 
  * Speed up location filtering ([#99](https://github.com/cucumber/cucumber-ruby-core/issues/99) @mattwynne @akostadinov @brasmusson)
 
 ## [1.3.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.2.0...v1.3.0)
 
-### New Features
+### Added
 
  * Add factory method to Cucumber::Core::Ast::Location that uses the output from Proc#source_location (@brasmusson)
  * Integrate Gherkin3 parser (@brasmusson)
 
-### Bugfixes
+### Fixed
 
  * Make sure that `after_test_step` is sent also when a test step is interrupted by (a timeout in) an around hook ([cucumber/cucumber-ruby#909](https://github.com/cucumber/cucumber-ruby/issues/909) @brasmusson)
  * Improve the check that a test_step quacks like a Cucumber::Core::Test::Step ([95](https://github.com/cucumber/cucumber-ruby-core/issues/95) @brasmusson)
 
 ## [1.2.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.3...v1.2.0)
 
-### New Features
+### Added
 
  * Enable the location of actions to be the step or hook location (@brasmusson)
  * Add the comments to the Steps, Examples tables and Examples table rows Ast classes (@brasmusson)
@@ -286,17 +260,17 @@ N/A
  * Add #to_sym to Cucumber::Core::Test::Result classes ([#89](https://github.com/cucumber/cucumber-ruby-core/pull/89) @pdswan)
  * Add #ok? to Cucumber::Core::Test::Result classes ([#92](https://github.com/cucumber/cucumber-ruby-core/pull/92) @brasmusson)
 
-### Bugfixes
+### Fixed
 
 ## [1.1.3](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.2...v1.1.3)
 
-### New Features
+### Added
 
   * Added custom `inspect` methods for AST Nodes (@tooky)
 
 ## [1.1.2](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.1...v1.1.2)
 
-### New Features
+### Added
 
   * Make Test Case names for Scenario Outlines language neutral [83](https://github.com/cucumber/cucumber-ruby-core/pull/83) (@brasmusson)
   * Add predicate methods for Multline arguments (@mattwynne)
@@ -307,17 +281,17 @@ N/A
 ## [1.1.1](https://github.com/cucumber/cucumber-ruby-core/compare/v1.1.0...v1.1.1)
 
 
-### New Features
+### Added
 
   * Calculate actual keyword for snippets (@brasmusson)
 
-### Bugfixes
+### Fixed
 
   * Remove keyword from `Test::Case#name` [82](https://github.com/cucumber/cucumber-ruby-core/pull/82) (@richarda)
 
 ## [1.1.0](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0...v1.1.0)
 
-### New features
+### Added
 
   * LocationsFilter now sorts test cases as well as filtering them (@mattwynne)
 
@@ -328,19 +302,19 @@ N/A
   * Removed the Mapper DSL (@mattwynne, @tooky)
   * Removed Cucumber.initializer (@tooky)
 
-### New Features
+### Added
 
   * Added dynamic filter class constructor (@mattwynne)
 
 ## [1.0.0.beta.4](https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.3...v1.0.0.beta.4)
 
-### New Features
+### Added
 
  * Introduce a Duration object (#[71](https://github.com/cucumber/cucumber-ruby-core/pull/71) [@brasmusson](https://github.com/brasmusson))
  * BeforeStep hooks (#[70](https://github.com/cucumber/cucumber-ruby-core/pull/70) [@almostwhitehat](https://github.com/almostwhitehat))
  * Expose `Test::Case#test_steps` (@mattwynne)
 
-### Bugfixes
+### Fixed
 
  * Handle empty feature files (#[77](https://github.com/cucumber/cucumber-ruby-core/pull/77), [cucumber/cucumber-ruby#771](https://github.com/cucumber/cucumber-ruby/issues/771) [@brasmusson](https://github.com/brasmusson))
  * Run after hooks in reverse order (#[69](https://github.com/cucumber/cucumber-ruby-core/pull/69) [@erran](https://github.com/erran))
