@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'cucumber-gherkin', '>= 24', '< 27'
   s.add_dependency 'cucumber-messages', '>= 19', '< 22'
-  s.add_dependency 'cucumber-tag-expressions', '~> 4.1', '>= 4.1.0'
+  s.add_dependency 'cucumber-tag-expressions', '>= 4.1', '< 6.0'
 
   s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   s.add_development_dependency 'rspec', '~> 3.11', '>= 3.11.0'
