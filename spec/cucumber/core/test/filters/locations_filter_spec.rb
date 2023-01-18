@@ -102,6 +102,22 @@ module Cucumber
                   | 1 | 2 |
                   | 3 | 4 |
 
+              Rule: A rule with a background
+                Background: A background rule
+                  Given background
+
+                Scenario: with a rule and background
+                  Given rule a
+
+                Scenario: another with a rule and background
+                  Given rule b
+
+              Rule: A rule without a background
+                Scenario: with a rule and no background
+                  Given rule c
+
+                Scenario: another with a rule and no background
+                  Given rule d
             FEATURE
           end
 
@@ -109,11 +125,65 @@ module Cucumber
             test_cases.find { |c| c.name == name }
           end
 
+          it 'matches the feature line to all scenarios' do
+            location = Test::Location.new(file, 1)
+            filter = described_class.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq test_cases.map(&:location)
+          end
+
+          it 'matches the background line to all scenarios' do
+            location = Test::Location.new(file, 2)
+            filter = described_class.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq test_cases.map(&:location)
+          end
+
           it 'matches the location on a background step to all scenarios' do
             location = Test::Location.new(file, 3)
             filter = described_class.new([location])
             compile([doc], receiver, [filter])
             expect(receiver.test_case_locations).to eq test_cases.map(&:location)
+          end
+
+          it 'matches the rule with background line to all of its scenarios' do
+            location = Test::Location.new(file, 29)
+            filter = described_class.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [
+              test_case_named('with a rule and background').location,
+              test_case_named('another with a rule and background').location
+            ]
+          end
+
+          it 'matches the rule background line to all of the rules scenarios' do
+            location = Test::Location.new(file, 30)
+            filter = described_class.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [
+              test_case_named('with a rule and background').location,
+              test_case_named('another with a rule and background').location
+            ]
+          end
+
+          it 'matches the location on a rule background step to all of the rules scenarios' do
+            location = Test::Location.new(file, 31)
+            filter = described_class.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [
+              test_case_named('with a rule and background').location,
+              test_case_named('another with a rule and background').location
+            ]
+          end
+
+          it 'matches the rule without background line to all of its scenarios' do
+            location = Test::Location.new(file, 39)
+            filter = described_class.new([location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq [
+              test_case_named('with a rule and no background').location,
+              test_case_named('another with a rule and no background').location
+            ]
           end
 
           it 'matches the precise location of the scenario' do
@@ -257,10 +327,17 @@ module Cucumber
           end
 
           let(:test_case) { test_cases.find { |c| c.name == 'two b' } }
+          let(:feature_location) { Test::Location.new(file, 1) }
           let(:row_location) { Test::Location.new(file, 19) }
           let(:start_of_outline_location) { Test::Location.new(file, 8) }
           let(:middle_of_outline_location) { Test::Location.new(file, 10) }
           let(:outline_tags_location) { Test::Location.new(file, 7) }
+
+          it 'matches the feature line to all scenarios' do
+            filter = described_class.new([feature_location])
+            compile [doc], receiver, [filter]
+            expect(receiver.test_case_locations).to eq test_cases.map(&:location)
+          end
 
           it 'matches row location to the test case of the row' do
             filter = described_class.new([row_location])

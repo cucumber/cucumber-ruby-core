@@ -18,6 +18,9 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
   ([#261](https://github.com/cucumber/cucumber-ruby-core/pull/261))
 - Permit usage of gherkin v27
 
+### Fixed
+- Restore support for matching a scenario by its Feature, Background, and Rule line numbers. ([#247](https://github.com/cucumber/cucumber-ruby-core/pull/237))
+
 ## [12.0.0] - 2023-09-06
 ### Changed
 - Update gherkin and messages minimum dependencies

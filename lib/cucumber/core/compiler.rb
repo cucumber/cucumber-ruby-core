@@ -38,8 +38,11 @@ module Cucumber
         uri = pickle.uri
         test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
         lines = source_lines_for_pickle(pickle).sort.reverse
+        location = Test::Location.new(uri, lines)
+        parent_lines = source_lines_for_pickle_parents(pickle)
+        parent_locations = Test::Location.new(uri, parent_lines)
         tags = source_lines_for_all_pickle_tags(pickle, uri)
-        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
+        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, location, parent_locations, tags, pickle.language)
         @event_bus&.test_case_created(test_case, pickle)
         test_case
       end
@@ -66,6 +69,10 @@ module Cucumber
 
       def source_lines_for_pickle(pickle)
         pickle.ast_node_ids.map { |id| source_line(id) }
+      end
+
+      def source_lines_for_pickle_parents(pickle)
+        gherkin_query.scenario_parent_locations(pickle.ast_node_ids[0]).map(&:line)
       end
 
       def source_lines_for_pickle_step(pickle_step)
