@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [11.1.1] - 2023-06-06
+### Changed
+- Fix: retried scenarios which are run after another scenario with a passed result are still counted as failed ([#250](https://github.com/cucumber/cucumber-ruby-core/pull/250) @thukim)
+
 ## [11.1.0] - 2022-12-22
 ### Changed
 - Update gherkin and messsages dependencies
