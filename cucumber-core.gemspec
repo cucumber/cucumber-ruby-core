@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
                   }
 
   s.add_dependency 'cucumber-gherkin', '>= 24', '< 27'
-  s.add_dependency 'cucumber-messages', '>= 19', '< 22'
+  s.add_dependency 'cucumber-messages', '>= 19', '< 23'
   s.add_dependency 'cucumber-tag-expressions', '~> 5.0', '>= 5.0.4'
 
   s.files            = Dir[
