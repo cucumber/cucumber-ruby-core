@@ -84,7 +84,7 @@ module Cucumber
           end
 
           it 'delegates #gsub to the content string' do
-            expect( doc_string.gsub(/n/, '_') ).to eq 'co_te_t'
+            expect( doc_string.gsub('n', '_') ).to eq 'co_te_t'
           end
 
           it 'delegates #split to the content string' do
