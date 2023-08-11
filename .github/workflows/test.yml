@@ -2,11 +2,15 @@ name: Test cucumber-core
 
 on:
   push:
-
+    branches:
+      - main
+      - renovate/**
+  pull_request:
+    branches:
+      - main
+  workflow_call:
   schedule:
     - cron: "0 5 * * *"
-
-  workflow_call:
 
 jobs:
   test:
