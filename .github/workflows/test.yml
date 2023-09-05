@@ -18,28 +18,22 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ruby: ['2.6', '2.7', '3.0', '3.1']
-
+        ruby: ['2.6', '2.7', '3.0', '3.1', '3.2']
         include:
           - os: ubuntu-latest
             ruby: jruby
-
           - os: macos-latest
             ruby: '3.0'
-
           - os: windows-latest
             ruby: '3.0'
 
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-
       - name: Run tests
         run: bundle exec rake
         shell: bash
