@@ -129,33 +129,6 @@ Layout/SpaceAroundMethodCallOperator:
 Style/ExponentialNotation:
   Enabled: false
 
-### rubocop 0.83 additions
-
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: true
-
-Style/SlicingWithRange:
-  Enabled: true
-
-### rubocop 0.84 additions
-
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: true
-
-### rubocop 0.85 additions
-
-Lint/MixedRegexpCaptureTypes:
-  Enabled: true
-
-Style/RedundantFetchBlock:
-  Enabled: true
-
-Style/RedundantRegexpCharacterClass:
-  Enabled: true
-
-Style/RedundantRegexpEscape:
-  Enabled: true
-
 # TODO - LH: Enable this cop
 Lint/BinaryOperatorWithIdenticalOperands:
   Enabled: false
