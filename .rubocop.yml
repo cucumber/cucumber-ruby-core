@@ -156,28 +156,6 @@ Style/RedundantRegexpCharacterClass:
 Style/RedundantRegexpEscape:
   Enabled: true
 
-### rubocop 0.87 additions
-
-Style/BisectedAttrAccessor:
-  Enabled: true
-
-Style/RedundantAssignment:
-  Enabled: true
-
-### rubocop 0.88 additions
-
-Lint/DuplicateElsifCondition:
-  Enabled: true
-
-Style/ArrayCoercion:
-  Enabled: true
-
-Style/CaseLikeIf:
-  Enabled: true
-
-Style/RedundantFileExtensionInRequire:
-  Enabled: true
-
 # TODO - LH: Enable this cop
 Lint/BinaryOperatorWithIdenticalOperands:
   Enabled: false
@@ -189,6 +167,7 @@ Lint/EmptyBlock:
 Lint/ConstantDefinitionInBlock:
   Exclude:
     - 'spec/**/*.rb'
+
 # TODO - LH: Enable this cop
 Style/SoleNestedConditional:
   Enabled: false
