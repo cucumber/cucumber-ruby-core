@@ -90,30 +90,6 @@ Style/StderrPuts:
 Style/RegexpLiteral:
   EnforcedStyle: slashes
 
-# TODO - LH: Enable this cop
-Style/HashTransformKeys:
-  Enabled: false
-
-# TODO - LH: Enable this cop
-Style/HashTransformValues:
-  Enabled: false
-
-# TODO - LH: Enable this cop
-Style/ExponentialNotation:
-  Enabled: false
-
-# TODO - LH: Enable this cop
-Lint/BinaryOperatorWithIdenticalOperands:
-  Enabled: false
-
-# TODO - LH: Enable this cop
-Lint/EmptyBlock:
-  Enabled: false
-
 Lint/ConstantDefinitionInBlock:
   Exclude:
     - 'spec/**/*.rb'
-
-# TODO - LH: Enable this cop
-Style/SoleNestedConditional:
-  Enabled: false
