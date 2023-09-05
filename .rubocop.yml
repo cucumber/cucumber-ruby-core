@@ -29,41 +29,15 @@ Layout/EndOfLine:
 Lint/AmbiguousOperator:
   Enabled: false
 
-Metrics/AbcSize:
-  Max: 45
-
-Metrics/BlockLength:
-  CountComments: false
-  Exclude:
-    - 'cucumber-core.gemspec'
-    - 'spec/**/*'
-
-Metrics/ClassLength:
-  Max: 375
-
-Metrics/CyclomaticComplexity:
-  Max: 9
-
 # A line length of 200 covers most violations in the repo while still being
 # a more up to date length given today's screen sizes
 Layout/LineLength:
   Max: 200
 
-Metrics/ModuleLength:
-  Max: 150
-  Exclude:
-    - 'spec/**/*'
-
-Metrics/MethodLength:
-  Max: 30
-
 # In most cases, being descriptive with parameter names helps a reader understand
 # what the variable is for. In some cases, shorter names are sufficient.
 Naming/MethodParameterName:
   AllowedNames: _, e, n, v, id, io, gh, pr
-
-Style/ClassAndModuleChildren:
-  Enabled: false
 
 Style/Documentation:
   Enabled: false
@@ -71,7 +45,3 @@ Style/Documentation:
 # Slashes are by far the most used form of regex values in the project.
 Style/RegexpLiteral:
   EnforcedStyle: slashes
-
-Lint/ConstantDefinitionInBlock:
-  Exclude:
-    - 'spec/**/*.rb'
