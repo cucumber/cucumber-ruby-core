@@ -2,7 +2,9 @@
 
 ## [Unreleased]
 ### Changed
-- Update gherkin and messages dependencies
+- Update gherkin and messages minimum dependencies
+- Added in new rubocop sub-gems for testing
+- Whole heap of rubocop updates into the todo file
 
 ## [11.1.0] - 2022-12-22
 ### Changed
