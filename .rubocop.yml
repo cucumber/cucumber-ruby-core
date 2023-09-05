@@ -8,13 +8,7 @@ require:
 AllCops:
   # Keep this inline with the gemspec
   TargetRubyVersion: 2.5
-  # Cop names are not displayed in offense messages by default. Change behavior
-  # by overriding DisplayCopNames, or by giving the `-D/--display-cop-names`
-  # option.
   DisplayCopNames: true
-  # Style guide URLs are not displayed in offense messages by default. Change
-  # behavior by overriding `DisplayStyleGuide`, or by giving the
-  # `-S/--display-style-guide` option.
   DisplayStyleGuide: true
   NewCops: enable
 
