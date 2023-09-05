@@ -96,36 +96,15 @@ Style/StderrPuts:
 Style/RegexpLiteral:
   EnforcedStyle: slashes
 
-# on rubocop upgrades, new cops are in a pending state so that CI won't break.
-# A warning is emitted until new cops are explicitly enabled or disabled.
-# See https://docs.rubocop.org/rubocop/versioning.html#pending-cops for details.
-
-### rubocop 0.80 additions
-
-Style/HashEachMethods:
-  Enabled: true
-
-# requires ruby 2.5
+# TODO - LH: Enable this cop
 Style/HashTransformKeys:
   Enabled: false
 
-# requires ruby 2.5
+# TODO - LH: Enable this cop
 Style/HashTransformValues:
   Enabled: false
 
-### rubocop 0.81 additions
-
-Lint/RaiseException:
-  Enabled: true
-
-Lint/StructNewOverride:
-  Enabled: true
-
-### rubocop 0.82 additions
-
-Layout/SpaceAroundMethodCallOperator:
-  Enabled: true
-
+# TODO - LH: Enable this cop
 Style/ExponentialNotation:
   Enabled: false
 
