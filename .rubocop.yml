@@ -77,15 +77,6 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
-Style/FormatStringToken:
-  EnforcedStyle: annotated
-
-Style/FloatDivision:
-  Enabled: false
-
-Style/StderrPuts:
-  Enabled: false
-
 # Slashes are by far the most used form of regex values in the project.
 Style/RegexpLiteral:
   EnforcedStyle: slashes
