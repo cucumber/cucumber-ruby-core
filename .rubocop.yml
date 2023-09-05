@@ -4,8 +4,7 @@ require:
   - rubocop-packaging
 
 AllCops:
-  # Keep this inline with the lowest ruby-* version in circleci/config.yml and
-  # the version in the gemspec
+  # Keep this inline with the gemspec
   TargetRubyVersion: 2.5
   # Cop names are not displayed in offense messages by default. Change behavior
   # by overriding DisplayCopNames, or by giving the `-D/--display-cop-names`
