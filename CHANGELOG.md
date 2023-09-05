@@ -1,10 +1,12 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- Update gherkin and messages dependencies
 
 ## [11.1.0] - 2022-12-22
 ### Changed
-- Update gherkin and messsages dependencies
+- Update gherkin and messages dependencies
 
 ### Fixed
 - Restore support for matching a scenario by tag and step line numbers. ([#237](https://github.com/cucumber/cucumber-ruby-core/pull/237), [#238](https://github.com/cucumber/cucumber-ruby-core/pull/238), [#239](https://github.com/cucumber/cucumber-ruby-core/pull/239))
