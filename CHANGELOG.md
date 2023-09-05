@@ -6,6 +6,9 @@
 - Added in new rubocop sub-gems for testing
 - Whole heap of rubocop updates into the todo file
 
+### Removed
+- Remove support for ruby 2.4 and below. 2.5 or higher is required now
+
 ## [11.1.0] - 2022-12-22
 ### Changed
 - Update gherkin and messages dependencies
