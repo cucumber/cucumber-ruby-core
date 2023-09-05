@@ -57,15 +57,6 @@ Metrics/ModuleLength:
 Metrics/MethodLength:
   Max: 30
 
-# Rubocop doesn't like method names in other languages but as Cucumber supports
-# languages, this cop needs to be disabled.
-Naming/AsciiIdentifiers:
-  Enabled: false
-
-Naming/MethodName:
-  EnforcedStyle: snake_case
-  Enabled: true
-
 # In most cases, being descriptive with parameter names helps a reader understand
 # what the variable is for. In some cases, shorter names are sufficient.
 Naming/MethodParameterName:
