@@ -3,7 +3,7 @@
 ## [Unreleased]
 ### Changed
 - Update gherkin and messages minimum dependencies
-- Added in new rubocop sub-gems for testing
+- Added in new rubocop sub-gems for testing, pinning versions where appropriate
 - Removed all redundant / incorrect rubocop config overrides (Placed in TODO file)
 
 ### Removed

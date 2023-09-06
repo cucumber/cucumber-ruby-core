@@ -27,9 +27,9 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   s.add_development_dependency 'rspec', '~> 3.11', '>= 3.11.0'
-  s.add_development_dependency 'rubocop', '< 1.40'
-  s.add_development_dependency 'rubocop-rake', '~> 0.6'
-  s.add_development_dependency 'rubocop-rspec', '< 2.10'
+  s.add_development_dependency 'rubocop', '1.27'
+  s.add_development_dependency 'rubocop-rake', '~> 0.6.0'
+  s.add_development_dependency 'rubocop-rspec', '2.8'
   s.add_development_dependency 'rubocop-packaging', '~> 0.5', '>= 0.5.1'
   s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
