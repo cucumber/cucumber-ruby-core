@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://cucumber.io"
   s.platform    = Gem::Platform::RUBY
   s.license     = "MIT"
-  s.required_ruby_version = '>= 2.3' # Keep in sync with .travis.yml
+  s.required_ruby_version = '>= 2.5'
 
   s.metadata    = {
                     'bug_tracker_uri' => 'https://github.com/cucumber/cucumber-ruby-core/issues',
@@ -21,9 +21,17 @@ Gem::Specification.new do |s|
                     'source_code_uri' => 'https://github.com/cucumber/cucumber-ruby-core',
                   }
 
-  s.add_dependency 'cucumber-gherkin', '>= 24', '< 27'
-  s.add_dependency 'cucumber-messages', '>= 19', '< 23'
+  s.add_dependency 'cucumber-gherkin', '>= 25', '< 27'
+  s.add_dependency 'cucumber-messages', '>= 20', '< 23'
   s.add_dependency 'cucumber-tag-expressions', '~> 5.0', '>= 5.0.4'
+
+  s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
+  s.add_development_dependency 'rspec', '~> 3.11', '>= 3.11.0'
+  s.add_development_dependency 'rubocop', '1.27'
+  s.add_development_dependency 'rubocop-rake', '~> 0.6.0'
+  s.add_development_dependency 'rubocop-rspec', '2.8'
+  s.add_development_dependency 'rubocop-packaging', '~> 0.5', '>= 0.5.1'
+  s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
   s.files            = Dir[
     'CHANGELOG.md',
