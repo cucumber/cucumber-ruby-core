@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+
+## [12.0.0] - 2023-09-06
 ### Changed
 - Update gherkin and messages minimum dependencies
 - Added in new rubocop sub-gems for testing, pinning versions where appropriate
@@ -56,15 +58,15 @@
 
 ## [7.1.0]
 ### Changed
+- `cucumber-gherkin` ~> 14.0.1
+- `cucumber-messages` ~> 12.2.0
 - Updated gems:
-  - `cucumber-gherkin` ~> 14.0.1
-  - `cucumber-messages` ~> 12.2.0
 
 ## [7.0.0]
 ### Changed
+- cucumber-gherkin ~> 13
+- cucumber-messages ~> 12
 - Updated monorepo libraries:
-  - cucumber-gherkin ~> 13
-  - cucumber-messages ~> 12
 
 ## [6.0.0]
 ### Added
@@ -244,6 +246,7 @@
 ## [1.0.0.beta.2]
 
 [Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
+[12.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
 [11.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
 [11.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...v11.0.0
 [10.1.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.0...v10.1.1
@@ -282,4 +285,3 @@
 [1.0.0.beta.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2
 [1.0.0.beta.3]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.2...v1.0.0.beta.3
 [1.0.0.beta.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v1.0.0.beta.1...v1.0.0.beta.2
-ore/compare/v10.1.1...main
