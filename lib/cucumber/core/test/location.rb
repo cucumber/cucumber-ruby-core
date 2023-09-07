@@ -91,7 +91,7 @@ module Cucumber
           end
 
           def inspect
-            "<#{self.class}: #{to_s}>"
+            "<#{self.class}: #{self}>"
           end
         end
 
