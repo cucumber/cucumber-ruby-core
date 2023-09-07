@@ -433,22 +433,22 @@ Style/ExpandPathArguments:
   Exclude:
     - 'Rakefile'
 
-# Offense count: 10
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - 'Gemfile'
-    - 'Rakefile'
-    - 'cucumber-core.gemspec'
-    - 'lib/cucumber/core/event.rb'
-    - 'lib/cucumber/core/event_bus.rb'
-    - 'lib/cucumber/core/events.rb'
-    - 'lib/cucumber/core/test/filters/activate_steps_for_self_test.rb'
-    - 'spec/cucumber/core/event_bus_spec.rb'
-    - 'spec/cucumber/core/event_spec.rb'
-    - 'spec/cucumber/core/report/summary_spec.rb'
+## Offense count: 10
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle.
+## SupportedStyles: always, always_true, never
+#Style/FrozenStringLiteralComment:
+#  Exclude:
+#    - 'Gemfile'
+#    - 'Rakefile'
+#    - 'cucumber-core.gemspec'
+#    - 'lib/cucumber/core/event.rb'
+#    - 'lib/cucumber/core/event_bus.rb'
+#    - 'lib/cucumber/core/events.rb'
+#    - 'lib/cucumber/core/test/filters/activate_steps_for_self_test.rb'
+#    - 'spec/cucumber/core/event_bus_spec.rb'
+#    - 'spec/cucumber/core/event_spec.rb'
+#    - 'spec/cucumber/core/report/summary_spec.rb'
 
 # Offense count: 3
 # This cop supports safe auto-correction (--auto-correct).
