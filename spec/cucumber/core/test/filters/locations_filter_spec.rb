@@ -336,7 +336,6 @@ module Cucumber
           end
           expect(receiver.test_cases.length).to eq num_features * num_scenarios_per_feature
         end
-
       end
     end
 

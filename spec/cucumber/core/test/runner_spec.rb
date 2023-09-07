@@ -9,7 +9,6 @@ module Cucumber
   module Core
     module Test
       describe Runner do
-
         let(:step_id)   { double }
         let(:test_id)   { double }
         let(:name)      { double }
@@ -223,7 +222,6 @@ module Cucumber
                 test_case.describe_to runner
               end
             end
-
           end
         end
 
@@ -319,7 +317,6 @@ module Cucumber
             test_case.describe_to runner
           end
         end
-
       end
     end
   end

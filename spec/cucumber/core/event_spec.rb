@@ -5,7 +5,6 @@ require 'cucumber/core/event'
 module Cucumber
   module Core
     describe Event do
-
       describe '.new' do
         it 'generates new types of events' do
           my_event_type = described_class.new

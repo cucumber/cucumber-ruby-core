@@ -18,7 +18,6 @@ module Cucumber
       let(:registry) { { test_event: Events::TestEvent, another_test_event: Events::AnotherTestEvent } }
 
       context 'broadcasting events' do
-
         it 'can broadcast by calling a method named after the event ID' do
           called = false
           event_bus.on(:test_event) { called = true }
@@ -80,7 +79,6 @@ module Cucumber
             }.to raise_error(ArgumentError)
           end
         end
-
       end
 
       context 'subscribing to events' do
@@ -148,7 +146,6 @@ module Cucumber
 
           expect(received_payload.some_attribute).to eq(:some_attribute)
         end
-
       end
 
       it 'will let you inspect the registry' do
@@ -158,7 +155,6 @@ module Cucumber
       it "won't let you modify the registry" do
         expect { event_bus.event_types[:foo] = :bar }.to raise_error(RuntimeError)
       end
-
     end
   end
 end

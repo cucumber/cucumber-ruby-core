@@ -37,26 +37,26 @@ Layout/EmptyLineAfterGuardClause:
     - 'lib/cucumber/core/test/result.rb'
     - 'lib/cucumber/core/test/step.rb'
 
-# Offense count: 30
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Exclude:
-    - 'lib/cucumber/core/filter.rb'
-    - 'spec/cucumber/core/event_bus_spec.rb'
-    - 'spec/cucumber/core/event_spec.rb'
-    - 'spec/cucumber/core/filter_spec.rb'
-    - 'spec/cucumber/core/gherkin/writer_spec.rb'
-    - 'spec/cucumber/core/test/action_spec.rb'
-    - 'spec/cucumber/core/test/data_table_spec.rb'
-    - 'spec/cucumber/core/test/empty_multiline_argument_spec.rb'
-    - 'spec/cucumber/core/test/filters/locations_filter_spec.rb'
-    - 'spec/cucumber/core/test/location_spec.rb'
-    - 'spec/cucumber/core/test/result_spec.rb'
-    - 'spec/cucumber/core/test/runner_spec.rb'
-    - 'spec/cucumber/core/test/step_spec.rb'
-    - 'spec/cucumber/core_spec.rb'
+## Offense count: 30
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle.
+## SupportedStyles: empty_lines, no_empty_lines
+#Layout/EmptyLinesAroundBlockBody:
+#  Exclude:
+#    - 'lib/cucumber/core/filter.rb'
+#    - 'spec/cucumber/core/event_bus_spec.rb'
+#    - 'spec/cucumber/core/event_spec.rb'
+#    - 'spec/cucumber/core/filter_spec.rb'
+#    - 'spec/cucumber/core/gherkin/writer_spec.rb'
+#    - 'spec/cucumber/core/test/action_spec.rb'
+#    - 'spec/cucumber/core/test/data_table_spec.rb'
+#    - 'spec/cucumber/core/test/empty_multiline_argument_spec.rb'
+#    - 'spec/cucumber/core/test/filters/locations_filter_spec.rb'
+#    - 'spec/cucumber/core/test/location_spec.rb'
+#    - 'spec/cucumber/core/test/result_spec.rb'
+#    - 'spec/cucumber/core/test/runner_spec.rb'
+#    - 'spec/cucumber/core/test/step_spec.rb'
+#    - 'spec/cucumber/core_spec.rb'
 
 # Offense count: 5
 # This cop supports safe auto-correction (--auto-correct).

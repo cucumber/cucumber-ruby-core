@@ -86,7 +86,6 @@ module Cucumber
           test_step = described_class.new(id, text, location)
           expect(test_step.to_s).to eq 'a passing step'
         end
-
       end
     end
   end

@@ -15,7 +15,6 @@ module Cucumber
     include Core::Gherkin::Writer
 
     describe 'compiling features to a test suite' do
-
       it 'compiles two scenarios into two test cases' do
         visitor = ReportAPISpy.new
 
@@ -82,7 +81,6 @@ module Cucumber
     end
 
     describe 'executing a test suite' do
-
       it 'fires events' do
         gherkin = gherkin do
           feature 'Feature name' do
@@ -259,7 +257,6 @@ module Cucumber
 
         expect(report.test_cases.total).to eq 1
       end
-
     end
   end
 end

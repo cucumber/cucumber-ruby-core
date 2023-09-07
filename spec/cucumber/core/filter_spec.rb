@@ -38,7 +38,6 @@ module Cucumber
         end
 
         context 'customizing by subclassing' do
-
           # Each filter imlicitly gets a :receiver attribute
           # that you need to call with the new test case
           # once you've received yours and modified it.
@@ -77,7 +76,6 @@ module Cucumber
             }.once.ordered
             run NamedBlankingFilter.new(/x/)
           end
-
         end
 
         context 'customizing by using a block' do

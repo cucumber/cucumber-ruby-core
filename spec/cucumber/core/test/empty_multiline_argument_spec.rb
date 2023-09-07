@@ -7,7 +7,6 @@ module Cucumber
   module Core
     module Test
       describe EmptyMultilineArgument do
-
         let(:location) { double }
         let(:arg) { described_class.new }
 
@@ -22,7 +21,6 @@ module Cucumber
             expect(arg).not_to be_doc_string
           end
         end
-
       end
     end
   end

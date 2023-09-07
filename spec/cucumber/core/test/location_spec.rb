@@ -68,7 +68,6 @@ module Cucumber
             it 'does not match a precise location on a different line in the same file' do
               expect(matching).not_to be_match(same_file_other_line)
             end
-
           end
 
           context 'a wildcard' do

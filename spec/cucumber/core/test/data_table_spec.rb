@@ -48,7 +48,6 @@ module Cucumber
           let(:table) { described_class.new([%w[foo bar], %w[1 2]]) }
 
           it 'yields the contents of each cell to the block' do
-
             expect { |b| table.map(&b) }.to yield_successive_args('foo', 'bar', '1', '2')
           end
 
@@ -73,7 +72,6 @@ module Cucumber
             expect(@table.transpose).to eq(transposed)
           end
         end
-
       end
     end
   end

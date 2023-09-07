@@ -7,7 +7,6 @@ module Cucumber
   module Core
     module Test
       describe Action do
-
         context 'constructed without a block' do
           it 'raises an error' do
             expect { described_class.new }.to raise_error(ArgumentError)
@@ -15,7 +14,6 @@ module Cucumber
         end
 
         context 'location' do
-
           context 'with location passed to the constructor' do
             let(:location) { double }
 
@@ -33,7 +31,6 @@ module Cucumber
               expect(action.location).to eq Test::Location.new(*block.source_location)
             end
           end
-
         end
 
         context 'executing' do
@@ -106,7 +103,6 @@ module Cucumber
               expect(duration).to be_duration 1
             end
           end
-
         end
 
         context 'skipping' do

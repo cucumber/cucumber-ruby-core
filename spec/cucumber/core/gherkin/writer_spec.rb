@@ -22,7 +22,6 @@ module Cucumber
         end
 
         context 'a feature' do
-
           it 'generates the feature statement' do
             source = gherkin { feature }
             expect(source).to eq "Feature:\n"
@@ -162,7 +161,6 @@ module Cucumber
                         end
                       end
                     end
-
                   end
 
                   expect(source).to eq <<-END.unindent
@@ -219,7 +217,6 @@ module Cucumber
                   feature do
                     scenario_outline do
                       examples description: "Doesn't need to be multi-line." do
-
                       end
                     end
                   end
@@ -329,7 +326,6 @@ module Cucumber
             | 12    | 5   | 7    |
             | 20    | 5   | 15   |
           END
-
         end
       end
     end

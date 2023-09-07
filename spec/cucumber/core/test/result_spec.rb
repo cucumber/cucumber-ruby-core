@@ -8,7 +8,6 @@ module Cucumber
   module Core
     module Test
       describe Result do
-
         let(:visitor) { double('visitor') }
         let(:args)    { double('args')    }
 
