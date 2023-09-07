@@ -16,19 +16,19 @@ Gemspec/OrderedDependencies:
   Exclude:
     - 'cucumber-core.gemspec'
 
-# Offense count: 2
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: with_first_element, with_fixed_indentation
-Layout/ArrayAlignment:
-  Exclude:
-    - 'spec/cucumber/core_spec.rb'
+## Offense count: 2
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle, IndentationWidth.
+## SupportedStyles: with_first_element, with_fixed_indentation
+#Layout/ArrayAlignment:
+#  Exclude:
+#    - 'spec/cucumber/core_spec.rb'
 
-# Offense count: 2
-# This cop supports safe auto-correction (--auto-correct).
-Layout/ClosingHeredocIndentation:
-  Exclude:
-    - 'spec/cucumber/core/gherkin/writer_spec.rb'
+## Offense count: 2
+## This cop supports safe auto-correction (--auto-correct).
+#Layout/ClosingHeredocIndentation:
+#  Exclude:
+#    - 'spec/cucumber/core/gherkin/writer_spec.rb'
 
 # Offense count: 4
 # This cop supports safe auto-correction (--auto-correct).
@@ -50,26 +50,26 @@ Layout/EmptyLineAfterGuardClause:
     - 'lib/cucumber/core/test/result.rb'
     - 'lib/cucumber/core/test/step.rb'
 
-# Offense count: 42
-# This cop supports safe auto-correction (--auto-correct).
-Layout/EmptyLineAfterMagicComment:
-  Enabled: false
+## Offense count: 42
+## This cop supports safe auto-correction (--auto-correct).
+#Layout/EmptyLineAfterMagicComment:
+#  Enabled: false
 
-# Offense count: 1
-# This cop supports safe auto-correction (--auto-correct).
-Layout/EmptyLines:
-  Exclude:
-    - 'lib/cucumber/core/event.rb'
-
-# Offense count: 13
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: around, only_before
-Layout/EmptyLinesAroundAccessModifier:
-  Exclude:
-    - 'lib/cucumber/core/gherkin/writer.rb'
-    - 'lib/cucumber/core/gherkin/writer/helpers.rb'
-    - 'lib/cucumber/core/test/around_hook.rb'
+## Offense count: 1
+## This cop supports safe auto-correction (--auto-correct).
+#Layout/EmptyLines:
+#  Exclude:
+#    - 'lib/cucumber/core/event.rb'
+#
+## Offense count: 13
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle.
+## SupportedStyles: around, only_before
+#Layout/EmptyLinesAroundAccessModifier:
+#  Exclude:
+#    - 'lib/cucumber/core/gherkin/writer.rb'
+#    - 'lib/cucumber/core/gherkin/writer/helpers.rb'
+#    - 'lib/cucumber/core/test/around_hook.rb'
 
 # Offense count: 30
 # This cop supports safe auto-correction (--auto-correct).
@@ -92,40 +92,40 @@ Layout/EmptyLinesAroundBlockBody:
     - 'spec/cucumber/core/test/step_spec.rb'
     - 'spec/cucumber/core_spec.rb'
 
-# Offense count: 19
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
-Layout/EmptyLinesAroundClassBody:
-  Exclude:
-    - 'lib/cucumber/core/event.rb'
-    - 'lib/cucumber/core/events.rb'
-    - 'lib/cucumber/core/test/data_table.rb'
-    - 'lib/cucumber/core/test/filters/locations_filter.rb'
-    - 'lib/cucumber/core/test/filters/name_filter.rb'
-    - 'lib/cucumber/core/test/filters/tag_filter.rb'
-    - 'lib/cucumber/core/test/runner.rb'
-    - 'spec/cucumber/core/test/filters/locations_filter_spec.rb'
-
-# Offense count: 19
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'lib/cucumber/core.rb'
-    - 'lib/cucumber/core/event_bus.rb'
-    - 'lib/cucumber/core/events.rb'
-    - 'lib/cucumber/core/filter.rb'
-    - 'lib/cucumber/core/gherkin/writer.rb'
-    - 'lib/cucumber/core/gherkin/writer/helpers.rb'
-    - 'lib/cucumber/core/test/action.rb'
-    - 'lib/cucumber/core/test/filters/activate_steps_for_self_test.rb'
-    - 'lib/cucumber/core/test/filters/locations_filter.rb'
-    - 'lib/cucumber/core/test/location.rb'
-    - 'spec/cucumber/core/event_bus_spec.rb'
-    - 'spec/cucumber/core/event_spec.rb'
-    - 'spec/cucumber/core/test/action_spec.rb'
+## Offense count: 19
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle.
+## SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines, beginning_only, ending_only
+#Layout/EmptyLinesAroundClassBody:
+#  Exclude:
+#    - 'lib/cucumber/core/event.rb'
+#    - 'lib/cucumber/core/events.rb'
+#    - 'lib/cucumber/core/test/data_table.rb'
+#    - 'lib/cucumber/core/test/filters/locations_filter.rb'
+#    - 'lib/cucumber/core/test/filters/name_filter.rb'
+#    - 'lib/cucumber/core/test/filters/tag_filter.rb'
+#    - 'lib/cucumber/core/test/runner.rb'
+#    - 'spec/cucumber/core/test/filters/locations_filter_spec.rb'
+#
+## Offense count: 19
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle.
+## SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
+#Layout/EmptyLinesAroundModuleBody:
+#  Exclude:
+#    - 'lib/cucumber/core.rb'
+#    - 'lib/cucumber/core/event_bus.rb'
+#    - 'lib/cucumber/core/events.rb'
+#    - 'lib/cucumber/core/filter.rb'
+#    - 'lib/cucumber/core/gherkin/writer.rb'
+#    - 'lib/cucumber/core/gherkin/writer/helpers.rb'
+#    - 'lib/cucumber/core/test/action.rb'
+#    - 'lib/cucumber/core/test/filters/activate_steps_for_self_test.rb'
+#    - 'lib/cucumber/core/test/filters/locations_filter.rb'
+#    - 'lib/cucumber/core/test/location.rb'
+#    - 'spec/cucumber/core/event_bus_spec.rb'
+#    - 'spec/cucumber/core/event_spec.rb'
+#    - 'spec/cucumber/core/test/action_spec.rb'
 
 # Offense count: 6
 # This cop supports safe auto-correction (--auto-correct).
@@ -136,29 +136,29 @@ Layout/ExtraSpacing:
     - 'spec/cucumber/core/test/runner_spec.rb'
     - 'spec/cucumber/core/test/step_spec.rb'
 
-# Offense count: 8
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Layout/FirstArrayElementIndentation:
-  EnforcedStyle: consistent
-
-# Offense count: 2
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_braces
-Layout/FirstHashElementIndentation:
-  EnforcedStyle: align_braces
-
-# Offense count: 2
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
-# SupportedHashRocketStyles: key, separator, table
-# SupportedColonStyles: key, separator, table
-# SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
-Layout/HashAlignment:
-  Exclude:
-    - 'cucumber-core.gemspec'
+## Offense count: 8
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: IndentationWidth.
+## SupportedStyles: special_inside_parentheses, consistent, align_brackets
+#Layout/FirstArrayElementIndentation:
+#  EnforcedStyle: consistent
+#
+## Offense count: 2
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: IndentationWidth.
+## SupportedStyles: special_inside_parentheses, consistent, align_braces
+#Layout/FirstHashElementIndentation:
+#  EnforcedStyle: align_braces
+#
+## Offense count: 2
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: AllowMultipleStyles, EnforcedHashRocketStyle, EnforcedColonStyle, EnforcedLastArgumentHashStyle.
+## SupportedHashRocketStyles: key, separator, table
+## SupportedColonStyles: key, separator, table
+## SupportedLastArgumentHashStyles: always_inspect, always_ignore, ignore_implicit, ignore_explicit
+#Layout/HashAlignment:
+#  Exclude:
+#    - 'cucumber-core.gemspec'
 
 # Offense count: 7
 # This cop supports safe auto-correction (--auto-correct).
@@ -199,28 +199,28 @@ Layout/SpaceAroundOperators:
   Exclude:
     - 'cucumber-core.gemspec'
 
-# Offense count: 16
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
-# SupportedStyles: space, no_space, compact
-# SupportedStylesForEmptyBrackets: space, no_space
-Layout/SpaceInsideArrayLiteralBrackets:
-  Exclude:
-    - 'spec/cucumber/core/test/data_table_spec.rb'
-    - 'spec/cucumber/core/test/runner_spec.rb'
-    - 'spec/cucumber/core_spec.rb'
-
-# Offense count: 8
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
-# SupportedStyles: space, no_space
-# SupportedStylesForEmptyBraces: space, no_space
-Layout/SpaceInsideBlockBraces:
-  Exclude:
-    - 'lib/cucumber/core/test/data_table.rb'
-    - 'spec/cucumber/core/event_bus_spec.rb'
-    - 'spec/cucumber/core/test/action_spec.rb'
-    - 'spec/cucumber/core/test/result_spec.rb'
+## Offense count: 16
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBrackets.
+## SupportedStyles: space, no_space, compact
+## SupportedStylesForEmptyBrackets: space, no_space
+#Layout/SpaceInsideArrayLiteralBrackets:
+#  Exclude:
+#    - 'spec/cucumber/core/test/data_table_spec.rb'
+#    - 'spec/cucumber/core/test/runner_spec.rb'
+#    - 'spec/cucumber/core_spec.rb'
+#
+## Offense count: 8
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces, SpaceBeforeBlockParameters.
+## SupportedStyles: space, no_space
+## SupportedStylesForEmptyBraces: space, no_space
+#Layout/SpaceInsideBlockBraces:
+#  Exclude:
+#    - 'lib/cucumber/core/test/data_table.rb'
+#    - 'spec/cucumber/core/event_bus_spec.rb'
+#    - 'spec/cucumber/core/test/action_spec.rb'
+#    - 'spec/cucumber/core/test/result_spec.rb'
 
 # Offense count: 735
 # This cop supports safe auto-correction (--auto-correct).
@@ -263,11 +263,11 @@ Lint/EmptyBlock:
     - 'spec/cucumber/core/test/runner_spec.rb'
     - 'spec/cucumber/core/test/step_spec.rb'
 
-# Offense count: 1
-# This cop supports safe auto-correction (--auto-correct).
-Lint/RedundantStringCoercion:
-  Exclude:
-    - 'lib/cucumber/core/test/location.rb'
+## Offense count: 1
+## This cop supports safe auto-correction (--auto-correct).
+#Lint/RedundantStringCoercion:
+#  Exclude:
+#    - 'lib/cucumber/core/test/location.rb'
 
 # Offense count: 2
 Lint/RescueException:
@@ -275,23 +275,23 @@ Lint/RescueException:
     - 'lib/cucumber/core/test/action.rb'
     - 'lib/cucumber/core/test/around_hook.rb'
 
-# Offense count: 23
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
-Lint/UnusedBlockArgument:
-  Exclude:
-    - 'spec/cucumber/core/test/runner_spec.rb'
-
-# Offense count: 22
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'lib/cucumber/core/test/around_hook.rb'
-    - 'lib/cucumber/core/test/empty_multiline_argument.rb'
-    - 'lib/cucumber/core/test/location.rb'
-    - 'lib/cucumber/core/test/result.rb'
-    - 'lib/cucumber/core/test/runner.rb'
+## Offense count: 23
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
+#Lint/UnusedBlockArgument:
+#  Exclude:
+#    - 'spec/cucumber/core/test/runner_spec.rb'
+#
+## Offense count: 22
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods, IgnoreNotImplementedMethods.
+#Lint/UnusedMethodArgument:
+#  Exclude:
+#    - 'lib/cucumber/core/test/around_hook.rb'
+#    - 'lib/cucumber/core/test/empty_multiline_argument.rb'
+#    - 'lib/cucumber/core/test/location.rb'
+#    - 'lib/cucumber/core/test/result.rb'
+#    - 'lib/cucumber/core/test/runner.rb'
 
 # Offense count: 2
 Lint/UselessAssignment:
@@ -353,12 +353,12 @@ Naming/RescuedExceptionsVariableName:
     - 'lib/cucumber/core/test/action.rb'
     - 'lib/cucumber/core/test/around_hook.rb'
 
-# Offense count: 2
-# This cop supports safe auto-correction (--auto-correct).
-RSpec/ContextMethod:
-  Exclude:
-    - 'spec/cucumber/core/event_bus_spec.rb'
-    - 'spec/cucumber/core/test/doc_string_spec.rb'
+## Offense count: 2
+## This cop supports safe auto-correction (--auto-correct).
+#RSpec/ContextMethod:
+#  Exclude:
+#    - 'spec/cucumber/core/event_bus_spec.rb'
+#    - 'spec/cucumber/core/test/doc_string_spec.rb'
 
 # Offense count: 49
 # Configuration parameters: Prefixes.
@@ -386,27 +386,27 @@ RSpec/ContextWording:
 RSpec/DescribedClass:
   Enabled: false
 
-# Offense count: 4
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: AllowConsecutiveOneLiners.
-RSpec/EmptyLineAfterExample:
-  Exclude:
-    - 'spec/cucumber/core/test/result_spec.rb'
-    - 'spec/cucumber/core_spec.rb'
-
-# Offense count: 2
-# This cop supports safe auto-correction (--auto-correct).
-RSpec/EmptyLineAfterExampleGroup:
-  Exclude:
-    - 'spec/cucumber/core/test/result_spec.rb'
-
-# Offense count: 5
-# This cop supports safe auto-correction (--auto-correct).
-RSpec/EmptyLineAfterFinalLet:
-  Exclude:
-    - 'spec/cucumber/core/test/case_spec.rb'
-    - 'spec/cucumber/core/test/result_spec.rb'
-    - 'spec/cucumber/core/test/runner_spec.rb'
+## Offense count: 4
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: AllowConsecutiveOneLiners.
+#RSpec/EmptyLineAfterExample:
+#  Exclude:
+#    - 'spec/cucumber/core/test/result_spec.rb'
+#    - 'spec/cucumber/core_spec.rb'
+#
+## Offense count: 2
+## This cop supports safe auto-correction (--auto-correct).
+#RSpec/EmptyLineAfterExampleGroup:
+#  Exclude:
+#    - 'spec/cucumber/core/test/result_spec.rb'
+#
+## Offense count: 5
+## This cop supports safe auto-correction (--auto-correct).
+#RSpec/EmptyLineAfterFinalLet:
+#  Exclude:
+#    - 'spec/cucumber/core/test/case_spec.rb'
+#    - 'spec/cucumber/core/test/result_spec.rb'
+#    - 'spec/cucumber/core/test/runner_spec.rb'
 
 # Offense count: 60
 # Configuration parameters: CountAsOne.
@@ -502,13 +502,13 @@ RSpec/PredicateMatcher:
     - 'spec/cucumber/core/test/case_spec.rb'
     - 'spec/cucumber/core/test/result_spec.rb'
 
-# Offense count: 5
-# This cop supports safe auto-correction (--auto-correct).
-RSpec/ReceiveCounts:
-  Exclude:
-    - 'spec/cucumber/core/compiler_spec.rb'
-    - 'spec/cucumber/core/filter_spec.rb'
-    - 'spec/cucumber/core_spec.rb'
+## Offense count: 5
+## This cop supports safe auto-correction (--auto-correct).
+#RSpec/ReceiveCounts:
+#  Exclude:
+#    - 'spec/cucumber/core/compiler_spec.rb'
+#    - 'spec/cucumber/core/filter_spec.rb'
+#    - 'spec/cucumber/core_spec.rb'
 
 # Offense count: 2
 RSpec/RepeatedDescription:
@@ -574,22 +574,22 @@ Style/CaseEquality:
   Exclude:
     - 'lib/cucumber/core/test/data_table.rb'
 
-# Offense count: 10
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: nested, compact
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'spec/cucumber/core/compiler_spec.rb'
-    - 'spec/cucumber/core/filter_spec.rb'
-    - 'spec/cucumber/core/gherkin/writer_spec.rb'
-    - 'spec/cucumber/core/report/summary_spec.rb'
-    - 'spec/cucumber/core/test/duration_matcher.rb'
-    - 'spec/cucumber/core/test/filters/locations_filter_spec.rb'
-    - 'spec/cucumber/core/test/location_spec.rb'
-    - 'spec/cucumber/core/test/result_spec.rb'
-    - 'spec/cucumber/core/test/runner_spec.rb'
-    - 'spec/cucumber/core/test/step_spec.rb'
+## Offense count: 10
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle.
+## SupportedStyles: nested, compact
+#Style/ClassAndModuleChildren:
+#  Exclude:
+#    - 'spec/cucumber/core/compiler_spec.rb'
+#    - 'spec/cucumber/core/filter_spec.rb'
+#    - 'spec/cucumber/core/gherkin/writer_spec.rb'
+#    - 'spec/cucumber/core/report/summary_spec.rb'
+#    - 'spec/cucumber/core/test/duration_matcher.rb'
+#    - 'spec/cucumber/core/test/filters/locations_filter_spec.rb'
+#    - 'spec/cucumber/core/test/location_spec.rb'
+#    - 'spec/cucumber/core/test/result_spec.rb'
+#    - 'spec/cucumber/core/test/runner_spec.rb'
+#    - 'spec/cucumber/core/test/step_spec.rb'
 
 # Offense count: 1
 # This cop supports safe auto-correction (--auto-correct).
@@ -670,11 +670,11 @@ Style/MultilineBlockChain:
   Exclude:
     - 'lib/cucumber/core/event_bus.rb'
 
-# Offense count: 7
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: Strict, AllowedNumbers.
-Style/NumericLiterals:
-  MinDigits: 16
+## Offense count: 7
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: Strict, AllowedNumbers.
+#Style/NumericLiterals:
+#  MinDigits: 16
 
 # Offense count: 2
 # This cop supports unsafe auto-correction (--auto-correct-all).
@@ -725,30 +725,30 @@ Style/RaiseArgs:
     - 'lib/cucumber/core/test/case.rb'
     - 'spec/cucumber/core/test/runner_spec.rb'
 
-# Offense count: 1
-# This cop supports safe auto-correction (--auto-correct).
-Style/RedundantBegin:
-  Exclude:
-    - 'lib/cucumber/core/test/data_table.rb'
-
-# Offense count: 1
-# This cop supports safe auto-correction (--auto-correct).
-Style/RedundantCondition:
-  Exclude:
-    - 'lib/cucumber/core/test/action.rb'
-
-# Offense count: 1
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - 'lib/cucumber/core/test/result.rb'
-
-# Offense count: 4
-# This cop supports safe auto-correction (--auto-correct).
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/cucumber/core/event.rb'
+## Offense count: 1
+## This cop supports safe auto-correction (--auto-correct).
+#Style/RedundantBegin:
+#  Exclude:
+#    - 'lib/cucumber/core/test/data_table.rb'
+#
+## Offense count: 1
+## This cop supports safe auto-correction (--auto-correct).
+#Style/RedundantCondition:
+#  Exclude:
+#    - 'lib/cucumber/core/test/action.rb'
+#
+## Offense count: 1
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: AllowMultipleReturnValues.
+#Style/RedundantReturn:
+#  Exclude:
+#    - 'lib/cucumber/core/test/result.rb'
+#
+## Offense count: 4
+## This cop supports safe auto-correction (--auto-correct).
+#Style/RedundantSelf:
+#  Exclude:
+#    - 'lib/cucumber/core/event.rb'
 
 # Offense count: 2
 # This cop supports safe auto-correction (--auto-correct).
@@ -782,12 +782,12 @@ Style/SoleNestedConditional:
     - 'lib/cucumber/core/test/doc_string.rb'
     - 'lib/cucumber/core/test/result.rb'
 
-# Offense count: 1
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: RequireEnglish.
-# SupportedStyles: use_perl_names, use_english_names
-Style/SpecialGlobalVars:
-  EnforcedStyle: use_perl_names
+## Offense count: 1
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: RequireEnglish.
+## SupportedStyles: use_perl_names, use_english_names
+#Style/SpecialGlobalVars:
+#  EnforcedStyle: use_perl_names
 
 # Offense count: 386
 # This cop supports safe auto-correction (--auto-correct).
@@ -817,30 +817,30 @@ Style/SymbolProc:
   Exclude:
     - 'lib/cucumber/core/compiler.rb'
     - 'spec/cucumber/core/test/runner_spec.rb'
-
-# Offense count: 1
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInArguments:
-  Exclude:
-    - 'lib/cucumber/core/events.rb'
-
-# Offense count: 3
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInArrayLiteral:
-  Exclude:
-    - 'spec/cucumber/core_spec.rb'
-
-# Offense count: 1
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'cucumber-core.gemspec'
+#
+## Offense count: 1
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyleForMultiline.
+## SupportedStylesForMultiline: comma, consistent_comma, no_comma
+#Style/TrailingCommaInArguments:
+#  Exclude:
+#    - 'lib/cucumber/core/events.rb'
+#
+## Offense count: 3
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyleForMultiline.
+## SupportedStylesForMultiline: comma, consistent_comma, no_comma
+#Style/TrailingCommaInArrayLiteral:
+#  Exclude:
+#    - 'spec/cucumber/core_spec.rb'
+#
+## Offense count: 1
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyleForMultiline.
+## SupportedStylesForMultiline: comma, consistent_comma, no_comma
+#Style/TrailingCommaInHashLiteral:
+#  Exclude:
+#    - 'cucumber-core.gemspec'
 
 # Offense count: 1
 # This cop supports safe auto-correction (--auto-correct).

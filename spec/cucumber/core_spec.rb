@@ -45,7 +45,7 @@ module Cucumber
           :test_step,
           :test_step,
           :test_step,
-          :done,
+          :done
         ]
       end
 
@@ -133,7 +133,7 @@ module Cucumber
           [:test_step_finished, 'passing', :skipped],
           [:test_step_started, 'undefined'],
           [:test_step_finished, 'undefined', :undefined],
-          [:test_case_finished, 'The one that fails', :failed],
+          [:test_case_finished, 'The one that fails', :failed]
         ]
       end
 
@@ -174,7 +174,7 @@ module Cucumber
           def test_case(test_case)
             base_step = Core::Test::Step.new('some-random-uid', 'text', nil, nil, nil)
             test_steps = [
-              base_step.with_action { logger << :step },
+              base_step.with_action { logger << :step }
             ]
 
             around_hook = Core::Test::AroundHook.new do |run_scenario|

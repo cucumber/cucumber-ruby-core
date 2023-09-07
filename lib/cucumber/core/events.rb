@@ -74,7 +74,7 @@ module Cucumber
           TestCaseStarted,
           TestStepStarted,
           TestStepFinished,
-          TestCaseFinished,
+          TestCaseFinished
         )
       end
 
