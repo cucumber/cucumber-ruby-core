@@ -15,12 +15,12 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.5'
 
   s.metadata    = {
-                    'bug_tracker_uri' => 'https://github.com/cucumber/cucumber-ruby-core/issues',
-                    'changelog_uri'   => 'https://github.com/cucumber/cucumber-ruby-core/blob/master/CHANGELOG.md',
-                    'documentation_uri' => 'https://www.rubydoc.info/github/cucumber/cucumber-ruby-core',
-                    'mailing_list_uri'  => 'https://groups.google.com/forum/#!forum/cukes',
-                    'source_code_uri' => 'https://github.com/cucumber/cucumber-ruby-core',
-                  }
+    'bug_tracker_uri' => 'https://github.com/cucumber/cucumber-ruby-core/issues',
+    'changelog_uri' => 'https://github.com/cucumber/cucumber-ruby-core/blob/master/CHANGELOG.md',
+    'documentation_uri' => 'https://www.rubydoc.info/github/cucumber/cucumber-ruby-core',
+    'mailing_list_uri' => 'https://groups.google.com/forum/#!forum/cukes',
+    'source_code_uri' => 'https://github.com/cucumber/cucumber-ruby-core',
+  }
 
   s.add_dependency 'cucumber-gherkin', '>= 25', '< 27'
   s.add_dependency 'cucumber-messages', '>= 20', '< 23'

@@ -9,9 +9,9 @@ module Cucumber
       describe DataTable do
         before do
           @table = DataTable.new([
-            %w{one four seven},
-            %w{4444 55555 666666}
-          ])
+                                   %w{one four seven},
+                                   %w{4444 55555 666666}
+                                 ])
         end
 
         describe "equality" do
@@ -60,16 +60,16 @@ module Cucumber
         describe "#transpose" do
           before(:each) do
             @table = DataTable.new([
-              %w{one 1111},
-              %w{two 22222}
-            ])
+                                     %w{one 1111},
+                                     %w{two 22222}
+                                   ])
           end
 
           it "should transpose the table" do
             transposed = DataTable.new([
-              %w{one two},
-              %w{1111 22222}
-            ])
+                                         %w{one two},
+                                         %w{1111 22222}
+                                       ])
             expect( @table.transpose ).to eq( transposed )
           end
         end

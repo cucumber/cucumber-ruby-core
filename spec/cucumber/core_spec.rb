@@ -20,21 +20,21 @@ module Cucumber
         visitor = ReportAPISpy.new
 
         compile([
-          gherkin do
-            feature do
-              background do
-                step 'text'
-              end
-              scenario do
-                step 'text'
-              end
-              scenario do
-                step 'text'
-                step 'text'
-              end
-            end
-          end
-        ], visitor)
+                  gherkin do
+                    feature do
+                      background do
+                        step 'text'
+                      end
+                      scenario do
+                        step 'text'
+                      end
+                      scenario do
+                        step 'text'
+                        step 'text'
+                      end
+                    end
+                  end
+                ], visitor)
 
         expect( visitor.messages ).to eq [
           :test_case,
