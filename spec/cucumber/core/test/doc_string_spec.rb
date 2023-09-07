@@ -9,18 +9,18 @@ module Cucumber
       describe DocString do
         let(:doc_string) { DocString.new(content, content_type) }
 
-        describe "#data_table?" do
-          let(:doc_string) { DocString.new("test", "text/plain" ) }
+        describe '#data_table?' do
+          let(:doc_string) { DocString.new('test', 'text/plain' ) }
 
-          it "returns false" do
+          it 'returns false' do
             expect(doc_string).not_to be_data_table
           end
         end
 
-        describe "#doc_string" do
-          let(:doc_string) { DocString.new("test", "text/plain" ) }
+        describe '#doc_string' do
+          let(:doc_string) { DocString.new('test', 'text/plain' ) }
 
-          it "returns true" do
+          it 'returns true' do
             expect(doc_string).to be_doc_string
           end
         end
@@ -94,11 +94,11 @@ module Cucumber
         end
       end
 
-      context "inspect" do
+      context 'inspect' do
         let(:content_type) { 'text/plain' }
 
-        it "provides a useful inspect method" do
-          doc_string = DocString.new("some text", content_type)
+        it 'provides a useful inspect method' do
+          doc_string = DocString.new('some text', content_type)
           expect(doc_string.inspect).to eq <<-END.chomp.unindent
           #<Cucumber::Core::Test::DocString
             """text/plain

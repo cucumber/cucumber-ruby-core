@@ -5,13 +5,13 @@ version = File.read(File.expand_path('VERSION', __dir__)).strip
 Gem::Specification.new do |s|
   s.name        = 'cucumber-core'
   s.version     = version
-  s.authors     = ["Aslak Hellesøy", "Matt Wynne", "Steve Tooke", "Oleg Sukhodolsky", "Tom Brand"]
+  s.authors     = ['Aslak Hellesøy', 'Matt Wynne', 'Steve Tooke', 'Oleg Sukhodolsky', 'Tom Brand']
   s.description = 'Core library for the Cucumber BDD app'
   s.summary     = "cucumber-core-#{s.version}"
   s.email       = 'cukes@googlegroups.com'
-  s.homepage    = "https://cucumber.io"
+  s.homepage    = 'https://cucumber.io'
   s.platform    = Gem::Platform::RUBY
-  s.license     = "MIT"
+  s.license     = 'MIT'
   s.required_ruby_version = '>= 2.5'
 
   s.metadata    = {
@@ -41,6 +41,6 @@ Gem::Specification.new do |s|
     'LICENSE',
     'lib/**/*'
   ]
-  s.rdoc_options     = ["--charset=UTF-8"]
-  s.require_path     = "lib"
+  s.rdoc_options     = ['--charset=UTF-8']
+  s.require_path     = 'lib'
 end

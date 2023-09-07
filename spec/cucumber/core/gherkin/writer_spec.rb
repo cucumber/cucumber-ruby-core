@@ -40,7 +40,7 @@ module Cucumber
           context 'when a description is provided' do
             it 'includes the description in the feature statement' do
               source = gherkin do
-                feature "A Feature", description: <<-END
+                feature 'A Feature', description: <<-END
               This is the description
               which can span
               multiple lines.
@@ -60,7 +60,7 @@ module Cucumber
           context 'when a keyword is provided' do
             it 'uses the supplied keyword' do
               source = gherkin do
-                feature "A Feature", keyword: "Business Need"
+                feature 'A Feature', keyword: 'Business Need'
               end
               expect( source ).to eq "Business Need: A Feature\n"
             end
@@ -91,7 +91,7 @@ module Cucumber
           context 'with a scenario' do
             it 'includes the scenario statement' do
               source = gherkin do
-                feature "A Feature" do
+                feature 'A Feature' do
                   scenario
                 end
               end
@@ -142,7 +142,7 @@ module Cucumber
             context 'with a step' do
               it 'includes the step statement' do
                 source = gherkin do
-                  feature "A Feature" do
+                  feature 'A Feature' do
                     scenario do
                       step 'passing'
                     end

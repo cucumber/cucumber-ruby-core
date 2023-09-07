@@ -42,7 +42,7 @@ module Cucumber
         end
 
         def map
-          raise ArgumentError, "No block given" unless block_given?
+          raise ArgumentError, 'No block given' unless block_given?
           new_content = yield content
           self.class.new(new_content, content_type)
         end

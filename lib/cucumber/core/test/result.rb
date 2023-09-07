@@ -1,8 +1,8 @@
 # encoding: utf-8
 # frozen_string_literal: true
 
-require "cucumber/messages"
-require "cucumber/messages/time_conversion"
+require 'cucumber/messages'
+require 'cucumber/messages/time_conversion'
 
 module Cucumber
   module Core
@@ -74,7 +74,7 @@ module Cucumber
           end
 
           def to_s
-            "✓"
+            '✓'
           end
 
           def to_message
@@ -121,14 +121,14 @@ module Cucumber
           end
 
           def to_s
-            "✗"
+            '✗'
           end
 
           def to_message
             begin
               message = exception.backtrace.join("\n")
             rescue NoMethodError
-              message = ""
+              message = ''
             end
 
             Cucumber::Messages::TestStepResult.new(
@@ -170,7 +170,7 @@ module Cucumber
         class Raisable < StandardError
           attr_reader :message, :duration
 
-          def initialize(message = "", duration = UnknownDuration.new, backtrace = nil)
+          def initialize(message = '', duration = UnknownDuration.new, backtrace = nil)
             @message, @duration = message, duration
             super(message)
             set_backtrace(backtrace) if backtrace
@@ -215,7 +215,7 @@ module Cucumber
           end
 
           def to_s
-            "?"
+            '?'
           end
 
           def to_message
@@ -240,7 +240,7 @@ module Cucumber
           end
 
           def to_s
-            "-"
+            '-'
           end
 
           def to_message
@@ -265,7 +265,7 @@ module Cucumber
           end
 
           def to_s
-            "P"
+            'P'
           end
 
           def to_message
@@ -424,7 +424,7 @@ module Cucumber
           end
 
           def nanoseconds
-            raise "#nanoseconds only allowed to be used in #tap block"
+            raise '#nanoseconds only allowed to be used in #tap block'
           end
 
           def to_message_duration

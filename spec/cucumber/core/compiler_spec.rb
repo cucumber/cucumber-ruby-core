@@ -16,7 +16,7 @@ module Cucumber
         end
       end
 
-      it "compiles a feature with a single scenario" do
+      it 'compiles a feature with a single scenario' do
         gherkin_documents = [
           gherkin do
             feature do
@@ -33,7 +33,7 @@ module Cucumber
         end
       end
 
-      context "when the event_bus is provided" do
+      context 'when the event_bus is provided' do
         let(:event_bus) { double }
 
         before do
@@ -43,7 +43,7 @@ module Cucumber
           allow( event_bus ).to receive(:test_step_created).and_return(nil)
         end
 
-        it "emits a TestCaseCreated event with the created Test::Case and Pickle" do
+        it 'emits a TestCaseCreated event with the created Test::Case and Pickle' do
           gherkin_documents = [
             gherkin do
               feature do
@@ -64,7 +64,7 @@ module Cucumber
           end
         end
 
-        it "emits a TestStepCreated event with the created Test::Step and PickleStep" do
+        it 'emits a TestStepCreated event with the created Test::Step and PickleStep' do
           gherkin_documents = [
             gherkin do
               feature do
@@ -87,7 +87,7 @@ module Cucumber
         end
       end
 
-      it "compiles a feature with a background" do
+      it 'compiles a feature with a background' do
         gherkin_documents = [
           gherkin do
             feature do
@@ -108,7 +108,7 @@ module Cucumber
         end
       end
 
-      it "compiles multiple features" do
+      it 'compiles multiple features' do
         gherkin_documents = [
           gherkin do
             feature do
@@ -140,8 +140,8 @@ module Cucumber
         end
       end
 
-      context "compiling scenario outlines" do
-        it "compiles a scenario outline to test cases" do
+      context 'compiling scenario outlines' do
+        it 'compiles a scenario outline to test cases' do
           gherkin_documents = [
             gherkin do
               feature do

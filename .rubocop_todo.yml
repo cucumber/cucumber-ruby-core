@@ -557,12 +557,12 @@ Style/SoleNestedConditional:
     - 'lib/cucumber/core/test/doc_string.rb'
     - 'lib/cucumber/core/test/result.rb'
 
-# Offense count: 386
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Enabled: false
+## Offense count: 386
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
+## SupportedStyles: single_quotes, double_quotes
+#Style/StringLiterals:
+#  Enabled: false
 
 # Offense count: 3
 # This cop supports safe auto-correction (--auto-correct).

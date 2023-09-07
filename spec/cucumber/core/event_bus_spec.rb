@@ -1,4 +1,4 @@
-require "cucumber/core/event_bus"
+require 'cucumber/core/event_bus'
 
 module Cucumber
   module Core
@@ -15,23 +15,23 @@ module Cucumber
       let(:event_bus) { EventBus.new(registry) }
       let(:registry) { { test_event: Events::TestEvent, another_test_event: Events::AnotherTestEvent } }
 
-      context "broadcasting events" do
+      context 'broadcasting events' do
 
-        it "can broadcast by calling a method named after the event ID" do
+        it 'can broadcast by calling a method named after the event ID' do
           called = false
           event_bus.on(:test_event) { called = true }
           event_bus.test_event
           expect(called).to be true
         end
 
-        it "can broadcast by calling the `broadcast` method with an instance of the event type" do
+        it 'can broadcast by calling the `broadcast` method with an instance of the event type' do
           called = false
           event_bus.on(:test_event) { called = true }
           event_bus.broadcast(Events::TestEvent.new(:some_attribute))
           expect(called).to be true
         end
 
-        it "calls a subscriber for an event, passing details of the event" do
+        it 'calls a subscriber for an event, passing details of the event' do
           received_payload = nil
           event_bus.on :test_event do |event|
             received_payload = event
@@ -42,7 +42,7 @@ module Cucumber
           expect(received_payload.some_attribute).to eq(:some_attribute)
         end
 
-        it "does not call subscribers for other events" do
+        it 'does not call subscribers for other events' do
           handler_called = false
           event_bus.on :test_event do
             handler_called = true
@@ -53,7 +53,7 @@ module Cucumber
           expect(handler_called).to eq(false)
         end
 
-        it "broadcasts to multiple subscribers" do
+        it 'broadcasts to multiple subscribers' do
           received_events = []
           event_bus.on :test_event do
             received_events << :event
@@ -71,8 +71,8 @@ module Cucumber
           expect { event_bus.some_unknown_event }.to raise_error(NameError)
         end
 
-        describe "#broadcast method" do
-          it "must be passed an instance of a registered event type" do
+        describe '#broadcast method' do
+          it 'must be passed an instance of a registered event type' do
             expect {
               event_bus.broadcast Events::UnregisteredEvent
             }.to raise_error(ArgumentError)
@@ -81,8 +81,8 @@ module Cucumber
 
       end
 
-      context "subscribing to events" do
-        it "allows subscription by symbol (Event ID)" do
+      context 'subscribing to events' do
+        it 'allows subscription by symbol (Event ID)' do
           received_payload = nil
           event_bus.on(:test_event) do |event|
             received_payload = event
@@ -93,13 +93,13 @@ module Cucumber
           expect(received_payload.some_attribute).to eq(:some_attribute)
         end
 
-        it "raises an error if you use an unknown Event ID" do
+        it 'raises an error if you use an unknown Event ID' do
           expect {
             event_bus.on(:some_unknown_event) { :whatever }
           }.to raise_error(ArgumentError)
         end
 
-        it "allows handlers that are objects with a `call` method" do
+        it 'allows handlers that are objects with a `call` method' do
           class MyHandler
             attr_reader :received_payload
 
@@ -116,7 +116,7 @@ module Cucumber
           expect(handler.received_payload.some_attribute).to eq :some_attribute
         end
 
-        it "allows handlers that are procs" do
+        it 'allows handlers that are procs' do
           class MyProccyHandler
             attr_reader :received_payload
 
@@ -135,7 +135,7 @@ module Cucumber
           expect(handler.received_payload.some_attribute).to eq :some_attribute
         end
 
-        it "sends events that were broadcast before you subscribed" do
+        it 'sends events that were broadcast before you subscribed' do
           event_bus.test_event :some_attribute
           event_bus.another_test_event
 
@@ -149,7 +149,7 @@ module Cucumber
 
       end
 
-      it "will let you inspect the registry" do
+      it 'will let you inspect the registry' do
         expect(event_bus.event_types[:test_event]).to eq Events::TestEvent
       end
 

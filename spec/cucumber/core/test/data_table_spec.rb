@@ -14,37 +14,37 @@ module Cucumber
                                  ])
         end
 
-        describe "equality" do
-          it "is equal to another table with the same data" do
+        describe 'equality' do
+          it 'is equal to another table with the same data' do
             expect( DataTable.new([[1, 2], [3, 4]]) ).to eq DataTable.new([[1, 2], [3, 4]])
           end
 
-          it "is not equal to another table with different data" do
+          it 'is not equal to another table with different data' do
             expect( DataTable.new([[1, 2], [3, 4]]) ).not_to eq DataTable.new([[1, 2]])
           end
 
-          it "is not equal to a non table" do
+          it 'is not equal to a non table' do
             expect( DataTable.new([[1, 2], [3, 4]]) ).not_to eq Object.new
           end
         end
 
-        describe "#data_table?" do
+        describe '#data_table?' do
           let(:table) { DataTable.new([[1, 2], [3, 4]]) }
 
-          it "returns true" do
+          it 'returns true' do
             expect(table).to be_data_table
           end
         end
 
-        describe "#doc_string" do
+        describe '#doc_string' do
           let(:table) { DataTable.new([[1, 2], [3, 4]]) }
 
-          it "returns false" do
+          it 'returns false' do
             expect(table).not_to be_doc_string
           end
         end
 
-        describe "#map" do
+        describe '#map' do
           let(:table) { DataTable.new([%w{foo bar}, %w{1 2}]) }
 
           it 'yields the contents of each cell to the block' do
@@ -57,7 +57,7 @@ module Cucumber
           end
         end
 
-        describe "#transpose" do
+        describe '#transpose' do
           before(:each) do
             @table = DataTable.new([
                                      %w{one 1111},
@@ -65,7 +65,7 @@ module Cucumber
                                    ])
           end
 
-          it "should transpose the table" do
+          it 'should transpose the table' do
             transposed = DataTable.new([
                                          %w{one two},
                                          %w{1111 22222}

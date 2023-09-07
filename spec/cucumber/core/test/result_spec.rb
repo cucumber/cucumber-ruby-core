@@ -16,34 +16,34 @@ module Cucumber
           subject(:result) { Result::Passed.new(duration) }
           let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
 
-          it "describes itself to a visitor" do
+          it 'describes itself to a visitor' do
             expect( visitor ).to receive(:passed).with(args)
             expect( visitor ).to receive(:duration).with(duration, args)
             result.describe_to(visitor, args)
           end
 
-          it "converts to a string" do
-            expect( result.to_s ).to eq "✓"
+          it 'converts to a string' do
+            expect( result.to_s ).to eq '✓'
           end
 
-          it "converts to a Cucumber::Message::TestResult" do
+          it 'converts to a Cucumber::Message::TestResult' do
             message = result.to_message
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::PASSED)
           end
 
-          it "has a duration" do
+          it 'has a duration' do
             expect( result.duration ).to eq duration
           end
 
-          it "requires the constructor argument" do
+          it 'requires the constructor argument' do
             expect { Result::Passed.new }.to raise_error(ArgumentError)
           end
 
-          it "does nothing when appending the backtrace" do
+          it 'does nothing when appending the backtrace' do
             expect( result.with_appended_backtrace(double) ).to equal result
           end
 
-          it "does nothing when filtering the backtrace" do
+          it 'does nothing when filtering the backtrace' do
             expect( result.with_filtered_backtrace(double) ).to equal result
           end
 
@@ -63,45 +63,45 @@ module Cucumber
         describe Result::Failed do
           subject(:result) { Result::Failed.new(duration, exception) }
           let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
-          let(:exception)  { StandardError.new("error message") }
+          let(:exception)  { StandardError.new('error message') }
 
-          it "describes itself to a visitor" do
+          it 'describes itself to a visitor' do
             expect( visitor ).to receive(:failed).with(args)
             expect( visitor ).to receive(:duration).with(duration, args)
             expect( visitor ).to receive(:exception).with(exception, args)
             result.describe_to(visitor, args)
           end
 
-          it "has a duration" do
+          it 'has a duration' do
             expect( result.duration ).to eq duration
           end
 
-          it "converts to a Cucumber::Message::TestResult" do
+          it 'converts to a Cucumber::Message::TestResult' do
             message = result.to_message
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::FAILED)
           end
 
-          it "requires both constructor arguments" do
+          it 'requires both constructor arguments' do
             expect { Result::Failed.new }.to raise_error(ArgumentError)
             expect { Result::Failed.new(duration) }.to raise_error(ArgumentError)
           end
 
-          it "does nothing if step has no backtrace line" do
-            result.exception.set_backtrace("exception backtrace")
-            step = "does not respond_to?(:backtrace_line)"
+          it 'does nothing if step has no backtrace line' do
+            result.exception.set_backtrace('exception backtrace')
+            step = 'does not respond_to?(:backtrace_line)'
 
-            expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(["exception backtrace"])
+            expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(['exception backtrace'])
           end
 
-          it "appends the backtrace line of the step" do
-            result.exception.set_backtrace("exception backtrace")
+          it 'appends the backtrace line of the step' do
+            result.exception.set_backtrace('exception backtrace')
             step = double
-            expect( step ).to receive(:backtrace_line).and_return("step_line")
+            expect( step ).to receive(:backtrace_line).and_return('step_line')
 
-            expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(["exception backtrace", "step_line"])
+            expect( result.with_appended_backtrace(step).exception.backtrace ).to eq(['exception backtrace', 'step_line'])
           end
 
-          it "apply filters to the exception" do
+          it 'apply filters to the exception' do
             filter_class = double
             filter = double
             filtered_exception = double
@@ -132,8 +132,8 @@ module Cucumber
             result.describe_to(visitor, args)
           end
 
-          it "defines a with_filtered_backtrace method" do
-            expect(result.with_filtered_backtrace(double("filter"))).to eql result
+          it 'defines a with_filtered_backtrace method' do
+            expect(result.with_filtered_backtrace(double('filter'))).to eql result
           end
 
           specify { expect( result.to_sym ).to eq :unknown }
@@ -145,49 +145,49 @@ module Cucumber
           specify { expect( result ).not_to be_skipped   }
           specify { expect( result ).not_to be_flaky     }
 
-          it "converts to a Cucumber::Message::TestResult" do
+          it 'converts to a Cucumber::Message::TestResult' do
             message = result.to_message
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::UNKNOWN)
           end
         end
 
         describe Result::Raisable do
-          context "with or without backtrace" do
+          context 'with or without backtrace' do
             subject(:result) { Result::Raisable.new }
 
-            it "does nothing if step has no backtrace line" do
-              step = "does not respond_to?(:backtrace_line)"
+            it 'does nothing if step has no backtrace line' do
+              step = 'does not respond_to?(:backtrace_line)'
 
               expect( result.with_appended_backtrace(step).backtrace ).to eq(nil)
             end
           end
 
-          context "without backtrace" do
+          context 'without backtrace' do
             subject(:result) { Result::Raisable.new }
 
-            it "set the backtrace to the backtrace line of the step" do
+            it 'set the backtrace to the backtrace line of the step' do
               step = double
-              expect( step ).to receive(:backtrace_line).and_return("step_line")
+              expect( step ).to receive(:backtrace_line).and_return('step_line')
 
-              expect( result.with_appended_backtrace(step).backtrace ).to eq(["step_line"])
+              expect( result.with_appended_backtrace(step).backtrace ).to eq(['step_line'])
             end
 
-            it "does nothing when filtering the backtrace" do
+            it 'does nothing when filtering the backtrace' do
               expect( result.with_filtered_backtrace(double) ).to equal result
             end
           end
 
-          context "with backtrace" do
-            subject(:result) { Result::Raisable.new("message", 0, "backtrace") }
+          context 'with backtrace' do
+            subject(:result) { Result::Raisable.new('message', 0, 'backtrace') }
 
-            it "appends the backtrace line of the step" do
+            it 'appends the backtrace line of the step' do
               step = double
-              expect( step ).to receive(:backtrace_line).and_return("step_line")
+              expect( step ).to receive(:backtrace_line).and_return('step_line')
 
-              expect( result.with_appended_backtrace(step).backtrace ).to eq(["backtrace", "step_line"])
+              expect( result.with_appended_backtrace(step).backtrace ).to eq(['backtrace', 'step_line'])
             end
 
-            it "apply filters to the backtrace" do
+            it 'apply filters to the backtrace' do
               filter_class = double
               filter = double
               filtered_result = double
@@ -202,13 +202,13 @@ module Cucumber
         describe Result::Undefined do
           subject(:result) { Result::Undefined.new }
 
-          it "describes itself to a visitor" do
+          it 'describes itself to a visitor' do
             expect( visitor ).to receive(:undefined).with(args)
             expect( visitor ).to receive(:duration).with(an_unknown_duration, args)
             result.describe_to(visitor, args)
           end
 
-          it "converts to a Cucumber::Message::TestResult" do
+          it 'converts to a Cucumber::Message::TestResult' do
             message = result.to_message
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::UNDEFINED)
           end
@@ -232,13 +232,13 @@ module Cucumber
         describe Result::Skipped do
           subject(:result) { Result::Skipped.new }
 
-          it "describes itself to a visitor" do
+          it 'describes itself to a visitor' do
             expect( visitor ).to receive(:skipped).with(args)
             expect( visitor ).to receive(:duration).with(an_unknown_duration, args)
             result.describe_to(visitor, args)
           end
 
-          it "converts to a Cucumber::Message::TestResult" do
+          it 'converts to a Cucumber::Message::TestResult' do
             message = result.to_message
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::SKIPPED)
           end
@@ -259,13 +259,13 @@ module Cucumber
         describe Result::Pending do
           subject(:result) { Result::Pending.new }
 
-          it "describes itself to a visitor" do
+          it 'describes itself to a visitor' do
             expect( visitor ).to receive(:pending).with(result, args)
             expect( visitor ).to receive(:duration).with(an_unknown_duration, args)
             result.describe_to(visitor, args)
           end
 
-          it "converts to a Cucumber::Message::TestResult" do
+          it 'converts to a Cucumber::Message::TestResult' do
             message = result.to_message
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::PENDING)
           end
@@ -376,35 +376,35 @@ module Cucumber
           let(:undefined) { Result::Undefined.new }
           let(:exception) { StandardError.new }
 
-          it "counts failed results" do
+          it 'counts failed results' do
             failed.describe_to summary
             expect( summary.total_failed   ).to eq 1
             expect( summary.total(:failed) ).to eq 1
             expect( summary.total          ).to eq 1
           end
 
-          it "counts passed results" do
+          it 'counts passed results' do
             passed.describe_to summary
             expect( summary.total_passed   ).to eq 1
             expect( summary.total(:passed) ).to eq 1
             expect( summary.total          ).to eq 1
           end
 
-          it "counts skipped results" do
+          it 'counts skipped results' do
             skipped.describe_to summary
             expect( summary.total_skipped   ).to eq 1
             expect( summary.total(:skipped) ).to eq 1
             expect( summary.total           ).to eq 1
           end
 
-          it "counts undefined results" do
+          it 'counts undefined results' do
             undefined.describe_to summary
             expect( summary.total_undefined   ).to eq 1
             expect( summary.total(:undefined) ).to eq 1
             expect( summary.total             ).to eq 1
           end
 
-          it "counts abitrary raisable results" do
+          it 'counts abitrary raisable results' do
             flickering = Class.new(Result::Raisable) do
               def describe_to(visitor, *args)
                 visitor.flickering(*args)
@@ -417,7 +417,7 @@ module Cucumber
             expect( summary.total              ).to eq 1
           end
 
-          it "returns zero for a status where no messges have been received" do
+          it 'returns zero for a status where no messges have been received' do
             expect( summary.total_passed   ).to eq 0
             expect( summary.total(:passed) ).to eq 0
             expect( summary.total_ponies   ).to eq 0
@@ -429,7 +429,7 @@ module Cucumber
             expect( summary.total ).to eq 0
           end
 
-          it "counts combinations" do
+          it 'counts combinations' do
             [passed, passed, failed, skipped, undefined].each { |r| r.describe_to summary }
             expect( summary.total           ).to eq 5
             expect( summary.total_passed    ).to eq 2
@@ -438,48 +438,48 @@ module Cucumber
             expect( summary.total_undefined ).to eq 1
           end
 
-          it "records durations" do
+          it 'records durations' do
             [passed, failed].each { |r| r.describe_to summary }
             expect( summary.durations[0] ).to be_duration 11
             expect( summary.durations[1] ).to be_duration 10
           end
 
-          it "records exceptions" do
+          it 'records exceptions' do
             [passed, failed].each { |r| r.describe_to summary }
             expect( summary.exceptions ).to eq [exception]
           end
 
-          context "ok? result" do
-            it "passed result is ok" do
+          context 'ok? result' do
+            it 'passed result is ok' do
               passed.describe_to summary
               expect( summary.ok? ).to be true
             end
 
-            it "skipped result is ok" do
+            it 'skipped result is ok' do
               skipped.describe_to summary
               expect( summary.ok? ).to be true
             end
 
-            it "failed result is not ok" do
+            it 'failed result is not ok' do
               failed.describe_to summary
               expect( summary.ok? ).to be false
             end
 
-            it "pending result is ok if not strict" do
+            it 'pending result is ok if not strict' do
               pending.describe_to summary
               expect( summary.ok? ).to be true
               be_strict = Result::StrictConfiguration.new([:pending])
               expect( summary.ok?(be_strict) ).to be false
             end
 
-            it "undefined result is ok if not strict" do
+            it 'undefined result is ok if not strict' do
               undefined.describe_to summary
               expect( summary.ok? ).to be true
               be_strict = Result::StrictConfiguration.new([:undefined])
               expect( summary.ok?(be_strict) ).to be false
             end
 
-            it "flaky result is ok if not strict" do
+            it 'flaky result is ok if not strict' do
               summary.flaky
               expect( summary.ok? ).to be true
               be_strict = Result::StrictConfiguration.new([:flaky])
@@ -491,7 +491,7 @@ module Cucumber
         describe Result::Duration do
           subject(:duration) { Result::Duration.new(10) }
 
-          it "#nanoseconds can be accessed in #tap" do
+          it '#nanoseconds can be accessed in #tap' do
             expect( duration.tap { |duration| @duration = duration.nanoseconds } ).to eq duration
             expect( @duration ).to eq 10
           end
@@ -500,11 +500,11 @@ module Cucumber
         describe Result::UnknownDuration do
           subject(:duration) { Result::UnknownDuration.new }
 
-          it "#tap does not execute the passed block" do
-            expect( duration.tap { raise "tap executed block" } ).to eq duration
+          it '#tap does not execute the passed block' do
+            expect( duration.tap { raise 'tap executed block' } ).to eq duration
           end
 
-          it "accessing #nanoseconds outside #tap block raises exception" do
+          it 'accessing #nanoseconds outside #tap block raises exception' do
             expect { duration.nanoseconds }.to raise_error(RuntimeError)
           end
         end

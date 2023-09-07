@@ -24,11 +24,11 @@ module Cucumber
           parser.document(source)
         end
 
-        context "for invalid gherkin" do
+        context 'for invalid gherkin' do
           let(:source) { Gherkin::Document.new(path, "\nnot gherkin\n\nFeature: \n") }
           let(:path)   { 'path_to/the.feature' }
 
-          it "raises an error" do
+          it 'raises an error' do
             expect { parse }.to raise_error(ParseError) do |error|
               expect( error.message ).to match(/not gherkin/)
               expect( error.message ).to match(/#{path}/)
@@ -36,11 +36,11 @@ module Cucumber
           end
         end
 
-        context "for valid gherkin" do
+        context 'for valid gherkin' do
           let(:source) { Gherkin::Document.new(path, 'Feature:') }
           let(:path)   { 'path_to/the.feature' }
 
-          it "issues a gherkin_source_parsed event" do
+          it 'issues a gherkin_source_parsed event' do
             expect( event_bus ).to receive(:gherkin_source_parsed)
             parse
           end
@@ -52,11 +52,11 @@ module Cucumber
           end
         end
 
-        context "for empty files" do
+        context 'for empty files' do
           let(:source) { Gherkin::Document.new(path, '') }
           let(:path)   { 'path_to/the.feature' }
 
-          it "passes on no pickles" do
+          it 'passes on no pickles' do
             expect( receiver ).not_to receive(:pickle)
             parse
           end
@@ -71,20 +71,20 @@ module Cucumber
           match { |actual| actual.language == language }
         end
 
-        context "when the Gherkin has a language header" do
+        context 'when the Gherkin has a language header' do
           source do
             feature(language: 'ja', keyword: '機能') do
               scenario(keyword: 'シナリオ')
             end
           end
 
-          it "the pickles have the correct language" do
+          it 'the pickles have the correct language' do
             expect( receiver ).to receive(:pickle).with(pickle_with_language('ja'))
             parse
           end
         end
 
-        context "when the Gherkin produces one pickle" do
+        context 'when the Gherkin produces one pickle' do
           source do
             feature do
               scenario do
@@ -93,7 +93,7 @@ module Cucumber
             end
           end
 
-          it "passes on the pickle" do
+          it 'passes on the pickle' do
             expect( receiver ).to receive(:pickle)
             parse
           end
@@ -106,53 +106,53 @@ module Cucumber
           end
         end
 
-        context "when scenario is inside a rule" do
+        context 'when scenario is inside a rule' do
           source do
             feature do
               rule do
-                scenario name: "My scenario"
+                scenario name: 'My scenario'
               end
             end
           end
 
-          it "passes on the pickle" do
+          it 'passes on the pickle' do
             expect( receiver ).to receive(:pickle)
             parse
           end
         end
 
-        context "when example is inside a rule" do
+        context 'when example is inside a rule' do
           source do
             feature do
               rule do
-                example name: "My example"
+                example name: 'My example'
               end
             end
           end
 
-          it "passes on the pickle" do
+          it 'passes on the pickle' do
             expect( receiver ).to receive(:pickle)
             parse
           end
         end
 
-        context "when there are multiple rules and scenarios or examples" do
+        context 'when there are multiple rules and scenarios or examples' do
           source do
             feature do
-              rule description: "First rule" do
-                scenario name: "Do not talk about the fight club" do
+              rule description: 'First rule' do
+                scenario name: 'Do not talk about the fight club' do
                   step 'text'
                 end
               end
-              rule description: "Second rule" do
-                example name: "Do not talk about the fight club" do
+              rule description: 'Second rule' do
+                example name: 'Do not talk about the fight club' do
                   step 'text'
                 end
               end
             end
           end
 
-          it "passes on the pickles" do
+          it 'passes on the pickles' do
             expect( receiver ).to receive(:pickle).twice
             parse
           end

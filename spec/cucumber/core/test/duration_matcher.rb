@@ -16,7 +16,7 @@ module Cucumber
 
       RSpec::Matchers.define :an_unknown_duration do
         match do |actual|
-          actual.tap { raise "#tap block was executed, not an UnknownDuration" }
+          actual.tap { raise '#tap block was executed, not an UnknownDuration' }
           expect(actual).to respond_to(:nanoseconds)
         end
       end

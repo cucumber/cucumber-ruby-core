@@ -30,7 +30,7 @@ module Cucumber
         end
 
         def self.new(file, raw_lines=nil)
-          file || raise(ArgumentError, "file is mandatory")
+          file || raise(ArgumentError, 'file is mandatory')
           if raw_lines
             Precise.new(file, Lines.new(raw_lines))
           else
@@ -68,7 +68,7 @@ module Cucumber
           end
 
           def to_s
-            [file, lines.to_s].join(":")
+            [file, lines.to_s].join(':')
           end
 
           def hash
@@ -128,7 +128,7 @@ module Cucumber
             return first.to_s if data.length == 1
             return "#{data.min}..#{data.max}" if range?
 
-            data.to_a.join(":")
+            data.to_a.join(':')
           end
 
           def inspect

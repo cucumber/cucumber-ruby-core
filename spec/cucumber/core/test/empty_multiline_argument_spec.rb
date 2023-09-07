@@ -11,14 +11,14 @@ module Cucumber
         let(:location) { double }
         let(:arg) { EmptyMultilineArgument.new }
 
-        describe "#data_table?" do
-          it "returns false" do
+        describe '#data_table?' do
+          it 'returns false' do
             expect(arg).not_to be_data_table
           end
         end
 
-        describe "#doc_string" do
-          it "returns false" do
+        describe '#doc_string' do
+          it 'returns false' do
             expect(arg).not_to be_doc_string
           end
         end

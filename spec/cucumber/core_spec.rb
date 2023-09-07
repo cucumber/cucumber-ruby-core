@@ -14,9 +14,9 @@ module Cucumber
     include Core
     include Core::Gherkin::Writer
 
-    describe "compiling features to a test suite" do
+    describe 'compiling features to a test suite' do
 
-      it "compiles two scenarios into two test cases" do
+      it 'compiles two scenarios into two test cases' do
         visitor = ReportAPISpy.new
 
         compile([
@@ -49,7 +49,7 @@ module Cucumber
         ]
       end
 
-      it "filters out test cases based on a tag expression" do
+      it 'filters out test cases based on a tag expression' do
         visitor = double.as_null_object
         expect( visitor ).to receive(:test_case) do |test_case|
           expect( test_case.name ).to eq 'foo'
@@ -81,9 +81,9 @@ module Cucumber
       end
     end
 
-    describe "executing a test suite" do
+    describe 'executing a test suite' do
 
-      it "fires events" do
+      it 'fires events' do
         gherkin = gherkin do
           feature 'Feature name' do
             scenario 'The one that passes' do
@@ -137,8 +137,8 @@ module Cucumber
         ]
       end
 
-      context "without hooks" do
-        it "executes the test cases in the suite" do
+      context 'without hooks' do
+        it 'executes the test cases in the suite' do
           gherkin = gherkin do
             feature 'Feature name' do
               scenario 'The one that passes' do
@@ -169,7 +169,7 @@ module Cucumber
         end
       end
 
-      context "with around hooks" do
+      context 'with around hooks' do
         class WithAroundHooks < Core::Filter.new(:logger)
           def test_case(test_case)
             base_step = Core::Test::Step.new('some-random-uid', 'text', nil, nil, nil)
@@ -188,7 +188,7 @@ module Cucumber
           end
         end
 
-        it "executes the test cases in the suite" do
+        it 'executes the test cases in the suite' do
           gherkin = gherkin do
             feature do
               scenario do
@@ -216,7 +216,7 @@ module Cucumber
       end
 
       require 'cucumber/core/test/filters'
-      it "filters test cases by tag" do
+      it 'filters test cases by tag' do
         gherkin = gherkin do
           feature do
             scenario do
@@ -240,7 +240,7 @@ module Cucumber
         expect( report.test_cases.total ).to eq 2
       end
 
-      it "filters test cases by name" do
+      it 'filters test cases by name' do
         gherkin = gherkin do
           feature 'first feature' do
             scenario 'first scenario' do
