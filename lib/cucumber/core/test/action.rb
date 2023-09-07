@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/location'
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/timer'
@@ -9,7 +10,7 @@ module Cucumber
       class Action
         def initialize(location = nil, &block)
           raise ArgumentError, "Passing a block to execute the action is mandatory." unless block
-          @location = location ? location : Test::Location.new(*block.source_location)
+          @location = location || Test::Location.new(*block.source_location)
           @block = block
           @timer = Timer.new
         end
@@ -78,7 +79,6 @@ module Cucumber
           Result::Undefined.new
         end
       end
-
     end
   end
 end

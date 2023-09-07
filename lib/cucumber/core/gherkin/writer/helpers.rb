@@ -1,9 +1,9 @@
 # frozen_string_literal: true
+
 module Cucumber
   module Core
     module Gherkin
       module Writer
-
         module HasOptionsInitializer
           def self.included(base)
             base.extend HasDefaultKeyword
@@ -79,6 +79,7 @@ module Cucumber
           end
 
           private
+
           def elements
             @elements ||= []
           end
@@ -89,6 +90,7 @@ module Cucumber
             end
 
             private
+
             def element(name)
               define_method name do |*args, &source|
                 factory_name = String(name).split("_").map(&:capitalize).join
@@ -125,6 +127,7 @@ module Cucumber
 
         module HasDescription
           private
+
           def description
             options.fetch(:description, '').split("\n").map(&:strip)
           end
@@ -168,7 +171,6 @@ module Cucumber
           end
         end
       end
-
     end
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/location'
 require 'cucumber/core/test/empty_multiline_argument'
 

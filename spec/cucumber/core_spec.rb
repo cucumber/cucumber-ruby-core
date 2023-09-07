@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'report_api_spy'
 require 'cucumber/core'
 require 'cucumber/core/filter'
@@ -19,21 +20,22 @@ module Cucumber
         visitor = ReportAPISpy.new
 
         compile([
-          gherkin do
-            feature do
-              background do
-                step 'text'
-              end
-              scenario do
-                step 'text'
-              end
-              scenario do
-                step 'text'
-                step 'text'
-              end
-            end
-          end
-        ], visitor)
+                  gherkin do
+                    feature do
+                      background do
+                        step 'text'
+                      end
+                      scenario do
+                        step 'text'
+                      end
+
+                      scenario do
+                        step 'text'
+                        step 'text'
+                      end
+                    end
+                  end
+                ], visitor)
 
         expect( visitor.messages ).to eq [
           :test_case,
@@ -43,7 +45,7 @@ module Cucumber
           :test_step,
           :test_step,
           :test_step,
-          :done,
+          :done
         ]
       end
 
@@ -51,7 +53,7 @@ module Cucumber
         visitor = double.as_null_object
         expect( visitor ).to receive(:test_case) do |test_case|
           expect( test_case.name ).to eq 'foo'
-        end.exactly(1).times
+        end.once
 
         gherkin = gherkin do
           feature do
@@ -131,7 +133,7 @@ module Cucumber
           [:test_step_finished, 'passing', :skipped],
           [:test_step_started, 'undefined'],
           [:test_step_finished, 'undefined', :undefined],
-          [:test_case_finished, 'The one that fails', :failed],
+          [:test_case_finished, 'The one that fails', :failed]
         ]
       end
 
@@ -172,7 +174,7 @@ module Cucumber
           def test_case(test_case)
             base_step = Core::Test::Step.new('some-random-uid', 'text', nil, nil, nil)
             test_steps = [
-              base_step.with_action { logger << :step },
+              base_step.with_action { logger << :step }
             ]
 
             around_hook = Core::Test::AroundHook.new do |run_scenario|
@@ -205,9 +207,9 @@ module Cucumber
           expect( report.test_cases.total_failed ).to eq 0
           expect( logger ).to eq [
             :before_all,
-              :step,
+            :step,
             :middle,
-              :step,
+            :step,
             :after_all
           ]
         end
@@ -233,7 +235,7 @@ module Cucumber
 
         event_bus = Core::EventBus.new
         report = Core::Report::Summary.new(event_bus)
-        execute [gherkin], [ Cucumber::Core::Test::TagFilter.new(['@a']) ], event_bus
+        execute [gherkin], [Cucumber::Core::Test::TagFilter.new(['@a'])], event_bus
 
         expect( report.test_cases.total ).to eq 2
       end
@@ -244,6 +246,7 @@ module Cucumber
             scenario 'first scenario' do
               step 'missing'
             end
+
             scenario 'second' do
               step 'missing'
             end
@@ -252,7 +255,7 @@ module Cucumber
 
         event_bus = Core::EventBus.new
         report = Core::Report::Summary.new(event_bus)
-        execute [gherkin], [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ], event_bus
+        execute [gherkin], [Cucumber::Core::Test::NameFilter.new([/scenario/])], event_bus
 
         expect( report.test_cases.total ).to eq 1
       end

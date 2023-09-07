@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/doc_string'
 require 'unindent'
 
@@ -24,7 +25,7 @@ module Cucumber
           end
         end
 
-        context '#map' do
+        describe '#map' do
           let(:content) { 'original content' }
           let(:content_type) { double }
 

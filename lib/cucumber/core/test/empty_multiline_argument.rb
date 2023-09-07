@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Cucumber
   module Core
     module Test
@@ -15,7 +16,7 @@ module Cucumber
           false
         end
 
-        def map(&block)
+        def map
           self
         end
 

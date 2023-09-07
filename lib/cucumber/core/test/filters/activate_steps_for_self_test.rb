@@ -2,7 +2,6 @@ module Cucumber
   module Core
     module Test
       module Filters
-
         # This filter is used for testing Cucumber itself. It adds step definitions
         # that will activate steps to have passed / failed / pending results
         # if they use conventional names.
@@ -28,7 +27,6 @@ module Cucumber
             test_case.with_steps(test_steps).describe_to(receiver)
           end
         end
-
       end
     end
   end

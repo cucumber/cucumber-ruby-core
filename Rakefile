@@ -1,9 +1,10 @@
 # encoding: utf-8
+
 require 'rubygems'
 require 'bundler'
 Bundler::GemHelper.install_tasks
 
-$:.unshift File.expand_path("../lib", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new

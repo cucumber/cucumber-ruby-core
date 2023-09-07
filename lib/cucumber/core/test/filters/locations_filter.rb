@@ -1,13 +1,12 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/filter'
 
 module Cucumber
   module Core
     module Test
-
       # Sorts and filters scenarios based on a list of locations
       class LocationsFilter < Filter.new(:filter_locations)
-
         def test_case(test_case)
           test_cases[test_case.location.file] << test_case
           self

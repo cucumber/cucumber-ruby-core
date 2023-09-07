@@ -3,7 +3,6 @@ require "cucumber/core/event_bus"
 module Cucumber
   module Core
     module Events
-
       class TestEvent < Core::Event.new(:some_attribute)
       end
 
@@ -20,14 +19,14 @@ module Cucumber
 
         it "can broadcast by calling a method named after the event ID" do
           called = false
-          event_bus.on(:test_event) {called = true }
+          event_bus.on(:test_event) { called = true }
           event_bus.test_event
           expect(called).to be true
         end
 
         it "can broadcast by calling the `broadcast` method with an instance of the event type" do
           called = false
-          event_bus.on(:test_event) {called = true }
+          event_bus.on(:test_event) { called = true }
           event_bus.broadcast(Events::TestEvent.new(:some_attribute))
           expect(called).to be true
         end
@@ -72,7 +71,7 @@ module Cucumber
           expect { event_bus.some_unknown_event }.to raise_error(NameError)
         end
 
-        context "#broadcast method" do
+        describe "#broadcast method" do
           it "must be passed an instance of a registered event type" do
             expect {
               event_bus.broadcast Events::UnregisteredEvent

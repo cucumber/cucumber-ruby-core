@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/timer'
 
 module Cucumber
@@ -67,7 +68,7 @@ module Cucumber
             self
           end
 
-          def pending(message, step_result)
+          def pending(_message, step_result)
             @status = Status::Pending.new(step_result)
             self
           end
@@ -82,11 +83,11 @@ module Cucumber
             self
           end
 
-          def exception(step_exception, step_result)
+          def exception(_step_exception, _step_result)
             self
           end
 
-          def duration(step_duration, step_result)
+          def duration(_step_duration, _step_result)
             self
           end
 
@@ -115,7 +116,7 @@ module Cucumber
             end
 
             class Unknown < Base
-              def result(duration)
+              def result(_duration)
                 Result::Unknown.new
               end
             end
@@ -127,7 +128,7 @@ module Cucumber
             end
 
             class Failing < Base
-              def execute(test_step, monitor, &continue)
+              def execute(test_step, monitor)
                 result = test_step.skip(monitor.result)
                 if result.undefined?
                   result = result.with_message(%(Undefined step: "#{test_step.text}"))
@@ -150,7 +151,6 @@ module Cucumber
             end
           end
         end
-
       end
     end
   end

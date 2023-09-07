@@ -1,11 +1,11 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/action'
 require 'cucumber/core/test/duration_matcher'
 
 module Cucumber
   module Core
     module Test
-
       describe Action do
 
         context "constructed without a block" do
@@ -91,11 +91,11 @@ module Cucumber
 
           context "recording the duration" do
             before do
-              allow( Timer::MonotonicTime ).to receive(:time_in_nanoseconds).and_return(525702744080000, 525702744080001)
+              allow( Timer::MonotonicTime ).to receive(:time_in_nanoseconds).and_return(525_702_744_080_000, 525_702_744_080_001)
             end
 
             it "records the nanoseconds duration of the execution on the result" do
-              action = Action.new { }
+              action = Action.new {}
               duration = action.execute.duration
               expect( duration ).to be_duration 1
             end
@@ -147,7 +147,6 @@ module Cucumber
           end
         end
       end
-
     end
   end
 end
