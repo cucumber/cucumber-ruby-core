@@ -26,7 +26,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ### Fixed
 - Restore support for matching a scenario by tag and step line numbers. ([#237](https://github.com/cucumber/cucumber-ruby-core/pull/237), [#238](https://github.com/cucumber/cucumber-ruby-core/pull/238), [#239](https://github.com/cucumber/cucumber-ruby-core/pull/239))
 
-## [11.0.0]
+## [11.0.0] - 2022-05-18
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
@@ -34,4 +34,3 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 [12.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
 [11.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
 [11.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...v11.0.0
-[10.1.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.0...v10.1.1
