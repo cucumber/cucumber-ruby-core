@@ -37,7 +37,7 @@ module Cucumber
                   end
                 ], visitor)
 
-        expect( visitor.messages ).to eq [
+        expect(visitor.messages).to eq [
           :test_case,
           :test_step,
           :test_step,
@@ -51,8 +51,8 @@ module Cucumber
 
       it 'filters out test cases based on a tag expression' do
         visitor = double.as_null_object
-        expect( visitor ).to receive(:test_case) do |test_case|
-          expect( test_case.name ).to eq 'foo'
+        expect(visitor).to receive(:test_case) do |test_case|
+          expect(test_case.name).to eq 'foo'
         end.once
 
         gherkin = gherkin do
@@ -158,14 +158,14 @@ module Cucumber
           report = Core::Report::Summary.new(event_bus)
           execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus
 
-          expect( report.test_cases.total           ).to eq 2
-          expect( report.test_cases.total_passed    ).to eq 1
-          expect( report.test_cases.total_failed    ).to eq 1
-          expect( report.test_steps.total           ).to eq 5
-          expect( report.test_steps.total_failed    ).to eq 1
-          expect( report.test_steps.total_passed    ).to eq 2
-          expect( report.test_steps.total_skipped   ).to eq 1
-          expect( report.test_steps.total_undefined ).to eq 1
+          expect(report.test_cases.total).to eq 2
+          expect(report.test_cases.total_passed).to eq 1
+          expect(report.test_cases.total_failed).to eq 1
+          expect(report.test_steps.total).to eq 5
+          expect(report.test_steps.total_failed).to eq 1
+          expect(report.test_steps.total_passed).to eq 2
+          expect(report.test_steps.total_skipped).to eq 1
+          expect(report.test_steps.total_undefined).to eq 1
         end
       end
 
@@ -202,10 +202,10 @@ module Cucumber
           report = Core::Report::Summary.new(event_bus)
           execute [gherkin], [WithAroundHooks.new(logger)], event_bus
 
-          expect( report.test_cases.total        ).to eq 1
-          expect( report.test_cases.total_passed ).to eq 1
-          expect( report.test_cases.total_failed ).to eq 0
-          expect( logger ).to eq [
+          expect(report.test_cases.total).to eq 1
+          expect(report.test_cases.total_passed).to eq 1
+          expect(report.test_cases.total_failed).to eq 0
+          expect(logger).to eq [
             :before_all,
             :step,
             :middle,
@@ -237,7 +237,7 @@ module Cucumber
         report = Core::Report::Summary.new(event_bus)
         execute [gherkin], [Cucumber::Core::Test::TagFilter.new(['@a'])], event_bus
 
-        expect( report.test_cases.total ).to eq 2
+        expect(report.test_cases.total).to eq 2
       end
 
       it 'filters test cases by name' do
@@ -257,7 +257,7 @@ module Cucumber
         report = Core::Report::Summary.new(event_bus)
         execute [gherkin], [Cucumber::Core::Test::NameFilter.new([/scenario/])], event_bus
 
-        expect( report.test_cases.total ).to eq 1
+        expect(report.test_cases.total).to eq 1
       end
 
     end

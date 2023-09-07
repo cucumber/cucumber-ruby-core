@@ -28,13 +28,13 @@ module Cucumber
         let(:exception) { StandardError.new('test error') }
 
         before do
-          allow( event_bus ).to receive(:test_case_started)
-          allow( text ).to receive(:empty?)
+          allow(event_bus).to receive(:test_case_started)
+          allow(text).to receive(:empty?)
         end
 
         context 'reporting the duration of a test case' do
           before do
-            allow( Timer::MonotonicTime ).to receive(:time_in_nanoseconds).and_return(525_702_744_080_000, 525_702_744_080_001)
+            allow(Timer::MonotonicTime).to receive(:time_in_nanoseconds).and_return(525_702_744_080_000, 525_702_744_080_001)
           end
 
           context 'for a passing test case' do
@@ -42,7 +42,7 @@ module Cucumber
 
             it 'records the nanoseconds duration of the execution on the result' do
               expect(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
-                expect( result.duration ).to be_duration 1
+                expect(result.duration).to be_duration 1
               end
               test_case.describe_to runner
             end
@@ -66,7 +66,7 @@ module Cucumber
           it 'sets the exception on the result' do
             allow(event_bus).to receive(:before_test_case)
             expect(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
-              expect( result.exception ).to eq exception
+              expect(result.exception).to eq exception
             end
             test_case.describe_to runner
           end
@@ -83,8 +83,8 @@ module Cucumber
 
             it 'emits the test_case_finished event after running the the test case' do
               expect(event_bus).to receive(:test_case_finished) do |reported_test_case, result|
-                expect( reported_test_case ).to eq test_case
-                expect( result ).to be_undefined
+                expect(reported_test_case).to eq test_case
+                expect(result).to be_undefined
               end
               test_case.describe_to runner
             end
@@ -96,7 +96,7 @@ module Cucumber
 
               it 'emits the test_case_finished event with a passing result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result ).to be_passed
+                  expect(result).to be_passed
                 end
                 test_case.describe_to runner
               end
@@ -107,7 +107,7 @@ module Cucumber
 
               it 'emits the test_case_finished event with an undefined result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result ).to be_undefined
+                  expect(result).to be_undefined
                 end
 
                 test_case.describe_to runner
@@ -115,18 +115,18 @@ module Cucumber
 
               it 'sets the message on the result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result.message ).to eq('Undefined step: "step name"')
+                  expect(result.message).to eq('Undefined step: "step name"')
                 end
-                allow( undefined ).to receive(:text).and_return('step name')
+                allow(undefined).to receive(:text).and_return('step name')
 
                 test_case.describe_to runner
               end
 
               it 'appends the backtrace of the result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result.backtrace ).to eq(['step line'])
+                  expect(result.backtrace).to eq(['step line'])
                 end
-                expect( undefined ).to receive(:backtrace_line).and_return('step line')
+                expect(undefined).to receive(:backtrace_line).and_return('step line')
 
                 test_case.describe_to runner
               end
@@ -137,16 +137,16 @@ module Cucumber
 
               it 'emits the test_case_finished event with a pending result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result ).to be_pending
+                  expect(result).to be_pending
                 end
                 test_case.describe_to runner
               end
 
               it 'appends the backtrace of the result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result.backtrace.last ).to eq('step line')
+                  expect(result.backtrace.last).to eq('step line')
                 end
-                expect( pending ).to receive(:backtrace_line).and_return('step line')
+                expect(pending).to receive(:backtrace_line).and_return('step line')
 
                 test_case.describe_to runner
               end
@@ -157,16 +157,16 @@ module Cucumber
 
               it 'emits the test_case_finished event with a skipped result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result ).to be_skipped
+                  expect(result).to be_skipped
                 end
                 test_case.describe_to runner
               end
 
               it 'appends the backtrace of the result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result.backtrace.last ).to eq('step line')
+                  expect(result.backtrace.last).to eq('step line')
                 end
-                expect( skipping ).to receive(:backtrace_line).and_return('step line')
+                expect(skipping).to receive(:backtrace_line).and_return('step line')
 
                 test_case.describe_to runner
               end
@@ -177,16 +177,16 @@ module Cucumber
 
               it 'emits the test_case_finished event with a failing result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result ).to be_failed
+                  expect(result).to be_failed
                 end
                 test_case.describe_to runner
               end
 
               it 'appends the backtrace of the exception of the result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result.exception.backtrace.last ).to eq('step line')
+                  expect(result.exception.backtrace.last).to eq('step line')
                 end
-                expect( failing ).to receive(:backtrace_line).and_return('step line')
+                expect(failing).to receive(:backtrace_line).and_return('step line')
 
                 test_case.describe_to runner
               end
@@ -197,29 +197,29 @@ module Cucumber
 
               it 'emits the test_step_finished event with a failed result' do
                 expect(event_bus).to receive(:test_step_finished).with(failing, anything) do |_test_step, result|
-                  expect( result ).to be_failed
+                  expect(result).to be_failed
                 end
                 test_case.describe_to runner
               end
 
               it 'emits a test_step_finished event with a skipped result' do
                 expect(event_bus).to receive(:test_step_finished).with(passing, anything) do |_test_step, result|
-                  expect( result ).to be_skipped
+                  expect(result).to be_skipped
                 end
                 test_case.describe_to runner
               end
 
               it 'emits a test_case_finished event with a failed result' do
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-                  expect( result ).to be_failed
-                  expect( result.exception ).to eq exception
+                  expect(result).to be_failed
+                  expect(result.exception).to eq exception
                 end
                 test_case.describe_to runner
               end
 
               it 'skips, rather than executing the second step' do
-                expect( passing ).not_to receive(:execute)
-                expect( passing ).to receive(:skip).and_return(Result::Skipped.new)
+                expect(passing).not_to receive(:execute)
+                expect(passing).to receive(:skip).and_return(Result::Skipped.new)
                 test_case.describe_to runner
               end
             end

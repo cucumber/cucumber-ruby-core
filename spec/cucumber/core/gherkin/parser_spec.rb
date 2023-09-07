@@ -15,9 +15,9 @@ module Cucumber
         let(:visitor)   { double }
 
         before do
-          allow( event_bus ).to receive(:gherkin_source_parsed)
-          allow( event_bus).to receive(:envelope)
-          allow( gherkin_query ).to receive(:update)
+          allow(event_bus).to receive(:gherkin_source_parsed)
+          allow(event_bus).to receive(:envelope)
+          allow(gherkin_query).to receive(:update)
         end
 
         def parse
@@ -30,8 +30,8 @@ module Cucumber
 
           it 'raises an error' do
             expect { parse }.to raise_error(ParseError) do |error|
-              expect( error.message ).to match(/not gherkin/)
-              expect( error.message ).to match(/#{path}/)
+              expect(error.message).to match(/not gherkin/)
+              expect(error.message).to match(/#{path}/)
             end
           end
         end
@@ -41,13 +41,13 @@ module Cucumber
           let(:path)   { 'path_to/the.feature' }
 
           it 'issues a gherkin_source_parsed event' do
-            expect( event_bus ).to receive(:gherkin_source_parsed)
+            expect(event_bus).to receive(:gherkin_source_parsed)
             parse
           end
 
           it "emits an 'envelope' event for every message produced by Gherkin" do
             # Only one message emited, there's no pickles generated
-            expect( event_bus ).to receive(:envelope).once
+            expect(event_bus).to receive(:envelope).once
             parse
           end
         end
@@ -57,7 +57,7 @@ module Cucumber
           let(:path)   { 'path_to/the.feature' }
 
           it 'passes on no pickles' do
-            expect( receiver ).not_to receive(:pickle)
+            expect(receiver).not_to receive(:pickle)
             parse
           end
         end
@@ -79,7 +79,7 @@ module Cucumber
           end
 
           it 'the pickles have the correct language' do
-            expect( receiver ).to receive(:pickle).with(pickle_with_language('ja'))
+            expect(receiver).to receive(:pickle).with(pickle_with_language('ja'))
             parse
           end
         end
@@ -94,14 +94,14 @@ module Cucumber
           end
 
           it 'passes on the pickle' do
-            expect( receiver ).to receive(:pickle)
+            expect(receiver).to receive(:pickle)
             parse
           end
 
           it "emits an 'envelope' event containing the pickle" do
-            allow( receiver ).to receive(:pickle)
+            allow(receiver).to receive(:pickle)
             # Once for the gherkin document, once with the pickle
-            expect( event_bus ).to receive(:envelope).twice
+            expect(event_bus).to receive(:envelope).twice
             parse
           end
         end
@@ -116,7 +116,7 @@ module Cucumber
           end
 
           it 'passes on the pickle' do
-            expect( receiver ).to receive(:pickle)
+            expect(receiver).to receive(:pickle)
             parse
           end
         end
@@ -131,7 +131,7 @@ module Cucumber
           end
 
           it 'passes on the pickle' do
-            expect( receiver ).to receive(:pickle)
+            expect(receiver).to receive(:pickle)
             parse
           end
         end
@@ -153,7 +153,7 @@ module Cucumber
           end
 
           it 'passes on the pickles' do
-            expect( receiver ).to receive(:pickle).twice
+            expect(receiver).to receive(:pickle).twice
             parse
           end
         end

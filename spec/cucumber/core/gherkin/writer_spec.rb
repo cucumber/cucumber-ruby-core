@@ -12,12 +12,12 @@ module Cucumber
         context 'specifying uri' do
           it 'generates a uri by default' do
             source = gherkin { feature }
-            expect( source.uri ).to eq 'features/test.feature'
+            expect(source.uri).to eq 'features/test.feature'
           end
 
           it 'allows you to specify a URI' do
             source = gherkin('features/path/to/my.feature') { feature }
-            expect( source.uri ).to eq 'features/path/to/my.feature'
+            expect(source.uri).to eq 'features/path/to/my.feature'
           end
         end
 
@@ -25,7 +25,7 @@ module Cucumber
 
           it 'generates the feature statement' do
             source = gherkin { feature }
-            expect( source ).to eq "Feature:\n"
+            expect(source).to eq "Feature:\n"
           end
 
           context 'when a name is provided' do
@@ -33,7 +33,7 @@ module Cucumber
               source = gherkin do
                 feature "A Feature\n"
               end
-              expect( source ).to eq "Feature: A Feature\n"
+              expect(source).to eq "Feature: A Feature\n"
             end
           end
 
@@ -53,7 +53,7 @@ module Cucumber
             multiple lines.
               END
 
-              expect( source ).to eq expected.unindent
+              expect(source).to eq expected.unindent
             end
           end
 
@@ -62,7 +62,7 @@ module Cucumber
               source = gherkin do
                 feature 'A Feature', keyword: 'Business Need'
               end
-              expect( source ).to eq "Business Need: A Feature\n"
+              expect(source).to eq "Business Need: A Feature\n"
             end
           end
 
@@ -72,7 +72,7 @@ module Cucumber
                 feature language: 'ru'
               end
 
-              expect( source ).to eq "# language: ru\nFeature:\n"
+              expect(source).to eq "# language: ru\nFeature:\n"
             end
           end
 
@@ -84,7 +84,7 @@ module Cucumber
                 feature
               end
 
-              expect( source.to_s ).to eq "# wow\n# great\nFeature:\n"
+              expect(source.to_s).to eq "# wow\n# great\nFeature:\n"
             end
           end
 
@@ -96,7 +96,7 @@ module Cucumber
                 end
               end
 
-              expect( source.to_s ).to match(/Scenario:/)
+              expect(source.to_s).to match(/Scenario:/)
             end
 
             context 'when a comment is provided' do
@@ -107,7 +107,7 @@ module Cucumber
                     scenario
                   end
                 end
-                expect( source.to_s ).to eq <<-END.unindent
+                expect(source.to_s).to eq <<-END.unindent
             Feature:
 
               # wow
@@ -128,7 +128,7 @@ module Cucumber
                   end
                 end
 
-                expect( source ).to eq <<-END.unindent
+                expect(source).to eq <<-END.unindent
             Feature:
 
               Scenario:
@@ -149,7 +149,7 @@ module Cucumber
                   end
                 end
 
-                expect( source.to_s ).to match(/Given passing\Z/m)
+                expect(source.to_s).to match(/Given passing\Z/m)
               end
 
               context 'when a docstring is provided' do
@@ -165,7 +165,7 @@ module Cucumber
 
                   end
 
-                  expect( source ).to eq <<-END.unindent
+                  expect(source).to eq <<-END.unindent
               Feature:
 
                 Scenario:
@@ -187,7 +187,7 @@ module Cucumber
                 end
               end
 
-              expect( source ).to eq <<-END.unindent
+              expect(source).to eq <<-END.unindent
           Feature:
 
             Background:
@@ -205,7 +205,7 @@ module Cucumber
                 end
               end
 
-              expect( source ).to eq <<-END.unindent
+              expect(source).to eq <<-END.unindent
           Feature:
 
             Scenario Outline:
@@ -225,7 +225,7 @@ module Cucumber
                   end
                 end
 
-                expect( source ).to eq <<-END.unindent
+                expect(source).to eq <<-END.unindent
             Feature:
 
               Scenario Outline:
@@ -288,7 +288,7 @@ module Cucumber
             end
           end
 
-          expect( source.to_s ).to eq <<-END.unindent
+          expect(source.to_s).to eq <<-END.unindent
       # language: en
       # wow
       @always

@@ -14,7 +14,7 @@ module Cucumber
 
         it 'returns a Result::Duration object' do
           timer = Timer.new.start
-          expect( timer.duration ).to be_duration 1
+          expect(timer.duration).to be_duration 1
         end
 
         it 'would be slow to test' do

@@ -106,25 +106,25 @@ Layout/SpaceAroundOperators:
   Exclude:
     - 'cucumber-core.gemspec'
 
-# Offense count: 735
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, compact, no_space
-Layout/SpaceInsideParens:
-  Exclude:
-    - 'spec/cucumber/core/compiler_spec.rb'
-    - 'spec/cucumber/core/gherkin/parser_spec.rb'
-    - 'spec/cucumber/core/gherkin/writer_spec.rb'
-    - 'spec/cucumber/core/report/summary_spec.rb'
-    - 'spec/cucumber/core/test/action_spec.rb'
-    - 'spec/cucumber/core/test/data_table_spec.rb'
-    - 'spec/cucumber/core/test/doc_string_spec.rb'
-    - 'spec/cucumber/core/test/location_spec.rb'
-    - 'spec/cucumber/core/test/result_spec.rb'
-    - 'spec/cucumber/core/test/runner_spec.rb'
-    - 'spec/cucumber/core/test/step_spec.rb'
-    - 'spec/cucumber/core/test/timer_spec.rb'
-    - 'spec/cucumber/core_spec.rb'
+## Offense count: 735
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: EnforcedStyle.
+## SupportedStyles: space, compact, no_space
+#Layout/SpaceInsideParens:
+#  Exclude:
+#    - 'spec/cucumber/core/compiler_spec.rb'
+#    - 'spec/cucumber/core/gherkin/parser_spec.rb'
+#    - 'spec/cucumber/core/gherkin/writer_spec.rb'
+#    - 'spec/cucumber/core/report/summary_spec.rb'
+#    - 'spec/cucumber/core/test/action_spec.rb'
+#    - 'spec/cucumber/core/test/data_table_spec.rb'
+#    - 'spec/cucumber/core/test/doc_string_spec.rb'
+#    - 'spec/cucumber/core/test/location_spec.rb'
+#    - 'spec/cucumber/core/test/result_spec.rb'
+#    - 'spec/cucumber/core/test/runner_spec.rb'
+#    - 'spec/cucumber/core/test/step_spec.rb'
+#    - 'spec/cucumber/core/test/timer_spec.rb'
+#    - 'spec/cucumber/core_spec.rb'
 
 # Offense count: 7
 # Configuration parameters: AllowedMethods.

@@ -27,36 +27,36 @@ module Cucumber
           it 'counts passed test cases' do
             event_bus.send(:test_case_finished, test_case, passed_result)
 
-            expect( @summary.test_cases.total(:passed) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:passed)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
           it 'counts failed test cases' do
             event_bus.send(:test_case_finished, test_case, failed_result)
 
-            expect( @summary.test_cases.total(:failed) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:failed)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
           it 'counts pending test cases' do
             event_bus.send(:test_case_finished, test_case, pending_result)
 
-            expect( @summary.test_cases.total(:pending) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:pending)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
           it 'counts skipped test cases' do
             event_bus.send(:test_case_finished, test_case, skipped_result)
 
-            expect( @summary.test_cases.total(:skipped) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:skipped)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
           it 'counts undefined test cases' do
             event_bus.send(:test_case_finished, test_case, undefined_result)
 
-            expect( @summary.test_cases.total(:undefined) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:undefined)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
           it 'handles flaky test cases' do
@@ -64,9 +64,9 @@ module Cucumber
             event_bus.send(:test_case_finished, test_case, failed_result)
             event_bus.send(:test_case_finished, test_case, passed_result)
 
-            expect( @summary.test_cases.total(:failed) ).to eq(0)
-            expect( @summary.test_cases.total(:flaky) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:failed)).to eq(0)
+            expect(@summary.test_cases.total(:flaky)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
           it 'handless flaky with following skip test cases' do
@@ -74,10 +74,10 @@ module Cucumber
             event_bus.send(:test_case_finished, test_case, failed_result)
             event_bus.send(:test_case_finished, test_case, skipped_result)
 
-            expect( @summary.test_cases.total(:failed) ).to eq(0)
-            expect( @summary.test_cases.total(:skipped) ).to eq(0)
-            expect( @summary.test_cases.total(:flaky) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:failed)).to eq(0)
+            expect(@summary.test_cases.total(:skipped)).to eq(0)
+            expect(@summary.test_cases.total(:flaky)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
         end
 
@@ -86,42 +86,42 @@ module Cucumber
             let(:test_step) { double }
 
             before(:each) do
-              expect( test_step ).to receive(:hook?).and_return(false)
+              expect(test_step).to receive(:hook?).and_return(false)
             end
 
             it 'counts passed test steps' do
               event_bus.send(:test_step_finished, test_step, passed_result)
 
-              expect( @summary.test_steps.total(:passed) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:passed)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
 
             it 'counts failed test cases' do
               event_bus.send(:test_step_finished, test_step, failed_result)
 
-              expect( @summary.test_steps.total(:failed) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:failed)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
 
             it 'counts pending test cases' do
               event_bus.send(:test_step_finished, test_step, pending_result)
 
-              expect( @summary.test_steps.total(:pending) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:pending)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
 
             it 'counts skipped test cases' do
               event_bus.send(:test_step_finished, test_step, skipped_result)
 
-              expect( @summary.test_steps.total(:skipped) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:skipped)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
 
             it 'counts undefined test cases' do
               event_bus.send(:test_step_finished, test_step, undefined_result)
 
-              expect( @summary.test_steps.total(:undefined) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:undefined)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
           end
 
@@ -129,13 +129,13 @@ module Cucumber
             let(:test_step) { double }
 
             before(:each) do
-              expect( test_step ).to receive(:hook?).and_return(true)
+              expect(test_step).to receive(:hook?).and_return(true)
             end
 
             it 'ignores test steps not defined by gherkin steps' do
               event_bus.send(:test_step_finished, test_step, passed_result)
 
-              expect( @summary.test_steps.total ).to eq(0)
+              expect(@summary.test_steps.total).to eq(0)
             end
           end
         end
@@ -146,35 +146,35 @@ module Cucumber
           it 'passed test case is ok' do
             event_bus.send(:test_case_finished, test_case, passed_result)
 
-            expect( @summary.ok? ).to eq true
+            expect(@summary.ok?).to eq true
           end
 
           it 'skipped test case is ok' do
             event_bus.send(:test_case_finished, test_case, skipped_result)
 
-            expect( @summary.ok? ).to eq true
+            expect(@summary.ok?).to eq true
           end
 
           it 'failed test case is not ok' do
             event_bus.send(:test_case_finished, test_case, failed_result)
 
-            expect( @summary.ok? ).to eq false
+            expect(@summary.ok?).to eq false
           end
 
           it 'pending test case is ok if not strict' do
             event_bus.send(:test_case_finished, test_case, pending_result)
 
-            expect( @summary.ok? ).to eq true
+            expect(@summary.ok?).to eq true
             be_strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
-            expect( @summary.ok?(be_strict) ).to eq false
+            expect(@summary.ok?(be_strict)).to eq false
           end
 
           it 'undefined test case is ok if not strict' do
             event_bus.send(:test_case_finished, test_case, undefined_result)
 
-            expect( @summary.ok? ).to eq true
+            expect(@summary.ok?).to eq true
             be_strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
-            expect( @summary.ok?(be_strict) ).to eq false
+            expect(@summary.ok?(be_strict)).to eq false
           end
         end
       end
