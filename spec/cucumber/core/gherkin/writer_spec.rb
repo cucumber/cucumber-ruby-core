@@ -41,7 +41,7 @@ module Cucumber::Core::Gherkin
               This is the description
               which can span
               multiple lines.
-              END
+            END
           end
           expected = <<-END
           Feature: A Feature
@@ -121,7 +121,7 @@ module Cucumber::Core::Gherkin
                   This is the description
                   which can span
                   multiple lines.
-                  END
+                END
               end
             end
 
