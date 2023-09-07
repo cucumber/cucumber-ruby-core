@@ -71,7 +71,7 @@ module Cucumber
           expect { event_bus.some_unknown_event }.to raise_error(NameError)
         end
 
-        context "#broadcast method" do
+        describe "#broadcast method" do
           it "must be passed an instance of a registered event type" do
             expect {
               event_bus.broadcast Events::UnregisteredEvent
