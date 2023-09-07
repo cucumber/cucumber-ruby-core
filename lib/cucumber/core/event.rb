@@ -5,7 +5,7 @@ module Cucumber
       # attribute readers.
       def self.new(*attributes)
         # Use normal constructor for subclasses of Event
-        return super if self.ancestors.index(Event) > 0
+        return super if ancestors.index(Event) > 0
 
         Class.new(Event) do
           attr_reader(*attributes)
@@ -17,12 +17,12 @@ module Cucumber
           end
 
           define_method(:attributes) do
-            attributes.map { |attribute| self.send(attribute) }
+            attributes.map { |attribute| send(attribute) }
           end
 
           define_method(:to_h) do
             attributes.reduce({}) { |result, attribute|
-              value = self.send(attribute)
+              value = send(attribute)
               result[attribute] = value
               result
             }
@@ -38,7 +38,7 @@ module Cucumber
         # @return [Symbol] the underscored name of the class to be used
         #                  as the key in an event registry.
         def event_id
-          underscore(self.name.split("::").last).to_sym
+          underscore(name.split("::").last).to_sym
         end
 
         private
