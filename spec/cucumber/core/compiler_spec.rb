@@ -102,7 +102,7 @@ module Cucumber::Core
       ]
       compile(gherkin_documents) do |visitor|
         expect( visitor ).to receive(:test_case).once.ordered.and_yield(visitor)
-        expect( visitor ).to receive(:test_step).exactly(2).times.ordered
+        expect( visitor ).to receive(:test_step).twice.ordered
         expect( visitor ).to receive(:done).once.ordered
       end
     end

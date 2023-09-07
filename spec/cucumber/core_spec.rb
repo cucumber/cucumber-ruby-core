@@ -53,7 +53,7 @@ module Cucumber
         visitor = double.as_null_object
         expect( visitor ).to receive(:test_case) do |test_case|
           expect( test_case.name ).to eq 'foo'
-        end.exactly(1).times
+        end.once
 
         gherkin = gherkin do
           feature do

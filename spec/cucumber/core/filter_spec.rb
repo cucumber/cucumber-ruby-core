@@ -32,7 +32,7 @@ module Cucumber::Core
         expect(receiver).to receive(:test_case) { |test_case|
           expect(test_case.test_steps.length).to eq 1
           expect(test_case.test_steps.first.text).to eq 'a step'
-        }.exactly(2).times
+        }.twice
         compile [doc], receiver, [my_filter]
       end
 
@@ -63,7 +63,7 @@ module Cucumber::Core
         it "can override methods from the base class" do
           expect(receiver).to receive(:test_case) { |test_case|
             expect(test_case.test_steps.length).to eq 0
-          }.exactly(2).times
+          }.twice
           run BasicBlankingFilter.new
         end
 
@@ -89,7 +89,7 @@ module Cucumber::Core
         it "allows methods to be overridden" do
           expect(receiver).to receive(:test_case) { |test_case|
             expect(test_case.test_steps.length).to eq 0
-          }.exactly(2).times
+          }.twice
           run BlockBlankingFilter.new
         end
       end
