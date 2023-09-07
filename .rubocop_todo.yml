@@ -324,14 +324,14 @@ RSpec/NotToNot:
   Exclude:
     - 'spec/cucumber/core/test/result_spec.rb'
 
-# Offense count: 36
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: Strict, EnforcedStyle, AllowedExplicitMatchers.
-# SupportedStyles: inflected, explicit
-RSpec/PredicateMatcher:
-  Exclude:
-    - 'spec/cucumber/core/test/case_spec.rb'
-    - 'spec/cucumber/core/test/result_spec.rb'
+## Offense count: 36
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: Strict, EnforcedStyle, AllowedExplicitMatchers.
+## SupportedStyles: inflected, explicit
+#RSpec/PredicateMatcher:
+#  Exclude:
+#    - 'spec/cucumber/core/test/case_spec.rb'
+#    - 'spec/cucumber/core/test/result_spec.rb'
 
 # Offense count: 2
 RSpec/RepeatedDescription:

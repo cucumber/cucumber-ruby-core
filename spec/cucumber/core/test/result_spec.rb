@@ -57,7 +57,7 @@ module Cucumber
           specify { expect(result).not_to be_flaky     }
 
           specify { expect(result).to be_ok }
-          specify { expect(result.ok?).to be_truthy }
+          specify { expect(result).to be_ok }
         end
 
         describe Result::Failed do
@@ -121,7 +121,7 @@ module Cucumber
           specify { expect(result).not_to be_flaky     }
 
           specify { expect(result).to_not be_ok }
-          specify { expect(result.ok?).to be_falsey }
+          specify { expect(result).not_to be_ok }
         end
 
         describe Result::Unknown do
@@ -223,10 +223,10 @@ module Cucumber
           specify { expect(result).not_to be_flaky     }
 
           specify { expect(result).to be_ok }
-          specify { expect(result.ok?).to be_truthy }
+          specify { expect(result).to be_ok }
 
           be_strict = Result::StrictConfiguration.new([:undefined])
-          specify { expect(result.ok?(be_strict)).to be_falsey }
+          specify { expect(result).not_to be_ok(be_strict) }
         end
 
         describe Result::Skipped do
@@ -253,7 +253,7 @@ module Cucumber
           specify { expect(result).not_to be_flaky     }
 
           specify { expect(result).to be_ok }
-          specify { expect(result.ok?).to be_truthy }
+          specify { expect(result).to be_ok }
         end
 
         describe Result::Pending do
@@ -281,15 +281,15 @@ module Cucumber
           specify { expect(result).to     be_pending   }
 
           specify { expect(result).to be_ok }
-          specify { expect(result.ok?).to be_truthy }
+          specify { expect(result).to be_ok }
 
           be_strict = Result::StrictConfiguration.new([:pending])
-          specify { expect(result.ok?(be_strict)).to be_falsey }
+          specify { expect(result).not_to be_ok(be_strict) }
         end
 
         describe Result::Flaky do
-          specify { expect(described_class.ok?(false)).to be_truthy }
-          specify { expect(described_class.ok?(true)).to be_falsey }
+          specify { expect(described_class).to be_ok(false) }
+          specify { expect(described_class).not_to be_ok(true) }
         end
 
         describe Result::StrictConfiguration do
@@ -299,28 +299,28 @@ module Cucumber
             context 'no type argument' do
               it 'sets all result types to the setting argument' do
                 strict_configuration.set_strict(true)
-                expect(strict_configuration.strict?(:undefined)).to be_truthy
-                expect(strict_configuration.strict?(:pending)).to be_truthy
-                expect(strict_configuration.strict?(:flaky)).to be_truthy
+                expect(strict_configuration).to be_strict(:undefined)
+                expect(strict_configuration).to be_strict(:pending)
+                expect(strict_configuration).to be_strict(:flaky)
 
                 strict_configuration.set_strict(false)
-                expect(strict_configuration.strict?(:undefined)).to be_falsey
-                expect(strict_configuration.strict?(:pending)).to be_falsey
-                expect(strict_configuration.strict?(:flaky)).to be_falsey
+                expect(strict_configuration).not_to be_strict(:undefined)
+                expect(strict_configuration).not_to be_strict(:pending)
+                expect(strict_configuration).not_to be_strict(:flaky)
               end
             end
 
             context 'with type argument' do
               it 'sets the specified result type to the setting argument' do
                 strict_configuration.set_strict(true, :undefined)
-                expect(strict_configuration.strict?(:undefined)).to be_truthy
-                expect(strict_configuration.set?(:pending)).to be_falsey
-                expect(strict_configuration.set?(:flaky)).to be_falsey
+                expect(strict_configuration).to be_strict(:undefined)
+                expect(strict_configuration).not_to be_set(:pending)
+                expect(strict_configuration).not_to be_set(:flaky)
 
                 strict_configuration.set_strict(false, :undefined)
-                expect(strict_configuration.strict?(:undefined)).to be_falsey
-                expect(strict_configuration.set?(:pending)).to be_falsey
-                expect(strict_configuration.set?(:flaky)).to be_falsey
+                expect(strict_configuration).not_to be_strict(:undefined)
+                expect(strict_configuration).not_to be_set(:pending)
+                expect(strict_configuration).not_to be_set(:flaky)
               end
             end
           end
@@ -329,10 +329,10 @@ module Cucumber
             context 'no type argument' do
               it 'returns true if any result type is set to strict' do
                 strict_configuration.set_strict(false, :pending)
-                expect(strict_configuration.strict?).to be_falsey
+                expect(strict_configuration).not_to be_strict
 
                 strict_configuration.set_strict(true, :flaky)
-                expect(strict_configuration.strict?).to be_truthy
+                expect(strict_configuration).to be_strict
               end
             end
 
@@ -341,9 +341,9 @@ module Cucumber
                 strict_configuration.set_strict(false, :pending)
                 strict_configuration.set_strict(true, :flaky)
 
-                expect(strict_configuration.strict?(:undefined)).to be_falsey
-                expect(strict_configuration.strict?(:pending)).to be_falsey
-                expect(strict_configuration.strict?(:flaky)).to be_truthy
+                expect(strict_configuration).not_to be_strict(:undefined)
+                expect(strict_configuration).not_to be_strict(:pending)
+                expect(strict_configuration).to be_strict(:flaky)
               end
             end
           end
@@ -359,9 +359,9 @@ module Cucumber
               merged_configuration.set_strict(false, :flaky)
               strict_configuration.merge!(merged_configuration)
 
-              expect(strict_configuration.strict?(:undefined)).to be_falsey
-              expect(strict_configuration.strict?(:pending)).to be_truthy
-              expect(strict_configuration.strict?(:flaky)).to be_falsey
+              expect(strict_configuration).not_to be_strict(:undefined)
+              expect(strict_configuration).to be_strict(:pending)
+              expect(strict_configuration).not_to be_strict(:flaky)
             end
           end
         end

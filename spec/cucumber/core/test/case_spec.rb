@@ -73,15 +73,15 @@ module Cucumber
           let(:tags) { ['@a', '@b', '@c'].map { |value| Tag.new(location, value) } }
 
           it 'matches tags using tag expressions' do
-            expect(test_case.match_tags?(['@a and @b'])).to be_truthy
-            expect(test_case.match_tags?(['@a or @d'])).to be_truthy
-            expect(test_case.match_tags?(['not @d'])).to be_truthy
-            expect(test_case.match_tags?(['@a and @d'])).to be_falsy
+            expect(test_case).to be_match_tags(['@a and @b'])
+            expect(test_case).to be_match_tags(['@a or @d'])
+            expect(test_case).to be_match_tags(['not @d'])
+            expect(test_case).not_to be_match_tags(['@a and @d'])
           end
 
           it 'matches handles multiple expressions' do
-            expect(test_case.match_tags?(['@a and @b', 'not @d'])).to be_truthy
-            expect(test_case.match_tags?(['@a and @b', 'not @c'])).to be_falsy
+            expect(test_case).to be_match_tags(['@a and @b', 'not @d'])
+            expect(test_case).not_to be_match_tags(['@a and @b', 'not @c'])
           end
         end
 
@@ -89,7 +89,7 @@ module Cucumber
           let(:name) { 'scenario' }
 
           it 'matches names against regexp' do
-            expect(test_case.match_name?(/scenario/)).to be_truthy
+            expect(test_case).to be_match_name(/scenario/)
           end
         end
 
