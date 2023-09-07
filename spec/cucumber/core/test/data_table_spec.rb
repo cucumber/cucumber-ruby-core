@@ -9,8 +9,8 @@ module Cucumber
       describe DataTable do
         before do
           @table = described_class.new([
-                                         %w{one four seven},
-                                         %w{4444 55555 666666}
+                                         %w[one four seven],
+                                         %w[4444 55555 666666]
                                        ])
         end
 
@@ -45,7 +45,7 @@ module Cucumber
         end
 
         describe '#map' do
-          let(:table) { described_class.new([%w{foo bar}, %w{1 2}]) }
+          let(:table) { described_class.new([%w[foo bar], %w[1 2]]) }
 
           it 'yields the contents of each cell to the block' do
 
@@ -53,22 +53,22 @@ module Cucumber
           end
 
           it 'returns a new table with the cells modified by the block' do
-            expect(table.map { |cell| "*#{cell}*" }).to eq described_class.new([%w{*foo* *bar*}, %w{*1* *2*}])
+            expect(table.map { |cell| "*#{cell}*" }).to eq described_class.new([%w[*foo* *bar*], %w[*1* *2*]])
           end
         end
 
         describe '#transpose' do
           before(:each) do
             @table = described_class.new([
-                                           %w{one 1111},
-                                           %w{two 22222}
+                                           %w[one 1111],
+                                           %w[two 22222]
                                          ])
           end
 
           it 'should transpose the table' do
             transposed = described_class.new([
-                                               %w{one two},
-                                               %w{1111 22222}
+                                               %w[one two],
+                                               %w[1111 22222]
                                              ])
             expect(@table.transpose).to eq(transposed)
           end

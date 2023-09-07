@@ -500,14 +500,14 @@ Style/ParallelAssignment:
     - 'lib/cucumber/core/gherkin/writer.rb'
     - 'lib/cucumber/core/test/result.rb'
 
-# Offense count: 15
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  Exclude:
-    - 'lib/cucumber/core/gherkin/writer.rb'
-    - 'lib/cucumber/core/test/doc_string.rb'
-    - 'spec/cucumber/core/test/data_table_spec.rb'
+## Offense count: 15
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: PreferredDelimiters.
+#Style/PercentLiteralDelimiters:
+#  Exclude:
+#    - 'lib/cucumber/core/gherkin/writer.rb'
+#    - 'lib/cucumber/core/test/doc_string.rb'
+#    - 'spec/cucumber/core/test/data_table_spec.rb'
 
 # Offense count: 1
 # This cop supports safe auto-correction (--auto-correct).

@@ -67,10 +67,10 @@ module Cucumber
 
         def inspect
           [
-            %{#<#{self.class}},
-            %{  """#{content_type}},
-            %{  #{@content}},
-            %{  """>}
+            %(#<#{self.class}),
+            %(  """#{content_type}),
+            %(  #{@content}),
+            %(  """>)
           ].join("\n")
         end
       end
