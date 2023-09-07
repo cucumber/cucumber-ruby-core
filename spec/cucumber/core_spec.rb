@@ -234,7 +234,7 @@ module Cucumber
 
         event_bus = Core::EventBus.new
         report = Core::Report::Summary.new(event_bus)
-        execute [gherkin], [ Cucumber::Core::Test::TagFilter.new(['@a']) ], event_bus
+        execute [gherkin], [Cucumber::Core::Test::TagFilter.new(['@a'])], event_bus
 
         expect( report.test_cases.total ).to eq 2
       end
@@ -253,7 +253,7 @@ module Cucumber
 
         event_bus = Core::EventBus.new
         report = Core::Report::Summary.new(event_bus)
-        execute [gherkin], [ Cucumber::Core::Test::NameFilter.new([/scenario/]) ], event_bus
+        execute [gherkin], [Cucumber::Core::Test::NameFilter.new([/scenario/])], event_bus
 
         expect( report.test_cases.total ).to eq 1
       end

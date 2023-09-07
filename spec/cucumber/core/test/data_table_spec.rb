@@ -45,7 +45,7 @@ module Cucumber
         end
 
         describe "#map" do
-          let(:table) { DataTable.new([ %w{foo bar}, %w{1 2} ]) }
+          let(:table) { DataTable.new([%w{foo bar}, %w{1 2}]) }
 
           it 'yields the contents of each cell to the block' do
 

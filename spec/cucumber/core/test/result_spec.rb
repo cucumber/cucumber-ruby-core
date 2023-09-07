@@ -289,7 +289,7 @@ module Cucumber::Core::Test
     end
 
     describe Result::StrictConfiguration do
-      subject(:strict_configuration) { Result::StrictConfiguration.new}
+      subject(:strict_configuration) { Result::StrictConfiguration.new }
 
       describe '#set_strict' do
         context 'no type argument' do

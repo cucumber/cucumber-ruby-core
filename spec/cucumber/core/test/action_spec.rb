@@ -95,7 +95,7 @@ module Cucumber
             end
 
             it "records the nanoseconds duration of the execution on the result" do
-              action = Action.new { }
+              action = Action.new {}
               duration = action.execute.duration
               expect( duration ).to be_duration 1
             end

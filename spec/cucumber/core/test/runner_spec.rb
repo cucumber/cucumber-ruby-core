@@ -89,7 +89,7 @@ module Cucumber::Core::Test
 
       context 'with steps' do
         context 'that all pass' do
-          let(:test_steps) { [ passing, passing ]  }
+          let(:test_steps) { [passing, passing]  }
 
           it 'emits the test_case_finished event with a passing result' do
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
@@ -100,7 +100,7 @@ module Cucumber::Core::Test
         end
 
         context 'an undefined step' do
-          let(:test_steps) { [ undefined ]  }
+          let(:test_steps) { [undefined]  }
 
           it 'emits the test_case_finished event with an undefined result' do
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
@@ -130,7 +130,7 @@ module Cucumber::Core::Test
         end
 
         context 'a pending step' do
-          let(:test_steps) { [ pending ] }
+          let(:test_steps) { [pending] }
 
           it 'emits the test_case_finished event with a pending result' do
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
@@ -170,7 +170,7 @@ module Cucumber::Core::Test
         end
 
         context 'that fail' do
-          let(:test_steps) { [ failing ] }
+          let(:test_steps) { [failing] }
 
           it 'emits the test_case_finished event with a failing result' do
             expect(event_bus).to receive(:test_case_finished) do |test_case, result|
@@ -190,7 +190,7 @@ module Cucumber::Core::Test
         end
 
         context 'where the first step fails' do
-          let(:test_steps) { [ failing, passing ] }
+          let(:test_steps) { [failing, passing] }
 
           it 'emits the test_step_finished event with a failed result' do
             expect(event_bus).to receive(:test_step_finished).with(failing, anything) do |test_step, result|
