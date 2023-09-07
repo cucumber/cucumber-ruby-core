@@ -30,7 +30,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
-[12.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
-[11.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...main
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v12.0.0...main
+[12.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v11.1.0...v12.0.0
+[11.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v11.0.0...v11.1.0
 [11.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...v11.0.0
