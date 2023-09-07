@@ -6,6 +6,8 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
+# TODO: [LH] Initial state -> 53 files inspected, 2221 offenses detected, 1663 offenses auto-correctable
+
 # Offense count: 1
 # This cop supports safe auto-correction (--auto-correct).
 # Configuration parameters: TreatCommentsAsGroupSeparators, ConsiderPunctuation, Include.
