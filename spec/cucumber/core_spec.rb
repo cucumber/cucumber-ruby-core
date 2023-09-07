@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'report_api_spy'
 require 'cucumber/core'
 require 'cucumber/core/filter'

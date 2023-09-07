@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class ReportAPISpy
   def initialize
     @result = []

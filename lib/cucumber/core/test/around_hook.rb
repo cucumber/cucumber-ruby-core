@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Cucumber
   module Core
     module Test
@@ -27,6 +28,7 @@ module Cucumber
         end
 
         private
+
         def failed(exception)
           Result::Failed.new(@timer.duration, exception)
         end

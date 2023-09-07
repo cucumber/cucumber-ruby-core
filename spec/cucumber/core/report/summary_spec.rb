@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+
 require 'cucumber/core/event_bus'
 require 'cucumber/core/events'
 require 'cucumber/core/report/summary'

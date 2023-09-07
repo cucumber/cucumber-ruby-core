@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'

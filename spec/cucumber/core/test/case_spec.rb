@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cucumber/core'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'

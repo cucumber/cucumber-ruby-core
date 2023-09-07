@@ -35,7 +35,6 @@ module Cucumber
         end
       end
 
-
       class << self
 
         # @return [Symbol] the underscored name of the class to be used

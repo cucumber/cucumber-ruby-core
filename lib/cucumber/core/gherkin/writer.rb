@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/gherkin/writer/helpers'
 require 'cucumber/core/gherkin/document'
 
@@ -55,6 +56,7 @@ module Cucumber
           end
 
           private
+
           def language
             options[:language]
           end
@@ -86,6 +88,7 @@ module Cucumber
           elements :step
 
           private
+
           def statements
             prepare_statements(
               comments_statement,
@@ -107,6 +110,7 @@ module Cucumber
           elements :example, :scenario
 
           private
+
           def statements
             prepare_statements(
               comments_statement,
@@ -128,6 +132,7 @@ module Cucumber
           elements :step
 
           private
+
           def statements
             prepare_statements(
               comments_statement,
@@ -155,6 +160,7 @@ module Cucumber
           elements :step, :examples
 
           private
+
           def statements
             prepare_statements comments_statement, tag_statement, name_statement, description_statement
           end
@@ -174,6 +180,7 @@ module Cucumber
           end
 
           private
+
           def statements
             prepare_statements comments_statement, name_statement
           end
@@ -195,6 +202,7 @@ module Cucumber
           end
 
           private
+
           def statements
             row_statements
           end
@@ -216,6 +224,7 @@ module Cucumber
           end
 
           private
+
           def statements
             prepare_statements doc_string_statement
           end
@@ -242,6 +251,7 @@ module Cucumber
           end
 
           private
+
           def statements
             prepare_statements(
               NEW_LINE,

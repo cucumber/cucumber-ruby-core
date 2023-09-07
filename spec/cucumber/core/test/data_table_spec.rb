@@ -1,5 +1,6 @@
 # encoding: utf-8
 # frozen_string_literal: true
+
 require 'cucumber/core/test/data_table'
 
 module Cucumber
