@@ -47,7 +47,7 @@ module Cucumber
             other.file == file
           end
 
-          def include?(lines)
+          def include?(_lines)
             true
           end
         end

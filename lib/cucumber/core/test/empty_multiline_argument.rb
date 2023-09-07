@@ -16,7 +16,7 @@ module Cucumber
           false
         end
 
-        def map(&block)
+        def map
           self
         end
 

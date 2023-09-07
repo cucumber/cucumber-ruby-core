@@ -17,7 +17,7 @@ module Cucumber
           true
         end
 
-        def execute(*args, &continue)
+        def execute(*_args, &continue)
           @timer.start
           @block.call(continue)
           Result::Unknown.new # Around hook does not know the result of the inner test steps

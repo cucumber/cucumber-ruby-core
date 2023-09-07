@@ -38,11 +38,11 @@ module Cucumber
         class Unknown
           include Result.query_methods :unknown
 
-          def describe_to(visitor, *args)
+          def describe_to(_visitor, *_args)
             self
           end
 
-          def with_filtered_backtrace(filter)
+          def with_filtered_backtrace(_filter)
             self
           end
 
@@ -58,7 +58,7 @@ module Cucumber
           include Result.query_methods :passed
           attr_accessor :duration
 
-          def self.ok?(be_strict = false)
+          def self.ok?(_be_strict = false)
             true
           end
 
@@ -84,15 +84,15 @@ module Cucumber
             )
           end
 
-          def ok?(be_strict = nil)
+          def ok?(_be_strict = nil)
             self.class.ok?
           end
 
-          def with_appended_backtrace(step)
+          def with_appended_backtrace(_step)
             self
           end
 
-          def with_filtered_backtrace(filter)
+          def with_filtered_backtrace(_filter)
             self
           end
         end
@@ -102,7 +102,7 @@ module Cucumber
 
           attr_reader :duration, :exception
 
-          def self.ok?(be_strict = false)
+          def self.ok?(_be_strict = false)
             false
           end
 
@@ -138,7 +138,7 @@ module Cucumber
             )
           end
 
-          def ok?(be_strict = nil)
+          def ok?(_be_strict = nil)
             self.class.ok?
           end
 
@@ -229,7 +229,7 @@ module Cucumber
         class Skipped < Raisable
           include Result.query_methods :skipped
 
-          def self.ok?(be_strict = false)
+          def self.ok?(_be_strict = false)
             true
           end
 
@@ -343,7 +343,7 @@ module Cucumber
             @durations = []
           end
 
-          def method_missing(name, *args)
+          def method_missing(name, *_args)
             if name =~ /^total_/
               get_total(name)
             else
@@ -419,7 +419,7 @@ module Cucumber
         class UnknownDuration
           include Cucumber::Messages::TimeConversion
 
-          def tap(&block)
+          def tap
             self
           end
 
