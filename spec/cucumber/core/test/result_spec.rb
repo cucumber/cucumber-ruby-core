@@ -222,6 +222,7 @@ module Cucumber::Core::Test
 
       specify { expect( result ).to be_ok }
       specify { expect( result.ok? ).to be_truthy }
+
       be_strict = Result::StrictConfiguration.new([:undefined])
       specify { expect( result.ok?(be_strict) ).to be_falsey }
     end
@@ -279,6 +280,7 @@ module Cucumber::Core::Test
 
       specify { expect( result ).to be_ok }
       specify { expect( result.ok? ).to be_truthy }
+
       be_strict = Result::StrictConfiguration.new([:pending])
       specify { expect( result.ok?(be_strict) ).to be_falsey }
     end
@@ -305,6 +307,7 @@ module Cucumber::Core::Test
             expect( strict_configuration.strict?(:flaky) ).to be_falsey
           end
         end
+
         context 'with type argument' do
           it 'sets the specified result type to the setting argument' do
             strict_configuration.set_strict(true, :undefined)
@@ -330,6 +333,7 @@ module Cucumber::Core::Test
             expect( strict_configuration.strict? ).to be_truthy
           end
         end
+
         context 'with type argument' do
           it 'returns true if the specified result type is set to strict' do
             strict_configuration.set_strict(false, :pending)
@@ -344,6 +348,7 @@ module Cucumber::Core::Test
 
       describe '#merge!' do
         let(:merged_configuration) { Result::StrictConfiguration.new }
+
         it 'sets the not default values from the argument accordingly' do
           strict_configuration.set_strict(false, :undefined)
           strict_configuration.set_strict(false, :pending)

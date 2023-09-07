@@ -60,6 +60,7 @@ module Cucumber::Core::Test
 
     context "reporting the exception that failed a test case" do
       let(:test_steps) { [failing] }
+
       it "sets the exception on the result" do
         allow(event_bus).to receive(:before_test_case)
         expect(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|

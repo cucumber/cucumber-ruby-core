@@ -71,6 +71,7 @@ module Cucumber
 
         describe "matching tags" do
           let(:tags) { ['@a', '@b', '@c'].map { |value| Tag.new(location, value) } }
+
           it "matches tags using tag expressions" do
             expect(test_case.match_tags?(['@a and @b'])).to be_truthy
             expect(test_case.match_tags?(['@a or @d'])).to be_truthy
@@ -86,6 +87,7 @@ module Cucumber
 
         describe "matching names" do
           let(:name) { 'scenario' }
+
           it "matches names against regexp" do
             expect(test_case.match_name?(/scenario/)).to be_truthy
           end
@@ -93,6 +95,7 @@ module Cucumber
 
         describe "#language" do
           let(:language) { 'en-pirate' }
+
           it "the language is passed when creating the test case" do
             expect(test_case.language).to eq 'en-pirate'
           end

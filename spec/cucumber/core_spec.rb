@@ -28,6 +28,7 @@ module Cucumber
                       scenario do
                         step 'text'
                       end
+
                       scenario do
                         step 'text'
                         step 'text'
@@ -245,6 +246,7 @@ module Cucumber
             scenario 'first scenario' do
               step 'missing'
             end
+
             scenario 'second' do
               step 'missing'
             end
