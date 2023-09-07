@@ -205,9 +205,9 @@ module Cucumber
           expect( report.test_cases.total_failed ).to eq 0
           expect( logger ).to eq [
             :before_all,
-              :step,
+            :step,
             :middle,
-              :step,
+            :step,
             :after_all
           ]
         end
