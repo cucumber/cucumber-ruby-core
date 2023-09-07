@@ -12,7 +12,7 @@ module Cucumber
     end
 
     describe EventBus do
-      let(:event_bus) { EventBus.new(registry) }
+      let(:event_bus) { described_class.new(registry) }
       let(:registry) { { test_event: Events::TestEvent, another_test_event: Events::AnotherTestEvent } }
 
       context 'broadcasting events' do

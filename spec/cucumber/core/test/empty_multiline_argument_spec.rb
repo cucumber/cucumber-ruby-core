@@ -9,7 +9,7 @@ module Cucumber
       describe EmptyMultilineArgument do
 
         let(:location) { double }
-        let(:arg) { EmptyMultilineArgument.new }
+        let(:arg) { described_class.new }
 
         describe '#data_table?' do
           it 'returns false' do

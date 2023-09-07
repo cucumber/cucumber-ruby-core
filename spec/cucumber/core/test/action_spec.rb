@@ -10,7 +10,7 @@ module Cucumber
 
         context 'constructed without a block' do
           it 'raises an error' do
-            expect { Action.new }.to raise_error(ArgumentError)
+            expect { described_class.new }.to raise_error(ArgumentError)
           end
         end
 
@@ -20,7 +20,7 @@ module Cucumber
             let(:location) { double }
 
             it 'returns the location passed to the constructor' do
-              action = Action.new(location) {}
+              action = described_class.new(location) {}
               expect(action.location).to be location
             end
           end
@@ -29,7 +29,7 @@ module Cucumber
             let(:block) { proc {} }
 
             it 'returns the location of the block passed to the constructor' do
-              action = Action.new(&block)
+              action = described_class.new(&block)
               expect(action.location).to eq Test::Location.new(*block.source_location)
             end
           end
@@ -39,19 +39,19 @@ module Cucumber
         context 'executing' do
           it 'executes the block passed to the constructor' do
             executed = false
-            action = Action.new { executed = true }
+            action = described_class.new { executed = true }
             action.execute
             expect(executed).to be_truthy
           end
 
           it "returns a passed result if the block doesn't fail" do
-            action = Action.new {}
+            action = described_class.new {}
             expect(action.execute).to be_passed
           end
 
           it 'returns a failed result when the block raises an error' do
             exception = StandardError.new
-            action = Action.new { raise exception }
+            action = described_class.new { raise exception }
             result = action.execute
             expect(result).to be_failed
             expect(result.exception).to eq exception
@@ -60,14 +60,14 @@ module Cucumber
           it 'yields the args passed to #execute to the block' do
             args = [double, double]
             args_spy = nil
-            action = Action.new { |arg1, arg2| args_spy = [arg1, arg2] }
+            action = described_class.new { |arg1, arg2| args_spy = [arg1, arg2] }
             action.execute(*args)
             expect(args_spy).to eq args
           end
 
           it 'returns a pending result if a Result::Pending error is raised' do
             exception = Result::Pending.new('TODO')
-            action = Action.new { raise exception }
+            action = described_class.new { raise exception }
             result = action.execute
             expect(result).to be_pending
             expect(result.message).to eq 'TODO'
@@ -75,7 +75,7 @@ module Cucumber
 
           it 'returns a skipped result if a Result::Skipped error is raised' do
             exception = Result::Skipped.new('Not working right now')
-            action = Action.new { raise exception }
+            action = described_class.new { raise exception }
             result = action.execute
             expect(result).to be_skipped
             expect(result.message).to eq 'Not working right now'
@@ -83,7 +83,7 @@ module Cucumber
 
           it 'returns an undefined result if a Result::Undefined error is raised' do
             exception = Result::Undefined.new('new step')
-            action = Action.new { raise exception }
+            action = described_class.new { raise exception }
             result = action.execute
             expect(result).to be_undefined
             expect(result.message).to eq 'new step'
@@ -95,13 +95,13 @@ module Cucumber
             end
 
             it 'records the nanoseconds duration of the execution on the result' do
-              action = Action.new {}
+              action = described_class.new {}
               duration = action.execute.duration
               expect(duration).to be_duration 1
             end
 
             it 'records the duration of a failed execution' do
-              action = Action.new { raise StandardError }
+              action = described_class.new { raise StandardError }
               duration = action.execute.duration
               expect(duration).to be_duration 1
             end
@@ -112,13 +112,13 @@ module Cucumber
         context 'skipping' do
           it 'does not execute the block' do
             executed = false
-            action = Action.new { executed = true }
+            action = described_class.new { executed = true }
             action.skip
             expect(executed).to be_falsey
           end
 
           it 'returns a skipped result' do
-            action = Action.new {}
+            action = described_class.new {}
             expect(action.skip).to be_skipped
           end
         end
@@ -126,7 +126,7 @@ module Cucumber
 
       describe UndefinedAction do
         let(:location) { double }
-        let(:action) { UndefinedAction.new(location) }
+        let(:action) { described_class.new(location) }
         let(:test_step) { double }
 
         context 'location' do

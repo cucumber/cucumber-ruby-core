@@ -7,7 +7,7 @@ module Cucumber
   module Core
     module Gherkin
       describe Writer do
-        include Writer
+        include described_class
 
         context 'specifying uri' do
           it 'generates a uri by default' do

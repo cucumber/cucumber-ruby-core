@@ -18,7 +18,7 @@ module Cucumber
         let(:location) { double }
         let(:tags) { double }
         let(:language) { double }
-        let(:test_case) { Test::Case.new(id, name, test_steps, location, tags, language) }
+        let(:test_case) { described_class.new(id, name, test_steps, location, tags, language) }
         let(:test_steps) { [double, double] }
 
         context 'describing itself' do
@@ -47,7 +47,7 @@ module Cucumber
             expect(first_hook).to receive(:describe_to).ordered.and_yield
             expect(second_hook).to receive(:describe_to).ordered.and_yield
             around_hooks = [first_hook, second_hook]
-            Test::Case.new(id, name, [], location, tags, language, around_hooks).describe_to(visitor, double)
+            described_class.new(id, name, [], location, tags, language, around_hooks).describe_to(visitor, double)
           end
         end
 

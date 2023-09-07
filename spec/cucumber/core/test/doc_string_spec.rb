@@ -7,10 +7,10 @@ module Cucumber
   module Core
     module Test
       describe DocString do
-        let(:doc_string) { DocString.new(content, content_type) }
+        let(:doc_string) { described_class.new(content, content_type) }
 
         describe '#data_table?' do
-          let(:doc_string) { DocString.new('test', 'text/plain') }
+          let(:doc_string) { described_class.new('test', 'text/plain') }
 
           it 'returns false' do
             expect(doc_string).not_to be_data_table
@@ -18,7 +18,7 @@ module Cucumber
         end
 
         describe '#doc_string' do
-          let(:doc_string) { DocString.new('test', 'text/plain') }
+          let(:doc_string) { described_class.new('test', 'text/plain') }
 
           it 'returns true' do
             expect(doc_string).to be_doc_string
@@ -47,15 +47,15 @@ module Cucumber
           let(:content_type) { 'text/plain' }
 
           it 'is equal to another DocString with the same content and content_type' do
-            expect(doc_string).to eq DocString.new(content, content_type)
+            expect(doc_string).to eq described_class.new(content, content_type)
           end
 
           it 'is not equal to another DocString with different content' do
-            expect(doc_string).not_to eq DocString.new('bar', content_type)
+            expect(doc_string).not_to eq described_class.new('bar', content_type)
           end
 
           it 'is not equal to another DocString with different content_type' do
-            expect(doc_string).not_to eq DocString.new(content, 'text/html')
+            expect(doc_string).not_to eq described_class.new(content, 'text/html')
           end
 
           it 'is equal to a string with the same content' do

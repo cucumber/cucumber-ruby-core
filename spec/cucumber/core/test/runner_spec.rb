@@ -18,7 +18,7 @@ module Cucumber
         let(:language)  { double }
         let(:test_case) { Case.new(test_id, name, test_steps, location, tags, language) }
         let(:text)      { double }
-        let(:runner)    { Runner.new(event_bus) }
+        let(:runner)    { described_class.new(event_bus) }
         let(:event_bus) { double.as_null_object }
         let(:passing)   { Step.new(step_id, text, location, location).with_action {} }
         let(:failing)   { Step.new(step_id, text, location, location).with_action { raise exception } }

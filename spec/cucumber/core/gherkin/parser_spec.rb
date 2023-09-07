@@ -11,7 +11,7 @@ module Cucumber
         let(:receiver)  { double }
         let(:event_bus) { double }
         let(:gherkin_query) { double }
-        let(:parser)    { Parser.new(receiver, event_bus, gherkin_query) }
+        let(:parser)    { described_class.new(receiver, event_bus, gherkin_query) }
         let(:visitor)   { double }
 
         before do

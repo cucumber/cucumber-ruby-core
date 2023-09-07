@@ -19,7 +19,7 @@ module Cucumber
         let(:duration) { double }
         let(:exception) { double }
 
-        before(:each) { @summary = Summary.new(event_bus) }
+        before(:each) { @summary = described_class.new(event_bus) }
 
         context 'test case summary' do
           let(:test_case) { double }

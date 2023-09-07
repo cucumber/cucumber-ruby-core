@@ -28,7 +28,7 @@ module Cucumber
         }
 
         it 'creates a filter class that can pass-through by default' do
-          my_filter_class = Filter.new
+          my_filter_class = described_class.new
           my_filter = my_filter_class.new
           expect(receiver).to receive(:test_case) { |test_case|
             expect(test_case.test_steps.length).to eq 1
@@ -81,7 +81,7 @@ module Cucumber
         end
 
         context 'customizing by using a block' do
-          BlockBlankingFilter = Filter.new do
+          BlockBlankingFilter = described_class.new do
             def test_case(test_case)
               test_case.with_steps([]).describe_to(receiver)
             end

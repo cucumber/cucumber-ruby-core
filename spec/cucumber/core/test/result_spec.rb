@@ -13,7 +13,7 @@ module Cucumber
         let(:args)    { double('args')    }
 
         describe Result::Passed do
-          subject(:result) { Result::Passed.new(duration) }
+          subject(:result) { described_class.new(duration) }
           let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
 
           it 'describes itself to a visitor' do
@@ -36,7 +36,7 @@ module Cucumber
           end
 
           it 'requires the constructor argument' do
-            expect { Result::Passed.new }.to raise_error(ArgumentError)
+            expect { described_class.new }.to raise_error(ArgumentError)
           end
 
           it 'does nothing when appending the backtrace' do
@@ -61,7 +61,7 @@ module Cucumber
         end
 
         describe Result::Failed do
-          subject(:result) { Result::Failed.new(duration, exception) }
+          subject(:result) { described_class.new(duration, exception) }
           let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
           let(:exception)  { StandardError.new('error message') }
 
@@ -82,8 +82,8 @@ module Cucumber
           end
 
           it 'requires both constructor arguments' do
-            expect { Result::Failed.new }.to raise_error(ArgumentError)
-            expect { Result::Failed.new(duration) }.to raise_error(ArgumentError)
+            expect { described_class.new }.to raise_error(ArgumentError)
+            expect { described_class.new(duration) }.to raise_error(ArgumentError)
           end
 
           it 'does nothing if step has no backtrace line' do
@@ -125,7 +125,7 @@ module Cucumber
         end
 
         describe Result::Unknown do
-          subject(:result) { Result::Unknown.new }
+          subject(:result) { described_class.new }
 
           it "doesn't describe itself to a visitor" do
             visitor = double('never receives anything')
@@ -153,7 +153,7 @@ module Cucumber
 
         describe Result::Raisable do
           context 'with or without backtrace' do
-            subject(:result) { Result::Raisable.new }
+            subject(:result) { described_class.new }
 
             it 'does nothing if step has no backtrace line' do
               step = 'does not respond_to?(:backtrace_line)'
@@ -163,7 +163,7 @@ module Cucumber
           end
 
           context 'without backtrace' do
-            subject(:result) { Result::Raisable.new }
+            subject(:result) { described_class.new }
 
             it 'set the backtrace to the backtrace line of the step' do
               step = double
@@ -178,7 +178,7 @@ module Cucumber
           end
 
           context 'with backtrace' do
-            subject(:result) { Result::Raisable.new('message', 0, 'backtrace') }
+            subject(:result) { described_class.new('message', 0, 'backtrace') }
 
             it 'appends the backtrace line of the step' do
               step = double
@@ -200,7 +200,7 @@ module Cucumber
         end
 
         describe Result::Undefined do
-          subject(:result) { Result::Undefined.new }
+          subject(:result) { described_class.new }
 
           it 'describes itself to a visitor' do
             expect(visitor).to receive(:undefined).with(args)
@@ -230,7 +230,7 @@ module Cucumber
         end
 
         describe Result::Skipped do
-          subject(:result) { Result::Skipped.new }
+          subject(:result) { described_class.new }
 
           it 'describes itself to a visitor' do
             expect(visitor).to receive(:skipped).with(args)
@@ -257,7 +257,7 @@ module Cucumber
         end
 
         describe Result::Pending do
-          subject(:result) { Result::Pending.new }
+          subject(:result) { described_class.new }
 
           it 'describes itself to a visitor' do
             expect(visitor).to receive(:pending).with(result, args)
@@ -288,12 +288,12 @@ module Cucumber
         end
 
         describe Result::Flaky do
-          specify { expect(Result::Flaky.ok?(false)).to be_truthy }
-          specify { expect(Result::Flaky.ok?(true)).to be_falsey }
+          specify { expect(described_class.ok?(false)).to be_truthy }
+          specify { expect(described_class.ok?(true)).to be_falsey }
         end
 
         describe Result::StrictConfiguration do
-          subject(:strict_configuration) { Result::StrictConfiguration.new }
+          subject(:strict_configuration) { described_class.new }
 
           describe '#set_strict' do
             context 'no type argument' do
@@ -349,7 +349,7 @@ module Cucumber
           end
 
           describe '#merge!' do
-            let(:merged_configuration) { Result::StrictConfiguration.new }
+            let(:merged_configuration) { described_class.new }
 
             it 'sets the not default values from the argument accordingly' do
               strict_configuration.set_strict(false, :undefined)
@@ -367,7 +367,7 @@ module Cucumber
         end
 
         describe Result::Summary do
-          let(:summary)   { Result::Summary.new }
+          let(:summary)   { described_class.new }
           let(:failed)    { Result::Failed.new(Result::Duration.new(10), exception) }
           let(:passed)    { Result::Passed.new(Result::Duration.new(11)) }
           let(:skipped)   { Result::Skipped.new }
@@ -489,7 +489,7 @@ module Cucumber
         end
 
         describe Result::Duration do
-          subject(:duration) { Result::Duration.new(10) }
+          subject(:duration) { described_class.new(10) }
 
           it '#nanoseconds can be accessed in #tap' do
             expect(duration.tap { |duration| @duration = duration.nanoseconds }).to eq duration
@@ -498,7 +498,7 @@ module Cucumber
         end
 
         describe Result::UnknownDuration do
-          subject(:duration) { Result::UnknownDuration.new }
+          subject(:duration) { described_class.new }
 
           it '#tap does not execute the passed block' do
             expect(duration.tap { raise 'tap executed block' }).to eq duration

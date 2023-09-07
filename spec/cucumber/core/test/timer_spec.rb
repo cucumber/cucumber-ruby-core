@@ -13,7 +13,7 @@ module Cucumber
         end
 
         it 'returns a Result::Duration object' do
-          timer = Timer.new.start
+          timer = described_class.new.start
           expect(timer.duration).to be_duration 1
         end
 

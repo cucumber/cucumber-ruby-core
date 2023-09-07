@@ -34,7 +34,7 @@ module Cucumber
           Test::Location.new('features/test.feature', 6),
           Test::Location.new('features/test.feature', 3)
         ]
-        filter = Test::LocationsFilter.new(locations)
+        filter = described_class.new(locations)
         compile [doc], receiver, [filter]
         expect(receiver.test_case_locations).to eq locations
       end
@@ -43,7 +43,7 @@ module Cucumber
         locations = [
           Test::Location.new('features/test.feature')
         ]
-        filter = Test::LocationsFilter.new(locations)
+        filter = described_class.new(locations)
         compile [doc], receiver, [filter]
         expect(receiver.test_case_locations).to eq [
           Test::Location.new('features/test.feature', 3),
@@ -55,7 +55,7 @@ module Cucumber
         locations = [
           Test::Location.new('features/test.feature', 3)
         ]
-        filter = Test::LocationsFilter.new(locations)
+        filter = described_class.new(locations)
         compile [doc], receiver, [filter]
         expect(receiver.test_case_locations).to eq locations
       end
@@ -111,14 +111,14 @@ module Cucumber
 
           it 'matches the location on a background step to all scenarios' do
             location = Test::Location.new(file, 3)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq test_cases.map(&:location)
           end
 
           it 'matches the precise location of the scenario' do
             location = test_case_named('two').location
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
@@ -126,35 +126,35 @@ module Cucumber
           it 'matches multiple locations' do
             good_location = Test::Location.new(file, 10)
             bad_location = Test::Location.new(file, 7)
-            filter = Test::LocationsFilter.new([good_location, bad_location])
+            filter = described_class.new([good_location, bad_location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
 
           it 'matches a location on the first step of the scenario' do
             location = Test::Location.new(file, 11)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
 
           it 'matches a location on the last step of the scenario' do
             location = Test::Location.new(file, 12)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
 
           it "matches a location on the scenario's tags" do
             location = Test::Location.new(file, 9)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
 
           it 'does not return a matched location on a whitespace line' do
             location = Test::Location.new(file, 13)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq []
           end
@@ -166,21 +166,21 @@ module Cucumber
 
             it 'matches a location at the start the docstring' do
               location = Test::Location.new(file, 17)
-              filter = Test::LocationsFilter.new([location])
+              filter = described_class.new([location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
             end
 
             it 'matches a location in the middle of the docstring' do
               location = Test::Location.new(file, 18)
-              filter = Test::LocationsFilter.new([location])
+              filter = described_class.new([location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
             end
 
             it 'matches a location at the end of the docstring' do
               location = Test::Location.new(file, 19)
-              filter = Test::LocationsFilter.new([location])
+              filter = described_class.new([location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with docstring').location]
             end
@@ -193,21 +193,21 @@ module Cucumber
 
             it 'matches a location at the start of the table' do
               location = Test::Location.new(file, 23)
-              filter = Test::LocationsFilter.new([location])
+              filter = described_class.new([location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
             end
 
             it 'matches a location at the middle of the table' do
               location = Test::Location.new(file, 24)
-              filter = Test::LocationsFilter.new([location])
+              filter = described_class.new([location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
             end
 
             it 'matches a location at the end of the table' do
               location = Test::Location.new(file, 25)
-              filter = Test::LocationsFilter.new([location])
+              filter = described_class.new([location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
             end
@@ -218,7 +218,7 @@ module Cucumber
               location_tc_two = test_case_named('two').location
               location_tc_one = test_case_named('one').location
               location_last_step_tc_two = Test::Location.new(file, 12)
-              filter = Test::LocationsFilter.new([location_tc_two, location_tc_one, location_last_step_tc_two])
+              filter = described_class.new([location_tc_two, location_tc_one, location_last_step_tc_two])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('two').location, location_tc_one = test_case_named('one').location]
             end
@@ -264,35 +264,35 @@ module Cucumber
 
           it 'matches row location to the test case of the row' do
             location = Test::Location.new(file, 19)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq [test_case.location]
           end
 
           it 'matches outline location with the all test cases of all the tables' do
             location = Test::Location.new(file, 8)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
           end
 
           it 'matches a location on a step of the scenario outline with all test cases of all the tables' do
             location = Test::Location.new(file, 10)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
           end
 
           it "matches a location on the scenario outline's tags with all test cases of all the tables" do
             location = Test::Location.new(file, 7)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
           end
 
           it "doesn't match the location of the examples line" do
             location = Test::Location.new(file, 17)
-            filter = Test::LocationsFilter.new([location])
+            filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq []
           end
@@ -330,7 +330,7 @@ module Cucumber
         max_duration_ms = 10_000
         max_duration_ms *= 2.5 if defined?(JRUBY_VERSION)
         it "filters #{num_features * num_scenarios_per_feature} test cases within #{max_duration_ms}ms" do
-          filter = Test::LocationsFilter.new(locations)
+          filter = described_class.new(locations)
           Timeout.timeout(max_duration_ms / 1000.0) do
             compile docs, receiver, [filter]
           end

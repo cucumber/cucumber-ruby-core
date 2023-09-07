@@ -11,7 +11,7 @@ require 'cucumber/core/test/filters/activate_steps_for_self_test'
 
 module Cucumber
   describe Core do
-    include Core
+    include described_class
     include Core::Gherkin::Writer
 
     describe 'compiling features to a test suite' do

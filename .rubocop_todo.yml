@@ -232,12 +232,12 @@ RSpec/ContextWording:
     - 'spec/cucumber/core/test/result_spec.rb'
     - 'spec/cucumber/core/test/runner_spec.rb'
 
-# Offense count: 121
-# This cop supports safe auto-correction (--auto-correct).
-# Configuration parameters: SkipBlocks, EnforcedStyle.
-# SupportedStyles: described_class, explicit
-RSpec/DescribedClass:
-  Enabled: false
+## Offense count: 121
+## This cop supports safe auto-correction (--auto-correct).
+## Configuration parameters: SkipBlocks, EnforcedStyle.
+## SupportedStyles: described_class, explicit
+#RSpec/DescribedClass:
+#  Enabled: false
 
 # Offense count: 60
 # Configuration parameters: CountAsOne.
