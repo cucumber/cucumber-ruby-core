@@ -3,7 +3,6 @@ require "cucumber/core/event_bus"
 module Cucumber
   module Core
     module Events
-
       class TestEvent < Core::Event.new(:some_attribute)
       end
 

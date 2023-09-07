@@ -6,7 +6,6 @@ module Cucumber
   module Core
     module Test
       class NameFilter < Filter.new(:name_regexps)
-
         def test_case(test_case)
           if accept?(test_case)
             test_case.describe_to(receiver)

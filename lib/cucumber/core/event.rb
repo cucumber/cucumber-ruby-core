@@ -1,7 +1,6 @@
 module Cucumber
   module Core
     class Event
-
       # Macro to generate new sub-classes of {Event} with
       # attribute readers.
       def self.new(*attributes)
@@ -36,7 +35,6 @@ module Cucumber
       end
 
       class << self
-
         # @return [Symbol] the underscored name of the class to be used
         #                  as the key in an event registry.
         def event_id
@@ -52,9 +50,7 @@ module Cucumber
           tr("-", "_").
           downcase
         end
-
       end
-
     end
   end
 end

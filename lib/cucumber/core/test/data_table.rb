@@ -110,7 +110,6 @@ module Cucumber
           header = hashes[0].keys.sort
           [header] + hashes.map {|hash| header.map {|key| hash[key]}}
         end
-
       end
     end
   end

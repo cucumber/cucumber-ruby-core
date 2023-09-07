@@ -354,6 +354,5 @@ module Cucumber::Core
     def test_cases
       @test_cases ||= []
     end
-
   end
 end

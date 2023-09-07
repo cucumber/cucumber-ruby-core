@@ -4,7 +4,6 @@ module Cucumber
   module Core
     module Gherkin
       module Writer
-
         module HasOptionsInitializer
           def self.included(base)
             base.extend HasDefaultKeyword
@@ -172,7 +171,6 @@ module Cucumber
           end
         end
       end
-
     end
   end
 end

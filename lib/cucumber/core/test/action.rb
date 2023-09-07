@@ -79,7 +79,6 @@ module Cucumber
           Result::Undefined.new
         end
       end
-
     end
   end
 end

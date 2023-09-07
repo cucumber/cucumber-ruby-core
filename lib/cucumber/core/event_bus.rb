@@ -2,7 +2,6 @@ require 'cucumber/core/events'
 
 module Cucumber
   module Core
-
     # Event Bus
     #
     # Implements an in-process pub-sub event broadcaster allowing multiple observers
@@ -68,6 +67,5 @@ module Cucumber
         raise ArgumentError, "Event ID #{event_id} is not recognised. Try one of these:\n#{event_types.keys.join("\n")}" unless is_registered_id?(event_id)
       end
     end
-
   end
 end

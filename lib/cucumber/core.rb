@@ -10,7 +10,6 @@ require 'gherkin/query'
 
 module Cucumber
   module Core
-
     def execute(gherkin_documents, filters = [], event_bus = EventBus.new)
       yield event_bus if block_given?
       receiver = Test::Runner.new(event_bus)

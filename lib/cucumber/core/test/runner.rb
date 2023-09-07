@@ -151,7 +151,6 @@ module Cucumber
             end
           end
         end
-
       end
     end
   end

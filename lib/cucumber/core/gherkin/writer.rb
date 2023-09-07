@@ -6,7 +6,6 @@ require 'cucumber/core/gherkin/document'
 module Cucumber
   module Core
     module Gherkin
-
       module Writer
         NEW_LINE = ''
         def gherkin(uri = nil, &source)

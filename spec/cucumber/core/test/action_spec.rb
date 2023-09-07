@@ -6,7 +6,6 @@ require 'cucumber/core/test/duration_matcher'
 module Cucumber
   module Core
     module Test
-
       describe Action do
 
         context "constructed without a block" do
@@ -148,7 +147,6 @@ module Cucumber
           end
         end
       end
-
     end
   end
 end
