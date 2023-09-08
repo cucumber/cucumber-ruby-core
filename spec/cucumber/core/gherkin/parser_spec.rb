@@ -25,7 +25,7 @@ module Cucumber
         end
 
         context 'for invalid gherkin' do
-          let(:source) { Gherkin::Document.new(path, "\nnot gherkin\n\nFeature: \n") }
+          let(:source) { Cucumber::Core::Gherkin::Document.new(path, "\nnot gherkin\n\nFeature: \n") }
           let(:path)   { 'path_to/the.feature' }
 
           it 'raises an error' do
