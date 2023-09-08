@@ -20,7 +20,7 @@ module Cucumber
               when /pending/
                 step.with_action { raise Test::Result::Pending }
               when /pass/
-                step.with_action {}
+                step.with_action { :no_op }
               else
                 step
               end
