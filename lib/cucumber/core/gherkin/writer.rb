@@ -230,7 +230,7 @@ module Cucumber
 
           def doc_string_statement
             [
-              %["""#{content_type}],
+              %("""#{content_type}),
               strings,
               '"""'
             ]

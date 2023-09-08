@@ -93,7 +93,7 @@ module Cucumber
 
             def element(name)
               define_method name do |*args, &source|
-                factory_name = String(name).split("_").map(&:capitalize).join
+                factory_name = String(name).split('_').map(&:capitalize).join
                 factory = Writer.const_get(factory_name)
                 factory.new(slurp_comments, *args).tap do |builder|
                   builder.instance_exec(&source) if source

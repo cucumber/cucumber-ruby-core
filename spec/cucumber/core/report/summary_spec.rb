@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# frozen_string_literal: true
 
 require 'cucumber/core/event_bus'
 require 'cucumber/core/events'
@@ -19,162 +20,162 @@ module Cucumber
         let(:duration) { double }
         let(:exception) { double }
 
-        before(:each) { @summary = Summary.new(event_bus) }
+        before(:each) { @summary = described_class.new(event_bus) }
 
-        context "test case summary" do
+        context 'test case summary' do
           let(:test_case) { double }
 
-          it "counts passed test cases" do
+          it 'counts passed test cases' do
             event_bus.send(:test_case_finished, test_case, passed_result)
 
-            expect( @summary.test_cases.total(:passed) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:passed)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
-          it "counts failed test cases" do
+          it 'counts failed test cases' do
             event_bus.send(:test_case_finished, test_case, failed_result)
 
-            expect( @summary.test_cases.total(:failed) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:failed)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
-          it "counts pending test cases" do
+          it 'counts pending test cases' do
             event_bus.send(:test_case_finished, test_case, pending_result)
 
-            expect( @summary.test_cases.total(:pending) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:pending)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
-          it "counts skipped test cases" do
+          it 'counts skipped test cases' do
             event_bus.send(:test_case_finished, test_case, skipped_result)
 
-            expect( @summary.test_cases.total(:skipped) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:skipped)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
-          it "counts undefined test cases" do
+          it 'counts undefined test cases' do
             event_bus.send(:test_case_finished, test_case, undefined_result)
 
-            expect( @summary.test_cases.total(:undefined) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:undefined)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
-          it "handles flaky test cases" do
+          it 'handles flaky test cases' do
             allow(test_case).to receive(:==).and_return(false, true)
             event_bus.send(:test_case_finished, test_case, failed_result)
             event_bus.send(:test_case_finished, test_case, passed_result)
 
-            expect( @summary.test_cases.total(:failed) ).to eq(0)
-            expect( @summary.test_cases.total(:flaky) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:failed)).to eq(0)
+            expect(@summary.test_cases.total(:flaky)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
 
-          it "handless flaky with following skip test cases" do
+          it 'handless flaky with following skip test cases' do
             allow(test_case).to receive(:==).and_return(false, true)
             event_bus.send(:test_case_finished, test_case, failed_result)
             event_bus.send(:test_case_finished, test_case, skipped_result)
 
-            expect( @summary.test_cases.total(:failed) ).to eq(0)
-            expect( @summary.test_cases.total(:skipped) ).to eq(0)
-            expect( @summary.test_cases.total(:flaky) ).to eq(1)
-            expect( @summary.test_cases.total ).to eq(1)
+            expect(@summary.test_cases.total(:failed)).to eq(0)
+            expect(@summary.test_cases.total(:skipped)).to eq(0)
+            expect(@summary.test_cases.total(:flaky)).to eq(1)
+            expect(@summary.test_cases.total).to eq(1)
           end
         end
 
-        context "test step summary" do
-          context "with test steps from gherkin steps" do
+        context 'test step summary' do
+          context 'with test steps from gherkin steps' do
             let(:test_step) { double }
 
             before(:each) do
-              expect( test_step ).to receive(:hook?).and_return(false)
+              expect(test_step).to receive(:hook?).and_return(false)
             end
 
-            it "counts passed test steps" do
+            it 'counts passed test steps' do
               event_bus.send(:test_step_finished, test_step, passed_result)
 
-              expect( @summary.test_steps.total(:passed) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:passed)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
 
-            it "counts failed test cases" do
+            it 'counts failed test cases' do
               event_bus.send(:test_step_finished, test_step, failed_result)
 
-              expect( @summary.test_steps.total(:failed) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:failed)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
 
-            it "counts pending test cases" do
+            it 'counts pending test cases' do
               event_bus.send(:test_step_finished, test_step, pending_result)
 
-              expect( @summary.test_steps.total(:pending) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:pending)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
 
-            it "counts skipped test cases" do
+            it 'counts skipped test cases' do
               event_bus.send(:test_step_finished, test_step, skipped_result)
 
-              expect( @summary.test_steps.total(:skipped) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:skipped)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
 
-            it "counts undefined test cases" do
+            it 'counts undefined test cases' do
               event_bus.send(:test_step_finished, test_step, undefined_result)
 
-              expect( @summary.test_steps.total(:undefined) ).to eq(1)
-              expect( @summary.test_steps.total ).to eq(1)
+              expect(@summary.test_steps.total(:undefined)).to eq(1)
+              expect(@summary.test_steps.total).to eq(1)
             end
           end
 
-          context "with test steps not from gherkin steps" do
+          context 'with test steps not from gherkin steps' do
             let(:test_step) { double }
 
             before(:each) do
-              expect( test_step ).to receive(:hook?).and_return(true)
+              expect(test_step).to receive(:hook?).and_return(true)
             end
 
-            it "ignores test steps not defined by gherkin steps" do
+            it 'ignores test steps not defined by gherkin steps' do
               event_bus.send(:test_step_finished, test_step, passed_result)
 
-              expect( @summary.test_steps.total ).to eq(0)
+              expect(@summary.test_steps.total).to eq(0)
             end
           end
         end
 
-        context "ok? result" do
+        context 'ok? result' do
           let(:test_case) { double }
 
-          it "passed test case is ok" do
+          it 'passed test case is ok' do
             event_bus.send(:test_case_finished, test_case, passed_result)
 
-            expect( @summary.ok? ).to eq true
+            expect(@summary.ok?).to eq true
           end
 
-          it "skipped test case is ok" do
+          it 'skipped test case is ok' do
             event_bus.send(:test_case_finished, test_case, skipped_result)
 
-            expect( @summary.ok? ).to eq true
+            expect(@summary.ok?).to eq true
           end
 
-          it "failed test case is not ok" do
+          it 'failed test case is not ok' do
             event_bus.send(:test_case_finished, test_case, failed_result)
 
-            expect( @summary.ok? ).to eq false
+            expect(@summary.ok?).to eq false
           end
 
-          it "pending test case is ok if not strict" do
+          it 'pending test case is ok if not strict' do
             event_bus.send(:test_case_finished, test_case, pending_result)
 
-            expect( @summary.ok? ).to eq true
+            expect(@summary.ok?).to eq true
             be_strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
-            expect( @summary.ok?(be_strict) ).to eq false
+            expect(@summary.ok?(be_strict)).to eq false
           end
 
-          it "undefined test case is ok if not strict" do
+          it 'undefined test case is ok if not strict' do
             event_bus.send(:test_case_finished, test_case, undefined_result)
 
-            expect( @summary.ok? ).to eq true
+            expect(@summary.ok?).to eq true
             be_strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
-            expect( @summary.ok?(be_strict) ).to eq false
+            expect(@summary.ok?(be_strict)).to eq false
           end
         end
       end

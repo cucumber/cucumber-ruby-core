@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cucumber/core/events'
 
 module Cucumber
@@ -62,8 +64,8 @@ module Cucumber
       end
 
       def validate_handler_and_event_id!(handler, event_id)
-        raise ArgumentError, "Please pass either an object or a handler block" unless handler
-        raise ArgumentError, "Please use a symbol for the event_id" unless event_id.is_a?(Symbol)
+        raise ArgumentError, 'Please pass either an object or a handler block' unless handler
+        raise ArgumentError, 'Please use a symbol for the event_id' unless event_id.is_a?(Symbol)
         raise ArgumentError, "Event ID #{event_id} is not recognised. Try one of these:\n#{event_types.keys.join("\n")}" unless is_registered_id?(event_id)
       end
     end

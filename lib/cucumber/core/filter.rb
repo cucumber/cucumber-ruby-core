@@ -69,7 +69,6 @@ module Cucumber
             args[-1] = new_receiver
             self.class.new(*args)
           end
-
         end
 
         if block

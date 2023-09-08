@@ -7,20 +7,20 @@ module Cucumber
   module Core
     module Test
       describe DocString do
-        let(:doc_string) { DocString.new(content, content_type) }
+        let(:doc_string) { described_class.new(content, content_type) }
 
-        describe "#data_table?" do
-          let(:doc_string) { DocString.new("test", "text/plain" ) }
+        describe '#data_table?' do
+          let(:doc_string) { described_class.new('test', 'text/plain') }
 
-          it "returns false" do
+          it 'returns false' do
             expect(doc_string).not_to be_data_table
           end
         end
 
-        describe "#doc_string" do
-          let(:doc_string) { DocString.new("test", "text/plain" ) }
+        describe '#doc_string' do
+          let(:doc_string) { described_class.new('test', 'text/plain') }
 
-          it "returns true" do
+          it 'returns true' do
             expect(doc_string).to be_doc_string
           end
         end
@@ -34,7 +34,7 @@ module Cucumber
           end
 
           it 'returns a new docstring with new content' do
-            expect( doc_string.map { 'foo' }.content ).to eq 'foo'
+            expect(doc_string.map { 'foo' }.content).to eq 'foo'
           end
 
           it 'raises an error if no block is given' do
@@ -47,23 +47,23 @@ module Cucumber
           let(:content_type) { 'text/plain' }
 
           it 'is equal to another DocString with the same content and content_type' do
-            expect( doc_string ).to eq DocString.new(content, content_type)
+            expect(doc_string).to eq described_class.new(content, content_type)
           end
 
           it 'is not equal to another DocString with different content' do
-            expect( doc_string ).not_to eq DocString.new('bar', content_type)
+            expect(doc_string).not_to eq described_class.new('bar', content_type)
           end
 
           it 'is not equal to another DocString with different content_type' do
-            expect( doc_string ).not_to eq DocString.new(content, 'text/html')
+            expect(doc_string).not_to eq described_class.new(content, 'text/html')
           end
 
           it 'is equal to a string with the same content' do
-            expect( doc_string ).to eq 'foo'
+            expect(doc_string).to eq 'foo'
           end
 
           it 'returns false when compared with something odd' do
-            expect( doc_string ).not_to eq 5
+            expect(doc_string).not_to eq 5
           end
         end
 
@@ -73,19 +73,19 @@ module Cucumber
 
           it 'delegates #encoding to the content string' do
             content.force_encoding('us-ascii')
-            expect( doc_string.encoding ).to eq Encoding.find('US-ASCII')
+            expect(doc_string.encoding).to eq Encoding.find('US-ASCII')
           end
 
           it 'allows implicit conversion to a String' do
-            expect( 'expected content' ).to include(doc_string)
+            expect('expected content').to include(doc_string)
           end
 
           it 'allows explicit conversion to a String' do
-            expect( doc_string.to_s ).to eq 'content'
+            expect(doc_string.to_s).to eq 'content'
           end
 
           it 'delegates #gsub to the content string' do
-            expect( doc_string.gsub('n', '_') ).to eq 'co_te_t'
+            expect(doc_string.gsub('n', '_')).to eq 'co_te_t'
           end
 
           it 'delegates #split to the content string' do
@@ -94,11 +94,11 @@ module Cucumber
         end
       end
 
-      context "inspect" do
+      context 'inspect' do
         let(:content_type) { 'text/plain' }
 
-        it "provides a useful inspect method" do
-          doc_string = DocString.new("some text", content_type)
+        it 'provides a useful inspect method' do
+          doc_string = DocString.new('some text', content_type)
           expect(doc_string.inspect).to eq <<-END.chomp.unindent
           #<Cucumber::Core::Test::DocString
             """text/plain

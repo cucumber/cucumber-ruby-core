@@ -97,7 +97,7 @@ module Cucumber
         def verify_rows_are_same_length(raw)
           raw.transpose
         rescue IndexError
-          raise ArgumentError, "Rows must all be the same length"
+          raise ArgumentError, 'Rows must all be the same length'
         end
 
         def ensure_array_of_array(array)

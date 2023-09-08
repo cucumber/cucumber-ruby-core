@@ -10,7 +10,7 @@ module Cucumber
       include Cucumber::Core::Gherkin::Writer
       include Cucumber::Core
 
-      describe ".new" do
+      describe '.new' do
         let(:receiver) { double.as_null_object }
 
         let(:doc) {
@@ -27,8 +27,8 @@ module Cucumber
           end
         }
 
-        it "creates a filter class that can pass-through by default" do
-          my_filter_class = Filter.new
+        it 'creates a filter class that can pass-through by default' do
+          my_filter_class = described_class.new
           my_filter = my_filter_class.new
           expect(receiver).to receive(:test_case) { |test_case|
             expect(test_case.test_steps.length).to eq 1
@@ -37,8 +37,7 @@ module Cucumber
           compile [doc], receiver, [my_filter]
         end
 
-        context "customizing by subclassing" do
-
+        context 'customizing by subclassing' do
           # Each filter imlicitly gets a :receiver attribute
           # that you need to call with the new test case
           # once you've received yours and modified it.
@@ -61,14 +60,14 @@ module Cucumber
             end
           end
 
-          it "can override methods from the base class" do
+          it 'can override methods from the base class' do
             expect(receiver).to receive(:test_case) { |test_case|
               expect(test_case.test_steps.length).to eq 0
             }.twice
             run BasicBlankingFilter.new
           end
 
-          it "can take arguments" do
+          it 'can take arguments' do
             expect(receiver).to receive(:test_case) { |test_case|
               expect(test_case.test_steps.length).to eq 0
             }.once.ordered
@@ -77,17 +76,16 @@ module Cucumber
             }.once.ordered
             run NamedBlankingFilter.new(/x/)
           end
-
         end
 
-        context "customizing by using a block" do
-          BlockBlankingFilter = Filter.new do
+        context 'customizing by using a block' do
+          BlockBlankingFilter = described_class.new do
             def test_case(test_case)
               test_case.with_steps([]).describe_to(receiver)
             end
           end
 
-          it "allows methods to be overridden" do
+          it 'allows methods to be overridden' do
             expect(receiver).to receive(:test_case) { |test_case|
               expect(test_case.test_steps.length).to eq 0
             }.twice

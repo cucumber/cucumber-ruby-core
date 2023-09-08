@@ -111,7 +111,7 @@ module Cucumber
               end
 
               def result
-                raise NoMethodError, "Override me"
+                raise NoMethodError, 'Override me'
               end
             end
 
