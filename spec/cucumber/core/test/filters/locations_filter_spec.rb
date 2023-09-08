@@ -73,7 +73,7 @@ module Cucumber
 
         context 'for a scenario' do
           let(:doc) do
-            Gherkin::Document.new(file, <<-END)
+            Gherkin::Document.new(file, <<-FEATURE)
             Feature:
               Background:
                 Given background
@@ -102,7 +102,7 @@ module Cucumber
                   | 1 | 2 |
                   | 3 | 4 |
 
-            END
+            FEATURE
           end
 
           def test_case_named(name)
@@ -225,13 +225,13 @@ module Cucumber
 
         context 'for a scenario outline' do
           let(:doc) do
-            Gherkin::Document.new(file, <<-END)
+            Gherkin::Document.new(file, <<-FEATURE)
             Feature:
 
               Scenario: one
                 Given one a
 
-              # comment on line 6
+              # comment on line 6
               @tags-on-line-7
               Scenario Outline: two <arg>
                 Given two a
@@ -240,7 +240,7 @@ module Cucumber
                   docstring
                   """
 
-                # comment on line 15
+                # comment on line 15
                 @tags-on-line-16
                 Examples: x1
                   | arg |
@@ -253,7 +253,7 @@ module Cucumber
 
               Scenario: three
                 Given three b
-            END
+            FEATURE
           end
 
           let(:test_case) { test_cases.find { |c| c.name == 'two b' } }

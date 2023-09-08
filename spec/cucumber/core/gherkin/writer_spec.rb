@@ -36,18 +36,18 @@ describe Cucumber::Core::Gherkin::Writer do
     context 'when a description is provided' do
       it 'includes the description in the feature statement' do
         source = gherkin do
-          feature 'A Feature', description: <<-END
+          feature 'A Feature', description: <<-FEATURE
         This is the description
         which can span
         multiple lines.
-          END
+          FEATURE
         end
-        expected = <<-END
+        expected = <<-FEATURE
     Feature: A Feature
       This is the description
       which can span
       multiple lines.
-        END
+        FEATURE
 
         expect(source).to eq expected.unindent
       end
@@ -103,12 +103,12 @@ describe Cucumber::Core::Gherkin::Writer do
               scenario
             end
           end
-          expect(source.to_s).to eq <<-END.unindent
+          expect(source.to_s).to eq <<-FEATURE.unindent
       Feature:
 
         # wow
         Scenario:
-          END
+          FEATURE
         end
       end
 
@@ -116,22 +116,22 @@ describe Cucumber::Core::Gherkin::Writer do
         it 'includes the description in the scenario statement' do
           source = gherkin do
             feature do
-              scenario description: <<-END
+              scenario description: <<-SCENARIO
             This is the description
             which can span
             multiple lines.
-              END
+              SCENARIO
             end
           end
 
-          expect(source).to eq <<-END.unindent
+          expect(source).to eq <<-FEATURE.unindent
       Feature:
 
         Scenario:
           This is the description
           which can span
           multiple lines.
-          END
+          FEATURE
         end
       end
 
@@ -160,7 +160,7 @@ describe Cucumber::Core::Gherkin::Writer do
               end
             end
 
-            expect(source).to eq <<-END.unindent
+            expect(source).to eq <<-FEATURE.unindent
         Feature:
 
           Scenario:
@@ -168,7 +168,7 @@ describe Cucumber::Core::Gherkin::Writer do
               """text/plain
               some text
               """
-            END
+            FEATURE
           end
         end
       end
@@ -182,13 +182,13 @@ describe Cucumber::Core::Gherkin::Writer do
           end
         end
 
-        expect(source).to eq <<-END.unindent
+        expect(source).to eq <<-FEATURE.unindent
     Feature:
 
       Background:
         One line,
         and two..
-        END
+        FEATURE
       end
     end
 
@@ -200,12 +200,12 @@ describe Cucumber::Core::Gherkin::Writer do
           end
         end
 
-        expect(source).to eq <<-END.unindent
+        expect(source).to eq <<-FEATURE.unindent
     Feature:
 
       Scenario Outline:
         Doesn't need to be multi-line.
-        END
+        FEATURE
       end
 
       context 'and examples table' do
@@ -218,14 +218,14 @@ describe Cucumber::Core::Gherkin::Writer do
             end
           end
 
-          expect(source).to eq <<-END.unindent
+          expect(source).to eq <<-FEATURE.unindent
       Feature:
 
         Scenario Outline:
 
           Examples:
             Doesn't need to be multi-line.
-          END
+          FEATURE
         end
       end
     end
@@ -249,10 +249,10 @@ describe Cucumber::Core::Gherkin::Writer do
           comment 'and here'
           step 'passing'
           step 'failing', keyword: 'When' do
-            doc_string <<-END
+            doc_string <<-DOC_STRING
         I wish I was a little bit taller.
         I wish I was a baller.
-            END
+            DOC_STRING
           end
         end
 
@@ -281,7 +281,7 @@ describe Cucumber::Core::Gherkin::Writer do
       end
     end
 
-    expect(source.to_s).to eq <<-END.unindent
+    expect(source.to_s).to eq <<-FEATURE.unindent
 # language: en
 # wow
 @always
@@ -321,6 +321,6 @@ Feature: Fully featured
       | start | eat | left |
       | 12    | 5   | 7    |
       | 20    | 5   | 15   |
-    END
+    FEATURE
   end
 end
