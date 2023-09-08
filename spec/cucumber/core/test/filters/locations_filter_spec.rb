@@ -187,27 +187,25 @@ module Cucumber
           end
 
           context 'with a table' do
-            let(:test_case) do
-              test_cases.find { |c| c.name == 'with a table' }
-            end
+            let(:test_case) { test_cases.find { |c| c.name == 'with a table' } }
+            let(:starting_location) { Test::Location.new(file, 23) }
+            let(:midpoint_location) { Test::Location.new(file, 24) }
+            let(:ending_location) { Test::Location.new(file, 25) }
 
             it 'matches a location at the start of the table' do
-              location = Test::Location.new(file, 23)
-              filter = described_class.new([location])
+              filter = described_class.new([starting_location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
             end
 
             it 'matches a location at the middle of the table' do
-              location = Test::Location.new(file, 24)
-              filter = described_class.new([location])
+              filter = described_class.new([midpoint_location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
             end
 
             it 'matches a location at the end of the table' do
-              location = Test::Location.new(file, 25)
-              filter = described_class.new([location])
+              filter = described_class.new([ending_location])
               compile [doc], receiver, [filter]
               expect(receiver.test_case_locations).to eq [test_case_named('with a table').location]
             end
@@ -220,7 +218,7 @@ module Cucumber
               location_last_step_tc_two = Test::Location.new(file, 12)
               filter = described_class.new([location_tc_two, location_tc_one, location_last_step_tc_two])
               compile [doc], receiver, [filter]
-              expect(receiver.test_case_locations).to eq [test_case_named('two').location, location_tc_one = test_case_named('one').location]
+              expect(receiver.test_case_locations).to eq [test_case_named('two').location, test_case_named('one').location]
             end
           end
         end
@@ -258,34 +256,33 @@ module Cucumber
             END
           end
 
-          let(:test_case) do
-            test_cases.find { |c| c.name == 'two b' }
-          end
+          let(:test_case) { test_cases.find { |c| c.name == 'two b' } }
+          let(:row_location) { Test::Location.new(file, 19) }
+          let(:start_of_outline_location) { Test::Location.new(file, 8) }
+          let(:middle_of_outline_location) { Test::Location.new(file, 10) }
+          let(:outline_tags_location) { Test::Location.new(file, 7) }
 
           it 'matches row location to the test case of the row' do
-            location = Test::Location.new(file, 19)
-            filter = described_class.new([location])
+            filter = described_class.new([row_location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq [test_case.location]
           end
 
           it 'matches outline location with the all test cases of all the tables' do
-            location = Test::Location.new(file, 8)
-            filter = described_class.new([location])
+            filter = described_class.new([start_of_outline_location])
             compile [doc], receiver, [filter]
-            expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
+            expect(receiver.test_case_locations.map(&:line)).to eq([19, 23, 24])
           end
 
           it 'matches a location on a step of the scenario outline with all test cases of all the tables' do
-            location = Test::Location.new(file, 10)
-            filter = described_class.new([location])
+            filter = described_class.new([middle_of_outline_location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
           end
 
           it "matches a location on the scenario outline's tags with all test cases of all the tables" do
             location = Test::Location.new(file, 7)
-            filter = described_class.new([location])
+            filter = described_class.new([outline_tags_location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations.map(&:line)).to eq [19, 23, 24]
           end
