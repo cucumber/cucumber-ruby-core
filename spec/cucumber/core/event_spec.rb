@@ -14,14 +14,14 @@ describe Cucumber::Core::Event do
       my_event_type = described_class.new(:foo, :bar)
       my_event = my_event_type.new(1, 2)
       expect(my_event.attributes).to eq [1, 2]
-      expect(my_event.foo).to eq 1
-      expect(my_event.bar).to eq 2
+      expect(my_event.foo).to eq(1)
+      expect(my_event.bar).to eq(2)
     end
   end
 
   describe 'a generated event' do
     let(:my_event_type) do
-      Class.new(Event.new(:foo, :bar))
+      Class.new(described_class.new(:foo, :bar))
     end
 
     it 'can be converted to a hash' do
