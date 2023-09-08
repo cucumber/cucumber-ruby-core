@@ -41,7 +41,7 @@ describe Cucumber::Core::Filter do
         # that you need to call with the new test case
         # once you've received yours and modified it.
 
-        Class.new(Filter.new) do
+        Class.new(described_class.new) do
           def test_case(test_case)
             test_case.with_steps([]).describe_to(receiver)
           end
@@ -52,7 +52,7 @@ describe Cucumber::Core::Filter do
         # You can pass the names of attributes when building a
         # filter, allowing you to have custom attributes.
 
-        Class.new(Filter.new(:name_pattern)) do
+        Class.new(described_class.new(:name_pattern)) do
           def test_case(test_case)
             if test_case.name =~ name_pattern
               test_case.with_steps([]).describe_to(receiver)
