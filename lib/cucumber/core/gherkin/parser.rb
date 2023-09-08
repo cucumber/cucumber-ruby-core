@@ -18,19 +18,8 @@ module Cucumber
         end
 
         def document(document)
-          messages = ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
-          messages.each do |message|
-            event_bus.envelope(message)
-            gherkin_query.update(message)
-            if !message.gherkin_document.nil?
-              event_bus.gherkin_source_parsed(message.gherkin_document)
-            elsif !message.pickle.nil?
-              receiver.pickle(message.pickle)
-            elsif message.parse_error
-              raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.parse_error.message}")
-            else
-              raise "Unknown message: #{message.to_hash}"
-            end
+          source_messages(document).each do |message|
+            store_metadata(message)
           end
         end
 
@@ -46,6 +35,27 @@ module Cucumber
         def done
           receiver.done
           self
+        end
+
+        private
+
+        def source_messages(document)
+          ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
+        end
+
+        def store_metadata(message)
+          event_bus.envelope(message)
+          gherkin_query.update(message)
+
+          if !message.gherkin_document.nil?
+            event_bus.gherkin_source_parsed(message.gherkin_document)
+          elsif !message.pickle.nil?
+            receiver.pickle(message.pickle)
+          elsif message.parse_error
+            raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.parse_error.message}")
+          else
+            raise "Unknown message: #{message.to_hash}"
+          end
         end
       end
     end
