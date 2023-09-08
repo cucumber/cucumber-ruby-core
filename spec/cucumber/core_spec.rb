@@ -7,11 +7,12 @@ require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
 require 'cucumber/core/report/summary'
 require 'cucumber/core/test/around_hook'
+require 'cucumber/core/test/filters'
 require 'cucumber/core/test/filters/activate_steps_for_self_test'
 
 describe Cucumber::Core do
   include described_class
-  include Core::Gherkin::Writer
+  include Cucumber::Core::Gherkin::Writer
 
   describe 'compiling features to a test suite' do
     it 'compiles two scenarios into two test cases' do
@@ -78,6 +79,9 @@ describe Cucumber::Core do
   end
 
   describe 'executing a test suite' do
+    let(:event_bus) { Cucumber::Core::EventBus.new }
+    let(:report) { Cucumber::Core::Report::Summary.new(event_bus) }
+
     it 'fires events' do
       gherkin = gherkin do
         feature 'Feature name' do
@@ -95,7 +99,7 @@ describe Cucumber::Core do
       end
 
       observed_events = []
-      execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
+      execute [gherkin], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
         event_bus.on(:test_case_started) do |event|
           test_case = event.test_case
           observed_events << [:test_case_started, test_case.name]
@@ -149,9 +153,7 @@ describe Cucumber::Core do
           end
         end
 
-        event_bus = Core::EventBus.new
-        report = Core::Report::Summary.new(event_bus)
-        execute [gherkin], [Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus
+        execute [gherkin], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus
 
         expect(report.test_cases.total).to eq 2
         expect(report.test_cases.total_passed).to eq 1
@@ -166,7 +168,7 @@ describe Cucumber::Core do
 
     context 'with around hooks' do
       let(:around_hooks_filter) do
-        Class.new(Core::Filter.new(:logger)) do
+        Class.new(Cucumber::Core::Filter.new(:logger)) do
           def test_case(test_case)
             test_steps = [base_step.with_action { logger << :step }]
             test_case.with_steps(test_steps).with_around_hooks([around_hook]).describe_to(receiver)
@@ -175,7 +177,7 @@ describe Cucumber::Core do
           private
 
           def around_hook
-            Core::Test::AroundHook.new do |run_scenario|
+            Cucumber::Core::Test::AroundHook.new do |run_scenario|
               logger << :before_all
               run_scenario.call
               logger << :middle
@@ -185,7 +187,7 @@ describe Cucumber::Core do
           end
 
           def base_step
-            Core::Test::Step.new('some-random-uid', 'text', nil, nil, nil)
+            Cucumber::Core::Test::Step.new('some-random-uid', 'text', nil, nil, nil)
           end
         end
       end
@@ -200,9 +202,7 @@ describe Cucumber::Core do
         end
         logger = []
 
-        event_bus = Core::EventBus.new
-        report = Core::Report::Summary.new(event_bus)
-        execute [gherkin], [WithAroundHooks.new(logger)], event_bus
+        execute [gherkin], [around_hooks_filter.new(logger)], event_bus
 
         expect(report.test_cases.total).to eq(1)
         expect(report.test_cases.total_passed).to eq(1)
@@ -217,7 +217,6 @@ describe Cucumber::Core do
       end
     end
 
-    require 'cucumber/core/test/filters'
     it 'filters test cases by tag' do
       gherkin = gherkin do
         feature do
@@ -235,8 +234,6 @@ describe Cucumber::Core do
         end
       end
 
-      event_bus = Core::EventBus.new
-      report = Core::Report::Summary.new(event_bus)
       execute [gherkin], [Cucumber::Core::Test::TagFilter.new(['@a'])], event_bus
 
       expect(report.test_cases.total).to eq(2)
@@ -255,8 +252,6 @@ describe Cucumber::Core do
         end
       end
 
-      event_bus = Core::EventBus.new
-      report = Core::Report::Summary.new(event_bus)
       execute [gherkin], [Cucumber::Core::Test::NameFilter.new([/scenario/])], event_bus
 
       expect(report.test_cases.total).to eq(1)
