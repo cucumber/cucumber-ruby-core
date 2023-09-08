@@ -226,11 +226,12 @@ describe Cucumber::Core::Compiler do
 
     if event_bus.nil?
       event_bus = double
-      allow(event_bus).to receive(:envelope).and_return(nil)
-      allow(event_bus).to receive(:gherkin_source_parsed).and_return(nil)
-      allow(event_bus).to receive(:test_case_created).and_return(nil)
-      allow(event_bus).to receive(:test_step_created).and_return(nil)
-      allow(event_bus).to receive(:envelope).and_return(nil)
+      allow(event_bus).to receive_messages(
+        envelope: nil,
+        gherkin_source_parsed: nil,
+        test_case_created: nil,
+        test_step_created: nil
+      )
     end
 
     yield visitor
