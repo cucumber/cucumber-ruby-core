@@ -19,7 +19,7 @@ module Cucumber
 
         def document(document)
           source_messages(document).each do |message|
-            store_metadata(message)
+            store_metadata(message, document)
           end
         end
 
@@ -43,7 +43,7 @@ module Cucumber
           ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
         end
 
-        def store_metadata(message)
+        def store_metadata(message, document)
           event_bus.envelope(message)
           gherkin_query.update(message)
 
@@ -52,7 +52,7 @@ module Cucumber
           elsif !message.pickle.nil?
             receiver.pickle(message.pickle)
           elsif message.parse_error
-            raise Core::Gherkin::ParseError.new("#{document.uri}: #{message.parse_error.message}")
+            raise ParseError.new("#{document.uri}: #{message.parse_error.message}")
           else
             raise "Unknown message: #{message.to_hash}"
           end
