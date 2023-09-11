@@ -125,7 +125,7 @@ module Cucumber
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
                   expect(result.backtrace).to eq(['step line'])
                 end
-                expect(undefined).to receive(:backtrace_line).and_return('step line')
+                allow(undefined).to receive(:backtrace_line).and_return('step line')
 
                 test_case.describe_to runner
               end
@@ -145,7 +145,7 @@ module Cucumber
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
                   expect(result.backtrace.last).to eq('step line')
                 end
-                expect(pending).to receive(:backtrace_line).and_return('step line')
+                allow(pending).to receive(:backtrace_line).and_return('step line')
 
                 test_case.describe_to runner
               end
@@ -165,7 +165,7 @@ module Cucumber
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
                   expect(result.backtrace.last).to eq('step line')
                 end
-                expect(skipping).to receive(:backtrace_line).and_return('step line')
+                allow(skipping).to receive(:backtrace_line).and_return('step line')
 
                 test_case.describe_to runner
               end
@@ -185,7 +185,7 @@ module Cucumber
                 expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
                   expect(result.exception.backtrace.last).to eq('step line')
                 end
-                expect(failing).to receive(:backtrace_line).and_return('step line')
+                allow(failing).to receive(:backtrace_line).and_return('step line')
 
                 test_case.describe_to runner
               end
@@ -218,7 +218,8 @@ module Cucumber
 
               it 'skips, rather than executing the second step' do
                 expect(passing).not_to receive(:execute)
-                expect(passing).to receive(:skip).and_return(Result::Skipped.new)
+
+                allow(passing).to receive(:skip).and_return(Result::Skipped.new)
                 test_case.describe_to runner
               end
             end
