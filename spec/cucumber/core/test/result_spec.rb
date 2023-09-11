@@ -46,16 +46,13 @@ module Cucumber
             expect(result.with_filtered_backtrace(double)).to equal result
           end
 
-          it { expect(result.to_sym).to eq :passed }
-
-          it { expect(result).to     be_passed    }
-          it { expect(result).not_to be_failed    }
+          it { expect(result.to_sym).to eq(:passed) }
+          it { expect(result).to be_passed }
+          it { expect(result).not_to be_failed }
           it { expect(result).not_to be_undefined }
-          it { expect(result).not_to be_unknown   }
-          it { expect(result).not_to be_skipped   }
-          it { expect(result).not_to be_flaky     }
-
-          it { expect(result).to be_ok }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
           it { expect(result).to be_ok }
         end
 
@@ -110,16 +107,13 @@ module Cucumber
             expect(result.with_filtered_backtrace(filter_class).exception).to equal filtered_exception
           end
 
-          it { expect(result.to_sym).to eq :failed }
-
-          it { expect(result).not_to be_passed    }
-          it { expect(result).to     be_failed    }
+          it { expect(result.to_sym).to eq(:failed) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).to be_failed }
           it { expect(result).not_to be_undefined }
-          it { expect(result).not_to be_unknown   }
-          it { expect(result).not_to be_skipped   }
-          it { expect(result).not_to be_flaky     }
-
-          it { expect(result).to_not be_ok }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
           it { expect(result).not_to be_ok }
         end
 
@@ -135,14 +129,13 @@ module Cucumber
             expect(result.with_filtered_backtrace(double('filter'))).to eql result
           end
 
-          it { expect(result.to_sym).to eq :unknown }
-
-          it { expect(result).not_to be_passed    }
-          it { expect(result).not_to be_failed    }
+          it { expect(result.to_sym).to eq(:unknown) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
           it { expect(result).not_to be_undefined }
-          it { expect(result).to     be_unknown   }
-          it { expect(result).not_to be_skipped   }
-          it { expect(result).not_to be_flaky     }
+          it { expect(result).to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
 
           it 'converts to a Cucumber::Message::TestResult' do
             message = result.to_message
@@ -212,16 +205,13 @@ module Cucumber
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::UNDEFINED)
           end
 
-          it { expect(result.to_sym).to eq :undefined }
-
-          it { expect(result).not_to be_passed    }
-          it { expect(result).not_to be_failed    }
-          it { expect(result).to     be_undefined }
-          it { expect(result).not_to be_unknown   }
-          it { expect(result).not_to be_skipped   }
-          it { expect(result).not_to be_flaky     }
-
-          it { expect(result).to be_ok }
+          it { expect(result.to_sym).to eq(:undefined) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
+          it { expect(result).to be_undefined }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
           it { expect(result).to be_ok }
 
           be_strict = Result::StrictConfiguration.new([:undefined])
@@ -242,16 +232,13 @@ module Cucumber
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::SKIPPED)
           end
 
-          it { expect(result.to_sym).to eq :skipped }
-
-          it { expect(result).not_to be_passed    }
-          it { expect(result).not_to be_failed    }
+          it { expect(result.to_sym).to eq(:skipped) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
           it { expect(result).not_to be_undefined }
-          it { expect(result).not_to be_unknown   }
-          it { expect(result).to     be_skipped   }
-          it { expect(result).not_to be_flaky     }
-
-          it { expect(result).to be_ok }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).to be_skipped }
+          it { expect(result).not_to be_flaky }
           it { expect(result).to be_ok }
         end
 
@@ -269,17 +256,13 @@ module Cucumber
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::PENDING)
           end
 
-          it { expect(result.to_sym).to eq :pending }
-
-          it { expect(result).not_to be_passed    }
-          it { expect(result).not_to be_failed    }
+          it { expect(result.to_sym).to eq(:pending) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
           it { expect(result).not_to be_undefined }
-          it { expect(result).not_to be_unknown   }
-          it { expect(result).not_to be_skipped   }
-          it { expect(result).not_to be_flaky     }
-          it { expect(result).to     be_pending   }
-
-          it { expect(result).to be_ok }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
           it { expect(result).to be_ok }
 
           be_strict = Result::StrictConfiguration.new([:pending])
