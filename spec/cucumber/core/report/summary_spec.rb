@@ -166,16 +166,16 @@ module Cucumber
             event_bus.send(:test_case_finished, test_case, pending_result)
 
             expect(@summary.ok?).to eq true
-            be_strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
-            expect(@summary.ok?(be_strict)).to eq false
+            strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
+            expect(@summary.ok?(strict)).to eq false
           end
 
           it 'undefined test case is ok if not strict' do
             event_bus.send(:test_case_finished, test_case, undefined_result)
 
             expect(@summary.ok?).to eq true
-            be_strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
-            expect(@summary.ok?(be_strict)).to eq false
+            strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
+            expect(@summary.ok?(strict)).to eq false
           end
         end
       end

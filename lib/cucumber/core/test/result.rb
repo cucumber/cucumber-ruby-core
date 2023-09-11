@@ -11,7 +11,7 @@ module Cucumber
         TYPES = [:failed, :flaky, :skipped, :undefined, :pending, :passed, :unknown].freeze
         STRICT_AFFECTED_TYPES = [:flaky, :undefined, :pending].freeze
 
-        def self.ok?(type, strict: StrictConfiguration.new)
+        def self.ok?(type, strict = StrictConfiguration.new)
           class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)
           const_get(class_name).ok?(strict.strict?(type))
         end
@@ -196,8 +196,8 @@ module Cucumber
             filter.new(dup).exception
           end
 
-          def ok?(be_strict = StrictConfiguration.new)
-            self.class.ok?(be_strict.strict?(to_sym))
+          def ok?(strict = StrictConfiguration.new)
+            self.class.ok?(strict.strict?(to_sym))
           end
         end
 
@@ -354,10 +354,10 @@ module Cucumber
             true
           end
 
-          def ok?(be_strict = StrictConfiguration.new)
+          def ok?(strict = StrictConfiguration.new)
             TYPES.each do |type|
               if get_total(type) > 0
-                return false unless Result.ok?(type, be_strict)
+                return false unless Result.ok?(type, strict)
               end
             end
             true
