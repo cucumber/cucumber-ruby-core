@@ -167,7 +167,7 @@ module Cucumber
 
             expect(@summary.ok?).to eq true
             strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
-            expect(@summary.ok?(strict)).to eq false
+            expect(@summary.ok?(strict: strict)).to eq false
           end
 
           it 'undefined test case is ok if not strict' do
@@ -175,7 +175,7 @@ module Cucumber
 
             expect(@summary.ok?).to eq true
             strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
-            expect(@summary.ok?(strict)).to eq false
+            expect(@summary.ok?(strict: strict)).to eq false
           end
         end
       end

@@ -211,7 +211,7 @@ module Cucumber
           it { expect(result).to be_ok }
 
           strict = Result::StrictConfiguration.new([:undefined])
-          it { expect(result).not_to be_ok(strict) }
+          it { expect(result).not_to be_ok(strict: strict) }
         end
 
         describe Result::Skipped do
@@ -261,8 +261,8 @@ module Cucumber
           it { expect(result).not_to be_flaky }
           it { expect(result).to be_ok }
 
-          be_strict = Result::StrictConfiguration.new([:pending])
-          it { expect(result).not_to be_ok(be_strict) }
+          strict = Result::StrictConfiguration.new([:pending])
+          it { expect(result).not_to be_ok(strict: strict) }
         end
 
         describe Result::Flaky do
@@ -446,22 +446,22 @@ module Cucumber
             it 'pending result is ok if not strict' do
               pending.describe_to summary
               expect(summary.ok?).to be true
-              be_strict = Result::StrictConfiguration.new([:pending])
-              expect(summary.ok?(be_strict)).to be false
+              strict = Result::StrictConfiguration.new([:pending])
+              expect(summary.ok?(strict: strict)).to be false
             end
 
             it 'undefined result is ok if not strict' do
               undefined.describe_to summary
               expect(summary.ok?).to be true
-              be_strict = Result::StrictConfiguration.new([:undefined])
-              expect(summary.ok?(be_strict)).to be false
+              strict = Result::StrictConfiguration.new([:undefined])
+              expect(summary.ok?(strict: strict)).to be false
             end
 
             it 'flaky result is ok if not strict' do
               summary.flaky
               expect(summary.ok?).to be true
-              be_strict = Result::StrictConfiguration.new([:flaky])
-              expect(summary.ok?(be_strict)).to be false
+              strict = Result::StrictConfiguration.new([:flaky])
+              expect(summary.ok?(strict: strict)).to be false
             end
           end
         end

@@ -13,8 +13,8 @@ module Cucumber
           subscribe_to(event_bus)
         end
 
-        def ok?(strict = Test::Result::StrictConfiguration.new)
-          test_cases.ok?(strict)
+        def ok?(strict: Test::Result::StrictConfiguration.new)
+          test_cases.ok?(strict: strict)
         end
 
         private
