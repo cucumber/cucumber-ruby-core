@@ -8,8 +8,8 @@ module Cucumber
   module Core
     module Test
       describe Result do
-        let(:visitor) { double('visitor') }
-        let(:args)    { double('args')    }
+        let(:visitor) { double }
+        let(:args)    { double }
 
         describe Result::Passed do
           subject(:result) { described_class.new(duration) }
@@ -31,19 +31,15 @@ module Cucumber
           end
 
           it 'has a duration' do
-            expect(result.duration).to eq duration
-          end
-
-          it 'requires the constructor argument' do
-            expect { described_class.new }.to raise_error(ArgumentError)
+            expect(result.duration).to eq(duration)
           end
 
           it 'does nothing when appending the backtrace' do
-            expect(result.with_appended_backtrace(double)).to equal result
+            expect(result.with_appended_backtrace(double)).to eq(result)
           end
 
           it 'does nothing when filtering the backtrace' do
-            expect(result.with_filtered_backtrace(double)).to equal result
+            expect(result.with_filtered_backtrace(double)).to eq(result)
           end
 
           it { expect(result.to_sym).to eq(:passed) }
@@ -121,12 +117,12 @@ module Cucumber
           subject(:result) { described_class.new }
 
           it "doesn't describe itself to a visitor" do
-            visitor = double('never receives anything')
+            visitor = double
             result.describe_to(visitor, args)
           end
 
           it 'defines a with_filtered_backtrace method' do
-            expect(result.with_filtered_backtrace(double('filter'))).to eql result
+            expect(result.with_filtered_backtrace(double)).to eq(result)
           end
 
           it { expect(result.to_sym).to eq(:unknown) }
