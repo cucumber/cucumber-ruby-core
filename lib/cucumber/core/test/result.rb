@@ -351,6 +351,10 @@ module Cucumber
             end
           end
 
+          def respond_to_missing?(*)
+            true
+          end
+
           def ok?(be_strict = StrictConfiguration.new)
             TYPES.each do |type|
               if get_total(type) > 0
