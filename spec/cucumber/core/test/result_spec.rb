@@ -210,8 +210,8 @@ module Cucumber
           it { expect(result).not_to be_flaky }
           it { expect(result).to be_ok }
 
-          be_strict = Result::StrictConfiguration.new([:undefined])
-          it { expect(result).not_to be_ok(be_strict) }
+          strict = Result::StrictConfiguration.new([:undefined])
+          it { expect(result).not_to be_ok(strict) }
         end
 
         describe Result::Skipped do
@@ -266,8 +266,8 @@ module Cucumber
         end
 
         describe Result::Flaky do
-          it { expect(described_class).to be_ok(false) }
-          it { expect(described_class).not_to be_ok(true) }
+          it { expect(described_class).to be_ok(strict: false) }
+          it { expect(described_class).not_to be_ok(strict: true) }
         end
 
         describe Result::StrictConfiguration do
