@@ -43,7 +43,7 @@ module Cucumber
           ::Gherkin.from_source(document.uri, document.body, gherkin_options(document))
         end
 
-        def store_metadata(message, document)
+        def process(message, document)
           event_bus.envelope(message)
           gherkin_query.update(message)
 
