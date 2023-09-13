@@ -31,7 +31,7 @@ module Cucumber
 
       # Broadcast an event
       def broadcast(event)
-        raise ArgumentError, "Event type #{event.class} is not registered. Try one of these:\n#{event_types.values.join("\n")}" unless is_registered_type?(event.class)
+        raise ArgumentError, "Event type #{event.class} is not registered. Try one of these:\n#{event_types.values.join("\n")}" unless registered_type?(event.class)
         handlers_for(event.class).each { |handler| handler.call(event) }
         @event_queue << event
       end
@@ -59,18 +59,18 @@ module Cucumber
         @handlers[event_class.to_s] ||= []
       end
 
-      def is_registered_id?(event_id)
-        event_types.keys.include?(event_id)
+      def registered_type?(event_type)
+        event_types.values.include?(event_type)
       end
 
-      def is_registered_type?(event_type)
-        event_types.values.include?(event_type)
+      def registered_id?(event_id)
+        event_types.keys.include?(event_id)
       end
 
       def validate_handler_and_event_id!(handler, event_id)
         raise ArgumentError, 'Please pass either an object or a handler block' unless handler
         raise ArgumentError, 'Please use a symbol for the event_id' unless event_id.is_a?(Symbol)
-        raise ArgumentError, "Event ID #{event_id} is not recognised. Try one of these:\n#{event_types.keys.join("\n")}" unless is_registered_id?(event_id)
+        raise ArgumentError, "Event ID #{event_id} is not recognised. Try one of these:\n#{event_types.keys.join("\n")}" unless registered_id?(event_id)
       end
     end
   end
