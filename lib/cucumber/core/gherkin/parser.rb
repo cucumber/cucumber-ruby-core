@@ -19,7 +19,7 @@ module Cucumber
 
         def document(document)
           source_messages(document).each do |message|
-            store_metadata(message, document)
+            process(message, document)
           end
         end
 
