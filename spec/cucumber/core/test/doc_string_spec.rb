@@ -99,12 +99,12 @@ module Cucumber
 
         it 'provides a useful inspect method' do
           doc_string = DocString.new('some text', content_type)
-          expect(doc_string.inspect).to eq <<-END.chomp.unindent
+          expect(doc_string.inspect).to eq <<-DOC_STRING.chomp.unindent
           #<Cucumber::Core::Test::DocString
             """text/plain
             some text
             """>
-          END
+          DOC_STRING
         end
       end
     end

@@ -19,7 +19,7 @@ module Cucumber
         let(:text)      { double }
         let(:runner)    { described_class.new(event_bus) }
         let(:event_bus) { double.as_null_object }
-        let(:passing)   { Step.new(step_id, text, location, location).with_action {} }
+        let(:passing)   { Step.new(step_id, text, location, location).with_action { :no_op } }
         let(:failing)   { Step.new(step_id, text, location, location).with_action { raise exception } }
         let(:pending)   { Step.new(step_id, text, location, location).with_action { raise Result::Pending.new('TODO') } }
         let(:skipping)  { Step.new(step_id, text, location, location).with_action { raise Result::Skipped.new } }
@@ -260,7 +260,7 @@ module Cucumber
         context 'with around hooks' do
           it "passes normally when around hooks don't fail" do
             around_hook = AroundHook.new { |block| block.call }
-            passing_step = Step.new(step_id, text, location, location).with_action {}
+            passing_step = Step.new(step_id, text, location, location).with_action { :no_op }
             test_case = Case.new(test_id, name, [passing_step], location, tags, language, [around_hook])
             expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
               expect(result).to be_passed
@@ -270,7 +270,7 @@ module Cucumber
 
           it 'gets a failed result if the Around hook fails before the test case is run' do
             around_hook = AroundHook.new { |_block| raise exception }
-            passing_step = Step.new(step_id, text, location, location).with_action {}
+            passing_step = Step.new(step_id, text, location, location).with_action { :no_op }
             test_case = Case.new(test_id, name, [passing_step], location, tags, language, [around_hook])
             expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
               expect(result).to be_failed
@@ -281,7 +281,7 @@ module Cucumber
 
           it 'gets a failed result if the Around hook fails after the test case is run' do
             around_hook = AroundHook.new { |block| block.call; raise exception }
-            passing_step = Step.new(step_id, text, location, location).with_action {}
+            passing_step = Step.new(step_id, text, location, location).with_action { :no_op }
             test_case = Case.new(test_id, name, [passing_step], location, tags, language, [around_hook])
             expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
               expect(result).to be_failed
@@ -303,7 +303,7 @@ module Cucumber
 
           it 'sends after_test_step for a step interrupted by (a timeout in) the around hook' do
             around_hook = AroundHook.new { |block| block.call; raise exception }
-            passing_step = Step.new(step_id, text, location, location).with_action {}
+            passing_step = Step.new(step_id, text, location, location).with_action { :no_op }
             test_case = Case.new(test_id, name, [], location, tags, language, [around_hook])
             allow(runner).to receive(:running_test_step).and_return(passing_step)
             expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |_reported_test_case, result|

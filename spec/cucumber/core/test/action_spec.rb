@@ -18,7 +18,7 @@ module Cucumber
             let(:location) { double }
 
             it 'returns the location passed to the constructor' do
-              action = described_class.new(location) {}
+              action = described_class.new(location) { :no_op }
               expect(action.location).to be location
             end
           end
@@ -42,7 +42,7 @@ module Cucumber
           end
 
           it "returns a passed result if the block doesn't fail" do
-            action = described_class.new {}
+            action = described_class.new { :no_op }
             expect(action.execute).to be_passed
           end
 
@@ -92,7 +92,7 @@ module Cucumber
             end
 
             it 'records the nanoseconds duration of the execution on the result' do
-              action = described_class.new {}
+              action = described_class.new { :no_op }
               duration = action.execute.duration
               expect(duration).to be_duration 1
             end
@@ -114,7 +114,7 @@ module Cucumber
           end
 
           it 'returns a skipped result' do
-            action = described_class.new {}
+            action = described_class.new { :no_op }
             expect(action.skip).to be_skipped
           end
         end

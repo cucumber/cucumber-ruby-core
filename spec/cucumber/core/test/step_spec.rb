@@ -43,7 +43,7 @@ module Cucumber
 
           context 'when a passing action exists' do
             it 'returns a passing result' do
-              test_step = described_class.new(id, text, location).with_action {}
+              test_step = described_class.new(id, text, location).with_action { :no_op }
               expect(test_step.execute).to be_passed
             end
           end

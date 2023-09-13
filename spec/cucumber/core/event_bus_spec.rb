@@ -65,7 +65,7 @@ module Cucumber
 
           event_bus.test_event(:some_attribute)
 
-          expect(received_events.length).to eq 2
+          expect(received_events.length).to eq(2)
         end
 
         it "raises an error when given an event to broadcast that it doesn't recognise" do
@@ -74,14 +74,36 @@ module Cucumber
 
         describe '#broadcast method' do
           it 'must be passed an instance of a registered event type' do
-            expect {
-              event_bus.broadcast Events::UnregisteredEvent
-            }.to raise_error(ArgumentError)
+            expect { event_bus.broadcast(Events::UnregisteredEvent) }.to raise_error(ArgumentError)
           end
         end
       end
 
       context 'subscribing to events' do
+        let(:regular_handler) do
+          Class.new do
+            attr_reader :received_payload
+
+            def call(event)
+              @received_payload = event
+            end
+          end
+        end
+
+        let(:proc_handler) do
+          Class.new do
+            attr_reader :received_payload
+
+            def initialize(event_bus)
+              event_bus.on :test_event, &method(:on_test_event)
+            end
+
+            def on_test_event(event)
+              @received_payload = event
+            end
+          end
+        end
+
         it 'allows subscription by symbol (Event ID)' do
           received_payload = nil
           event_bus.on(:test_event) do |event|
@@ -94,21 +116,11 @@ module Cucumber
         end
 
         it 'raises an error if you use an unknown Event ID' do
-          expect {
-            event_bus.on(:some_unknown_event) { :whatever }
-          }.to raise_error(ArgumentError)
+          expect { event_bus.on(:some_unknown_event) { :whatever } }.to raise_error(ArgumentError)
         end
 
         it 'allows handlers that are objects with a `call` method' do
-          class MyHandler
-            attr_reader :received_payload
-
-            def call(event)
-              @received_payload = event
-            end
-          end
-
-          handler = MyHandler.new
+          handler = regular_handler.new
           event_bus.on(:test_event, handler)
 
           event_bus.test_event :some_attribute
@@ -117,19 +129,7 @@ module Cucumber
         end
 
         it 'allows handlers that are procs' do
-          class MyProccyHandler
-            attr_reader :received_payload
-
-            def initialize(event_bus)
-              event_bus.on :test_event, &method(:on_test_event)
-            end
-
-            def on_test_event(event)
-              @received_payload = event
-            end
-          end
-
-          handler = MyProccyHandler.new(event_bus)
+          handler = proc_handler.new(event_bus)
 
           event_bus.test_event :some_attribute
           expect(handler.received_payload.some_attribute).to eq :some_attribute

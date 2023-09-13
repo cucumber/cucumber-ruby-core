@@ -108,7 +108,7 @@ module Cucumber
         module Indentation
           def self.level(number)
             Module.new do
-              define_method :indent do |string, amount=nil|
+              define_method :indent do |string, amount = nil|
                 amount ||= number
                 return string if string.nil? || string.empty?
                 (' ' * amount) + string

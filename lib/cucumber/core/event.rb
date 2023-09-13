@@ -14,7 +14,7 @@ module Cucumber
 
           define_method(:initialize) do |*args|
             attributes.zip(args) do |name, value|
-              instance_variable_set "@#{name}".to_sym, value
+              instance_variable_set("@#{name}".to_sym, value)
             end
           end
 
@@ -24,8 +24,7 @@ module Cucumber
 
           define_method(:to_h) do
             attributes.reduce({}) { |result, attribute|
-              value = send(attribute)
-              result[attribute] = value
+              result[attribute] = send(attribute)
               result
             }
           end
@@ -37,8 +36,7 @@ module Cucumber
       end
 
       class << self
-        # @return [Symbol] the underscored name of the class to be used
-        #                  as the key in an event registry.
+        # @return [Symbol] the underscored name of the class to be used as the key in an event registry
         def event_id
           underscore(name.split('::').last).to_sym
         end
