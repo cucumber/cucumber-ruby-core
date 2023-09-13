@@ -16,14 +16,10 @@ AllCops:
 Gemspec/RequireMFA:
   Enabled: false
 
-# Disabling for appveyor
-Layout/EndOfLine:
-  Enabled: false
-
-# Reviewed: please see PR-1022 for details on why this cop is disabled:
-# https://github.com/cucumber/cucumber-ruby/pull/1022
-Lint/AmbiguousOperator:
-  Enabled: false
+# A line length of 200 covers most violations in the repo while still being
+# a more up to date length given today's screen sizes
+Layout/LineLength:
+  Max: 200
 
 # We want to permit Exception rescuing in these two instances as they literally guard against the final fail chance
 Lint/RescueException:
@@ -31,19 +27,15 @@ Lint/RescueException:
     - lib/cucumber/core/test/action.rb
     - lib/cucumber/core/test/around_hook.rb
 
-# A line length of 200 covers most violations in the repo while still being
-# a more up to date length given today's screen sizes
-Layout/LineLength:
-  Max: 200
-
 # In most cases, being descriptive with parameter names helps a reader understand
-# what the variable is for. In some cases, shorter names are sufficient.
+# what the variable is for. In some cases, shorter names are sufficient
 Naming/MethodParameterName:
   AllowedNames: _, e, n, v, id, io, gh, pr
 
+# We don't verbosely document this gem
 Style/Documentation:
   Enabled: false
 
-# Slashes are by far the most used form of regex values in the project.
+# Slashes are by far the most used form of regex values in the project
 Style/RegexpLiteral:
   EnforcedStyle: slashes
