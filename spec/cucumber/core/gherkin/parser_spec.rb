@@ -5,6 +5,8 @@ require 'cucumber/core/gherkin/parser'
 require 'cucumber/core/gherkin/writer'
 
 describe Cucumber::Core::Gherkin::Parser do
+  include Cucumber::Core::Gherkin::Writer
+
   let(:receiver)  { double }
   let(:event_bus) { double }
   let(:gherkin_query) { double }
@@ -17,8 +19,16 @@ describe Cucumber::Core::Gherkin::Parser do
     allow(gherkin_query).to receive(:update)
   end
 
+  def self.source(&block)
+    let(:source) { gherkin(&block) }
+  end
+
   def parse
     parser.document(source)
+  end
+
+  RSpec::Matchers.define :pickle_with_language do |language|
+    match { |actual| actual.language == language }
   end
 
   context 'for invalid gherkin' do
@@ -39,12 +49,14 @@ describe Cucumber::Core::Gherkin::Parser do
 
     it 'issues a gherkin_source_parsed event' do
       expect(event_bus).to receive(:gherkin_source_parsed)
+
       parse
     end
 
     it "emits an 'envelope' event for every message produced by Gherkin" do
-      # Only one message emited, there's no pickles generated
+      # Only one message emitted, there's no pickles generated
       expect(event_bus).to receive(:envelope).once
+
       parse
     end
   end
@@ -55,17 +67,9 @@ describe Cucumber::Core::Gherkin::Parser do
 
     it 'passes on no pickles' do
       expect(receiver).not_to receive(:pickle)
+
       parse
     end
-  end
-
-  include Cucumber::Core::Gherkin::Writer
-  def self.source(&block)
-    let(:source) { gherkin(&block) }
-  end
-
-  RSpec::Matchers.define :pickle_with_language do |language|
-    match { |actual| actual.language == language }
   end
 
   context 'when the Gherkin has a language header' do
@@ -77,6 +81,7 @@ describe Cucumber::Core::Gherkin::Parser do
 
     it 'the pickles have the correct language' do
       expect(receiver).to receive(:pickle).with(pickle_with_language('ja'))
+
       parse
     end
   end
@@ -92,6 +97,7 @@ describe Cucumber::Core::Gherkin::Parser do
 
     it 'passes on the pickle' do
       expect(receiver).to receive(:pickle)
+
       parse
     end
 
@@ -99,6 +105,7 @@ describe Cucumber::Core::Gherkin::Parser do
       allow(receiver).to receive(:pickle)
       # Once for the gherkin document, once with the pickle
       expect(event_bus).to receive(:envelope).twice
+
       parse
     end
   end
@@ -114,6 +121,7 @@ describe Cucumber::Core::Gherkin::Parser do
 
     it 'passes on the pickle' do
       expect(receiver).to receive(:pickle)
+
       parse
     end
   end
@@ -129,6 +137,7 @@ describe Cucumber::Core::Gherkin::Parser do
 
     it 'passes on the pickle' do
       expect(receiver).to receive(:pickle)
+
       parse
     end
   end
@@ -142,7 +151,7 @@ describe Cucumber::Core::Gherkin::Parser do
           end
         end
         rule description: 'Second rule' do
-          example name: 'Do not talk about the fight club' do
+          example name: 'Do NOT talk about the fight club' do
             step 'text'
           end
         end
@@ -151,6 +160,7 @@ describe Cucumber::Core::Gherkin::Parser do
 
     it 'passes on the pickles' do
       expect(receiver).to receive(:pickle).twice
+
       parse
     end
   end
