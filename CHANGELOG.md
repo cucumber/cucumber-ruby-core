@@ -11,6 +11,9 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ## [Unreleased]
 ### Changed
 - Now using a 2-tiered changelog to avoid any bugs when using polyglot-release
+- In all Summary and Result classes, changed the `strict` argument into a keyword argument.
+  See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-1300)
+  ([#TBD](https://github.com/cucumber/cucumber-ruby/pull/TBD))
 
 ## [12.0.0] - 2023-09-06
 ### Changed
