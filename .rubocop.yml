@@ -27,11 +27,6 @@ Lint/RescueException:
     - lib/cucumber/core/test/action.rb
     - lib/cucumber/core/test/around_hook.rb
 
-# In most cases, being descriptive with parameter names helps a reader understand
-# what the variable is for. In some cases, shorter names are sufficient
-Naming/MethodParameterName:
-  AllowedNames: _, e, n, v, id, io, gh, pr
-
 # We don't verbosely document this gem
 Style/Documentation:
   Enabled: false
