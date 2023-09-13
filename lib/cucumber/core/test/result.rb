@@ -374,7 +374,7 @@ module Cucumber
             if for_status
               @totals.fetch(for_status, 0)
             else
-              @totals.values.reduce(0) { |total,status| total + status }
+              @totals.values.reduce(0) { |total,count| total + count }
             end
           end
 
