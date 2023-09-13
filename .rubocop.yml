@@ -12,10 +12,6 @@ AllCops:
   DisplayStyleGuide: true
   NewCops: enable
 
-# Disabling to allow people to install cucumber-core on older rubies
-Gemspec/RequiredRubyVersion:
-  Enabled: false
-
 # We do not support MFA at the moment with the new automated release process
 Gemspec/RequireMFA:
   Enabled: false
