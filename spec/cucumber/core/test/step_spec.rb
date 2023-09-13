@@ -76,9 +76,9 @@ module Cucumber
 
         it 'exposes the location of the action as attribute' do
           location = double
-          action = double(location: location)
+          action = instance_double(Test::Action, location: location)
           test_step = described_class.new(id, text, location, action)
-          expect(test_step.action_location).to eq location
+          expect(test_step.action_location).to eq(location)
         end
 
         it 'returns the text when converted to a string' do

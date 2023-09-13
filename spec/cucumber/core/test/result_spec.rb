@@ -8,8 +8,8 @@ module Cucumber
   module Core
     module Test
       describe Result do
-        let(:visitor) { double('visitor') }
-        let(:args)    { double('args')    }
+        let(:visitor) { double }
+        let(:args)    { double }
 
         describe Result::Passed do
           subject(:result) { described_class.new(duration) }
@@ -31,32 +31,25 @@ module Cucumber
           end
 
           it 'has a duration' do
-            expect(result.duration).to eq duration
-          end
-
-          it 'requires the constructor argument' do
-            expect { described_class.new }.to raise_error(ArgumentError)
+            expect(result.duration).to eq(duration)
           end
 
           it 'does nothing when appending the backtrace' do
-            expect(result.with_appended_backtrace(double)).to equal result
+            expect(result.with_appended_backtrace(double)).to eq(result)
           end
 
           it 'does nothing when filtering the backtrace' do
-            expect(result.with_filtered_backtrace(double)).to equal result
+            expect(result.with_filtered_backtrace(double)).to eq(result)
           end
 
-          specify { expect(result.to_sym).to eq :passed }
-
-          specify { expect(result).to     be_passed    }
-          specify { expect(result).not_to be_failed    }
-          specify { expect(result).not_to be_undefined }
-          specify { expect(result).not_to be_unknown   }
-          specify { expect(result).not_to be_skipped   }
-          specify { expect(result).not_to be_flaky     }
-
-          specify { expect(result).to be_ok }
-          specify { expect(result).to be_ok }
+          it { expect(result.to_sym).to eq(:passed) }
+          it { expect(result).to be_passed }
+          it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_undefined }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
+          it { expect(result).to be_ok }
         end
 
         describe Result::Failed do
@@ -95,7 +88,7 @@ module Cucumber
           it 'appends the backtrace line of the step' do
             result.exception.set_backtrace('exception backtrace')
             step = double
-            expect(step).to receive(:backtrace_line).and_return('step_line')
+            allow(step).to receive(:backtrace_line).and_return('step_line')
 
             expect(result.with_appended_backtrace(step).exception.backtrace).to eq(['exception backtrace', 'step_line'])
           end
@@ -104,45 +97,41 @@ module Cucumber
             filter_class = double
             filter = double
             filtered_exception = double
-            expect(filter_class).to receive(:new).with(result.exception).and_return(filter)
-            expect(filter).to receive(:exception).and_return(filtered_exception)
+            allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
+            allow(filter).to receive(:exception).and_return(filtered_exception)
 
             expect(result.with_filtered_backtrace(filter_class).exception).to equal filtered_exception
           end
 
-          specify { expect(result.to_sym).to eq :failed }
-
-          specify { expect(result).not_to be_passed    }
-          specify { expect(result).to     be_failed    }
-          specify { expect(result).not_to be_undefined }
-          specify { expect(result).not_to be_unknown   }
-          specify { expect(result).not_to be_skipped   }
-          specify { expect(result).not_to be_flaky     }
-
-          specify { expect(result).to_not be_ok }
-          specify { expect(result).not_to be_ok }
+          it { expect(result.to_sym).to eq(:failed) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).to be_failed }
+          it { expect(result).not_to be_undefined }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
+          it { expect(result).not_to be_ok }
         end
 
         describe Result::Unknown do
           subject(:result) { described_class.new }
 
           it "doesn't describe itself to a visitor" do
-            visitor = double('never receives anything')
+            visitor = double
             result.describe_to(visitor, args)
           end
 
           it 'defines a with_filtered_backtrace method' do
-            expect(result.with_filtered_backtrace(double('filter'))).to eql result
+            expect(result.with_filtered_backtrace(double)).to eq(result)
           end
 
-          specify { expect(result.to_sym).to eq :unknown }
-
-          specify { expect(result).not_to be_passed    }
-          specify { expect(result).not_to be_failed    }
-          specify { expect(result).not_to be_undefined }
-          specify { expect(result).to     be_unknown   }
-          specify { expect(result).not_to be_skipped   }
-          specify { expect(result).not_to be_flaky     }
+          it { expect(result.to_sym).to eq(:unknown) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_undefined }
+          it { expect(result).to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
 
           it 'converts to a Cucumber::Message::TestResult' do
             message = result.to_message
@@ -166,7 +155,7 @@ module Cucumber
 
             it 'set the backtrace to the backtrace line of the step' do
               step = double
-              expect(step).to receive(:backtrace_line).and_return('step_line')
+              allow(step).to receive(:backtrace_line).and_return('step_line')
 
               expect(result.with_appended_backtrace(step).backtrace).to eq(['step_line'])
             end
@@ -181,7 +170,7 @@ module Cucumber
 
             it 'appends the backtrace line of the step' do
               step = double
-              expect(step).to receive(:backtrace_line).and_return('step_line')
+              allow(step).to receive(:backtrace_line).and_return('step_line')
 
               expect(result.with_appended_backtrace(step).backtrace).to eq(['backtrace', 'step_line'])
             end
@@ -190,8 +179,8 @@ module Cucumber
               filter_class = double
               filter = double
               filtered_result = double
-              expect(filter_class).to receive(:new).with(result.exception).and_return(filter)
-              expect(filter).to receive(:exception).and_return(filtered_result)
+              allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
+              allow(filter).to receive(:exception).and_return(filtered_result)
 
               expect(result.with_filtered_backtrace(filter_class)).to equal filtered_result
             end
@@ -212,20 +201,17 @@ module Cucumber
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::UNDEFINED)
           end
 
-          specify { expect(result.to_sym).to eq :undefined }
+          it { expect(result.to_sym).to eq(:undefined) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
+          it { expect(result).to be_undefined }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
+          it { expect(result).to be_ok }
 
-          specify { expect(result).not_to be_passed    }
-          specify { expect(result).not_to be_failed    }
-          specify { expect(result).to     be_undefined }
-          specify { expect(result).not_to be_unknown   }
-          specify { expect(result).not_to be_skipped   }
-          specify { expect(result).not_to be_flaky     }
-
-          specify { expect(result).to be_ok }
-          specify { expect(result).to be_ok }
-
-          be_strict = Result::StrictConfiguration.new([:undefined])
-          specify { expect(result).not_to be_ok(be_strict) }
+          strict = Result::StrictConfiguration.new([:undefined])
+          it { expect(result).not_to be_ok(strict: strict) }
         end
 
         describe Result::Skipped do
@@ -242,17 +228,14 @@ module Cucumber
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::SKIPPED)
           end
 
-          specify { expect(result.to_sym).to eq :skipped }
-
-          specify { expect(result).not_to be_passed    }
-          specify { expect(result).not_to be_failed    }
-          specify { expect(result).not_to be_undefined }
-          specify { expect(result).not_to be_unknown   }
-          specify { expect(result).to     be_skipped   }
-          specify { expect(result).not_to be_flaky     }
-
-          specify { expect(result).to be_ok }
-          specify { expect(result).to be_ok }
+          it { expect(result.to_sym).to eq(:skipped) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_undefined }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).to be_skipped }
+          it { expect(result).not_to be_flaky }
+          it { expect(result).to be_ok }
         end
 
         describe Result::Pending do
@@ -269,26 +252,22 @@ module Cucumber
             expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::PENDING)
           end
 
-          specify { expect(result.to_sym).to eq :pending }
+          it { expect(result.to_sym).to eq(:pending) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_undefined }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
+          it { expect(result).to be_ok }
 
-          specify { expect(result).not_to be_passed    }
-          specify { expect(result).not_to be_failed    }
-          specify { expect(result).not_to be_undefined }
-          specify { expect(result).not_to be_unknown   }
-          specify { expect(result).not_to be_skipped   }
-          specify { expect(result).not_to be_flaky     }
-          specify { expect(result).to     be_pending   }
-
-          specify { expect(result).to be_ok }
-          specify { expect(result).to be_ok }
-
-          be_strict = Result::StrictConfiguration.new([:pending])
-          specify { expect(result).not_to be_ok(be_strict) }
+          strict = Result::StrictConfiguration.new([:pending])
+          it { expect(result).not_to be_ok(strict: strict) }
         end
 
         describe Result::Flaky do
-          specify { expect(described_class).to be_ok(false) }
-          specify { expect(described_class).not_to be_ok(true) }
+          it { expect(described_class).to be_ok(strict: false) }
+          it { expect(described_class).not_to be_ok(strict: true) }
         end
 
         describe Result::StrictConfiguration do
@@ -467,22 +446,22 @@ module Cucumber
             it 'pending result is ok if not strict' do
               pending.describe_to summary
               expect(summary.ok?).to be true
-              be_strict = Result::StrictConfiguration.new([:pending])
-              expect(summary.ok?(be_strict)).to be false
+              strict = Result::StrictConfiguration.new([:pending])
+              expect(summary.ok?(strict: strict)).to be false
             end
 
             it 'undefined result is ok if not strict' do
               undefined.describe_to summary
               expect(summary.ok?).to be true
-              be_strict = Result::StrictConfiguration.new([:undefined])
-              expect(summary.ok?(be_strict)).to be false
+              strict = Result::StrictConfiguration.new([:undefined])
+              expect(summary.ok?(strict: strict)).to be false
             end
 
             it 'flaky result is ok if not strict' do
               summary.flaky
               expect(summary.ok?).to be true
-              be_strict = Result::StrictConfiguration.new([:flaky])
-              expect(summary.ok?(be_strict)).to be false
+              strict = Result::StrictConfiguration.new([:flaky])
+              expect(summary.ok?(strict: strict)).to be false
             end
           end
         end

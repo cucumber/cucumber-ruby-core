@@ -11,9 +11,9 @@ module Cucumber
         TYPES = [:failed, :flaky, :skipped, :undefined, :pending, :passed, :unknown].freeze
         STRICT_AFFECTED_TYPES = [:flaky, :undefined, :pending].freeze
 
-        def self.ok?(type, be_strict = StrictConfiguration.new)
+        def self.ok?(type, strict: StrictConfiguration.new)
           class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)
-          const_get(class_name).ok?(be_strict.strict?(type))
+          const_get(class_name).ok?(strict: strict.strict?(type))
         end
 
         # Defines to_sym on a result class for the given result type
@@ -58,7 +58,7 @@ module Cucumber
           include Result.query_methods :passed
           attr_accessor :duration
 
-          def self.ok?(_be_strict = false)
+          def self.ok?(*)
             true
           end
 
@@ -84,7 +84,7 @@ module Cucumber
             )
           end
 
-          def ok?(_be_strict = nil)
+          def ok?
             self.class.ok?
           end
 
@@ -102,7 +102,7 @@ module Cucumber
 
           attr_reader :duration, :exception
 
-          def self.ok?(_be_strict = false)
+          def self.ok?(*)
             false
           end
 
@@ -138,7 +138,7 @@ module Cucumber
             )
           end
 
-          def ok?(_be_strict = nil)
+          def ok?(*)
             self.class.ok?
           end
 
@@ -160,8 +160,8 @@ module Cucumber
         # reporting result type for test cases that fails and the passes on
         # retry, therefore only the class method self.ok? is needed.
         class Flaky
-          def self.ok?(be_strict = false)
-            !be_strict
+          def self.ok?(strict: false)
+            !strict
           end
         end
 
@@ -196,16 +196,16 @@ module Cucumber
             filter.new(dup).exception
           end
 
-          def ok?(be_strict = StrictConfiguration.new)
-            self.class.ok?(be_strict.strict?(to_sym))
+          def ok?(strict: StrictConfiguration.new)
+            self.class.ok?(strict: strict.strict?(to_sym))
           end
         end
 
         class Undefined < Raisable
           include Result.query_methods :undefined
 
-          def self.ok?(be_strict = false)
-            !be_strict
+          def self.ok?(strict: false)
+            !strict
           end
 
           def describe_to(visitor, *args)
@@ -229,7 +229,7 @@ module Cucumber
         class Skipped < Raisable
           include Result.query_methods :skipped
 
-          def self.ok?(_be_strict = false)
+          def self.ok?(*)
             true
           end
 
@@ -254,8 +254,8 @@ module Cucumber
         class Pending < Raisable
           include Result.query_methods :pending
 
-          def self.ok?(be_strict = false)
-            !be_strict
+          def self.ok?(strict: false)
+            !strict
           end
 
           def describe_to(visitor, *args)
@@ -325,8 +325,7 @@ module Cucumber
         end
 
         #
-        # An object that responds to the description protocol from the results
-        # and collects summary information.
+        # An object that responds to the description protocol from the results and collects summary information.
         #
         # e.g.
         #     summary = Result::Summary.new
@@ -351,10 +350,14 @@ module Cucumber
             end
           end
 
-          def ok?(be_strict = StrictConfiguration.new)
+          def respond_to_missing?(*)
+            true
+          end
+
+          def ok?(strict: StrictConfiguration.new)
             TYPES.each do |type|
               if get_total(type) > 0
-                return false unless Result.ok?(type, be_strict)
+                return false unless Result.ok?(type, strict: strict)
               end
             end
             true

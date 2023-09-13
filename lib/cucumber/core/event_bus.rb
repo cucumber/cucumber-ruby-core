@@ -19,7 +19,7 @@ module Cucumber
         @event_queue = []
       end
 
-      # Register for an event. The handler proc will be called back with each of the attributes
+      # Register for an event. The handler proc will be called back with each of the attributes
       # of the event.
       def on(event_id, handler_object = nil, &handler_proc)
         handler = handler_proc || handler_object
@@ -29,7 +29,7 @@ module Cucumber
         broadcast_queued_events_to handler, event_class
       end
 
-      # Broadcast an event
+      # Broadcast an event
       def broadcast(event)
         raise ArgumentError, "Event type #{event.class} is not registered. Try one of these:\n#{event_types.values.join("\n")}" unless is_registered_type?(event.class)
         handlers_for(event.class).each { |handler| handler.call(event) }
@@ -39,6 +39,10 @@ module Cucumber
       def method_missing(event_id, *args)
         event_class = event_types.fetch(event_id) { super }
         broadcast event_class.new(*args)
+      end
+
+      def respond_to_missing?(event_id, *args)
+        event_types.key?(event_id) || super
       end
 
       private

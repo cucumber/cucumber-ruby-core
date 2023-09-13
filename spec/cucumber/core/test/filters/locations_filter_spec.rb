@@ -19,11 +19,11 @@ module Cucumber
         gherkin('features/test.feature') do
           feature do
             scenario 'x' do
-              step 'a step'
+              step 'step for scenario x'
             end
 
             scenario 'y' do
-              step 'a step'
+              step 'step for scenario y'
             end
           end
         end
