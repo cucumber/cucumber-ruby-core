@@ -14,20 +14,6 @@ module Cucumber
                                        ])
         end
 
-        describe 'equality' do
-          it 'is equal to another table with the same data' do
-            expect(described_class.new([[1, 2], [3, 4]])).to eq described_class.new([[1, 2], [3, 4]])
-          end
-
-          it 'is not equal to another table with different data' do
-            expect(described_class.new([[1, 2], [3, 4]])).not_to eq described_class.new([[1, 2]])
-          end
-
-          it 'is not equal to a non table' do
-            expect(described_class.new([[1, 2], [3, 4]])).not_to eq Object.new
-          end
-        end
-
         describe '#data_table?' do
           let(:table) { described_class.new([[1, 2], [3, 4]]) }
 

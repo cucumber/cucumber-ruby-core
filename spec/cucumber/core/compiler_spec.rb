@@ -14,17 +14,48 @@ describe Cucumber::Core::Compiler do
     end
   end
 
-  it 'compiles a feature with a single scenario' do
-    gherkin_documents = [
-      gherkin do
-        feature do
-          scenario do
-            step 'passing'
-          end
+  let(:empty_gherkin_document) do
+    gherkin do
+      feature do
+        scenario
+      end
+    end
+  end
+  let(:single_step_gherkin_document) do
+    gherkin do
+      feature do
+        scenario do
+          step 'passing'
         end
       end
-    ]
-    compile(gherkin_documents) do |visitor|
+    end
+  end
+  let(:double_step_gherkin_document) do
+    gherkin do
+      feature do
+        scenario do
+          step 'passing'
+          step 'passing'
+        end
+      end
+    end
+  end
+  let(:background_step_gherkin_document) do
+    gherkin do
+      feature do
+        background do
+          step 'passing'
+        end
+
+        scenario do
+          step 'passing'
+        end
+      end
+    end
+  end
+
+  it 'compiles a feature with a single scenario' do
+    compile([single_step_gherkin_document]) do |visitor|
       expect(visitor).to receive(:test_case).once.ordered.and_yield(visitor)
       expect(visitor).to receive(:test_step).once.ordered
       expect(visitor).to receive(:done).once.ordered
@@ -42,17 +73,7 @@ describe Cucumber::Core::Compiler do
     end
 
     it 'emits a TestCaseCreated event with the created Test::Case and Pickle' do
-      gherkin_documents = [
-        gherkin do
-          feature do
-            scenario do
-              step 'passing'
-            end
-          end
-        end
-      ]
-
-      compile(gherkin_documents, event_bus) do |visitor|
+      compile([single_step_gherkin_document], event_bus) do |visitor|
         allow(visitor).to receive(:test_case)
         allow(visitor).to receive(:test_step)
         allow(visitor).to receive(:done)
@@ -63,18 +84,7 @@ describe Cucumber::Core::Compiler do
     end
 
     it 'emits a TestStepCreated event with the created Test::Step and PickleStep' do
-      gherkin_documents = [
-        gherkin do
-          feature do
-            scenario do
-              step 'passing'
-              step 'passing'
-            end
-          end
-        end
-      ]
-
-      compile(gherkin_documents, event_bus) do |visitor|
+      compile([double_step_gherkin_document], event_bus) do |visitor|
         allow(visitor).to receive(:test_case)
         allow(visitor).to receive(:test_step)
         allow(visitor).to receive(:done)
@@ -107,29 +117,7 @@ describe Cucumber::Core::Compiler do
   end
 
   it 'compiles multiple features' do
-    gherkin_documents = [
-      gherkin do
-        feature do
-          background do
-            step 'passing'
-          end
-          scenario do
-            step 'passing'
-          end
-        end
-      end,
-      gherkin do
-        feature do
-          background do
-            step 'passing'
-          end
-          scenario do
-            step 'passing'
-          end
-        end
-      end
-    ]
-    compile(gherkin_documents) do |visitor|
+    compile([background_step_gherkin_document, background_step_gherkin_document]) do |visitor|
       expect(visitor).to receive(:test_case).once.ordered
       expect(visitor).to receive(:test_step).twice.ordered
       expect(visitor).to receive(:test_case).once.ordered
@@ -205,14 +193,7 @@ describe Cucumber::Core::Compiler do
 
   context 'empty scenarios' do
     it 'does create test cases for them' do
-      gherkin_documents = [
-        gherkin do
-          feature do
-            scenario
-          end
-        end
-      ]
-      compile(gherkin_documents) do |visitor|
+      compile([empty_gherkin_document]) do |visitor|
         expect(visitor).to receive(:test_case).once.ordered
         expect(visitor).to receive(:done).once.ordered
       end

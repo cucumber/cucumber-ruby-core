@@ -19,24 +19,24 @@ describe Cucumber::Core do
       visitor = ReportAPISpy.new
 
       compile([
-                gherkin do
-                  feature do
-                    background do
-                      step 'text'
-                    end
-                    scenario do
-                      step 'text'
-                    end
+        gherkin do
+          feature do
+            background do
+              step 'text'
+            end
+            scenario do
+              step 'text'
+            end
 
-                    scenario do
-                      step 'text'
-                      step 'text'
-                    end
-                  end
-                end
-              ], visitor)
+            scenario do
+              step 'text'
+              step 'text'
+            end
+          end
+        end
+      ], visitor)
 
-      expect(visitor.messages).to eq [
+      expect(visitor.messages).to eq([
         :test_case,
         :test_step,
         :test_step,
@@ -45,7 +45,7 @@ describe Cucumber::Core do
         :test_step,
         :test_step,
         :done
-      ]
+      ])
     end
 
     it 'filters out test cases based on a tag expression' do
@@ -137,8 +137,8 @@ describe Cucumber::Core do
     end
 
     context 'without hooks' do
-      it 'executes the test cases in the suite' do
-        gherkin = gherkin do
+      let(:gherkin_document) do
+        gherkin do
           feature 'Feature name' do
             scenario 'The one that passes' do
               step 'passing'
@@ -152,17 +152,42 @@ describe Cucumber::Core do
             end
           end
         end
+      end
 
-        execute [gherkin], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus
+      before do
+        execute([gherkin_document], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus)
+      end
 
-        expect(report.test_cases.total).to eq 2
-        expect(report.test_cases.total_passed).to eq 1
-        expect(report.test_cases.total_failed).to eq 1
-        expect(report.test_steps.total).to eq 5
-        expect(report.test_steps.total_failed).to eq 1
-        expect(report.test_steps.total_passed).to eq 2
-        expect(report.test_steps.total_skipped).to eq 1
-        expect(report.test_steps.total_undefined).to eq 1
+      it 'reports on how many total test cases there were' do
+        expect(report.test_cases.total).to eq(2)
+      end
+
+      it 'reports on how many total test cases passed' do
+        expect(report.test_cases.total_passed).to eq(1)
+      end
+
+      it 'reports on how many total test cases failed' do
+        expect(report.test_cases.total_failed).to eq(1)
+      end
+
+      it 'reports on how many total test steps there were' do
+        expect(report.test_steps.total).to eq(5)
+      end
+
+      it 'reports on how many total test steps failed' do
+        expect(report.test_steps.total_failed).to eq(1)
+      end
+
+      it 'reports on how many total test steps passed' do
+        expect(report.test_steps.total_passed).to eq(2)
+      end
+
+      it 'reports on how many total test steps were skipped' do
+        expect(report.test_steps.total_skipped).to eq(1)
+      end
+
+      it 'reports on how many total test steps were undefined' do
+        expect(report.test_steps.total_undefined).to eq(1)
       end
     end
 
@@ -191,18 +216,19 @@ describe Cucumber::Core do
           end
         end
       end
-
-      it 'executes the test cases in the suite' do
-        gherkin = gherkin do
+      let(:gherkin_document) do
+        gherkin do
           feature do
             scenario do
               step 'text'
             end
           end
         end
-        logger = []
+      end
 
-        execute [gherkin], [around_hooks_filter.new(logger)], event_bus
+      it 'executes the test cases in the suite' do
+        logger = []
+        execute [gherkin_document], [around_hooks_filter.new(logger)], event_bus
 
         expect(report.test_cases.total).to eq(1)
         expect(report.test_cases.total_passed).to eq(1)

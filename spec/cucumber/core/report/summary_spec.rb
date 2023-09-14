@@ -5,6 +5,7 @@ require 'cucumber/core/event_bus'
 require 'cucumber/core/events'
 require 'cucumber/core/report/summary'
 require 'cucumber/core/test/result'
+require 'cucumber/core/test/step'
 
 module Cucumber
   module Core
@@ -70,7 +71,7 @@ module Cucumber
             expect(@summary.test_cases.total).to eq(1)
           end
 
-          it 'handless flaky with following skip test cases' do
+          it 'handles flaky with following skip test cases' do
             allow(test_case).to receive(:==).and_return(false, true)
             event_bus.send(:test_case_finished, test_case, failed_result)
             event_bus.send(:test_case_finished, test_case, skipped_result)
@@ -84,11 +85,7 @@ module Cucumber
 
         context 'test step summary' do
           context 'with test steps from gherkin steps' do
-            let(:test_step) { double }
-
-            before(:each) do
-              expect(test_step).to receive(:hook?).and_return(false)
-            end
+            let(:test_step) { instance_double(Cucumber::Core::Test::Step, hook?: false) }
 
             it 'counts passed test steps' do
               event_bus.send(:test_step_finished, test_step, passed_result)
@@ -127,11 +124,7 @@ module Cucumber
           end
 
           context 'with test steps not from gherkin steps' do
-            let(:test_step) { double }
-
-            before(:each) do
-              expect(test_step).to receive(:hook?).and_return(true)
-            end
+            let(:test_step) { instance_double(Cucumber::Core::Test::Step, hook?: true) }
 
             it 'ignores test steps not defined by gherkin steps' do
               event_bus.send(:test_step_finished, test_step, passed_result)
@@ -141,41 +134,41 @@ module Cucumber
           end
         end
 
-        context 'ok? result' do
+        describe '#ok?' do
           let(:test_case) { double }
 
           it 'passed test case is ok' do
             event_bus.send(:test_case_finished, test_case, passed_result)
 
-            expect(@summary.ok?).to eq true
+            expect(@summary.ok?).to be true
           end
 
           it 'skipped test case is ok' do
             event_bus.send(:test_case_finished, test_case, skipped_result)
 
-            expect(@summary.ok?).to eq true
+            expect(@summary.ok?).to be true
           end
 
           it 'failed test case is not ok' do
             event_bus.send(:test_case_finished, test_case, failed_result)
 
-            expect(@summary.ok?).to eq false
+            expect(@summary.ok?).to be false
           end
 
           it 'pending test case is ok if not strict' do
             event_bus.send(:test_case_finished, test_case, pending_result)
 
-            expect(@summary.ok?).to eq true
+            expect(@summary.ok?).to be true
             strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
-            expect(@summary.ok?(strict: strict)).to eq false
+            expect(@summary.ok?(strict: strict)).to be false
           end
 
           it 'undefined test case is ok if not strict' do
             event_bus.send(:test_case_finished, test_case, undefined_result)
 
-            expect(@summary.ok?).to eq true
+            expect(@summary.ok?).to be true
             strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
-            expect(@summary.ok?(strict: strict)).to eq false
+            expect(@summary.ok?(strict: strict)).to be false
           end
         end
       end
