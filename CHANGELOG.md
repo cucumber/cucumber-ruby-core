@@ -18,7 +18,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
   ([#261](https://github.com/cucumber/cucumber-ruby-core/pull/261))
 - Permit usage of gherkin v27
 
-## [11.1.1] - 2023-06-06
+## [12.0.1] - 2023-09-17
 ### Changed
 - Fix: retried scenarios which are run after another scenario with a passed result are still counted as failed ([#250](https://github.com/cucumber/cucumber-ruby-core/pull/250) @thukim)
 
