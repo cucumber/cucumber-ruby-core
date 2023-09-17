@@ -2,11 +2,15 @@ name: Test cucumber-core
 
 on:
   push:
-
+    branches:
+      - main
+      - renovate/**
+  pull_request:
+    branches:
+      - main
+  workflow_call:
   schedule:
     - cron: "0 5 * * *"
-
-  workflow_call:
 
 jobs:
   test:
@@ -14,28 +18,22 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ruby: ['2.6', '2.7', '3.0', '3.1']
-
+        ruby: ['2.5', '2.6', '2.7', '3.0', '3.1', '3.2']
         include:
           - os: ubuntu-latest
             ruby: jruby
-
           - os: macos-latest
             ruby: '3.0'
-
           - os: windows-latest
             ruby: '3.0'
 
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-
       - name: Run tests
         run: bundle exec rake
         shell: bash

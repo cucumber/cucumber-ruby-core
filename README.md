@@ -50,12 +50,13 @@ or install the gem directly:
 
 ### Supported platforms
 
+- Ruby 3.2
+- Ruby 3.1
 - Ruby 3.0
 - Ruby 2.7
 - Ruby 2.6
 - Ruby 2.5
 - Ruby 2.4
-- Ruby 2.3
 - JRuby 9.2 (with [some limitations](https://github.com/cucumber/cucumber-ruby/blob/main/docs/jruby-limitations.md))
 
 ## Usage

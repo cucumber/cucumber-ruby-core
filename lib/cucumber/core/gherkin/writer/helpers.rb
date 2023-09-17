@@ -1,9 +1,9 @@
 # frozen_string_literal: true
+
 module Cucumber
   module Core
     module Gherkin
       module Writer
-
         module HasOptionsInitializer
           def self.included(base)
             base.extend HasDefaultKeyword
@@ -79,6 +79,7 @@ module Cucumber
           end
 
           private
+
           def elements
             @elements ||= []
           end
@@ -89,9 +90,10 @@ module Cucumber
             end
 
             private
+
             def element(name)
               define_method name do |*args, &source|
-                factory_name = String(name).split("_").map(&:capitalize).join
+                factory_name = String(name).split('_').map(&:capitalize).join
                 factory = Writer.const_get(factory_name)
                 factory.new(slurp_comments, *args).tap do |builder|
                   builder.instance_exec(&source) if source
@@ -106,7 +108,7 @@ module Cucumber
         module Indentation
           def self.level(number)
             Module.new do
-              define_method :indent do |string, amount=nil|
+              define_method :indent do |string, amount = nil|
                 amount ||= number
                 return string if string.nil? || string.empty?
                 (' ' * amount) + string
@@ -125,6 +127,7 @@ module Cucumber
 
         module HasDescription
           private
+
           def description
             options.fetch(:description, '').split("\n").map(&:strip)
           end
@@ -168,7 +171,6 @@ module Cucumber
           end
         end
       end
-
     end
   end
 end

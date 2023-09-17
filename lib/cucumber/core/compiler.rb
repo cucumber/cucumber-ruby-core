@@ -38,7 +38,7 @@ module Cucumber
         uri = pickle.uri
         test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
         lines = source_lines_for_pickle(pickle).sort.reverse
-        tags = pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, source_line_for_pickle_tag(tag)), tag.name) }
+        tags = source_lines_for_all_pickle_tags(pickle, uri)
         test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
         @event_bus&.test_case_created(test_case, pickle)
         test_case
@@ -55,16 +55,9 @@ module Cucumber
       def create_multiline_arg(pickle_step, _uri)
         if pickle_step.argument
           if pickle_step.argument.doc_string
-            doc_string = pickle_step.argument.doc_string
-            Test::DocString.new(
-              doc_string.content,
-              doc_string.media_type
-            )
+            pickle_step_for_doc_string(pickle_step)
           elsif pickle_step.argument.data_table
-            data_table = pickle_step.argument.data_table
-            Test::DataTable.new(
-              data_table.rows.map { |row| row.cells.map { |cell| cell.value } }
-            )
+            pickle_step_for_data_table(pickle_step)
           end
         else
           Test::EmptyMultilineArgument.new
@@ -79,12 +72,33 @@ module Cucumber
         pickle_step.ast_node_ids.map { |id| source_line(id) }
       end
 
+      def source_lines_for_all_pickle_tags(pickle, uri)
+        pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, source_line_for_pickle_tag(tag)), tag.name) }
+      end
+
       def source_line_for_pickle_tag(tag)
         source_line(tag.ast_node_id)
       end
 
       def source_line(id)
         gherkin_query.location(id).line
+      end
+
+      def pickle_step_for_doc_string(pickle_step)
+        doc_string = pickle_step.argument.doc_string
+        Test::DocString.new(
+          doc_string.content,
+          doc_string.media_type
+        )
+      end
+
+      def pickle_step_for_data_table(pickle_step)
+        data_table = pickle_step.argument.data_table
+        Test::DataTable.new(
+          data_table.rows.map do |row|
+            row.cells.map { |cell| cell.value }
+          end
+        )
       end
     end
   end

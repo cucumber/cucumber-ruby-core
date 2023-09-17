@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'forwardable'
 require 'cucumber/core/platform'
 module Cucumber
@@ -7,7 +8,6 @@ module Cucumber
       IncompatibleLocations = Class.new(StandardError)
 
       module Location
-
         def self.of_caller(additional_depth = 0)
           from_file_colon_line(*caller[1 + additional_depth])
         end
@@ -30,7 +30,7 @@ module Cucumber
         end
 
         def self.new(file, raw_lines=nil)
-          file || raise(ArgumentError, "file is mandatory")
+          file || raise(ArgumentError, 'file is mandatory')
           if raw_lines
             Precise.new(file, Lines.new(raw_lines))
           else
@@ -47,7 +47,7 @@ module Cucumber
             other.file == file
           end
 
-          def include?(lines)
+          def include?(_lines)
             true
           end
         end
@@ -68,7 +68,7 @@ module Cucumber
           end
 
           def to_s
-            [file, lines.to_s].join(":")
+            [file, lines.to_s].join(':')
           end
 
           def hash
@@ -91,7 +91,7 @@ module Cucumber
           end
 
           def inspect
-            "<#{self.class}: #{to_s}>"
+            "<#{self.class}: #{self}>"
           end
         end
 
@@ -128,7 +128,7 @@ module Cucumber
             return first.to_s if data.length == 1
             return "#{data.min}..#{data.max}" if range?
 
-            data.to_a.join(":")
+            data.to_a.join(':')
           end
 
           def inspect
@@ -180,7 +180,6 @@ module Cucumber
           # will be overriden by nodes that actually have a multiline_argument
           Test::EmptyMultilineArgument.new
         end
-
       end
     end
   end

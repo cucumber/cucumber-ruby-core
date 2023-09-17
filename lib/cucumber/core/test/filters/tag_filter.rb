@@ -1,11 +1,11 @@
 # frozen_string_literal: true
+
 require 'cucumber/core/filter'
 
 module Cucumber
   module Core
     module Test
       class TagFilter < Filter.new(:filter_expressions)
-
         def test_case(test_case)
           test_cases << test_case
           if test_case.match_tags?(filter_expressions)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+
 module Cucumber
   module Core
-
     # Filters process test cases.
     #
     # Each filter must respond to the following protocol:
@@ -22,7 +22,6 @@ module Cucumber
     # Finally, the `done` message is sent. A filter should pass this message directly to its receiver.
     #
     module Filter
-
       # Utility method for quick construction of filter classes.
       #
       # @example Example usage:
@@ -70,7 +69,6 @@ module Cucumber
             args[-1] = new_receiver
             self.class.new(*args)
           end
-
         end
 
         if block

@@ -1,7 +1,8 @@
 # encoding: utf-8
 # frozen_string_literal: true
-require "cucumber/messages"
-require "cucumber/messages/time_conversion"
+
+require 'cucumber/messages'
+require 'cucumber/messages/time_conversion'
 
 module Cucumber
   module Core
@@ -10,9 +11,9 @@ module Cucumber
         TYPES = [:failed, :flaky, :skipped, :undefined, :pending, :passed, :unknown].freeze
         STRICT_AFFECTED_TYPES = [:flaky, :undefined, :pending].freeze
 
-        def self.ok?(type, be_strict = StrictConfiguration.new)
+        def self.ok?(type, strict: StrictConfiguration.new)
           class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)
-          const_get(class_name).ok?(be_strict.strict?(type))
+          const_get(class_name).ok?(strict: strict.strict?(type))
         end
 
         # Defines to_sym on a result class for the given result type
@@ -37,11 +38,11 @@ module Cucumber
         class Unknown
           include Result.query_methods :unknown
 
-          def describe_to(visitor, *args)
+          def describe_to(_visitor, *_args)
             self
           end
 
-          def with_filtered_backtrace(filter)
+          def with_filtered_backtrace(_filter)
             self
           end
 
@@ -57,7 +58,7 @@ module Cucumber
           include Result.query_methods :passed
           attr_accessor :duration
 
-          def self.ok?(be_strict = false)
+          def self.ok?(*)
             true
           end
 
@@ -73,7 +74,7 @@ module Cucumber
           end
 
           def to_s
-            "✓"
+            '✓'
           end
 
           def to_message
@@ -83,15 +84,15 @@ module Cucumber
             )
           end
 
-          def ok?(be_strict = nil)
+          def ok?
             self.class.ok?
           end
 
-          def with_appended_backtrace(step)
+          def with_appended_backtrace(_step)
             self
           end
 
-          def with_filtered_backtrace(filter)
+          def with_filtered_backtrace(_filter)
             self
           end
         end
@@ -101,7 +102,7 @@ module Cucumber
 
           attr_reader :duration, :exception
 
-          def self.ok?(be_strict = false)
+          def self.ok?(*)
             false
           end
 
@@ -120,14 +121,14 @@ module Cucumber
           end
 
           def to_s
-            "✗"
+            '✗'
           end
 
           def to_message
             begin
               message = exception.backtrace.join("\n")
             rescue NoMethodError
-              message = ""
+              message = ''
             end
 
             Cucumber::Messages::TestStepResult.new(
@@ -137,7 +138,7 @@ module Cucumber
             )
           end
 
-          def ok?(be_strict = nil)
+          def ok?(*)
             self.class.ok?
           end
 
@@ -159,8 +160,8 @@ module Cucumber
         # reporting result type for test cases that fails and the passes on
         # retry, therefore only the class method self.ok? is needed.
         class Flaky
-          def self.ok?(be_strict = false)
-            !be_strict
+          def self.ok?(strict: false)
+            !strict
           end
         end
 
@@ -169,7 +170,7 @@ module Cucumber
         class Raisable < StandardError
           attr_reader :message, :duration
 
-          def initialize(message = "", duration = UnknownDuration.new, backtrace = nil)
+          def initialize(message = '', duration = UnknownDuration.new, backtrace = nil)
             @message, @duration = message, duration
             super(message)
             set_backtrace(backtrace) if backtrace
@@ -195,16 +196,16 @@ module Cucumber
             filter.new(dup).exception
           end
 
-          def ok?(be_strict = StrictConfiguration.new)
-            self.class.ok?(be_strict.strict?(to_sym))
+          def ok?(strict: StrictConfiguration.new)
+            self.class.ok?(strict: strict.strict?(to_sym))
           end
         end
 
         class Undefined < Raisable
           include Result.query_methods :undefined
 
-          def self.ok?(be_strict = false)
-            !be_strict
+          def self.ok?(strict: false)
+            !strict
           end
 
           def describe_to(visitor, *args)
@@ -214,7 +215,7 @@ module Cucumber
           end
 
           def to_s
-            "?"
+            '?'
           end
 
           def to_message
@@ -228,7 +229,7 @@ module Cucumber
         class Skipped < Raisable
           include Result.query_methods :skipped
 
-          def self.ok?(be_strict = false)
+          def self.ok?(*)
             true
           end
 
@@ -239,7 +240,7 @@ module Cucumber
           end
 
           def to_s
-            "-"
+            '-'
           end
 
           def to_message
@@ -253,8 +254,8 @@ module Cucumber
         class Pending < Raisable
           include Result.query_methods :pending
 
-          def self.ok?(be_strict = false)
-            !be_strict
+          def self.ok?(strict: false)
+            !strict
           end
 
           def describe_to(visitor, *args)
@@ -264,7 +265,7 @@ module Cucumber
           end
 
           def to_s
-            "P"
+            'P'
           end
 
           def to_message
@@ -324,8 +325,7 @@ module Cucumber
         end
 
         #
-        # An object that responds to the description protocol from the results
-        # and collects summary information.
+        # An object that responds to the description protocol from the results and collects summary information.
         #
         # e.g.
         #     summary = Result::Summary.new
@@ -342,7 +342,7 @@ module Cucumber
             @durations = []
           end
 
-          def method_missing(name, *args)
+          def method_missing(name, *_args)
             if name =~ /^total_/
               get_total(name)
             else
@@ -350,10 +350,14 @@ module Cucumber
             end
           end
 
-          def ok?(be_strict = StrictConfiguration.new)
+          def respond_to_missing?(*)
+            true
+          end
+
+          def ok?(strict: StrictConfiguration.new)
             TYPES.each do |type|
               if get_total(type) > 0
-                return false unless Result.ok?(type, be_strict)
+                return false unless Result.ok?(type, strict: strict)
               end
             end
             true
@@ -373,7 +377,7 @@ module Cucumber
             if for_status
               @totals.fetch(for_status, 0)
             else
-              @totals.reduce(0) { |total, status| total += status[1] }
+              @totals.values.reduce(0) { |total,count| total + count }
             end
           end
 
@@ -385,7 +389,7 @@ module Cucumber
 
           def get_total(method_name)
             status = method_name.to_s.gsub('total_', '').to_sym
-            return @totals.fetch(status, 0)
+            @totals.fetch(status, 0)
           end
 
           def increment_total(status)
@@ -418,12 +422,12 @@ module Cucumber
         class UnknownDuration
           include Cucumber::Messages::TimeConversion
 
-          def tap(&block)
+          def tap
             self
           end
 
           def nanoseconds
-            raise "#nanoseconds only allowed to be used in #tap block"
+            raise '#nanoseconds only allowed to be used in #tap block'
           end
 
           def to_message_duration

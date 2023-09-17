@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'delegate'
 module Cucumber
   module Core
@@ -41,7 +42,7 @@ module Cucumber
         end
 
         def map
-          raise ArgumentError, "No block given" unless block_given?
+          raise ArgumentError, 'No block given' unless block_given?
           new_content = yield content
           self.class.new(new_content, content_type)
         end
@@ -66,10 +67,10 @@ module Cucumber
 
         def inspect
           [
-            %{#<#{self.class}},
-            %{  """#{content_type}},
-            %{  #{@content}},
-            %{  """>}
+            %(#<#{self.class}),
+            %(  """#{content_type}),
+            %(  #{@content}),
+            %(  """>)
           ].join("\n")
         end
       end

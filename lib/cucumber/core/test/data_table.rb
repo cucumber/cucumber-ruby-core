@@ -95,11 +95,9 @@ module Cucumber
         private
 
         def verify_rows_are_same_length(raw)
-          begin
-            raw.transpose
-          rescue IndexError
-            raise ArgumentError, "Rows must all be the same length"
-          end
+          raw.transpose
+        rescue IndexError
+          raise ArgumentError, 'Rows must all be the same length'
         end
 
         def ensure_array_of_array(array)
@@ -108,9 +106,8 @@ module Cucumber
 
         def hashes_to_array(hashes)
           header = hashes[0].keys.sort
-          [header] + hashes.map {|hash| header.map {|key| hash[key]}}
+          [header] + hashes.map { |hash| header.map { |key| hash[key] } }
         end
-
       end
     end
   end
