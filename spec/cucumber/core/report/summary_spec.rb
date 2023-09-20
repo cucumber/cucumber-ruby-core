@@ -79,10 +79,10 @@ module Cucumber
                 event_bus.send(:test_case_finished, test_case, failed_result)
                 event_bus.send(:test_case_finished, test_case, passed_result)
 
-                expect( @summary.test_cases.total(:passed) ).to eq(0)
-                expect( @summary.test_cases.total(:failed) ).to eq(0)
-                expect( @summary.test_cases.total(:flaky) ).to eq(1)
-                expect( @summary.test_cases.total ).to eq(1)
+                expect(@summary.test_cases.total(:passed)).to eq(0)
+                expect(@summary.test_cases.total(:failed)).to eq(0)
+                expect(@summary.test_cases.total(:flaky)).to eq(1)
+                expect(@summary.test_cases.total).to eq(1)
               end
             end
 
@@ -94,10 +94,10 @@ module Cucumber
                   event_bus.send(:test_case_finished, test_case, failed_result)
                   event_bus.send(:test_case_finished, test_case, passed_result)
 
-                  expect( @summary.test_cases.total(:passed) ).to eq(1)
-                  expect( @summary.test_cases.total(:failed) ).to eq(0)
-                  expect( @summary.test_cases.total(:flaky) ).to eq(1)
-                  expect( @summary.test_cases.total ).to eq(2)
+                  expect(@summary.test_cases.total(:passed)).to eq(1)
+                  expect(@summary.test_cases.total(:failed)).to eq(0)
+                  expect(@summary.test_cases.total(:flaky)).to eq(1)
+                  expect(@summary.test_cases.total).to eq(2)
                 end
               end
 
@@ -109,10 +109,10 @@ module Cucumber
                   event_bus.send(:test_case_finished, test_case, failed_result)
                   event_bus.send(:test_case_finished, test_case, failed_result)
 
-                  expect( @summary.test_cases.total(:passed) ).to eq(1)
-                  expect( @summary.test_cases.total(:failed) ).to eq(1)
-                  expect( @summary.test_cases.total(:flaky) ).to eq(0)
-                  expect( @summary.test_cases.total ).to eq(2)
+                  expect(@summary.test_cases.total(:passed)).to eq(1)
+                  expect(@summary.test_cases.total(:failed)).to eq(1)
+                  expect(@summary.test_cases.total(:flaky)).to eq(0)
+                  expect(@summary.test_cases.total).to eq(2)
                 end
               end
             end
