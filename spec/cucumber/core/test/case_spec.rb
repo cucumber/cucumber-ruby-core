@@ -9,14 +9,22 @@ describe Cucumber::Core::Test::Case do
   include Cucumber::Core
   include Cucumber::Core::Gherkin::Writer
 
-  let(:id) { double }
   let(:name) { double }
+  let(:test_steps) { [double, double] }
   let(:location) { double }
-  let(:parent_locations) { double }
   let(:tags) { double }
   let(:language) { double }
-  let(:test_case) { described_class.new(id, name, test_steps, location, parent_locations, tags, language) }
-  let(:test_steps) { [double, double] }
+  let(:test_case) do
+    described_class.new(
+      id: double,
+      name: name,
+      test_steps: test_steps,
+      location: location,
+      parent_locations: double,
+      tags: tags,
+      language: language
+    )
+  end
 
   describe '#describe_to' do
     let(:visitor) { double }
@@ -42,7 +50,7 @@ describe Cucumber::Core::Test::Case do
       expect(first_hook).to receive(:describe_to).ordered.and_yield
       expect(second_hook).to receive(:describe_to).ordered.and_yield
       around_hooks = [first_hook, second_hook]
-      described_class.new(id, name, [], location, parent_locations, tags, language, around_hooks).describe_to(visitor, double)
+      test_case.with(test_steps: [], around_hooks: around_hooks).describe_to(visitor, double)
     end
   end
 
