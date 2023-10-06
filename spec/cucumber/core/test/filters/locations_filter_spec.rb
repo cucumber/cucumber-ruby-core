@@ -110,14 +110,14 @@ module Cucumber
                   Given rule a
 
                 Scenario: another with a rule and background
-                  Given rule b
+                  Given rule a
 
               Rule: A rule without a background
                 Scenario: with a rule and no background
-                  Given rule c
+                  Given rule a
 
                 Scenario: another with a rule and no background
-                  Given rule d
+                  Given rule a
             FEATURE
           end
 
@@ -125,28 +125,28 @@ module Cucumber
             test_cases.find { |c| c.name == name }
           end
 
-          it 'matches the feature line to all scenarios' do
+          it 'matches the feature location to all scenarios' do
             location = Test::Location.new(file, 1)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq test_cases.map(&:location)
           end
 
-          it 'matches the background line to all scenarios' do
+          it 'matches the feature background location to all scenarios' do
             location = Test::Location.new(file, 2)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq test_cases.map(&:location)
           end
 
-          it 'matches the location on a background step to all scenarios' do
+          it 'matches a feature background step location to all scenarios' do
             location = Test::Location.new(file, 3)
             filter = described_class.new([location])
             compile([doc], receiver, [filter])
             expect(receiver.test_case_locations).to eq test_cases.map(&:location)
           end
 
-          it 'matches the rule with background line to all of its scenarios' do
+          it "matches a rule location (containing a background) to all of the rule's scenarios" do
             location = Test::Location.new(file, 29)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
@@ -156,7 +156,7 @@ module Cucumber
             ]
           end
 
-          it 'matches the rule background line to all of the rules scenarios' do
+          it "matches the rule background location to all of the rule's scenarios" do
             location = Test::Location.new(file, 30)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
@@ -166,7 +166,7 @@ module Cucumber
             ]
           end
 
-          it 'matches the location on a rule background step to all of the rules scenarios' do
+          it "matches a rule background step location to all of the rule's scenarios" do
             location = Test::Location.new(file, 31)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
@@ -176,7 +176,7 @@ module Cucumber
             ]
           end
 
-          it 'matches the rule without background line to all of its scenarios' do
+          it "matches a rule location (without a background) to all of the rule's scenarios" do
             location = Test::Location.new(file, 39)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
@@ -186,43 +186,47 @@ module Cucumber
             ]
           end
 
-          it 'matches the precise location of the scenario' do
+          it 'matches a scenario location to the scenario' do
             location = test_case_named('two').location
             filter = described_class.new([location])
             compile([doc], receiver, [filter])
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
 
-          it 'matches multiple locations' do
-            good_location = Test::Location.new(file, 10)
-            bad_location = Test::Location.new(file, 7)
-            filter = described_class.new([good_location, bad_location])
+          it 'matches multiple locations, ignoring whitespace locations' do
+            scenario_location = Test::Location.new(file, 5)
+            another_scenario_location = Test::Location.new(file, 10)
+            whitespace_location = Test::Location.new(file, 7)
+            filter = described_class.new([scenario_location, another_scenario_location, whitespace_location])
             compile([doc], receiver, [filter])
-            expect(receiver.test_case_locations).to eq [test_case_named('two').location]
+            expect(receiver.test_case_locations).to eq [
+              test_case_named('one').location,
+              test_case_named('two').location
+            ]
           end
 
-          it 'matches a location on the first step of the scenario' do
+          it 'matches the first scenario step location to the scenario' do
             location = Test::Location.new(file, 11)
             filter = described_class.new([location])
             compile([doc], receiver, [filter])
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
 
-          it 'matches a location on the last step of the scenario' do
+          it 'matches the last scenario step location to the scenario' do
             location = Test::Location.new(file, 12)
             filter = described_class.new([location])
             compile([doc], receiver, [filter])
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
 
-          it "matches a location on the scenario's tags" do
+          it "matches a scenario's tag location to the scenario" do
             location = Test::Location.new(file, 9)
             filter = described_class.new([location])
             compile([doc], receiver, [filter])
             expect(receiver.test_case_locations).to eq [test_case_named('two').location]
           end
 
-          it 'does not return a matched location on a whitespace line' do
+          it 'does not match a whitespace location to any scenarios' do
             location = Test::Location.new(file, 13)
             filter = described_class.new([location])
             compile([doc], receiver, [filter])
