@@ -35,7 +35,7 @@ describe Cucumber::Core::Filter do
       compile [doc], receiver, [my_filter]
     end
 
-    context 'customizing by subclassing' do
+    context 'when customizing using a subclass' do
       let(:basic_blanking_filter) do
         # Each filter implicitly gets a :receiver attribute
         # that you need to call with the new test case
@@ -78,7 +78,7 @@ describe Cucumber::Core::Filter do
       end
     end
 
-    context 'customizing by using a block' do
+    context 'when customizing using a block' do
       let(:block_blanking_filter) do
         Class.new(described_class.new) do
           def test_case(test_case)

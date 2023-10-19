@@ -29,7 +29,7 @@ describe Cucumber::Core::Test::Runner do
     allow(text).to receive(:empty?)
   end
 
-  context 'reporting the duration of a test case' do
+  context 'when reporting the duration of a test case' do
     before do
       allow(Cucumber::Core::Test::Timer::MonotonicTime).to receive(:time_in_nanoseconds).and_return(525_702_744_080_000, 525_702_744_080_001)
     end
@@ -57,7 +57,7 @@ describe Cucumber::Core::Test::Runner do
     end
   end
 
-  context 'reporting the exception that failed a test case' do
+  context 'when reporting the exception that failed a test case' do
     let(:test_steps) { [failing] }
 
     it 'sets the exception on the result' do
@@ -88,7 +88,7 @@ describe Cucumber::Core::Test::Runner do
     end
 
     context 'with steps' do
-      context 'that all pass' do
+      context 'with steps that all pass' do
         let(:test_steps) { [passing, passing]  }
 
         it 'emits the test_case_finished event with a passing result' do
@@ -99,7 +99,7 @@ describe Cucumber::Core::Test::Runner do
         end
       end
 
-      context 'an undefined step' do
+      context 'with an undefined step' do
         let(:test_steps) { [undefined]  }
 
         it 'emits the test_case_finished event with an undefined result' do
@@ -129,7 +129,7 @@ describe Cucumber::Core::Test::Runner do
         end
       end
 
-      context 'a pending step' do
+      context 'with a pending step' do
         let(:test_steps) { [pending] }
 
         it 'emits the test_case_finished event with a pending result' do
@@ -149,7 +149,7 @@ describe Cucumber::Core::Test::Runner do
         end
       end
 
-      context 'a skipping step' do
+      context 'with a skipping step' do
         let(:test_steps) { [skipping] }
 
         it 'emits the test_case_finished event with a skipped result' do
@@ -169,7 +169,7 @@ describe Cucumber::Core::Test::Runner do
         end
       end
 
-      context 'that fail' do
+      context 'with failing steps' do
         let(:test_steps) { [failing] }
 
         it 'emits the test_case_finished event with a failing result' do
@@ -189,7 +189,7 @@ describe Cucumber::Core::Test::Runner do
         end
       end
 
-      context 'where the first step fails' do
+      context 'with an initial failing step' do
         let(:test_steps) { [failing, passing] }
 
         it 'emits the test_step_finished event with a failed result' do
@@ -241,7 +241,7 @@ describe Cucumber::Core::Test::Runner do
     end
   end
 
-  context 'passing latest result to a mapping' do
+  context 'when passing the latest result to a mapping' do
     let(:hook_mapping) { Cucumber::Core::Test::UnskippableAction.new { |last_result| @result_spy = last_result } }
     let(:after_hook) { Cucumber::Core::Test::HookStep.new(step_id, text, location, hook_mapping) }
     let(:failing_step) { Cucumber::Core::Test::Step.new(step_id, text, location).with_action { fail } }

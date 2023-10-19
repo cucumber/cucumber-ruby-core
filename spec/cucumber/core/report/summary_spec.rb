@@ -23,7 +23,7 @@ module Cucumber
 
         before(:each) { @summary = described_class.new(event_bus) }
 
-        context 'test case summary' do
+        describe 'test case summary' do
           let(:test_case) { double }
 
           it 'counts passed test cases' do
@@ -83,7 +83,7 @@ module Cucumber
           end
         end
 
-        context 'test step summary' do
+        describe 'test step summary' do
           context 'with test steps from gherkin steps' do
             let(:test_step) { instance_double(Cucumber::Core::Test::Step, hook?: false) }
 
