@@ -13,7 +13,7 @@ describe Cucumber::Core::Event do
     it 'generates events with attributes' do
       my_event_type = described_class.new(:foo, :bar)
       my_event = my_event_type.new(1, 2)
-      expect(my_event.attributes).to eq [1, 2]
+      expect(my_event.attributes).to eq([1, 2])
       expect(my_event.foo).to eq(1)
       expect(my_event.bar).to eq(2)
     end

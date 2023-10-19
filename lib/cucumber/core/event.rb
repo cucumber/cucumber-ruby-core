@@ -22,16 +22,18 @@ module Cucumber
             instance_variables.map { |var| instance_variable_get(var) }
           end
 
-          def events
-            instance_variables.map { |var| (var[1..-1]).to_sym }
-          end
-
           def to_h
             events.zip(attributes).to_h
           end
 
           def event_id
             self.class.event_id
+          end
+
+          private
+
+          def events
+            instance_variables.map { |var| (var[1..-1]).to_sym }
           end
         end
       end
