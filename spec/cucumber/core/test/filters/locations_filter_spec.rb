@@ -107,17 +107,17 @@ module Cucumber
                   Given background
 
                 Scenario: with a rule and background
-                  Given rule a
+                  Given a rule with a background
 
                 Scenario: another with a rule and background
-                  Given rule a
+                  Given a rule with a background
 
               Rule: A rule without a background
                 Scenario: with a rule and no background
-                  Given rule a
+                  Given a rule without a background
 
                 Scenario: another with a rule and no background
-                  Given rule a
+                  Given a rule without a background
             FEATURE
           end
 
