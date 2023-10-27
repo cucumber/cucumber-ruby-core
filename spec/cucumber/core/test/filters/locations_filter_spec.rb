@@ -46,9 +46,9 @@ module Cucumber
         filter = described_class.new(locations)
         compile([doc], receiver, [filter])
         expect(receiver.test_case_locations).to eq([
-          Test::Location.new('features/test.feature', 3),
-          Test::Location.new('features/test.feature', 6)
-        ])
+                                                     Test::Location.new('features/test.feature', 3),
+                                                     Test::Location.new('features/test.feature', 6)
+                                                   ])
       end
 
       it "filters out scenarios that don't match" do
@@ -151,9 +151,9 @@ module Cucumber
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq([
-              test_case_named('with a rule and background').location,
-              test_case_named('another with a rule and background').location
-            ])
+                                                         test_case_named('with a rule and background').location,
+                                                         test_case_named('another with a rule and background').location
+                                                       ])
           end
 
           it "matches the rule background location to all of the rule's scenarios" do
@@ -161,9 +161,9 @@ module Cucumber
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq([
-              test_case_named('with a rule and background').location,
-              test_case_named('another with a rule and background').location
-            ])
+                                                         test_case_named('with a rule and background').location,
+                                                         test_case_named('another with a rule and background').location
+                                                       ])
           end
 
           it "matches a rule background step location to all of the rule's scenarios" do
@@ -171,9 +171,9 @@ module Cucumber
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq([
-              test_case_named('with a rule and background').location,
-              test_case_named('another with a rule and background').location
-            ])
+                                                         test_case_named('with a rule and background').location,
+                                                         test_case_named('another with a rule and background').location
+                                                       ])
           end
 
           it "matches a rule location (without a background) to all of the rule's scenarios" do
@@ -181,9 +181,9 @@ module Cucumber
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
             expect(receiver.test_case_locations).to eq([
-              test_case_named('with a rule and no background').location,
-              test_case_named('another with a rule and no background').location
-            ])
+                                                         test_case_named('with a rule and no background').location,
+                                                         test_case_named('another with a rule and no background').location
+                                                       ])
           end
 
           it 'matches a scenario location to the scenario' do
@@ -200,9 +200,9 @@ module Cucumber
             filter = described_class.new([scenario_location, another_scenario_location, whitespace_location])
             compile([doc], receiver, [filter])
             expect(receiver.test_case_locations).to eq([
-              test_case_named('one').location,
-              test_case_named('two').location
-            ])
+                                                         test_case_named('one').location,
+                                                         test_case_named('two').location
+                                                       ])
           end
 
           it 'matches the first scenario step location to the scenario' do
