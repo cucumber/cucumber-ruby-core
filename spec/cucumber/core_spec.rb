@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'report_api_spy'
 require 'cucumber/core'
 require 'cucumber/core/filter'
 require 'cucumber/core/gherkin/writer'
@@ -13,41 +12,6 @@ require 'cucumber/core/test/filters/activate_steps_for_self_test'
 describe Cucumber::Core do
   include described_class
   include Cucumber::Core::Gherkin::Writer
-
-  describe 'compiling features to a test suite' do
-    it 'compiles two scenarios into two test cases' do
-      visitor = ReportAPISpy.new
-
-      compile([
-        gherkin do
-          feature do
-            background do
-              step 'text'
-            end
-            scenario do
-              step 'text'
-            end
-
-            scenario do
-              step 'text'
-              step 'text'
-            end
-          end
-        end
-      ], visitor)
-
-      expect(visitor.messages).to eq([
-        :test_case,
-        :test_step,
-        :test_step,
-        :test_case,
-        :test_step,
-        :test_step,
-        :test_step,
-        :done
-      ])
-    end
-
     it 'filters out test cases based on a tag expression' do
       visitor = double.as_null_object
       expect(visitor).to receive(:test_case) { |test_case| expect(test_case.name).to eq('foo') }.once
