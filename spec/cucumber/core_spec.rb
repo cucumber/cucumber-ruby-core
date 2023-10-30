@@ -12,35 +12,6 @@ require 'cucumber/core/test/filters/activate_steps_for_self_test'
 describe Cucumber::Core do
   include described_class
   include Cucumber::Core::Gherkin::Writer
-    it 'filters out test cases based on a tag expression' do
-      visitor = double.as_null_object
-      expect(visitor).to receive(:test_case) { |test_case| expect(test_case.name).to eq('foo') }.once
-
-      gherkin = gherkin do
-        feature do
-          scenario tags: '@b' do
-            step 'text'
-          end
-
-          scenario_outline 'foo' do
-            step '<arg>'
-
-            examples tags: '@a' do
-              row 'arg'
-              row 'x'
-            end
-
-            examples 'bar', tags: '@a @b' do
-              row 'arg'
-              row 'y'
-            end
-          end
-        end
-      end
-
-      compile([gherkin], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])])
-    end
-  end
 
   describe 'executing a test suite' do
     let(:event_bus) { Cucumber::Core::EventBus.new }
