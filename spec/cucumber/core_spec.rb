@@ -3,7 +3,6 @@
 require 'cucumber/core'
 require 'cucumber/core/filter'
 require 'cucumber/core/gherkin/writer'
-require 'cucumber/core/platform'
 require 'cucumber/core/report/summary'
 require 'cucumber/core/test/filters/activate_steps_for_self_test'
 
