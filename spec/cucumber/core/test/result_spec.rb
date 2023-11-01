@@ -26,10 +26,8 @@ module Cucumber
             expect(result.to_s).to eq '✓'
           end
 
-          it 'converts to a Cucumber::Message::TestResult' do
-            message = result.to_message
-
-            expect(message.status).to eq(Cucumber::Messages::TestStepResultStatus::PASSED)
+          it 'converts to a `Cucumber::Message::TestResult`' do
+            expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::PASSED)
           end
 
           it 'has a duration' do
@@ -336,7 +334,7 @@ module Cucumber
           end
 
           describe '#strict?' do
-            context 'no type argument' do
+            context 'without a type argument' do
               it 'returns true if any result type is set to strict' do
                 strict_configuration.set_strict(false, :pending)
                 expect(strict_configuration).not_to be_strict
@@ -346,7 +344,7 @@ module Cucumber
               end
             end
 
-            context 'with type argument' do
+            context 'with a type argument' do
               it 'returns true if the specified result type is set to strict' do
                 strict_configuration.set_strict(false, :pending)
                 strict_configuration.set_strict(true, :flaky)
@@ -415,7 +413,7 @@ module Cucumber
             expect(summary.total).to eq(1)
           end
 
-          it 'counts abitrary raisable results' do
+          it 'counts arbitrary raiseable results' do
             flickering = Class.new(Result::Raisable) do
               def describe_to(visitor, *args)
                 visitor.flickering(*args)
@@ -461,7 +459,7 @@ module Cucumber
             expect(summary.exceptions).to eq [exception]
           end
 
-          context 'ok? result' do
+          describe '#ok?' do
             it 'passed result is ok' do
               passed.describe_to(summary)
 
@@ -507,7 +505,7 @@ module Cucumber
           subject(:duration) { described_class.new(10) }
 
           it '#nanoseconds can be accessed in #tap' do
-            expect(duration.tap { |duration| @duration = duration.nanoseconds }).to eq duration
+            expect(duration.tap { |duration| @duration = duration.nanoseconds }).to eq(duration)
             expect(@duration).to eq(10)
           end
         end

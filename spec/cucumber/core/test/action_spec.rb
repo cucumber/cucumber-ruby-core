@@ -7,13 +7,11 @@ module Cucumber
   module Core
     module Test
       describe Action do
-        context 'constructed without a block' do
-          it 'raises an error' do
-            expect { described_class.new }.to raise_error(ArgumentError)
-          end
+        it 'raises an error if created without a block' do
+          expect { described_class.new }.to raise_error(ArgumentError)
         end
 
-        context 'location' do
+        describe '#location' do
           context 'with location passed to the constructor' do
             let(:location) { double }
 
@@ -33,7 +31,7 @@ module Cucumber
           end
         end
 
-        context 'executing' do
+        context 'when executing' do
           it 'executes the block passed to the constructor' do
             executed = false
             action = described_class.new { executed = true }
@@ -105,7 +103,7 @@ module Cucumber
           end
         end
 
-        context 'skipping' do
+        context 'when skipped' do
           it 'does not execute the block' do
             executed = false
             action = described_class.new { executed = true }
@@ -125,19 +123,19 @@ module Cucumber
         let(:action) { described_class.new(location) }
         let(:test_step) { double }
 
-        context 'location' do
+        describe '#location' do
           it 'returns the location passed to the constructor' do
             expect(action.location).to be location
           end
         end
 
-        context 'executing' do
+        describe '#execute' do
           it 'returns an undefined result' do
             expect(action.execute).to be_undefined
           end
         end
 
-        context 'skipping' do
+        describe '#skip' do
           it 'returns an undefined result' do
             expect(action.skip).to be_undefined
           end

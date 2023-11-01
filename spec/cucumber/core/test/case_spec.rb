@@ -18,7 +18,7 @@ describe Cucumber::Core::Test::Case do
   let(:test_case) { described_class.new(id, name, test_steps, location, tags, language) }
   let(:test_steps) { [double, double] }
 
-  context 'describing itself' do
+  context 'when describing itself' do
     let(:visitor) { double }
     let(:args) { double }
 
@@ -64,8 +64,8 @@ describe Cucumber::Core::Test::Case do
     end
   end
 
-  describe 'matching tags' do
-    let(:tags) { ['@a', '@b', '@c'].map { |value| Cucumber::Core::Test::Tag.new(location, value) } }
+  context 'when matching tags' do
+    let(:tags) { %w[@a @b @c].map { |value| Cucumber::Core::Test::Tag.new(location, value) } }
 
     it 'matches tags using tag expressions' do
       expect(test_case).to be_match_tags(['@a and @b'])
@@ -80,7 +80,7 @@ describe Cucumber::Core::Test::Case do
     end
   end
 
-  describe 'matching names' do
+  context 'when matching names' do
     let(:name) { 'scenario' }
 
     it 'matches names against regexp' do

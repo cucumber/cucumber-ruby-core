@@ -17,7 +17,7 @@ module Cucumber
       let(:event_bus) { described_class.new(registry) }
       let(:registry) { { test_event: Events::TestEvent, another_test_event: Events::AnotherTestEvent } }
 
-      context 'broadcasting events' do
+      context 'when broadcasting events' do
         it 'can broadcast by calling a method named after the event ID' do
           called = false
           event_bus.on(:test_event) { called = true }
@@ -79,7 +79,7 @@ module Cucumber
         end
       end
 
-      context 'subscribing to events' do
+      context 'when subscribing to events' do
         let(:regular_handler) do
           Class.new do
             attr_reader :received_payload

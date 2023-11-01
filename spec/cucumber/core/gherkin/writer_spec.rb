@@ -6,19 +6,17 @@ require 'unindent'
 describe Cucumber::Core::Gherkin::Writer do
   include described_class
 
-  context 'specifying uri' do
-    it 'generates a uri by default' do
-      source = gherkin { feature }
-      expect(source.uri).to eq 'features/test.feature'
-    end
-
-    it 'allows you to specify a URI' do
-      source = gherkin('features/path/to/my.feature') { feature }
-      expect(source.uri).to eq 'features/path/to/my.feature'
-    end
+  it 'generates a uri by default' do
+    source = gherkin { feature }
+    expect(source.uri).to eq 'features/test.feature'
   end
 
-  context 'a feature' do
+  it 'allows you to specify a URI' do
+    source = gherkin('features/path/to/my.feature') { feature }
+    expect(source.uri).to eq 'features/path/to/my.feature'
+  end
+
+  context 'for a feature' do
     it 'generates the feature statement' do
       source = gherkin { feature }
       expect(source).to eq "Feature:\n"
@@ -208,7 +206,7 @@ describe Cucumber::Core::Gherkin::Writer do
         FEATURE
       end
 
-      context 'and examples table' do
+      context 'with an examples table' do
         it 'can have a description' do
           source = gherkin do
             feature do

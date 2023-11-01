@@ -126,7 +126,7 @@ describe Cucumber::Core::Compiler do
     end
   end
 
-  context 'compiling scenario outlines' do
+  context 'when compiling scenario outlines' do
     it 'compiles a scenario outline to test cases' do
       gherkin_documents = [
         gherkin do
@@ -191,8 +191,8 @@ describe Cucumber::Core::Compiler do
     end
   end
 
-  context 'empty scenarios' do
-    it 'does create test cases for them' do
+  context 'with empty scenarios' do
+    it 'creates test cases' do
       compile([empty_gherkin_document]) do |visitor|
         expect(visitor).to receive(:test_case).once.ordered
         expect(visitor).to receive(:done).once.ordered

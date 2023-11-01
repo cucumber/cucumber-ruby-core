@@ -5,32 +5,35 @@ module Cucumber
     class Event
       # Macro to generate new sub-classes of {Event} with
       # attribute readers.
-      def self.new(*attributes)
+      def self.new(*events)
         # Use normal constructor for subclasses of Event
         return super if ancestors.index(Event) > 0
 
         Class.new(Event) do
-          attr_reader(*attributes)
+          attr_reader(*events)
 
-          define_method(:initialize) do |*args|
-            attributes.zip(args) do |name, value|
+          define_method(:initialize) do |*attributes|
+            events.zip(attributes) do |name, value|
               instance_variable_set("@#{name}".to_sym, value)
             end
           end
 
-          define_method(:attributes) do
-            attributes.map { |attribute| send(attribute) }
+          def attributes
+            instance_variables.map { |var| instance_variable_get(var) }
           end
 
-          define_method(:to_h) do
-            attributes.reduce({}) { |result, attribute|
-              result[attribute] = send(attribute)
-              result
-            }
+          def to_h
+            events.zip(attributes).to_h
           end
 
-          define_method(:event_id) do
+          def event_id
             self.class.event_id
+          end
+
+          private
+
+          def events
+            instance_variables.map { |var| (var[1..-1]).to_sym }
           end
         end
       end
@@ -44,11 +47,13 @@ module Cucumber
         private
 
         def underscore(string)
-          string.to_s.gsub('::', '/').
-          gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
-          gsub(/([a-z\d])([A-Z])/, '\1_\2').
-          tr('-', '_').
-          downcase
+          string
+            .to_s
+            .gsub('::', '/').
+            gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2').
+            gsub(/([a-z\d])([A-Z])/, '\1_\2').
+            tr('-', '_').
+            downcase
         end
       end
     end

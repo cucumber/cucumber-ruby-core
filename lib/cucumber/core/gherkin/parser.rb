@@ -44,17 +44,34 @@ module Cucumber
         end
 
         def process(message, document)
-          event_bus.envelope(message)
-          gherkin_query.update(message)
+          generate_envelope(message)
+          update_gherkin_query(message)
 
+          case type?(message)
+          when :gherkin_document; then event_bus.gherkin_source_parsed(message.gherkin_document)
+          when :pickle;           then receiver.pickle(message.pickle)
+          when :parse_error;      then raise ParseError.new("#{document.uri}: #{message.parse_error.message}")
+          else                    raise "Unknown message: #{message.to_hash}"
+          end
+        end
+
+        def generate_envelope(message)
+          event_bus.envelope(message)
+        end
+
+        def update_gherkin_query(message)
+          gherkin_query.update(message)
+        end
+
+        def type?(message)
           if !message.gherkin_document.nil?
-            event_bus.gherkin_source_parsed(message.gherkin_document)
+            :gherkin_document
           elsif !message.pickle.nil?
-            receiver.pickle(message.pickle)
+            :pickle
           elsif message.parse_error
-            raise ParseError.new("#{document.uri}: #{message.parse_error.message}")
+            :parse_error
           else
-            raise "Unknown message: #{message.to_hash}"
+            :unknown
           end
         end
       end
