@@ -27,7 +27,7 @@ jobs:
             bundler: '2.3.17'
             rubygems: '3.2.3'
           - os: ubuntu-latest
-            ruby: jruby
+            ruby: jruby-head
           - os: macos-latest
             ruby: '3.2'
           - os: windows-latest
