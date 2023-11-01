@@ -99,8 +99,6 @@ describe Cucumber::Core do
     end
 
     it 'fires events' do
-      pending 'This spec fails in JRuby. See https://github.com/jruby/jruby/issues/7988, for details' if defined?(JRUBY_VERSION)
-
       observed_events = []
       execute [gherkin_document], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
         event_bus.on(:test_case_started) do |event|
