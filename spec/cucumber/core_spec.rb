@@ -81,9 +81,8 @@ describe Cucumber::Core do
   describe 'executing a test suite' do
     let(:event_bus) { Cucumber::Core::EventBus.new }
     let(:report) { Cucumber::Core::Report::Summary.new(event_bus) }
-
-    it 'fires events' do
-      gherkin = gherkin do
+    let(:gherkin_document) do
+      gherkin do
         feature 'Feature name' do
           scenario 'The one that passes' do
             step 'passing'
@@ -97,9 +96,13 @@ describe Cucumber::Core do
           end
         end
       end
+    end
+
+    it 'fires events' do
+      pending 'This spec fails in JRuby. See https://github.com/jruby/jruby/issues/7988, for details' if defined?(JRUBY_VERSION)
 
       observed_events = []
-      execute [gherkin], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
+      execute [gherkin_document], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
         event_bus.on(:test_case_started) do |event|
           test_case = event.test_case
           observed_events << [:test_case_started, test_case.name]
@@ -137,23 +140,6 @@ describe Cucumber::Core do
     end
 
     context 'without hooks' do
-      let(:gherkin_document) do
-        gherkin do
-          feature 'Feature name' do
-            scenario 'The one that passes' do
-              step 'passing'
-            end
-
-            scenario 'The one that fails' do
-              step 'passing'
-              step 'failing'
-              step 'passing'
-              step 'undefined'
-            end
-          end
-        end
-      end
-
       before do
         execute([gherkin_document], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus)
       end
