@@ -61,14 +61,106 @@ module Cucumber
             expect(@summary.test_cases.total).to eq(1)
           end
 
-          it 'handles flaky test cases' do
-            allow(test_case).to receive(:==).and_return(false, true)
-            event_bus.send(:test_case_finished, test_case, failed_result)
-            event_bus.send(:test_case_finished, test_case, passed_result)
+          context 'handles flaky test cases' do
+            context 'with following skip test cases' do
+              before do
+                allow(test_case).to receive(:==).and_return(false, true)
+                event_bus.send(:test_case_finished, test_case, failed_result)
+                event_bus.send(:test_case_finished, test_case, passed_result)
+              end
 
-            expect(@summary.test_cases.total(:failed)).to eq(0)
-            expect(@summary.test_cases.total(:flaky)).to eq(1)
-            expect(@summary.test_cases.total).to eq(1)
+              it 'reports 0 passed test' do
+                expect(@summary.test_cases.total(:passed)).to eq(0)
+              end
+
+              it 'reports 0 failed test' do
+                expect(@summary.test_cases.total(:failed)).to eq(0)
+              end
+
+              it 'reports 1 flaky test' do
+                expect(@summary.test_cases.total(:flaky)).to eq(1)
+              end
+
+              it 'reports 1 total test case' do
+                expect(@summary.test_cases.total).to eq(1)
+              end
+            end
+
+            context 'with following passed test cases' do
+              before do
+                event_bus.send(:test_case_finished, test_case, failed_result)
+                event_bus.send(:test_case_finished, test_case, passed_result)
+              end
+
+              it 'reports 0 passed test' do
+                expect(@summary.test_cases.total(:passed)).to eq(0)
+              end
+
+              it 'reports 0 failed test' do
+                expect(@summary.test_cases.total(:failed)).to eq(0)
+              end
+
+              it 'reports 1 flaky test' do
+                expect(@summary.test_cases.total(:flaky)).to eq(1)
+              end
+
+              it 'reports 1 total test case' do
+                expect(@summary.test_cases.total).to eq(1)
+              end
+            end
+
+            context 'with another passed test case and then followed by a retried test case' do
+              context 'passed retried test cases' do
+                before do
+                  event_bus.send(:test_case_finished, test_case, failed_result)
+                  event_bus.send(:test_case_finished, double, passed_result)
+                  event_bus.send(:test_case_finished, test_case, failed_result)
+                  event_bus.send(:test_case_finished, test_case, passed_result)
+                end
+
+                it 'reports 1 passed test' do
+                  expect(@summary.test_cases.total(:passed)).to eq(1)
+                end
+
+                it 'reports 0 failed test' do
+                  expect(@summary.test_cases.total(:failed)).to eq(0)
+                end
+
+                it 'reports 1 flaky test' do
+                  expect(@summary.test_cases.total(:flaky)).to eq(1)
+                end
+
+                it 'reports 2 total test case' do
+                  expect(@summary.test_cases.total).to eq(2)
+                end
+              end
+
+              context 'failed retried test cases' do
+                before do
+                  event_bus.send(:test_case_finished, test_case, failed_result)
+                  event_bus.send(:test_case_finished, double, passed_result)
+                  event_bus.send(:test_case_finished, test_case, failed_result)
+                  event_bus.send(:test_case_finished, test_case, failed_result)
+                  event_bus.send(:test_case_finished, test_case, failed_result)
+                end
+
+                it 'reports 1 passed test' do
+                  expect(@summary.test_cases.total(:passed)).to eq(1)
+                end
+
+                it 'reports 1 failed test' do
+                  expect(@summary.test_cases.total(:failed)).to eq(1)
+                end
+
+                it 'reports 0 flaky test' do
+                  expect(@summary.test_cases.total(:flaky)).to eq(0)
+                end
+
+                it 'reports 2 total test case' do
+                  expect(@summary.test_cases.total).to eq(2)
+                end
+              end
+            end
           end
 
           it 'handles flaky with following skip test cases' do

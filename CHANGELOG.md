@@ -17,6 +17,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
   See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-1300)
   ([#261](https://github.com/cucumber/cucumber-ruby-core/pull/261))
 - Permit usage of gherkin v27
+- Fixed retried scenarios which are run after another scenario with a passed result are still counted as failed ([#250](https://github.com/cucumber/cucumber-ruby-core/pull/250)
 
 ## [12.0.0] - 2023-09-06
 ### Changed
