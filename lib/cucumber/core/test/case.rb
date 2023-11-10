@@ -7,14 +7,15 @@ module Cucumber
   module Core
     module Test
       class Case
-        attr_reader :id, :name, :test_steps, :location, :tags, :language, :around_hooks
+        attr_reader :id, :name, :test_steps, :location, :parent_locations, :tags, :language, :around_hooks
 
-        def initialize(id, name, test_steps, location, tags, language, around_hooks = [])
+        def initialize(id, name, test_steps, location, parent_locations, tags, language, around_hooks = [])
           raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.is_a?(Array)
           @id = id
           @name = name
           @test_steps = test_steps
           @location = location
+          @parent_locations = parent_locations
           @tags = tags
           @language = language
           @around_hooks = around_hooks
@@ -36,11 +37,11 @@ module Cucumber
         end
 
         def with_steps(test_steps)
-          self.class.new(id, name, test_steps, location, tags, language, around_hooks)
+          self.class.new(id, name, test_steps, location, parent_locations, tags, language, around_hooks)
         end
 
         def with_around_hooks(around_hooks)
-          self.class.new(id, name, test_steps, location, tags, language, around_hooks)
+          self.class.new(id, name, test_steps, location, parent_locations, tags, language, around_hooks)
         end
 
         def match_tags?(*expressions)
@@ -61,6 +62,7 @@ module Cucumber
 
         def matching_locations
           [
+            parent_locations,
             location,
             tags.map(&:location),
             test_steps.map(&:matching_locations)

@@ -134,6 +134,8 @@ Metrics/ModuleLength:
 # Configuration parameters: CountKeywordArgs, MaxOptionalParameters.
 Metrics/ParameterLists:
   Max: 7
+  Exclude:
+    - 'lib/cucumber/core/test/case.rb'
 
 # Offense count: 4
 # This cop supports safe auto-correction (--auto-correct).
@@ -227,6 +229,8 @@ RSpec/MultipleExpectations:
 # Configuration parameters: AllowSubject.
 RSpec/MultipleMemoizedHelpers:
   Max: 20
+  Exclude:
+    - 'spec/cucumber/core/test/runner_spec.rb'
 
 # Offense count: 13
 RSpec/NestedGroups:

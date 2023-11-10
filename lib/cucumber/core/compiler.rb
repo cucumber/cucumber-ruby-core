@@ -37,17 +37,18 @@ module Cucumber
       def create_test_case(pickle)
         uri = pickle.uri
         test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
-        lines = source_lines_for_pickle(pickle).sort.reverse
-        tags = source_lines_for_all_pickle_tags(pickle, uri)
-        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, Test::Location.new(uri, lines), tags, pickle.language)
+        location = location_from_pickle(pickle)
+        parent_locations = parent_locations_from_pickle(pickle)
+        tags = tags_from_pickle(pickle, uri)
+        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, location, parent_locations, tags, pickle.language)
         @event_bus&.test_case_created(test_case, pickle)
         test_case
       end
 
       def create_test_step(pickle_step, uri)
-        lines = source_lines_for_pickle_step(pickle_step).sort.reverse
+        location = location_from_pickle_step(pickle_step, uri)
         multiline_arg = create_multiline_arg(pickle_step, uri)
-        step = Test::Step.new(id_generator.new_id, pickle_step.text, Test::Location.new(uri, lines), multiline_arg)
+        step = Test::Step.new(id_generator.new_id, pickle_step.text, location, multiline_arg)
         @event_bus&.test_step_created(step, pickle_step)
         step
       end
@@ -55,36 +56,42 @@ module Cucumber
       def create_multiline_arg(pickle_step, _uri)
         if pickle_step.argument
           if pickle_step.argument.doc_string
-            pickle_step_for_doc_string(pickle_step)
+            doc_string_from_pickle_step(pickle_step)
           elsif pickle_step.argument.data_table
-            pickle_step_for_data_table(pickle_step)
+            data_table_from_pickle_step(pickle_step)
           end
         else
           Test::EmptyMultilineArgument.new
         end
       end
 
-      def source_lines_for_pickle(pickle)
-        pickle.ast_node_ids.map { |id| source_line(id) }
+      def location_from_pickle(pickle)
+        lines = pickle.ast_node_ids.map { |id| source_line(id) }
+        Test::Location.new(pickle.uri, lines.sort.reverse)
       end
 
-      def source_lines_for_pickle_step(pickle_step)
-        pickle_step.ast_node_ids.map { |id| source_line(id) }
+      def parent_locations_from_pickle(pickle)
+        parent_lines = gherkin_query.scenario_parent_locations(pickle.ast_node_ids[0]).map(&:line)
+        Test::Location.new(pickle.uri, parent_lines)
       end
 
-      def source_lines_for_all_pickle_tags(pickle, uri)
-        pickle.tags.map { |tag| Test::Tag.new(Test::Location.new(uri, source_line_for_pickle_tag(tag)), tag.name) }
+      def location_from_pickle_step(pickle_step, uri)
+        lines = pickle_step.ast_node_ids.map { |id| source_line(id) }
+        Test::Location.new(uri, lines.sort.reverse)
       end
 
-      def source_line_for_pickle_tag(tag)
-        source_line(tag.ast_node_id)
+      def tags_from_pickle(pickle, uri)
+        pickle.tags.map do |tag|
+          location = Test::Location.new(uri, source_line(tag.ast_node_id))
+          Test::Tag.new(location, tag.name)
+        end
       end
 
       def source_line(id)
         gherkin_query.location(id).line
       end
 
-      def pickle_step_for_doc_string(pickle_step)
+      def doc_string_from_pickle_step(pickle_step)
         doc_string = pickle_step.argument.doc_string
         Test::DocString.new(
           doc_string.content,
@@ -92,11 +99,11 @@ module Cucumber
         )
       end
 
-      def pickle_step_for_data_table(pickle_step)
+      def data_table_from_pickle_step(pickle_step)
         data_table = pickle_step.argument.data_table
         Test::DataTable.new(
           data_table.rows.map do |row|
-            row.cells.map { |cell| cell.value }
+            row.cells.map(&:value)
           end
         )
       end

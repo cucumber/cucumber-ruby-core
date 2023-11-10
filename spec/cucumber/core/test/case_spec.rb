@@ -13,9 +13,10 @@ describe Cucumber::Core::Test::Case do
   let(:id) { double }
   let(:name) { double }
   let(:location) { double }
+  let(:parent_locations) { double }
   let(:tags) { double }
   let(:language) { double }
-  let(:test_case) { described_class.new(id, name, test_steps, location, tags, language) }
+  let(:test_case) { described_class.new(id, name, test_steps, location, parent_locations, tags, language) }
   let(:test_steps) { [double, double] }
 
   context 'when describing itself' do
@@ -42,7 +43,7 @@ describe Cucumber::Core::Test::Case do
       expect(first_hook).to receive(:describe_to).ordered.and_yield
       expect(second_hook).to receive(:describe_to).ordered.and_yield
       around_hooks = [first_hook, second_hook]
-      described_class.new(id, name, [], location, tags, language, around_hooks).describe_to(visitor, double)
+      described_class.new(id, name, [], location, parent_locations, tags, language, around_hooks).describe_to(visitor, double)
     end
   end
 
