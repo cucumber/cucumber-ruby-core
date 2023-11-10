@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # frozen_string_literal: true
 
 version = File.read(File.expand_path('VERSION', __dir__)).strip
@@ -25,7 +24,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'cucumber-gherkin', '>= 27', '< 28'
   s.add_dependency 'cucumber-messages', '>= 20', '< 23'
-  s.add_dependency 'cucumber-tag-expressions', '~> 5.0', '>= 5.0.4'
+  s.add_dependency 'cucumber-tag-expressions', '> 5', '< 7'
 
   s.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
   s.add_development_dependency 'rspec', '~> 3.11', '>= 3.11.0'
@@ -35,13 +34,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop-packaging', '~> 0.5', '>= 0.5.1'
   s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
-  s.files            = Dir[
-    'CHANGELOG.md',
-    'CONTRIBUTING.md',
-    'README.md',
-    'LICENSE',
-    'lib/**/*'
-  ]
+  s.files            = Dir['CHANGELOG.md', 'CONTRIBUTING.md', 'README.md', 'LICENSE', 'lib/**/*']
   s.rdoc_options     = ['--charset=UTF-8']
   s.require_path     = 'lib'
 end
