@@ -40,21 +40,19 @@ module Cucumber
       end
 
       it 'works with wildcard locations' do
-        locations = [
-          Test::Location.new('features/test.feature')
-        ]
+        locations = [Test::Location.new('features/test.feature')]
         filter = described_class.new(locations)
         compile([doc], receiver, [filter])
-        expect(receiver.test_case_locations).to eq([
-                                                     Test::Location.new('features/test.feature', 3),
-                                                     Test::Location.new('features/test.feature', 6)
-                                                   ])
+        expect(receiver.test_case_locations).to eq(
+          [
+            Test::Location.new('features/test.feature', 3),
+            Test::Location.new('features/test.feature', 6)
+          ]
+        )
       end
 
       it "filters out scenarios that don't match" do
-        locations = [
-          Test::Location.new('features/test.feature', 3)
-        ]
+        locations = [Test::Location.new('features/test.feature', 3)]
         filter = described_class.new(locations)
         compile([doc], receiver, [filter])
         expect(receiver.test_case_locations).to eq(locations)
@@ -62,7 +60,6 @@ module Cucumber
 
       describe 'matching location' do
         let(:file) { 'features/path/to/the.feature' }
-
         let(:test_cases) do
           receiver = double.as_null_object
           result = []
@@ -81,7 +78,7 @@ module Cucumber
               Scenario: one
                 Given one a
 
-              # comment
+              # comment
               @tags
               Scenario: two
                 Given two a
@@ -150,40 +147,48 @@ module Cucumber
             location = Test::Location.new(file, 29)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
-            expect(receiver.test_case_locations).to eq([
-                                                         test_case_named('with a rule and background').location,
-                                                         test_case_named('another with a rule and background').location
-                                                       ])
+            expect(receiver.test_case_locations).to eq(
+              [
+                test_case_named('with a rule and background').location,
+                test_case_named('another with a rule and background').location
+              ]
+            )
           end
 
           it "matches the rule background location to all of the rule's scenarios" do
             location = Test::Location.new(file, 30)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
-            expect(receiver.test_case_locations).to eq([
-                                                         test_case_named('with a rule and background').location,
-                                                         test_case_named('another with a rule and background').location
-                                                       ])
+            expect(receiver.test_case_locations).to eq(
+              [
+                test_case_named('with a rule and background').location,
+                test_case_named('another with a rule and background').location
+              ]
+            )
           end
 
           it "matches a rule background step location to all of the rule's scenarios" do
             location = Test::Location.new(file, 31)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
-            expect(receiver.test_case_locations).to eq([
-                                                         test_case_named('with a rule and background').location,
-                                                         test_case_named('another with a rule and background').location
-                                                       ])
+            expect(receiver.test_case_locations).to eq(
+              [
+                test_case_named('with a rule and background').location,
+                test_case_named('another with a rule and background').location
+              ]
+            )
           end
 
           it "matches a rule location (without a background) to all of the rule's scenarios" do
             location = Test::Location.new(file, 39)
             filter = described_class.new([location])
             compile [doc], receiver, [filter]
-            expect(receiver.test_case_locations).to eq([
-                                                         test_case_named('with a rule and no background').location,
-                                                         test_case_named('another with a rule and no background').location
-                                                       ])
+            expect(receiver.test_case_locations).to eq(
+              [
+                test_case_named('with a rule and no background').location,
+                test_case_named('another with a rule and no background').location
+              ]
+            )
           end
 
           it 'matches a scenario location to the scenario' do
@@ -199,10 +204,12 @@ module Cucumber
             whitespace_location = Test::Location.new(file, 7)
             filter = described_class.new([scenario_location, another_scenario_location, whitespace_location])
             compile([doc], receiver, [filter])
-            expect(receiver.test_case_locations).to eq([
-                                                         test_case_named('one').location,
-                                                         test_case_named('two').location
-                                                       ])
+            expect(receiver.test_case_locations).to eq(
+              [
+                test_case_named('one').location,
+                test_case_named('two').location
+              ]
+            )
           end
 
           it 'matches the first scenario step location to the scenario' do
@@ -306,7 +313,7 @@ module Cucumber
                 Given one a
 
               # comment on line 6
-              @tags-on-line-7
+              @tag-on-line-7
               Scenario Outline: two <arg>
                 Given two a
                 And two <arg>
@@ -315,7 +322,7 @@ module Cucumber
                   """
 
                 # comment on line 15
-                @tags-on-line-16
+                @tag-on-line-16
                 Examples: x1
                   | arg |
                   | b   |
@@ -421,8 +428,7 @@ module Cucumber
         test_cases << test_case
       end
 
-      def done
-      end
+      def done; end
 
       def test_case_locations
         test_cases.map(&:location)
