@@ -10,6 +10,11 @@ module Cucumber
         return super if ancestors.index(Event) > 0
 
         Class.new(Event) do
+          # NB: We need to use metaprogramming here instead of direct variable obtainment
+          # because JRuby does not guarantee the order in which variables are defined is equivalent
+          # to the order in which they are obtainable
+          #
+          # See https://github.com/jruby/jruby/issues/7988 for more info
           attr_reader(*events)
 
           define_method(:initialize) do |*attributes|
