@@ -255,6 +255,7 @@ RSpec/VerifiedDoubles:
   Exclude:
     - 'spec/cucumber/core/compiler_spec.rb'
 
+# TODO: Re-test once using rubocop 1.50+
 # Offense count: 1
 # Configuration parameters: EnforcedStyle, AllowModifiersOnSymbols.
 # SupportedStyles: inline, group
