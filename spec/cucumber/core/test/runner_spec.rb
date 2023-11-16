@@ -249,7 +249,6 @@ describe Cucumber::Core::Test::Runner do
     let(:test_steps) { [failing_step, after_hook] }
 
     it 'passes a Failed result when the scenario is failing' do
-      @result_spy = nil
       test_case.describe_to(runner)
 
       expect(@result_spy).to be_failed
