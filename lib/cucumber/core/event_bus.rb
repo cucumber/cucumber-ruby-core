@@ -8,7 +8,6 @@ module Cucumber
     #
     # Implements an in-process pub-sub event broadcaster allowing multiple observers
     # to subscribe to events that fire as your tests are executed.
-    #
     class EventBus
       attr_reader :event_types
 
@@ -19,8 +18,7 @@ module Cucumber
         @event_queue = []
       end
 
-      # Register for an event. The handler proc will be called back with each of the attributes
-      # of the event.
+      # Register for an event. The handler proc will be called back with each of the attributes of the event
       def on(event_id, handler_object = nil, &handler_proc)
         handler = handler_proc || handler_object
         validate_handler_and_event_id!(handler, event_id)
@@ -29,7 +27,6 @@ module Cucumber
         broadcast_queued_events_to handler, event_class
       end
 
-      # Broadcast an event
       def broadcast(event)
         raise ArgumentError, "Event type #{event.class} is not registered. Try one of these:\n#{event_types.values.join("\n")}" unless registered_type?(event.class)
         handlers_for(event.class).each { |handler| handler.call(event) }
@@ -48,11 +45,7 @@ module Cucumber
       private
 
       def broadcast_queued_events_to(handler, event_type)
-        @event_queue.select { |event|
-          event.instance_of?(event_type)
-        }.each { |event|
-          handler.call(event)
-        }
+        @event_queue.select { |event| event.instance_of?(event_type) }.each { |event| handler.call(event) }
       end
 
       def handlers_for(event_class)
