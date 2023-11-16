@@ -35,7 +35,7 @@ describe Cucumber::Core::Test::Runner do
       allow(Cucumber::Core::Test::Timer::MonotonicTime).to receive(:time_in_nanoseconds).and_return(525_702_744_080_000, 525_702_744_080_001)
     end
 
-    context 'for a passing test case' do
+    context 'with a passing test case' do
       let(:test_steps) { [passing] }
 
       it 'records the nanoseconds duration of the execution on the result' do
@@ -46,7 +46,7 @@ describe Cucumber::Core::Test::Runner do
       end
     end
 
-    context 'for a failing test case' do
+    context 'with a failing test case' do
       let(:test_steps) { [failing] }
 
       it 'records the duration' do

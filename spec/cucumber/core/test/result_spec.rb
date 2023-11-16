@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # frozen_string_literal: true
 
 require 'cucumber/core/test/result'
@@ -271,31 +270,37 @@ module Cucumber
             context 'without a type argument' do
               it 'can set undefined to be strict' do
                 strict_configuration.set_strict(true)
+
                 expect(strict_configuration).to be_strict(:undefined)
               end
 
               it 'can set pending to be strict' do
                 strict_configuration.set_strict(true)
+
                 expect(strict_configuration).to be_strict(:pending)
               end
 
               it 'can set flaky to be strict' do
                 strict_configuration.set_strict(true)
+
                 expect(strict_configuration).to be_strict(:flaky)
               end
 
               it 'can set undefined not to be strict' do
                 strict_configuration.set_strict(false)
+
                 expect(strict_configuration).not_to be_strict(:undefined)
               end
 
               it 'can set pending not to be strict' do
                 strict_configuration.set_strict(false)
+
                 expect(strict_configuration).not_to be_strict(:pending)
               end
 
               it 'can set flaky not to be strict' do
                 strict_configuration.set_strict(false)
+
                 expect(strict_configuration).not_to be_strict(:flaky)
               end
             end
@@ -303,31 +308,37 @@ module Cucumber
             context 'with a type argument' do
               it 'can set undefined only to be strict' do
                 strict_configuration.set_strict(true, :undefined)
+
                 expect(strict_configuration).to be_strict(:undefined)
               end
 
               it 'can set pending only to be strict' do
                 strict_configuration.set_strict(true, :pending)
+
                 expect(strict_configuration).to be_strict(:pending)
               end
 
               it 'can set flaky only to be strict' do
                 strict_configuration.set_strict(true, :flaky)
+
                 expect(strict_configuration).to be_strict(:flaky)
               end
 
               it 'can set undefined only not to be strict' do
                 strict_configuration.set_strict(false, :undefined)
+
                 expect(strict_configuration).not_to be_strict(:undefined)
               end
 
               it 'can set pending only not to be strict' do
                 strict_configuration.set_strict(false, :pending)
+
                 expect(strict_configuration).not_to be_strict(:pending)
               end
 
               it 'can set flaky only not to be strict' do
                 strict_configuration.set_strict(false, :flaky)
+
                 expect(strict_configuration).not_to be_strict(:flaky)
               end
             end
