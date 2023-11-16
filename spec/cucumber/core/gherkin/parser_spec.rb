@@ -1,4 +1,3 @@
-# -*- encoding: utf-8 -*-
 # frozen_string_literal: true
 
 require 'cucumber/core/gherkin/parser'
@@ -31,19 +30,16 @@ describe Cucumber::Core::Gherkin::Parser do
     match { |actual| actual.language == language }
   end
 
-  context 'for invalid gherkin' do
+  context 'when invalid gherkin is used as a source' do
     let(:source) { Cucumber::Core::Gherkin::Document.new(path, "\nnot gherkin\n\nFeature: \n") }
     let(:path)   { 'path_to/the.feature' }
 
     it 'raises an error' do
-      expect { parse }.to raise_error(Cucumber::Core::Gherkin::ParseError) do |error|
-        expect(error.message).to match(/not gherkin/)
-        expect(error.message).to match(/#{path}/)
-      end
+      expect { parse }.to raise_error(Cucumber::Core::Gherkin::ParseError).with_message(/#{path}.*not gherkin/)
     end
   end
 
-  context 'for valid gherkin' do
+  context 'when valid gherkin is used as a source' do
     let(:source) { Cucumber::Core::Gherkin::Document.new(path, 'Feature:') }
     let(:path)   { 'path_to/the.feature' }
 
@@ -53,7 +49,7 @@ describe Cucumber::Core::Gherkin::Parser do
       parse
     end
 
-    it "emits an 'envelope' event for every message produced by Gherkin" do
+    it "emits an `:envelope` event for every message produced by Gherkin" do
       # Only one message emitted, there's no pickles generated
       expect(event_bus).to receive(:envelope).once
 
@@ -61,7 +57,7 @@ describe Cucumber::Core::Gherkin::Parser do
     end
   end
 
-  context 'for empty files' do
+  context 'with an empty file' do
     let(:source) { Cucumber::Core::Gherkin::Document.new(path, '') }
     let(:path)   { 'path_to/the.feature' }
 
@@ -101,7 +97,7 @@ describe Cucumber::Core::Gherkin::Parser do
       parse
     end
 
-    it "emits an 'envelope' event containing the pickle" do
+    it "emits an `:envelope` event containing the pickle" do
       allow(receiver).to receive(:pickle)
       # Once for the gherkin document, once with the pickle
       expect(event_bus).to receive(:envelope).twice
