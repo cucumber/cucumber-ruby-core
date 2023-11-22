@@ -103,7 +103,7 @@ describe Cucumber::Core::Gherkin::Writer do
       let(:expected) do
         <<~FEATURE
           Feature:
-        
+
             # wow
             Scenario:
         FEATURE
@@ -195,7 +195,7 @@ describe Cucumber::Core::Gherkin::Writer do
     let(:expected) do
       <<~FEATURE
         Feature:
-      
+
           Background:
             One line,
             and two..
@@ -217,7 +217,7 @@ describe Cucumber::Core::Gherkin::Writer do
     let(:expected) do
       <<~FEATURE
         Feature:
-      
+
           Scenario Outline:
             Doesn't need to be multi-line.
       FEATURE
@@ -237,9 +237,9 @@ describe Cucumber::Core::Gherkin::Writer do
       let(:expected) do
         <<~FEATURE
           Feature:
-      
+
             Scenario Outline:
-      
+
               Examples:
                 Doesn't need to be multi-line.
         FEATURE
@@ -314,14 +314,14 @@ describe Cucumber::Core::Gherkin::Writer do
     # wow
     @always
     Feature: Fully featured
-    
+
       # cool
       Background:
         Given passing
-    
+
       Scenario:
         Given passing
-    
+
       # here
       @first @second
       Scenario: with doc string
@@ -332,18 +332,18 @@ describe Cucumber::Core::Gherkin::Writer do
           I wish I was a little bit taller.
           I wish I was a baller.
           """
-    
+
       Scenario: with a table...
         Given passes:
           | name   | age | location   |
           | Janine | 43  | Antarctica |
-    
+
       # yay
       Scenario Outline: eating
         Given there are <start> cucumbers
         When I eat <eat> cucumbers
         Then I should have <left> cucumbers
-    
+
         # hmmm
         Examples:
           | start | eat | left |
