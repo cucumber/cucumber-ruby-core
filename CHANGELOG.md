@@ -12,7 +12,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ### Changed
 - Now using a 2-tiered changelog to avoid any bugs when using polyglot-release
 - More refactoring of the repo by fixing up a bunch of manual rubocop offenses (See PR's for details)
-  ([#259](https://github.com/cucumber/cucumber-ruby-core/pull/259) [#262](https://github.com/cucumber/cucumber-ruby-core/pull/262) [#268](https://github.com/cucumber/cucumber-ruby-core/pull/268))
+  ([#259](https://github.com/cucumber/cucumber-ruby-core/pull/259) [#262](https://github.com/cucumber/cucumber-ruby-core/pull/262) [#268](https://github.com/cucumber/cucumber-ruby-core/pull/268) [#274](https://github.com/cucumber/cucumber-ruby-core/pull/274))
 - In all `Summary` and `Result` classes, changed the `strict` argument into a keyword argument.
   See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-1300)
   ([#261](https://github.com/cucumber/cucumber-ruby-core/pull/261))
