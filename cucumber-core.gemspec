@@ -33,7 +33,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rubocop-rake', '~> 0.6.0'
   s.add_development_dependency 'rubocop-rspec', '2.8'
   s.add_development_dependency 'rubocop-packaging', '~> 0.5', '>= 0.5.1'
-  s.add_development_dependency 'unindent', '~> 1.0', '>= 1.0'
 
   s.files            = Dir['CHANGELOG.md', 'CONTRIBUTING.md', 'README.md', 'LICENSE', 'lib/**/*']
   s.rdoc_options     = ['--charset=UTF-8']
