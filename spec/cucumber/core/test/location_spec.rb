@@ -26,15 +26,15 @@ module Cucumber
             expect(described_class.new(file, line)).not_to eq described_class.new(file)
           end
 
-          context 'collections of locations' do
+          context 'with a collection of locations' do
             it 'behave as expected with uniq' do
               unique_collection = [described_class.new(file, line), described_class.new(file, line)].uniq
-              expect(unique_collection).to eq [described_class.new(file, line)]
+              expect(unique_collection).to eq([described_class.new(file, line)])
             end
           end
         end
 
-        describe 'to_s' do
+        describe '#to_s' do
           it 'is file:line for a precise location' do
             expect(described_class.new('foo.feature', 12).to_s).to eq 'foo.feature:12'
           end
@@ -52,13 +52,13 @@ module Cucumber
           end
         end
 
-        describe 'matches' do
+        describe '#match?' do
           let(:matching) { described_class.new(file, line) }
           let(:same_file_other_line) { described_class.new(file, double) }
           let(:not_matching) { described_class.new(other_file, line) }
           let(:other_file) { double }
 
-          context 'a precise location' do
+          context 'with a precise location' do
             let(:precise) { described_class.new(file, line) }
 
             it 'matches a precise location of the same file and line' do
@@ -70,7 +70,7 @@ module Cucumber
             end
           end
 
-          context 'a wildcard' do
+          context 'with a wildcard' do
             let(:wildcard) { described_class.new(file) }
 
             it 'matches any location with the same filename' do
@@ -87,44 +87,42 @@ module Cucumber
           end
         end
 
-        describe 'created from source location' do
+        describe '#from_source_location' do
           context 'when the location is in the tree below pwd' do
-            it 'create a relative path from pwd' do
+            it 'creates a relative path from pwd' do
               expect(described_class.from_source_location("#{Dir.pwd}/path/file.rb", 1).file).to eq 'path/file.rb'
             end
           end
 
           context 'when the location is in an installed gem' do
-            it 'create a relative path from the gem directory' do
+            it 'creates a relative path from the gem directory' do
               expect(described_class.from_source_location('/path/gems/gem-name/path/file.rb', 1).file).to eq 'gem-name/path/file.rb'
             end
           end
 
           context 'when the location is neither below pwd nor in an installed gem' do
-            it 'use the absolute path to the file' do
+            it 'uses the absolute path to the file' do
               # Use File.expand on expectation to ensure tests work on multiple platform.
               # On Windows, it will return "C:/path/file.rb" as an absolute path while it will return "/path/file.rb" on Linux.
-              expect(described_class.from_source_location('/path/file.rb', 1).file).to eq File.expand_path('/path/file.rb')
+              expect(described_class.from_source_location('/path/file.rb', 1).file).to eq(File.expand_path('/path/file.rb'))
             end
           end
         end
 
-        describe 'created from file-colon-line' do
+        describe '#from_file_colon_line' do
           it 'handles also Windows paths' do
             # NOTE: running this test on Windows will produce "c:/path/file.rb", but "c:\path\file.rb" on Linux.
             expect(described_class.from_file_colon_line('c:\\path\\file.rb:123').file).to match(/c:(\\|\/)path(\\|\/)file.rb/)
           end
         end
 
-        describe 'created of caller' do
+        describe '#of_caller' do
           it 'use the location of the caller' do
             expect(described_class.of_caller.to_s).to be_included_in caller[0]
           end
 
-          context 'when specifying additional caller depth' do
-            it 'use the location of the n:th caller' do
-              expect(described_class.of_caller(1).to_s).to be_included_in caller[1]
-            end
+          it 'uses the location of the nth caller' do
+            expect(described_class.of_caller(1).to_s).to be_included_in caller[1]
           end
         end
       end

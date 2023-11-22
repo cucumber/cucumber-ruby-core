@@ -4,7 +4,6 @@ require 'cucumber/core'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'
 require 'cucumber/core/test/case'
-require 'unindent'
 
 describe Cucumber::Core::Test::Case do
   include Cucumber::Core
@@ -19,7 +18,7 @@ describe Cucumber::Core::Test::Case do
   let(:test_case) { described_class.new(id, name, test_steps, location, parent_locations, tags, language) }
   let(:test_steps) { [double, double] }
 
-  context 'when describing itself' do
+  describe '#describe_to' do
     let(:visitor) { double }
     let(:args) { double }
 
@@ -65,7 +64,7 @@ describe Cucumber::Core::Test::Case do
     end
   end
 
-  context 'when matching tags' do
+  describe '#match_tags?' do
     let(:tags) { %w[@a @b @c].map { |value| Cucumber::Core::Test::Tag.new(location, value) } }
 
     it 'matches tags using tag expressions' do
@@ -81,7 +80,7 @@ describe Cucumber::Core::Test::Case do
     end
   end
 
-  context 'when matching names' do
+  describe '#match_name?' do
     let(:name) { 'scenario' }
 
     it 'matches names against regexp' do
