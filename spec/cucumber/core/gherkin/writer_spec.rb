@@ -8,19 +8,19 @@ describe Cucumber::Core::Gherkin::Writer do
   it 'generates a uri by default' do
     source = gherkin { feature }
 
-    expect(source.uri).to eq 'features/test.feature'
+    expect(source.uri).to eq('features/test.feature')
   end
 
   it 'allows you to specify a URI' do
     source = gherkin('features/path/to/my.feature') { feature }
 
-    expect(source.uri).to eq 'features/path/to/my.feature'
+    expect(source.uri).to eq('features/path/to/my.feature')
   end
 
   it 'generates the feature statement by default' do
     source = gherkin { feature }
 
-    expect(source).to eq "Feature:\n"
+    expect(source).to eq("Feature:\n")
   end
 
   context 'when a name is provided' do
@@ -29,7 +29,7 @@ describe Cucumber::Core::Gherkin::Writer do
         feature "A Feature\n"
       end
 
-      expect(source).to eq "Feature: A Feature\n"
+      expect(source).to eq("Feature: A Feature\n")
     end
   end
 
@@ -84,7 +84,7 @@ describe Cucumber::Core::Gherkin::Writer do
         feature
       end
 
-      expect(source.to_s).to eq "# wow\n# great\nFeature:\n"
+      expect(source.to_s).to eq("# wow\n# great\nFeature:\n")
     end
   end
 
