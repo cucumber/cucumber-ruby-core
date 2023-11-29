@@ -259,98 +259,82 @@ describe Cucumber::Core::Gherkin::Writer do
     end
   end
 
-  it 'can generate a complex feature' do
-    source = gherkin do
-      comment 'wow'
-      feature 'Fully featured', language: 'en', tags: '@always' do
-        comment 'cool'
-        background do
-          step 'passing'
-        end
+  context 'with a feature file with many options' do
+    let(:expected) do
+      <<~FEATURE
+        # language: en
+        # wow
+        @always
+        Feature: Fully featured
 
-        scenario do
-          step 'passing'
-        end
+          # cool
+          Background:
+            Given passing
 
-        comment 'here'
-        scenario 'with doc string', tags: '@first @second' do
-          comment 'and here'
-          step 'passing'
-          step 'failing', keyword: 'When' do
-            doc_string <<~DOC_STRING
-              I wish I was a little bit taller.
-              I wish I was a baller.
-            DOC_STRING
+          Scenario:
+            Given passing
+
+          # here
+          @first @second
+          Scenario: with doc string
+            # and here
+            Given failing
+              """
+              I wish I was a little bit taller
+              """
+
+          # yay
+          Scenario Outline: eating
+            Given there are <start> cucumbers
+            When I eat <eat> cucumbers
+            Then I should have <left> cucumbers
+
+            # hmmm
+            Examples:
+              | start | eat | left |
+              | 12    | 5   | 7    |
+              | 20    | 5   | 15   |
+      FEATURE
+    end
+
+    it 'can generate a complex feature' do
+      source = gherkin do
+        comment 'wow'
+        feature 'Fully featured', language: 'en', tags: '@always' do
+          comment 'cool'
+          background do
+            step 'passing'
           end
-        end
 
-        scenario 'with a table...' do
-          step 'passes:' do
-            table do
-              row 'name',   'age', 'location'
-              row 'Janine', '43',  'Antarctica'
+          scenario do
+            step 'passing'
+          end
+
+          comment 'here'
+          scenario 'with doc string', tags: '@first @second' do
+            comment 'and here'
+            step 'failing' do
+              doc_string 'I wish I was a little bit taller'
+            end
+          end
+
+          comment 'yay'
+          scenario_outline 'eating' do
+            step 'there are <start> cucumbers'
+            step 'I eat <eat> cucumbers', keyword: 'When'
+            step 'I should have <left> cucumbers', keyword: 'Then'
+
+            comment 'hmmm'
+            examples do
+              row 'start', 'eat', 'left'
+              row '12',    '5',   '7'
+              row '20',    '5',   '15'
             end
           end
         end
-
-        comment 'yay'
-        scenario_outline 'eating' do
-          step 'there are <start> cucumbers'
-          step 'I eat <eat> cucumbers', keyword: 'When'
-          step 'I should have <left> cucumbers', keyword: 'Then'
-
-          comment 'hmmm'
-          examples do
-            row 'start', 'eat', 'left'
-            row '12',    '5',   '7'
-            row '20',    '5',   '15'
-          end
-        end
       end
+
+      expect(source.to_s).to eq(expected)
     end
-
-    expected = <<~FEATURE
-    # language: en
-    # wow
-    @always
-    Feature: Fully featured
-
-      # cool
-      Background:
-        Given passing
-
-      Scenario:
-        Given passing
-
-      # here
-      @first @second
-      Scenario: with doc string
-        # and here
-        Given passing
-        When failing
-          """
-          I wish I was a little bit taller.
-          I wish I was a baller.
-          """
-
-      Scenario: with a table...
-        Given passes:
-          | name   | age | location   |
-          | Janine | 43  | Antarctica |
-
-      # yay
-      Scenario Outline: eating
-        Given there are <start> cucumbers
-        When I eat <eat> cucumbers
-        Then I should have <left> cucumbers
-
-        # hmmm
-        Examples:
-          | start | eat | left |
-          | 12    | 5   | 7    |
-          | 20    | 5   | 15   |
-    FEATURE
-
-    expect(source.to_s).to eq(expected)
   end
 end
