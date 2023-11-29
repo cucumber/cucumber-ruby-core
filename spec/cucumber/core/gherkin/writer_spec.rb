@@ -1,24 +1,26 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/gherkin/writer'
-require 'unindent'
 
 describe Cucumber::Core::Gherkin::Writer do
   include described_class
 
   it 'generates a uri by default' do
     source = gherkin { feature }
-    expect(source.uri).to eq 'features/test.feature'
+
+    expect(source.uri).to eq('features/test.feature')
   end
 
   it 'allows you to specify a URI' do
     source = gherkin('features/path/to/my.feature') { feature }
-    expect(source.uri).to eq 'features/path/to/my.feature'
+
+    expect(source.uri).to eq('features/path/to/my.feature')
   end
 
   it 'generates the feature statement by default' do
     source = gherkin { feature }
-    expect(source).to eq "Feature:\n"
+
+    expect(source).to eq("Feature:\n")
   end
 
   context 'when a name is provided' do
@@ -26,27 +28,31 @@ describe Cucumber::Core::Gherkin::Writer do
       source = gherkin do
         feature "A Feature\n"
       end
-      expect(source).to eq "Feature: A Feature\n"
+
+      expect(source).to eq("Feature: A Feature\n")
     end
   end
 
   context 'when a description is provided' do
+    let(:expected) do
+      <<~FEATURE
+        Feature: A Feature
+          This is the description
+          which can span
+          multiple lines.
+      FEATURE
+    end
+
     it 'includes the description in the feature statement' do
       source = gherkin do
-        feature 'A Feature', description: <<-FEATURE
-      This is the description
-      which can span
-      multiple lines.
+        feature 'A Feature', description: <<~FEATURE
+          This is the description
+          which can span
+          multiple lines.
         FEATURE
       end
-      expected = <<-FEATURE
-  Feature: A Feature
-    This is the description
-    which can span
-    multiple lines.
-      FEATURE
 
-      expect(source).to eq expected.unindent
+      expect(source).to eq(expected)
     end
   end
 
@@ -55,7 +61,8 @@ describe Cucumber::Core::Gherkin::Writer do
       source = gherkin do
         feature 'A Feature', keyword: 'Business Need'
       end
-      expect(source).to eq "Business Need: A Feature\n"
+
+      expect(source).to eq("Business Need: A Feature\n")
     end
   end
 
@@ -65,7 +72,7 @@ describe Cucumber::Core::Gherkin::Writer do
         feature language: 'ru'
       end
 
-      expect(source).to eq "# language: ru\nFeature:\n"
+      expect(source).to eq("# language: ru\nFeature:\n")
     end
   end
 
@@ -77,7 +84,7 @@ describe Cucumber::Core::Gherkin::Writer do
         feature
       end
 
-      expect(source.to_s).to eq "# wow\n# great\nFeature:\n"
+      expect(source.to_s).to eq("# wow\n# great\nFeature:\n")
     end
   end
 
@@ -93,6 +100,15 @@ describe Cucumber::Core::Gherkin::Writer do
     end
 
     context 'when a comment is provided' do
+      let(:expected) do
+        <<~FEATURE
+          Feature:
+
+            # wow
+            Scenario:
+        FEATURE
+      end
+
       it 'includes the comment in the scenario statement' do
         source = gherkin do
           feature do
@@ -100,35 +116,35 @@ describe Cucumber::Core::Gherkin::Writer do
             scenario
           end
         end
-        expect(source.to_s).to eq <<-FEATURE.unindent
-    Feature:
 
-      # wow
-      Scenario:
-        FEATURE
+        expect(source.to_s).to eq(expected)
       end
     end
 
     context 'when a description is provided' do
+      let(:expected) do
+        <<~FEATURE
+          Feature:
+
+            Scenario:
+              This is the description
+              which can span
+              multiple lines.
+        FEATURE
+      end
+
       it 'includes the description in the scenario statement' do
         source = gherkin do
           feature do
-            scenario description: <<-SCENARIO
-          This is the description
-          which can span
-          multiple lines.
+            scenario description: <<~SCENARIO
+              This is the description
+              which can span
+              multiple lines.
             SCENARIO
           end
         end
 
-        expect(source).to eq <<-FEATURE.unindent
-    Feature:
-
-      Scenario:
-        This is the description
-        which can span
-        multiple lines.
-        FEATURE
+        expect(source).to eq(expected)
       end
     end
 
@@ -146,6 +162,18 @@ describe Cucumber::Core::Gherkin::Writer do
       end
 
       context 'when a docstring is provided' do
+        let(:expected) do
+          <<~FEATURE
+            Feature:
+
+              Scenario:
+                Given failing
+                  """text/plain
+                  some text
+                  """
+          FEATURE
+        end
+
         it 'includes the content type when provided' do
           source = gherkin do
             feature do
@@ -157,21 +185,23 @@ describe Cucumber::Core::Gherkin::Writer do
             end
           end
 
-          expect(source).to eq <<-FEATURE.unindent
-      Feature:
-
-        Scenario:
-          Given failing
-            """text/plain
-            some text
-            """
-          FEATURE
+          expect(source).to eq(expected)
         end
       end
     end
   end
 
   context 'with a background' do
+    let(:expected) do
+      <<~FEATURE
+        Feature:
+
+          Background:
+            One line,
+            and two..
+      FEATURE
+    end
+
     it 'can have a description' do
       source = gherkin do
         feature do
@@ -179,17 +209,20 @@ describe Cucumber::Core::Gherkin::Writer do
         end
       end
 
-      expect(source).to eq <<-FEATURE.unindent
-  Feature:
-
-    Background:
-      One line,
-      and two..
-      FEATURE
+      expect(source).to eq(expected)
     end
   end
 
   context 'with a scenario outline' do
+    let(:expected) do
+      <<~FEATURE
+        Feature:
+
+          Scenario Outline:
+            Doesn't need to be multi-line.
+      FEATURE
+    end
+
     it 'can have a description' do
       source = gherkin do
         feature do
@@ -197,15 +230,21 @@ describe Cucumber::Core::Gherkin::Writer do
         end
       end
 
-      expect(source).to eq <<-FEATURE.unindent
-  Feature:
-
-    Scenario Outline:
-      Doesn't need to be multi-line.
-      FEATURE
+      expect(source).to eq(expected)
     end
 
     context 'with an examples table' do
+      let(:expected) do
+        <<~FEATURE
+          Feature:
+
+            Scenario Outline:
+
+              Examples:
+                Doesn't need to be multi-line.
+        FEATURE
+      end
+
       it 'can have a description' do
         source = gherkin do
           feature do
@@ -215,108 +254,87 @@ describe Cucumber::Core::Gherkin::Writer do
           end
         end
 
-        expect(source).to eq <<-FEATURE.unindent
-    Feature:
-
-      Scenario Outline:
-
-        Examples:
-          Doesn't need to be multi-line.
-        FEATURE
+        expect(source).to eq(expected)
       end
     end
   end
 
-  it 'can generate a complex feature' do
-    source = gherkin do
-      comment 'wow'
-      feature 'Fully featured', language: 'en', tags: '@always' do
-        comment 'cool'
-        background do
-          step 'passing'
-        end
+  context 'with a feature file with many options' do
+    let(:expected) do
+      <<~FEATURE
+        # language: en
+        # wow
+        @always
+        Feature: Fully featured
 
-        scenario do
-          step 'passing'
-        end
+          # cool
+          Background:
+            Given passing
 
-        comment 'here'
-        scenario 'with doc string', tags: '@first @second' do
-          comment 'and here'
-          step 'passing'
-          step 'failing', keyword: 'When' do
-            doc_string <<-DOC_STRING
-        I wish I was a little bit taller.
-        I wish I was a baller.
-            DOC_STRING
+          Scenario:
+            Given passing
+
+          # here
+          @first @second
+          Scenario: with doc string
+            # and here
+            Given failing
+              """
+              I wish I was a little bit taller
+              """
+
+          # yay
+          Scenario Outline: eating
+            Given there are <start> cucumbers
+            When I eat <eat> cucumbers
+            Then I should have <left> cucumbers
+
+            # hmmm
+            Examples:
+              | start | eat | left |
+              | 12    | 5   | 7    |
+              | 20    | 5   | 15   |
+      FEATURE
+    end
+
+    it 'can generate a complex feature' do
+      source = gherkin do
+        comment 'wow'
+        feature 'Fully featured', language: 'en', tags: '@always' do
+          comment 'cool'
+          background do
+            step 'passing'
           end
-        end
 
-        scenario 'with a table...' do
-          step 'passes:' do
-            table do
-              row 'name',   'age', 'location'
-              row 'Janine', '43',  'Antarctica'
+          scenario do
+            step 'passing'
+          end
+
+          comment 'here'
+          scenario 'with doc string', tags: '@first @second' do
+            comment 'and here'
+            step 'failing' do
+              doc_string 'I wish I was a little bit taller'
+            end
+          end
+
+          comment 'yay'
+          scenario_outline 'eating' do
+            step 'there are <start> cucumbers'
+            step 'I eat <eat> cucumbers', keyword: 'When'
+            step 'I should have <left> cucumbers', keyword: 'Then'
+
+            comment 'hmmm'
+            examples do
+              row 'start', 'eat', 'left'
+              row '12',    '5',   '7'
+              row '20',    '5',   '15'
             end
           end
         end
-
-        comment 'yay'
-        scenario_outline 'eating' do
-          step 'there are <start> cucumbers'
-          step 'I eat <eat> cucumbers', keyword: 'When'
-          step 'I should have <left> cucumbers', keyword: 'Then'
-
-          comment 'hmmm'
-          examples do
-            row 'start', 'eat', 'left'
-            row '12',    '5',   '7'
-            row '20',    '5',   '15'
-          end
-        end
       end
+
+      expect(source.to_s).to eq(expected)
     end
-
-    expect(source.to_s).to eq <<-FEATURE.unindent
-# language: en
-# wow
-@always
-Feature: Fully featured
-
-  # cool
-  Background:
-    Given passing
-
-  Scenario:
-    Given passing
-
-  # here
-  @first @second
-  Scenario: with doc string
-    # and here
-    Given passing
-    When failing
-      """
-      I wish I was a little bit taller.
-      I wish I was a baller.
-      """
-
-  Scenario: with a table...
-    Given passes:
-      | name   | age | location   |
-      | Janine | 43  | Antarctica |
-
-  # yay
-  Scenario Outline: eating
-    Given there are <start> cucumbers
-    When I eat <eat> cucumbers
-    Then I should have <left> cucumbers
-
-    # hmmm
-    Examples:
-      | start | eat | left |
-      | 12    | 5   | 7    |
-      | 20    | 5   | 15   |
-    FEATURE
   end
 end

@@ -13,13 +13,16 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 - Now using a 2-tiered changelog to avoid any bugs when using polyglot-release
 - More refactoring of the repo by fixing up a bunch of manual rubocop offenses (See PR's for details)
   ([#259](https://github.com/cucumber/cucumber-ruby-core/pull/259) [#262](https://github.com/cucumber/cucumber-ruby-core/pull/262) [#268](https://github.com/cucumber/cucumber-ruby-core/pull/268) [#274](https://github.com/cucumber/cucumber-ruby-core/pull/274))
-- In all `Summary` and `Result` classes, changed the `strict` argument into a keyword argument.
+- In all `Summary` and `Result` classes, changed the `strict` argument into a keyword argument
   See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-1300)
   ([#261](https://github.com/cucumber/cucumber-ruby-core/pull/261))
 - Permit usage of gherkin v27
 
 ### Fixed
-- Restore support for matching a scenario by its Feature, Background, and Rule line numbers. ([#247](https://github.com/cucumber/cucumber-ruby-core/pull/237))
+- Restore support for matching a scenario by its Feature, Background, and Rule line numbers ([#247](https://github.com/cucumber/cucumber-ruby-core/pull/247))
+
+### Removed
+- Remove legacy `unindent` gem (Now no longer required since Ruby 2.3 and Squiggly heredocs) ([#278](https://github.com/cucumber/cucumber-ruby-core/pull/278))
 
 ## [12.0.0] - 2023-09-06
 ### Changed
