@@ -28,11 +28,11 @@ describe Cucumber::Core::Filter do
     it 'creates a filter class that can pass-through by default' do
       my_filter_class = described_class.new
       my_filter = my_filter_class.new
-      expect(receiver).to receive(:test_case) { |test_case|
-        expect(test_case.test_steps.length).to eq 1
-        expect(test_case.test_steps.first.text).to eq 'a step'
-      }.twice
-      compile [doc], receiver, [my_filter]
+      expect(receiver).to receive(:test_case) do |test_case|
+        expect(test_case.test_steps.length).to eq(1)
+        expect(test_case.test_steps.first.text).to eq('a step')
+      end.twice
+      compile([doc], receiver, [my_filter])
     end
 
     context 'when customizing using a subclass' do

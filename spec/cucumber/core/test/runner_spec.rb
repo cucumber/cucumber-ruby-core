@@ -63,176 +63,172 @@ describe Cucumber::Core::Test::Runner do
     end
   end
 
-  context 'with a single case' do
-    context 'without steps' do
-      let(:test_steps) { [] }
+  context 'without steps' do
+    let(:test_steps) { [] }
 
-      it 'emits a test_case_started event before running the test case' do
-        expect(event_bus).to receive(:test_case_started).with(test_case)
+    it 'emits a test_case_started event before running the test case' do
+      expect(event_bus).to receive(:test_case_started).with(test_case)
 
-        test_case.describe_to runner
+      test_case.describe_to runner
+    end
+
+    it 'emits the test_case_finished event after running the the test case' do
+      expect(event_bus).to receive(:test_case_finished) do |reported_test_case, result|
+        expect(reported_test_case).to eq(test_case)
+        expect(result).to be_undefined
       end
+      test_case.describe_to runner
+    end
+  end
 
-      it 'emits the test_case_finished event after running the the test case' do
-        expect(event_bus).to receive(:test_case_finished) do |reported_test_case, result|
-          expect(reported_test_case).to eq(test_case)
-          expect(result).to be_undefined
+  context 'with steps' do
+    context 'with steps that all pass' do
+      let(:test_steps) { [passing, passing]  }
+
+      it 'emits the test_case_finished event with a passing result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result).to be_passed
         end
         test_case.describe_to runner
       end
     end
 
-    context 'with steps' do
-      context 'with steps that all pass' do
-        let(:test_steps) { [passing, passing]  }
+    context 'with an undefined step' do
+      let(:test_steps) { [undefined]  }
 
-        it 'emits the test_case_finished event with a passing result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result).to be_passed
-          end
-          test_case.describe_to runner
+      it 'emits the test_case_finished event with an undefined result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result).to be_undefined
         end
+
+        test_case.describe_to runner
       end
 
-      context 'with an undefined step' do
-        let(:test_steps) { [undefined]  }
-
-        it 'emits the test_case_finished event with an undefined result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result).to be_undefined
-          end
-
-          test_case.describe_to runner
+      it 'sets the message on the result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result.message).to eq('Undefined step: "step name"')
         end
+        allow(undefined).to receive(:text).and_return('step name')
 
-        it 'sets the message on the result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result.message).to eq('Undefined step: "step name"')
-          end
-          allow(undefined).to receive(:text).and_return('step name')
-
-          test_case.describe_to runner
-        end
-
-        it 'appends the backtrace of the result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result.backtrace).to eq(['step line'])
-          end
-          allow(undefined).to receive(:backtrace_line).and_return('step line')
-
-          test_case.describe_to runner
-        end
+        test_case.describe_to runner
       end
 
-      context 'with a pending step' do
-        let(:test_steps) { [pending] }
-
-        it 'emits the test_case_finished event with a pending result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result).to be_pending
-          end
-          test_case.describe_to runner
+      it 'appends the backtrace of the result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result.backtrace).to eq(['step line'])
         end
+        allow(undefined).to receive(:backtrace_line).and_return('step line')
 
-        it 'appends the backtrace of the result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result.backtrace.last).to eq('step line')
-          end
-          allow(pending).to receive(:backtrace_line).and_return('step line')
+        test_case.describe_to runner
+      end
+    end
 
-          test_case.describe_to runner
+    context 'with a pending step' do
+      let(:test_steps) { [pending] }
+
+      it 'emits the test_case_finished event with a pending result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result).to be_pending
         end
+        test_case.describe_to runner
       end
 
-      context 'with a skipping step' do
-        let(:test_steps) { [skipping] }
-
-        it 'emits the test_case_finished event with a skipped result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result).to be_skipped
-          end
-          test_case.describe_to runner
+      it 'appends the backtrace of the result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result.backtrace.last).to eq('step line')
         end
+        allow(pending).to receive(:backtrace_line).and_return('step line')
 
-        it 'appends the backtrace of the result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result.backtrace.last).to eq('step line')
-          end
-          allow(skipping).to receive(:backtrace_line).and_return('step line')
+        test_case.describe_to runner
+      end
+    end
 
-          test_case.describe_to runner
+    context 'with a skipping step' do
+      let(:test_steps) { [skipping] }
+
+      it 'emits the test_case_finished event with a skipped result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result).to be_skipped
         end
+        test_case.describe_to runner
       end
 
-      context 'with failing steps' do
-        let(:test_steps) { [failing] }
-
-        it 'emits the test_case_finished event with a failing result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result).to be_failed
-          end
-          test_case.describe_to runner
+      it 'appends the backtrace of the result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result.backtrace.last).to eq('step line')
         end
+        allow(skipping).to receive(:backtrace_line).and_return('step line')
 
-        it 'appends the backtrace of the exception of the result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result.exception.backtrace.last).to eq('step line')
-          end
-          allow(failing).to receive(:backtrace_line).and_return('step line')
+        test_case.describe_to runner
+      end
+    end
 
-          test_case.describe_to runner
+    context 'with failing steps' do
+      let(:test_steps) { [failing] }
+
+      it 'emits the test_case_finished event with a failing result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result).to be_failed
         end
+        test_case.describe_to runner
       end
 
-      context 'with an initial failing step' do
-        let(:test_steps) { [failing, passing] }
-
-        it 'emits the test_step_finished event with a failed result' do
-          expect(event_bus).to receive(:test_step_finished).with(failing, anything) do |_test_step, result|
-            expect(result).to be_failed
-          end
-          test_case.describe_to runner
+      it 'appends the backtrace of the exception of the result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result.exception.backtrace.last).to eq('step line')
         end
+        allow(failing).to receive(:backtrace_line).and_return('step line')
 
-        it 'emits a test_step_finished event with a skipped result' do
-          expect(event_bus).to receive(:test_step_finished).with(passing, anything) do |_test_step, result|
-            expect(result).to be_skipped
-          end
-          test_case.describe_to runner
+        test_case.describe_to runner
+      end
+    end
+
+    context 'with an initial failing step' do
+      let(:test_steps) { [failing, passing] }
+
+      it 'emits the test_step_finished event with a failed result' do
+        expect(event_bus).to receive(:test_step_finished).with(failing, anything) do |_test_step, result|
+          expect(result).to be_failed
         end
+        test_case.describe_to runner
+      end
 
-        it 'emits a test_case_finished event with a failed result' do
-          expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
-            expect(result).to be_failed
-            expect(result.exception).to eq exception
-          end
-          test_case.describe_to runner
+      it 'emits a test_step_finished event with a skipped result' do
+        expect(event_bus).to receive(:test_step_finished).with(passing, anything) do |_test_step, result|
+          expect(result).to be_skipped
         end
+        test_case.describe_to runner
+      end
 
-        it 'skips, rather than executing the second step' do
-          expect(passing).not_to receive(:execute)
-
-          allow(passing).to receive(:skip).and_return(Cucumber::Core::Test::Result::Skipped.new)
-          test_case.describe_to runner
+      it 'emits a test_case_finished event with a failed result' do
+        expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
+          expect(result).to be_failed
+          expect(result.exception).to eq exception
         end
+        test_case.describe_to runner
+      end
+
+      it 'skips, rather than executing the second step' do
+        expect(passing).not_to receive(:execute)
+
+        allow(passing).to receive(:skip).and_return(Cucumber::Core::Test::Result::Skipped.new)
+        test_case.describe_to runner
       end
     end
   end
 
   context 'with multiple test cases' do
-    context 'when the first test case fails' do
-      let(:first_test_case) { Cucumber::Core::Test::Case.new(double, double, [failing], double, double, double, double) }
-      let(:last_test_case)  { Cucumber::Core::Test::Case.new(double, double, [passing], double, double, double, double) }
-      let(:test_cases)      { [first_test_case, last_test_case] }
+    let(:first_test_case) { Cucumber::Core::Test::Case.new(double, double, [failing], double, double, double, double) }
+    let(:last_test_case)  { Cucumber::Core::Test::Case.new(double, double, [passing], double, double, double, double) }
+    let(:test_cases)      { [first_test_case, last_test_case] }
 
-      it 'reports the results correctly for the following test case' do
-        expect(event_bus).to receive(:test_case_finished) { |reported_test_case, result|
-          expect(result).to be_failed if reported_test_case.equal?(first_test_case)
-          expect(result).to be_passed if reported_test_case.equal?(last_test_case)
-        }.twice
+    it 'reports the results correctly for test cases after a failing test case' do
+      expect(event_bus).to receive(:test_case_finished) { |reported_test_case, result|
+        expect(result).to be_failed if reported_test_case.equal?(first_test_case)
+        expect(result).to be_passed if reported_test_case.equal?(last_test_case)
+      }.twice
 
-        test_cases.each { |test_case| test_case.describe_to(runner) }
-      end
+      test_cases.each { |test_case| test_case.describe_to(runner) }
     end
   end
 
