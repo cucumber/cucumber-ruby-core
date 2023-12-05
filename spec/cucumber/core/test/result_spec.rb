@@ -53,6 +53,7 @@ module Cucumber
 
         describe Result::Failed do
           subject(:result) { described_class.new(duration, exception) }
+
           let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
           let(:exception)  { StandardError.new('error message') }
 

@@ -8,7 +8,7 @@ require 'cucumber/core/test/duration_matcher'
 
 describe Cucumber::Core::Test::Runner do
   let(:test_case)        { Cucumber::Core::Test::Case.new(double, double, test_steps, double, double, double, double) }
-  let(:text)             { double }
+  let(:text)             { double(empty?: false) }
   let(:runner)           { described_class.new(event_bus) }
   let(:event_bus)        { double.as_null_object }
   let(:passing)          { Cucumber::Core::Test::Step.new(double, text, double, double).with_action { :no_op } }
@@ -18,10 +18,7 @@ describe Cucumber::Core::Test::Runner do
   let(:undefined)        { Cucumber::Core::Test::Step.new(double, text, double, double) }
   let(:exception)        { StandardError.new('test error') }
 
-  before do
-    allow(event_bus).to receive(:test_case_started)
-    allow(text).to receive(:empty?)
-  end
+  before { allow(event_bus).to receive(:test_case_started) }
 
   context 'when reporting the duration of a test case' do
     before do
