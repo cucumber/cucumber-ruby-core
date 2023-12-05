@@ -8,12 +8,6 @@ describe Cucumber::Core::Compiler do
   include Cucumber::Core::Gherkin::Writer
   include Cucumber::Core
 
-  def self.stubs(*names)
-    names.each do |name|
-      let(name) { double(name.to_s) }
-    end
-  end
-
   let(:empty_gherkin_document) do
     gherkin do
       feature do
@@ -63,21 +57,22 @@ describe Cucumber::Core::Compiler do
   end
 
   context 'when the event_bus is provided' do
-    let(:event_bus) { double }
-
-    before do
-      allow(event_bus).to receive(:envelope)
-      allow(event_bus).to receive(:gherkin_source_parsed).and_return(nil)
-      allow(event_bus).to receive(:test_case_created).and_return(nil)
-      allow(event_bus).to receive(:test_step_created).and_return(nil)
+    let(:event_bus_class) do
+      Class.new(Cucumber::Core::EventBus) do
+        def gherkin_source_parsed(*); end
+        def test_case_created(*); end
+        def test_step_created(*); end
+        def envelope(*); end
+      end
     end
+
+    let(:event_bus) { event_bus_class.new }
 
     it 'emits a TestCaseCreated event with the created Test::Case and Pickle' do
       compile([single_step_gherkin_document], event_bus) do |visitor|
         allow(visitor).to receive(:test_case)
         allow(visitor).to receive(:test_step)
         allow(visitor).to receive(:done)
-        allow(event_bus).to receive(:envelope)
 
         expect(event_bus).to receive(:test_case_created).once
       end
