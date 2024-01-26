@@ -12,6 +12,9 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ### Fixed
 - The `Passed` `Result` class was missing the strict keyword argument handling
 
+### Changed
+- Fixed up a few styling / layout cops in the tests
+
 ## [13.0.0] - 2023-12-05
 ### Changed
 - Now using a 2-tiered changelog to avoid any bugs when using polyglot-release
