@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Fixed
+- The `Passed` `Result` class was missing the strict keyword argument handling
 
 ## [13.0.0] - 2023-12-05
 ### Changed
