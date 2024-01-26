@@ -84,7 +84,7 @@ module Cucumber
             )
           end
 
-          def ok?
+          def ok?(*)
             self.class.ok?
           end
 
