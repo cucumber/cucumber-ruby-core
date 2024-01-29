@@ -92,7 +92,7 @@ module Cucumber
             private
 
             def element(name)
-              define_method name do |*args, &source|
+              define_method(name) do |*args, &source|
                 factory_name = String(name).split('_').map(&:capitalize).join
                 factory = Writer.const_get(factory_name)
                 factory.new(slurp_comments, *args).tap do |builder|
@@ -108,17 +108,18 @@ module Cucumber
         module Indentation
           def self.level(number)
             Module.new do
-              define_method :indent do |string, amount = nil|
-                amount ||= number
+              define_method(:indent) do |string, amount = nil|
                 return string if string.nil? || string.empty?
-                (' ' * amount) + string
+
+                amount ||= number
+                "#{' ' * amount}#{string}"
               end
 
-              define_method :indent_level do
+              define_method(:indent_level) do
                 number
               end
 
-              define_method :prepare_statements do |*statements|
+              define_method(:prepare_statements) do |*statements|
                 statements.flatten.compact.map { |s| indent(s) }
               end
             end
