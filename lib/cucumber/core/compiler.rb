@@ -35,12 +35,15 @@ module Cucumber
       private
 
       def create_test_case(pickle)
-        uri = pickle.uri
-        test_steps = pickle.steps.map { |step| create_test_step(step, uri) }
-        location = location_from_pickle(pickle)
-        parent_locations = parent_locations_from_pickle(pickle)
-        tags = tags_from_pickle(pickle, uri)
-        test_case = Test::Case.new(id_generator.new_id, pickle.name, test_steps, location, parent_locations, tags, pickle.language)
+        test_case = Test::Case.new(
+          id: id_generator.new_id,
+          name: pickle.name,
+          test_steps: pickle.steps.map { |step| create_test_step(step, pickle.uri) },
+          location: location_from_pickle(pickle),
+          parent_locations: parent_locations_from_pickle(pickle),
+          tags: tags_from_pickle(pickle),
+          language: pickle.language
+        )
         @event_bus&.test_case_created(test_case, pickle)
         test_case
       end
@@ -80,9 +83,9 @@ module Cucumber
         Test::Location.new(uri, lines.sort.reverse)
       end
 
-      def tags_from_pickle(pickle, uri)
+      def tags_from_pickle(pickle)
         pickle.tags.map do |tag|
-          location = Test::Location.new(uri, source_line(tag.ast_node_id))
+          location = Test::Location.new(pickle.uri, source_line(tag.ast_node_id))
           Test::Tag.new(location, tag.name)
         end
       end
