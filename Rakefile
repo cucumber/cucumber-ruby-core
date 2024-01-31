@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
 require 'rubygems'
@@ -20,4 +19,4 @@ namespace :spec do
   end
 end
 
-task default: ['spec', 'spec:slow', 'rubocop']
+task default: ['spec', 'spec:slow']

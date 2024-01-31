@@ -296,9 +296,8 @@ describe Cucumber::Core::Gherkin::Writer do
               | 20    | 5   | 15   |
       FEATURE
     end
-
-    it 'can generate a complex feature' do
-      source = gherkin do
+    let(:gherkin_document) do
+      gherkin do
         comment 'wow'
         feature 'Fully featured', language: 'en', tags: '@always' do
           comment 'cool'
@@ -333,8 +332,10 @@ describe Cucumber::Core::Gherkin::Writer do
           end
         end
       end
+    end
 
-      expect(source.to_s).to eq(expected)
+    it 'can generate a complex feature' do
+      expect(gherkin_document.to_s).to eq(expected)
     end
   end
 end

@@ -15,10 +15,8 @@ describe Cucumber::Core do
   include Cucumber::Core::Gherkin::Writer
 
   describe 'compiling features to a test suite' do
-    it 'compiles two scenarios into two test cases' do
-      visitor = ReportAPISpy.new
-
-      compile([
+    context 'with two scenarios' do
+      let(:gherkin_document) do
         gherkin do
           feature do
             background do
@@ -34,54 +32,61 @@ describe Cucumber::Core do
             end
           end
         end
-      ], visitor)
+      end
 
-      expect(visitor.messages).to eq([
-        :test_case,
-        :test_step,
-        :test_step,
-        :test_case,
-        :test_step,
-        :test_step,
-        :test_step,
-        :done
-      ])
+      it 'compiles the scenarios into two test cases' do
+        visitor = ReportAPISpy.new
+        compile([gherkin_document], visitor)
+
+        expect(visitor.messages).to eq([
+          :test_case,
+          :test_step,
+          :test_step,
+          :test_case,
+          :test_step,
+          :test_step,
+          :test_step,
+          :done
+        ])
+      end
     end
 
-    it 'filters out test cases based on a tag expression' do
-      visitor = double.as_null_object
-      expect(visitor).to receive(:test_case) { |test_case| expect(test_case.name).to eq('foo') }.once
-
-      gherkin = gherkin do
-        feature do
-          scenario tags: '@b' do
-            step 'text'
-          end
-
-          scenario_outline 'foo' do
-            step '<arg>'
-
-            examples tags: '@a' do
-              row 'arg'
-              row 'x'
+    context 'when compiling using a tag expression' do
+      let(:gherkin_document) do
+        gherkin do
+          feature do
+            scenario tags: '@b' do
+              step 'text'
             end
 
-            examples 'bar', tags: '@a @b' do
-              row 'arg'
-              row 'y'
+            scenario_outline 'foo' do
+              step '<arg>'
+
+              examples tags: '@a' do
+                row 'arg'
+                row 'x'
+              end
+
+              examples 'bar', tags: '@a @b' do
+                row 'arg'
+                row 'y'
+              end
             end
           end
         end
       end
 
-      compile([gherkin], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])])
+      it 'filters out test cases based on a tag expression' do
+        visitor = double.as_null_object
+        expect(visitor).to receive(:test_case) { |test_case| expect(test_case.name).to eq('foo') }.once
+
+        compile([gherkin_document], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])])
+      end
     end
   end
 
   describe 'executing a test suite' do
-    let(:event_bus) { Cucumber::Core::EventBus.new }
-    let(:report) { Cucumber::Core::Report::Summary.new(event_bus) }
-    let(:gherkin_document) do
+    subject(:gherkin_document) do
       gherkin do
         feature 'Feature name' do
           scenario 'The one that passes' do
@@ -98,8 +103,11 @@ describe Cucumber::Core do
       end
     end
 
-    it 'fires events' do
-      observed_events = []
+    let(:event_bus) { Cucumber::Core::EventBus.new }
+    let(:observed_events) { [] }
+    let(:report) { Cucumber::Core::Report::Summary.new(event_bus) }
+
+    before do
       execute [gherkin_document], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
         event_bus.on(:test_case_started) do |event|
           test_case = event.test_case
@@ -118,7 +126,9 @@ describe Cucumber::Core do
           observed_events << [:test_step_finished, test_step.text, result.to_sym]
         end
       end
+    end
 
+    it 'fires events' do
       expect(observed_events).to eq [
         [:test_case_started, 'The one that passes'],
         [:test_step_started, 'passing'],

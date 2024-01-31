@@ -81,7 +81,7 @@ describe Cucumber::Core::Test::LocationsFilter do
       result
     end
 
-    context 'for a scenario' do
+    context 'with a scenario' do
       let(:doc) do
         Cucumber::Core::Gherkin::Document.new(file, <<-FEATURE)
         Feature:
@@ -317,7 +317,7 @@ describe Cucumber::Core::Test::LocationsFilter do
       end
     end
 
-    context 'for a scenario outline' do
+    context 'with a scenario outline' do
       let(:doc) do
         Cucumber::Core::Gherkin::Document.new(file, <<-FEATURE)
         Feature:
@@ -396,7 +396,7 @@ describe Cucumber::Core::Test::LocationsFilter do
     end
   end
 
-  context 'under load', slow: true do
+  context 'when under extreme load', slow: true do
     num_features = 50
     num_scenarios_per_feature = 50
 
