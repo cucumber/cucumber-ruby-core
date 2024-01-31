@@ -9,11 +9,13 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
-### Fixed
-- The `Passed` `Result` class was missing the strict keyword argument handling
 
+## [13.0.1] - 2024-01-31
 ### Changed
 - Fixed up a few styling / layout cops in the tests
+
+### Fixed
+- The `Passed` `Result` class was missing the strict keyword argument handling
 
 ## [13.0.0] - 2023-12-05
 ### Changed
@@ -53,7 +55,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-1300)
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.0...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.1...HEAD
+[13.0.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.0...v13.0.1
 [13.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v12.0.0...v13.0.0
 [12.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v11.1.0...v12.0.0
 [11.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v11.0.0...v11.1.0
