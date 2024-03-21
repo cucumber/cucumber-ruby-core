@@ -38,15 +38,15 @@ describe Cucumber::Core do
         visitor = ReportAPISpy.new
         compile([gherkin_document], visitor)
 
-        expect(visitor.messages).to eq([
-          :test_case,
-          :test_step,
-          :test_step,
-          :test_case,
-          :test_step,
-          :test_step,
-          :test_step,
-          :done
+        expect(visitor.messages).to eq(%i[
+          test_case
+          test_step
+          test_step
+          test_case
+          test_step
+          test_step
+          test_step
+          done
         ])
       end
     end
@@ -227,13 +227,7 @@ describe Cucumber::Core do
         expect(report.test_cases.total).to eq(1)
         expect(report.test_cases.total_passed).to eq(1)
         expect(report.test_cases.total_failed).to eq(0)
-        expect(logger).to eq [
-          :before_all,
-          :step,
-          :middle,
-          :step,
-          :after_all
-        ]
+        expect(logger).to eq(%i[before_all step middle step after_all])
       end
     end
 
@@ -254,7 +248,7 @@ describe Cucumber::Core do
         end
       end
 
-      execute [gherkin], [Cucumber::Core::Test::TagFilter.new(['@a'])], event_bus
+      execute([gherkin], [Cucumber::Core::Test::TagFilter.new(['@a'])], event_bus)
 
       expect(report.test_cases.total).to eq(2)
     end
@@ -272,7 +266,7 @@ describe Cucumber::Core do
         end
       end
 
-      execute [gherkin], [Cucumber::Core::Test::NameFilter.new([/scenario/])], event_bus
+      execute([gherkin], [Cucumber::Core::Test::NameFilter.new([/scenario/])], event_bus)
 
       expect(report.test_cases.total).to eq(1)
     end

@@ -59,16 +59,6 @@ module Cucumber
           "#<#{self.class}: #{location}>"
         end
       end
-
-      class HookStep < Step
-        def initialize(id, text, location, action)
-          super(id, text, location, Test::EmptyMultilineArgument.new, action)
-        end
-
-        def hook?
-          true
-        end
-      end
     end
   end
 end

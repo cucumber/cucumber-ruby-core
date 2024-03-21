@@ -8,8 +8,8 @@ module Cucumber
   module Core
     module Test
       module Result
-        TYPES = [:failed, :flaky, :skipped, :undefined, :pending, :passed, :unknown].freeze
-        STRICT_AFFECTED_TYPES = [:flaky, :undefined, :pending].freeze
+        TYPES = %i[failed flaky skipped undefined pending passed unknown].freeze
+        STRICT_AFFECTED_TYPES = %i[flaky undefined pending].freeze
 
         def self.ok?(type, strict: StrictConfiguration.new)
           class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)

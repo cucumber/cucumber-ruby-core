@@ -86,7 +86,7 @@ describe Cucumber::Core::Test::DocString do
     end
 
     it 'delegates #split to the content string' do
-      expect(doc_string.split('n')).to eq(['co', 'te', 't'])
+      expect(doc_string.split('n')).to eq(%w[co te t])
     end
   end
 
