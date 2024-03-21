@@ -2,8 +2,7 @@ Cucumber Core is the [inner hexagon](https://en.wikipedia.org/wiki/Hexagonal_arc
 
 ## Overview
 
-The entry-point is a single method on the module `Cucumber::Core` called
-`#execute`. Here's what it does:
+The entry-point is a single method on the `Cucumber::Core` module called `#execute`. Here's what it does:
 
 1. Parses the plain-text Gherkin documents into an **AST**
 2. Compiles the AST down to **test cases**
@@ -12,7 +11,9 @@ The entry-point is a single method on the module `Cucumber::Core` called
 
 ### The AST
 
-The Abstract Syntax Tree or AST is an object graph that represents the Gherkin documents you've passed into the core. Things like `Feature`, `Scenario` and `ExamplesTable`.
+The Abstract Syntax Tree or AST is an object graph that represents the Gherkin documents you've passed into the core.
+
+Things like `Feature`, `Scenario` and `ExamplesTable`.
 
 These are immutable value objects.
 
@@ -26,7 +27,9 @@ Test cases and their test steps are immutable value objects.
 
 ### Filters
 
-Once we have the test cases, and they've been activated by the mappings, you may want to pass them through a filter or two. Filters can be used to do things like activate, sort, replace or remove some of the test cases or their steps before they're executed.
+Once we have the test cases, and they've been activated by the mappings, you may want to pass them through a filter or two.
+
+Filters can be used to do things like activate, sort, replace or remove some of the test cases or their steps before they're executed.
 
 ### Events
 
@@ -39,7 +42,7 @@ Some of the events that can be emitted during a run are:
 - `TestStepFinished`
 - `TestCaseFinished`
 
-That's probably best illustrated with an example.
+These are probably best illustrated with an actual example (See below).
 
 ## Example
 
