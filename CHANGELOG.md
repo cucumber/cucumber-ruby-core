@@ -15,7 +15,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 - Fixed up a few styling / layout cops in the tests
 
 ### Fixed
-- The `Passed` `Result` class was missing the strict keyword argument handling
+- The `Cucumber::Core::Test::Result::Passed` class was missing the strict keyword argument handling
 
 ## [13.0.0] - 2023-12-05
 ### Changed
