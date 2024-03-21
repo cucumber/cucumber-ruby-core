@@ -414,9 +414,8 @@ describe Cucumber::Core::Test::LocationsFilter do
       end
     end
 
-    num_locations = num_features
     let(:locations) do
-      (1..num_locations).map do |i|
+      (1..num_features).map do |i|
         (1..num_scenarios_per_feature).map do |j|
           line = 3 + ((j - 1) * 3)
           Cucumber::Core::Test::Location.new("features/test_#{i}.feature", line)
