@@ -265,7 +265,10 @@ describe Cucumber::Core::Test::Runner do
     end
 
     it 'gets a failed result if the Around hook fails after the test case is run' do
-      around_hook = Cucumber::Core::Test::AroundHook.new { |block| block.call; raise exception }
+      around_hook = Cucumber::Core::Test::AroundHook.new do |block|
+        block.call
+        raise exception
+      end
       test_case = Cucumber::Core::Test::Case.new(double, double, [passing_step], double, double, double, double, [around_hook])
       expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
         expect(result).to be_failed
@@ -286,7 +289,10 @@ describe Cucumber::Core::Test::Runner do
     end
 
     it 'sends after_test_step for a step interrupted by (a timeout in) the around hook' do
-      around_hook = Cucumber::Core::Test::AroundHook.new { |block| block.call; raise exception }
+      around_hook = Cucumber::Core::Test::AroundHook.new do |block|
+        block.call
+        raise exception
+      end
       test_case = Cucumber::Core::Test::Case.new(double, double, [], double, double, double, double, [around_hook])
       allow(runner).to receive(:running_test_step).and_return(passing_step)
       expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |_reported_test_case, result|
