@@ -19,4 +19,4 @@ namespace :spec do
   end
 end
 
-task default: ['spec', 'spec:slow']
+task default: %w[spec spec:slow]
