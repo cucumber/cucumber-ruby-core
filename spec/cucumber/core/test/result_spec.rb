@@ -166,7 +166,7 @@ module Cucumber
               step = double
               allow(step).to receive(:backtrace_line).and_return('step_line')
 
-              expect(result.with_appended_backtrace(step).backtrace).to eq(['backtrace', 'step_line'])
+              expect(result.with_appended_backtrace(step).backtrace).to eq(%w[backtrace step_line])
             end
 
             it 'apply filters to the backtrace' do
