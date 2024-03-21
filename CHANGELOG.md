@@ -9,6 +9,9 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- Added CI testing for Ruby 3.3
+- Fixed up a few minor rubocop offenses in the codebase around Array structuring
 
 ## [13.0.1] - 2024-01-31
 ### Changed
