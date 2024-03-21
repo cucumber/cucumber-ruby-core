@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+
+## [13.0.2] - 2024-03-21
 ### Changed
 - Added CI testing for Ruby 3.3
 - Fixed up a few minor rubocop offenses in the codebase around Array structuring
@@ -58,7 +60,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-1300)
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.1...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.2...HEAD
+[13.0.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.1...v13.0.2
 [13.0.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.0...v13.0.1
 [13.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v12.0.0...v13.0.0
 [12.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v11.1.0...v12.0.0
