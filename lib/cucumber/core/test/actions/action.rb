@@ -52,34 +52,6 @@ module Cucumber
           Result::Skipped.new
         end
       end
-
-      class UnskippableAction < Action
-        def skip(*args)
-          execute(*args)
-        end
-      end
-
-      class UndefinedAction
-        attr_reader :location
-
-        def initialize(source_location)
-          @location = source_location
-        end
-
-        def execute(*)
-          undefined
-        end
-
-        def skip(*)
-          undefined
-        end
-
-        private
-
-        def undefined
-          Result::Undefined.new
-        end
-      end
     end
   end
 end
