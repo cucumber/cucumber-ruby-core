@@ -6,6 +6,13 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
+# TODO: [LH] v12 Part 2 iteration -> 53 files inspected, 506 offenses detected, 163 offenses auto-correctable
+# TODO: [LH] v12 -> 53 files inspected, 450 offenses detected, 150 offenses auto-correctable
+# TODO: [LH] v12 -> 53 files inspected, 453 offenses detected, 148 offenses auto-correctable
+# TODO: [LH] v13 Part 3 iteration -> 53 files inspected, 450 offenses detected, 173 offenses auto-correctable
+# TODO: [LH] v13 -> 54 files inspected, 424 offenses detected, 133 offenses auto-correctable
+# TODO: [LH] v13 -> 58 files inspected, 392 offenses detected, 100 offenses auto-correctable
+
 # Offense count: 1
 # This cop supports safe auto-correction (--auto-correct).
 Layout/HeredocIndentation:
