@@ -49,7 +49,7 @@ module Cucumber
                                          ])
           end
 
-          it 'should transpose the table' do
+          it 'transposes the table' do
             transposed = described_class.new([
                                                %w[one two],
                                                %w[1111 22222]
