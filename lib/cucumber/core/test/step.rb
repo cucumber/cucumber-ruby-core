@@ -12,6 +12,7 @@ module Cucumber
 
         def initialize(id, text, location, multiline_arg = Test::EmptyMultilineArgument.new, action = Test::UndefinedAction.new(location))
           raise ArgumentError if text.nil? || text.empty?
+
           @id = id
           @text = text
           @location = location

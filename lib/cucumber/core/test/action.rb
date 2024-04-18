@@ -10,6 +10,7 @@ module Cucumber
       class Action
         def initialize(location = nil, &block)
           raise ArgumentError, 'Passing a block to execute the action is mandatory.' unless block
+
           @location = location || Test::Location.new(*block.source_location)
           @block = block
           @timer = Timer.new
