@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/result'
-require 'cucumber/core/test/action'
+require 'cucumber/core/test/actions'
 require 'cucumber/core/test/empty_multiline_argument'
 
 module Cucumber

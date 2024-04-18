@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/action'
+require 'cucumber/core/test/actions'
 require 'cucumber/core/test/duration_matcher'
 
 describe Cucumber::Core::Test::Action do
