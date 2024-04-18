@@ -74,7 +74,7 @@ describe Cucumber::Core::Test::DocString do
     end
 
     it 'allows implicit conversion to a String' do
-      expect('expected content').to include(doc_string)
+      expect("I have a string of #{doc_string}").to eq('I have a string of content')
     end
 
     it 'allows explicit conversion to a String' do
