@@ -43,6 +43,7 @@ module Cucumber
 
         def map
           raise ArgumentError, 'No block given' unless block_given?
+
           new_content = yield content
           self.class.new(new_content, content_type)
         end
@@ -62,6 +63,7 @@ module Cucumber
           if other.respond_to?(:to_str)
             return content == other.to_str
           end
+
           false
         end
 

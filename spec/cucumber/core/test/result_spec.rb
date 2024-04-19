@@ -398,7 +398,7 @@ module Cucumber
 
           it 'counts failed results' do
             failed.describe_to(summary)
-            
+
             expect(summary.total_failed).to eq(1)
             expect(summary.total(:failed)).to eq(1)
             expect(summary.total).to eq(1)
@@ -452,7 +452,7 @@ module Cucumber
 
           it 'counts combinations' do
             [passed, passed, failed, skipped, undefined].each { |r| r.describe_to(summary) }
-            
+
             expect(summary.total).to eq(5)
             expect(summary.total_passed).to eq(2)
             expect(summary.total_failed).to eq(1)

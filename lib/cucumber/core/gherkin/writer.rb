@@ -174,7 +174,7 @@ module Cucumber
 
           elements :table
 
-          def doc_string(string, content_type='')
+          def doc_string(string, content_type = '')
             elements << DocString.new(string, content_type)
           end
 

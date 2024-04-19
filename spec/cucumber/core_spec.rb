@@ -38,16 +38,18 @@ describe Cucumber::Core do
         visitor = ReportAPISpy.new
         compile([gherkin_document], visitor)
 
-        expect(visitor.messages).to eq(%i[
-          test_case
-          test_step
-          test_step
-          test_case
-          test_step
-          test_step
-          test_step
-          done
-        ])
+        expect(visitor.messages).to eq(
+          %i[
+            test_case
+            test_step
+            test_step
+            test_case
+            test_step
+            test_step
+            test_step
+            done
+          ]
+        )
       end
     end
 
@@ -129,22 +131,24 @@ describe Cucumber::Core do
     end
 
     it 'fires events' do
-      expect(observed_events).to eq [
-        [:test_case_started, 'The one that passes'],
-        [:test_step_started, 'passing'],
-        [:test_step_finished, 'passing', :passed],
-        [:test_case_finished, 'The one that passes', :passed],
-        [:test_case_started, 'The one that fails'],
-        [:test_step_started, 'passing'],
-        [:test_step_finished, 'passing', :passed],
-        [:test_step_started, 'failing'],
-        [:test_step_finished, 'failing', :failed],
-        [:test_step_started, 'passing'],
-        [:test_step_finished, 'passing', :skipped],
-        [:test_step_started, 'undefined'],
-        [:test_step_finished, 'undefined', :undefined],
-        [:test_case_finished, 'The one that fails', :failed]
-      ]
+      expect(observed_events).to eq(
+        [
+          [:test_case_started, 'The one that passes'],
+          [:test_step_started, 'passing'],
+          [:test_step_finished, 'passing', :passed],
+          [:test_case_finished, 'The one that passes', :passed],
+          [:test_case_started, 'The one that fails'],
+          [:test_step_started, 'passing'],
+          [:test_step_finished, 'passing', :passed],
+          [:test_step_started, 'failing'],
+          [:test_step_finished, 'failing', :failed],
+          [:test_step_started, 'passing'],
+          [:test_step_finished, 'passing', :skipped],
+          [:test_step_started, 'undefined'],
+          [:test_step_finished, 'undefined', :undefined],
+          [:test_case_finished, 'The one that fails', :failed]
+        ]
+      )
     end
 
     context 'without hooks' do

@@ -64,6 +64,7 @@ module Cucumber
 
           def initialize(duration)
             raise ArgumentError unless duration
+
             @duration = duration
           end
 
@@ -109,6 +110,7 @@ module Cucumber
           def initialize(duration, exception)
             raise ArgumentError unless duration
             raise ArgumentError unless exception
+
             @duration = duration
             @exception = exception
           end
@@ -186,6 +188,7 @@ module Cucumber
 
           def with_appended_backtrace(step)
             return self unless step.respond_to?(:backtrace_line)
+
             set_backtrace([]) unless backtrace
             backtrace << step.backtrace_line
             self
@@ -193,6 +196,7 @@ module Cucumber
 
           def with_filtered_backtrace(filter)
             return self unless backtrace
+
             filter.new(dup).exception
           end
 
@@ -298,6 +302,7 @@ module Cucumber
             else
               return false unless settings.key?(type)
               return false unless set?(type)
+
               settings[type]
             end
           end
@@ -377,7 +382,7 @@ module Cucumber
             if for_status
               @totals.fetch(for_status, 0)
             else
-              @totals.values.reduce(0) { |total,count| total + count }
+              @totals.values.reduce(0) { |total, count| total + count }
             end
           end
 

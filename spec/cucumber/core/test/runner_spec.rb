@@ -91,7 +91,7 @@ describe Cucumber::Core::Test::Runner do
     end
 
     context 'with an undefined step' do
-      let(:test_steps) { [undefined]  }
+      let(:test_steps) { [undefined] }
 
       it 'emits the test_case_finished event with an undefined result' do
         expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
