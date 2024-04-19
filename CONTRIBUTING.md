@@ -29,8 +29,7 @@ You can find more details for each of these steps in the following sections.
 
 ### Look for existing issues and pull requests
 
-Search in [the current repository][cucumber-ruby-core-issues], in the
-[mono-repo][cucumber/common-issues], but also in the
+Search in [the current repository][cucumber-ruby-core-issues] or in the
 [whole cucumber organization][cucumber-issues] if the problem or feature has already
 been reported. If you find an issue or pull request which is still open, add
 comments to it instead of opening a new one.
@@ -70,8 +69,8 @@ your proposal.
 ### Development environment
 
 Development environment for `cucumber-ruby-core` is a simple Ruby environment with
-Bundler. Use a [supported Ruby version](./README.md#supported-platforms), make
-sure [Bundler] is set-up, and voilà!
+bundler. Use a [supported Ruby version](./README.md#supported-platforms), make
+sure [bundler] is set-up, and voilà!
 
 You can then [fork][how-to-fork] and clone the repository. If your environment
 is set-up properly, the following commands should install the dependencies and
@@ -157,9 +156,7 @@ with the code, you can join us on [Slack][community-slack]. You will find there
 a lot of contributors.
 
 Full-time maintainers are also available. We would be please to have 1:1 pairing
-sessions to help you getting started. Look for
-[Matt Wynne](https://cucumberbdd.slack.com/team/U590XDLF3) or
-[Aurélien Reeves](https://cucumberbdd.slack.com/team/U011BB95MC7) on
+sessions to help you getting started. Look for Luke Hill or Matt Wynne on
 [Slack][community-slack].
 
 ### Additional documentation and notice
@@ -173,14 +170,12 @@ You can find additional documentation in the [docs](./docs) directory such as
 <!-- Links -->
 
 [community-slack]: https://cucumberbdd.slack.com/
-[cucumber/common]: https://github.com/cucumber/common
 [cucumber-ruby]: https://github.com/cucumber/cucumber-ruby
 [cucumber-ruby-core]: https://github.com/cucumber/cucumber-ruby-core
 [cucumber-ruby-core-issues]: https://github.com/cucumber/cucumber-ruby-core/search?q=is%3Aissue
-[cucumber/common-issues]: https://github.com/cucumber/common/search?q=is%3Aissue
 [cucumber-issues]: https://github.com/search?q=is%3Aissue+user%3Acucumber
 [how-to-create-a-draft-pr]: https://docs.github.com/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests#draft-pull-requests
 [how-to-fork]: https://docs.github.com/github/collaborating-with-pull-requests/working-with-forks/about-forks
 [sign your commits]: https://docs.github.com/en/github/authenticating-to-github/managing-commit-signature-verification/signing-commits
 [minimal-reproducible-example]: https://stackoverflow.com/help/minimal-reproducible-example
-[Bundler]: https://bundler.io/
+[bundler]: https://bundler.io/
