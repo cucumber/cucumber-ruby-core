@@ -173,7 +173,8 @@ module Cucumber
           attr_reader :message, :duration
 
           def initialize(message = '', duration = UnknownDuration.new, backtrace = nil)
-            @message, @duration = message, duration
+            @message = message
+            @duration = duration
             super(message)
             set_backtrace(backtrace) if backtrace
           end

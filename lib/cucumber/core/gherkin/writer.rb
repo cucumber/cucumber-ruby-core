@@ -16,7 +16,8 @@ module Cucumber
 
         class Gherkin
           def initialize(uri, &source)
-            @uri, @source = uri, source
+            @uri = uri
+            @source = source
           end
 
           def comment(line)
