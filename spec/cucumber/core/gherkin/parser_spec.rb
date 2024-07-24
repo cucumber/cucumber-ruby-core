@@ -49,7 +49,7 @@ describe Cucumber::Core::Gherkin::Parser do
       parse
     end
 
-    it "emits an `:envelope` event for every message produced by Gherkin" do
+    it 'emits an `:envelope` event for every message produced by Gherkin' do
       # Only one message emitted, there's no pickles generated
       expect(event_bus).to receive(:envelope).once
 
@@ -97,7 +97,7 @@ describe Cucumber::Core::Gherkin::Parser do
       parse
     end
 
-    it "emits an `:envelope` event containing the pickle" do
+    it 'emits an `:envelope` event containing the pickle' do
       allow(receiver).to receive(:pickle)
       # Once for the gherkin document, once with the pickle
       expect(event_bus).to receive(:envelope).twice
