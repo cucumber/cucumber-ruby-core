@@ -92,7 +92,7 @@ describe Cucumber::Core::Test::DocString do
 
   describe '#inspect' do
     let(:content_type) { 'text/plain' }
-    let(:doc_string) { Cucumber::Core::Test::DocString.new('some text', content_type) }
+    let(:doc_string) { described_class.new('some text', content_type) }
 
     it 'provides a useful inspect method' do
       expect(doc_string.inspect).to eq(<<~DOC_STRING.chomp)
