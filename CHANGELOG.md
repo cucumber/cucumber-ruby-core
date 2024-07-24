@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Removed
+- Remove support for ruby 2.6 and below. 2.7 or higher is required now
 
 ## [13.0.3] - 2024-07-24
 ### Changed
