@@ -12,8 +12,8 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://cucumber.io'
   s.platform    = Gem::Platform::RUBY
   s.license     = 'MIT'
-  s.required_ruby_version = '>= 2.5'
-  s.required_rubygems_version = '>= 3.0.1'
+  s.required_ruby_version = '>= 2.7'
+  s.required_rubygems_version = '>= 3.2.8'
 
   s.metadata = {
     'bug_tracker_uri' => 'https://github.com/cucumber/cucumber-ruby-core/issues',
