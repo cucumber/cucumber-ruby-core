@@ -23,11 +23,11 @@ module Cucumber
         private
 
         def sorted_test_cases
-          filter_locations.map { |filter_location|
-            test_cases[filter_location.file].select { |test_case|
+          filter_locations.map do |filter_location|
+            test_cases[filter_location.file].select do |test_case|
               test_case.match_locations?([filter_location])
-            }
-          }.flatten.uniq
+            end
+          end.flatten.uniq
         end
 
         def test_cases
