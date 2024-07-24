@@ -87,7 +87,7 @@ module Cucumber
       #
       # @return [Hash{Symbol => Class}]
       def self.build_registry(*types)
-        types.map { |type| [type.event_id, type] }.to_h
+        types.to_h { |type| [type.event_id, type] }
       end
     end
   end

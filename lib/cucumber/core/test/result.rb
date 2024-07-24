@@ -287,7 +287,7 @@ module Cucumber
           private :settings
 
           def initialize(strict_types = [])
-            @settings = STRICT_AFFECTED_TYPES.map { |t| [t, :default] }.to_h
+            @settings = STRICT_AFFECTED_TYPES.to_h { |t| [t, :default] }
             strict_types.each do |type|
               set_strict(true, type)
             end
