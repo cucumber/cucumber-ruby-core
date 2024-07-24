@@ -10,7 +10,7 @@ require:
 
 AllCops:
   # Keep this inline with the gemspec
-  TargetRubyVersion: 2.5
+  TargetRubyVersion: 2.7
   DisplayCopNames: true
   DisplayStyleGuide: true
   NewCops: enable
