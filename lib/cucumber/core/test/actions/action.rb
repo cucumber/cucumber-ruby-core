@@ -8,6 +8,8 @@ module Cucumber
   module Core
     module Test
       class Action
+        attr_reader :location
+
         def initialize(location = nil, &block)
           raise ArgumentError, 'Passing a block to execute the action is mandatory.' unless block
 
@@ -28,10 +30,6 @@ module Cucumber
           e.with_duration(@timer.duration)
         rescue Exception => e
           failed(e)
-        end
-
-        def location
-          @location
         end
 
         def inspect
