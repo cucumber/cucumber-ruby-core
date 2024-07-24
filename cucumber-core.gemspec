@@ -23,11 +23,11 @@ Gem::Specification.new do |s|
     'source_code_uri' => 'https://github.com/cucumber/cucumber-ruby-core'
   }
 
-  s.add_dependency 'cucumber-gherkin', '>= 27', '< 28'
-  s.add_dependency 'cucumber-messages', '>= 20', '< 23'
+  s.add_dependency 'cucumber-gherkin', '> 27', '< 30'
+  s.add_dependency 'cucumber-messages', '> 22', '< 27'
   s.add_dependency 'cucumber-tag-expressions', '> 5', '< 7'
 
-  s.add_development_dependency 'rake', '~> 13.1'
+  s.add_development_dependency 'rake', '~> 13.2'
   s.add_development_dependency 'rspec', '~> 3.13'
   s.add_development_dependency 'rubocop', '~> 1.28.2'
   s.add_development_dependency 'rubocop-packaging', '~> 0.5.1'
