@@ -149,7 +149,7 @@ module Cucumber
 
           private
 
-          def row_statements(indent=nil)
+          def row_statements(indent = nil)
             rows.map { |row| indent(table_row(row), indent) }
           end
 

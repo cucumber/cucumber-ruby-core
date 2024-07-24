@@ -11,6 +11,7 @@ module Cucumber
 
         def initialize(id, name, test_steps, location, parent_locations, tags, language, around_hooks = [])
           raise ArgumentError.new("test_steps should be an Array but is a #{test_steps.class}") unless test_steps.is_a?(Array)
+
           @id = id
           @name = name
           @test_steps = test_steps

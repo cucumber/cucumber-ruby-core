@@ -42,14 +42,14 @@ module Cucumber
         end
 
         describe '#transpose' do
-          before(:each) do
+          before do
             @table = described_class.new([
                                            %w[one 1111],
                                            %w[two 22222]
                                          ])
           end
 
-          it 'should transpose the table' do
+          it 'transposes the table' do
             transposed = described_class.new([
                                                %w[one two],
                                                %w[1111 22222]

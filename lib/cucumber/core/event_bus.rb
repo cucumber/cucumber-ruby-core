@@ -29,6 +29,7 @@ module Cucumber
 
       def broadcast(event)
         raise ArgumentError, "Event type #{event.class} is not registered. Try one of these:\n#{event_types.values.join("\n")}" unless registered_type?(event.class)
+
         handlers_for(event.class).each { |handler| handler.call(event) }
         @event_queue << event
       end

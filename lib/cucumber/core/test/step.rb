@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/result'
-require 'cucumber/core/test/action'
+require 'cucumber/core/test/actions'
 require 'cucumber/core/test/empty_multiline_argument'
 
 module Cucumber
@@ -12,6 +12,7 @@ module Cucumber
 
         def initialize(id, text, location, multiline_arg = Test::EmptyMultilineArgument.new, action = Test::UndefinedAction.new(location))
           raise ArgumentError if text.nil? || text.empty?
+
           @id = id
           @text = text
           @location = location

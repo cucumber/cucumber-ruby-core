@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.required_ruby_version = '>= 2.5'
   s.required_rubygems_version = '>= 3.0.1'
-  
-  s.metadata    = {
+
+  s.metadata = {
     'bug_tracker_uri' => 'https://github.com/cucumber/cucumber-ruby-core/issues',
     'changelog_uri' => 'https://github.com/cucumber/cucumber-ruby-core/blob/master/CHANGELOG.md',
     'documentation_uri' => 'https://www.rubydoc.info/github/cucumber/cucumber-ruby-core',
@@ -30,9 +30,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake', '~> 13.1'
   s.add_development_dependency 'rspec', '~> 3.13'
   s.add_development_dependency 'rubocop', '~> 1.28.2'
+  s.add_development_dependency 'rubocop-packaging', '~> 0.5.1'
   s.add_development_dependency 'rubocop-rake', '~> 0.6.0'
   s.add_development_dependency 'rubocop-rspec', '~> 2.10.0'
-  s.add_development_dependency 'rubocop-packaging', '~> 0.5.1'
 
   s.files            = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*']
   s.rdoc_options     = ['--charset=UTF-8']

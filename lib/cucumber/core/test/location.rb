@@ -29,7 +29,7 @@ module Cucumber
           new(file, line)
         end
 
-        def self.new(file, raw_lines=nil)
+        def self.new(file, raw_lines = nil)
           file || raise(ArgumentError, 'file is mandatory')
           if raw_lines
             Precise.new(file, Lines.new(raw_lines))

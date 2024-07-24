@@ -51,7 +51,7 @@ module Cucumber
 
           event_bus.another_test_event
 
-          expect(handler_called).to eq(false)
+          expect(handler_called).to be false
         end
 
         it 'broadcasts to multiple subscribers' do
@@ -125,18 +125,18 @@ module Cucumber
 
           event_bus.test_event :some_attribute
 
-          expect(handler.received_payload.some_attribute).to eq :some_attribute
+          expect(handler.received_payload.some_attribute).to eq(:some_attribute)
         end
 
         it 'allows handlers that are procs' do
           handler = proc_handler.new(event_bus)
 
           event_bus.test_event :some_attribute
-          expect(handler.received_payload.some_attribute).to eq :some_attribute
+          expect(handler.received_payload.some_attribute).to eq(:some_attribute)
         end
 
         it 'sends events that were broadcast before you subscribed' do
-          event_bus.test_event :some_attribute
+          event_bus.test_event(:some_attribute)
           event_bus.another_test_event
 
           received_payload = nil
@@ -149,7 +149,7 @@ module Cucumber
       end
 
       it 'will let you inspect the registry' do
-        expect(event_bus.event_types[:test_event]).to eq Events::TestEvent
+        expect(event_bus.event_types[:test_event]).to eq(Events::TestEvent)
       end
 
       it "won't let you modify the registry" do
