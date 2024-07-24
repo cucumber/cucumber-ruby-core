@@ -24,10 +24,10 @@ module Cucumber
           @timer.start
           @block.call(*args)
           passed
-        rescue Result::Raisable => exception
-          exception.with_duration(@timer.duration)
-        rescue Exception => exception
-          failed(exception)
+        rescue Result::Raisable => e
+          e.with_duration(@timer.duration)
+        rescue Exception => e
+          failed(e)
         end
 
         def location

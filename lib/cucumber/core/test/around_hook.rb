@@ -21,10 +21,10 @@ module Cucumber
           @timer.start
           @block.call(continue)
           Result::Unknown.new # Around hook does not know the result of the inner test steps
-        rescue Result::Raisable => exception
-          exception.with_duration(@timer.duration)
-        rescue Exception => exception
-          failed(exception)
+        rescue Result::Raisable => e
+          e.with_duration(@timer.duration)
+        rescue Exception => e
+          failed(e)
         end
 
         private
