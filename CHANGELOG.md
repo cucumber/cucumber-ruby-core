@@ -9,6 +9,9 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- Permit usage of gherkin up to v29 and messages up to v26
+
 ### Removed
 - Remove support for ruby 2.6 and below. 2.7 or higher is required now
 
