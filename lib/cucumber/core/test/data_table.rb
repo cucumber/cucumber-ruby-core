@@ -101,7 +101,7 @@ module Cucumber
         end
 
         def ensure_array_of_array(array)
-          Hash === array[0] ? hashes_to_array(array) : array
+          array[0].is_a?(Hash) ? hashes_to_array(array) : array
         end
 
         def hashes_to_array(hashes)
