@@ -8,7 +8,7 @@ require 'cucumber/core/test/step'
 require 'cucumber/core/test/duration_matcher'
 
 describe Cucumber::Core::Test::Runner do
-  include_context 'steps'
+  include_context 'with different types of steps'
 
   let(:test_case)        { Cucumber::Core::Test::Case.new(double, double, test_steps, double, double, double, double) }
   let(:runner)           { described_class.new(event_bus) }

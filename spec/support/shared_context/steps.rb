@@ -2,7 +2,7 @@
 
 require 'cucumber/core/test/step'
 
-RSpec.shared_context "steps" do
+RSpec.shared_context 'with different types of steps' do
   let(:passing)          { Cucumber::Core::Test::Step.new(1, 'Passing Step', double).with_action { :no_op } }
   let(:failing)          { Cucumber::Core::Test::Step.new(2, 'Failing Step', double).with_action { raise StandardError, 'Error' } }
   let(:pending)          { Cucumber::Core::Test::Step.new(3, 'Pending Step', double).with_action { raise Cucumber::Core::Test::Result::Pending, 'TODO' } }
