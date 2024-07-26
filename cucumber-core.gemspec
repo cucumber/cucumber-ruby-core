@@ -29,10 +29,10 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 13.2'
   s.add_development_dependency 'rspec', '~> 3.13'
-  s.add_development_dependency 'rubocop', '~> 1.41.0'
+  s.add_development_dependency 'rubocop', '~> 1.61.0'
   s.add_development_dependency 'rubocop-packaging', '~> 0.5.2'
   s.add_development_dependency 'rubocop-rake', '~> 0.6.0'
-  s.add_development_dependency 'rubocop-rspec', '~> 2.31.0'
+  s.add_development_dependency 'rubocop-rspec', '~> 3.0.1'
 
   s.files            = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*']
   s.rdoc_options     = ['--charset=UTF-8']
