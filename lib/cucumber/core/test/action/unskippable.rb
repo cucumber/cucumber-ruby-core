@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/result'
-require 'cucumber/core/test/action/action'
+require 'cucumber/core/test/action/defined'
 
 module Cucumber
   module Core
