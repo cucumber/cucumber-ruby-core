@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'support/report_api_spy'
+require 'support/activate_steps_for_self_test'
+
 require 'cucumber/core'
 require 'cucumber/core/filter'
 require 'cucumber/core/gherkin/writer'
@@ -8,7 +10,6 @@ require 'cucumber/core/platform'
 require 'cucumber/core/report/summary'
 require 'cucumber/core/test/around_hook'
 require 'cucumber/core/test/filters'
-require 'cucumber/core/test/filters/activate_steps_for_self_test'
 
 describe Cucumber::Core do
   include described_class
@@ -110,7 +111,7 @@ describe Cucumber::Core do
     let(:report) { Cucumber::Core::Report::Summary.new(event_bus) }
 
     before do
-      execute [gherkin_document], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new] do |event_bus|
+      execute [gherkin_document], [ActivateStepsForSelfTest.new] do |event_bus|
         event_bus.on(:test_case_started) do |event|
           test_case = event.test_case
           observed_events << [:test_case_started, test_case.name]
@@ -153,7 +154,7 @@ describe Cucumber::Core do
 
     context 'without hooks' do
       before do
-        execute([gherkin_document], [Cucumber::Core::Test::Filters::ActivateStepsForSelfTest.new], event_bus)
+        execute([gherkin_document], [ActivateStepsForSelfTest.new], event_bus)
       end
 
       it 'reports on how many total test cases there were' do
