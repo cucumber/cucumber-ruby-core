@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cucumber/core/test/step'
 
 RSpec.shared_context "steps" do
