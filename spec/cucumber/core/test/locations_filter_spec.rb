@@ -138,14 +138,14 @@ describe Cucumber::Core::Test::LocationsFilter do
       it 'matches the feature location to all scenarios' do
         location = Cucumber::Core::Test::Location.new(file, 1)
         filter = described_class.new([location])
-        compile [doc], receiver, [filter]
+        compile([doc], receiver, [filter])
         expect(receiver.test_case_locations).to eq(test_cases.map(&:location))
       end
 
       it 'matches the feature background location to all scenarios' do
         location = Cucumber::Core::Test::Location.new(file, 2)
         filter = described_class.new([location])
-        compile [doc], receiver, [filter]
+        compile([doc], receiver, [filter])
         expect(receiver.test_case_locations).to eq(test_cases.map(&:location))
       end
 
@@ -159,7 +159,7 @@ describe Cucumber::Core::Test::LocationsFilter do
       it "matches a rule location (containing a background) to all of the rule's scenarios" do
         location = Cucumber::Core::Test::Location.new(file, 29)
         filter = described_class.new([location])
-        compile [doc], receiver, [filter]
+        compile([doc], receiver, [filter])
         expect(receiver.test_case_locations).to eq(
           [
             test_case_named('with a rule and background').location,
