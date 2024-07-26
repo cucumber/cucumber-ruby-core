@@ -226,14 +226,16 @@ describe Cucumber::Core::Test::Runner do
   end
 
   context 'when passing the latest result to a mapping' do
-    let(:hook_mapping) { Cucumber::Core::Test::Action::Unskippable.new { |last_result| @result_spy = last_result } }
+    let(:hook_mapping) { Cucumber::Core::Test::Action::Unskippable.new { :no_op } }
     let(:after_hook) { Cucumber::Core::Test::HookStep.new(double, 'After Hook Step', double, hook_mapping) }
     let(:test_steps) { [failing, after_hook] }
 
     it 'passes a Failed result when the scenario is failing' do
-      test_case.describe_to(runner)
+      allow(event_bus).to receive(:test_case_finished) { |_reported_test_case, result|
+        expect(result).to be_failed
+      }
 
-      expect(@result_spy).to be_failed
+      test_case.describe_to(runner)
     end
   end
 
