@@ -7,7 +7,7 @@ module Cucumber
   module Core
     module Test
       module Action
-        class Unskippable < Action
+        class Unskippable < Defined
           def skip(*args)
             execute(*args)
           end

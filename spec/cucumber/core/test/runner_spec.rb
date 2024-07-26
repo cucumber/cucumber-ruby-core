@@ -226,7 +226,7 @@ describe Cucumber::Core::Test::Runner do
   end
 
   context 'when passing the latest result to a mapping' do
-    let(:hook_mapping) { Cucumber::Core::Test::UnskippableAction.new { |last_result| @result_spy = last_result } }
+    let(:hook_mapping) { Cucumber::Core::Test::Action::Unskippable.new { |last_result| @result_spy = last_result } }
     let(:after_hook) { Cucumber::Core::Test::HookStep.new(double, 'After Hook Step', double, hook_mapping) }
     let(:test_steps) { [failing, after_hook] }
 
