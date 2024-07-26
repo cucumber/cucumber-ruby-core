@@ -7,9 +7,7 @@ module Cucumber
     module Test
       class NameFilter < Filter.new(:name_regexps)
         def test_case(test_case)
-          if accept?(test_case)
-            test_case.describe_to(receiver)
-          end
+          test_case.describe_to(receiver) if accept?(test_case)
           self
         end
 

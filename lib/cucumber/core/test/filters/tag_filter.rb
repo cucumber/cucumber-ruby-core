@@ -8,9 +8,7 @@ module Cucumber
       class TagFilter < Filter.new(:filter_expressions)
         def test_case(test_case)
           test_cases << test_case
-          if test_case.match_tags?(filter_expressions)
-            test_case.describe_to(receiver)
-          end
+          test_case.describe_to(receiver) if test_case.match_tags?(filter_expressions)
           self
         end
 
