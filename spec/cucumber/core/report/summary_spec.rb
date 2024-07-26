@@ -9,13 +9,13 @@ require 'cucumber/core/test/step'
 describe Cucumber::Core::Report::Summary do
   subject(:summary) { described_class.new(event_bus) }
 
-  let(:event_bus) { ::Cucumber::Core::EventBus.new(registry) }
-  let(:registry) { ::Cucumber::Core::Events.registry }
-  let(:passed_result) { ::Cucumber::Core::Test::Result::Passed.new(duration) }
-  let(:failed_result) { ::Cucumber::Core::Test::Result::Failed.new(duration, exception) }
-  let(:pending_result) { ::Cucumber::Core::Test::Result::Pending.new(duration) }
-  let(:skipped_result) { ::Cucumber::Core::Test::Result::Skipped.new(duration) }
-  let(:undefined_result) { ::Cucumber::Core::Test::Result::Undefined.new(duration) }
+  let(:event_bus) { Cucumber::Core::EventBus.new(registry) }
+  let(:registry) { Cucumber::Core::Events.registry }
+  let(:passed_result) { Cucumber::Core::Test::Result::Passed.new(duration) }
+  let(:failed_result) { Cucumber::Core::Test::Result::Failed.new(duration, exception) }
+  let(:pending_result) { Cucumber::Core::Test::Result::Pending.new(duration) }
+  let(:skipped_result) { Cucumber::Core::Test::Result::Skipped.new(duration) }
+  let(:undefined_result) { Cucumber::Core::Test::Result::Undefined.new(duration) }
   let(:duration) { double }
   let(:exception) { double }
 
@@ -155,7 +155,7 @@ describe Cucumber::Core::Report::Summary do
       event_bus.send(:test_case_finished, test_case, pending_result)
 
       expect(summary.ok?).to be true
-      strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
+      strict = Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
       expect(summary.ok?(strict: strict)).to be false
     end
 
@@ -163,7 +163,7 @@ describe Cucumber::Core::Report::Summary do
       event_bus.send(:test_case_finished, test_case, undefined_result)
 
       expect(summary.ok?).to be true
-      strict = ::Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
+      strict = Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
       expect(summary.ok?(strict: strict)).to be false
     end
   end
