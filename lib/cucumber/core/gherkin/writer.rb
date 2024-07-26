@@ -194,8 +194,7 @@ module Cucumber
           include Indentation.level(6)
           include HasRows
 
-          def initialize(*)
-          end
+          def initialize(*); end
 
           def build(source)
             source + statements
