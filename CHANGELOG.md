@@ -16,7 +16,7 @@ See upgrading notes for [14.0.0.md](upgrading_notes/14.0.0.md#upgrading-to-cucum
   ([#282](https://github.com/cucumber/cucumber-ruby-core/pull/282))
 
 ### Removed
-- Remove support for ruby 2.6 and below. 2.7 or higher is required now
+- Remove support for ruby 2.6 and below. 2.7 or higher is required now (Autofixed to Ruby 2.7 styles)
 
 ## [13.0.3] - 2024-07-24
 ### Changed
