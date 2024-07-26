@@ -14,6 +14,30 @@ describe Cucumber::Core do
   include described_class
   include Cucumber::Core::Gherkin::Writer
 
+  let(:tagged_gherkin_document) do
+    gherkin do
+      feature do
+        scenario tags: '@b' do
+          step 'text'
+        end
+
+        scenario_outline 'foo' do
+          step '<arg>'
+
+          examples tags: '@a' do
+            row 'arg'
+            row 'x'
+          end
+
+          examples 'bar', tags: '@a @b' do
+            row 'arg'
+            row 'y'
+          end
+        end
+      end
+    end
+  end
+
   describe 'compiling features to a test suite' do
     context 'with two scenarios' do
       let(:gherkin_document) do
@@ -54,35 +78,11 @@ describe Cucumber::Core do
     end
 
     context 'when compiling using a tag expression' do
-      let(:gherkin_document) do
-        gherkin do
-          feature do
-            scenario tags: '@b' do
-              step 'text'
-            end
-
-            scenario_outline 'foo' do
-              step '<arg>'
-
-              examples tags: '@a' do
-                row 'arg'
-                row 'x'
-              end
-
-              examples 'bar', tags: '@a @b' do
-                row 'arg'
-                row 'y'
-              end
-            end
-          end
-        end
-      end
-
       it 'filters out test cases based on a tag expression' do
         visitor = double.as_null_object
         expect(visitor).to receive(:test_case) { |test_case| expect(test_case.name).to eq('foo') }.once
 
-        compile([gherkin_document], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])])
+        compile([tagged_gherkin_document], visitor, [Cucumber::Core::Test::TagFilter.new(['@a', '@b'])])
       end
     end
   end
@@ -223,9 +223,9 @@ describe Cucumber::Core do
           end
         end
       end
+      let(:logger) { [] }
 
       it 'executes the test cases in the suite' do
-        logger = []
         execute [gherkin_document], [around_hooks_filter.new(logger)], event_bus
 
         expect(report.test_cases.total).to eq(1)
@@ -236,41 +236,13 @@ describe Cucumber::Core do
     end
 
     it 'filters test cases by tag' do
-      gherkin = gherkin do
-        feature do
-          scenario do
-            step 'text'
-          end
-
-          scenario tags: '@a @b' do
-            step 'text'
-          end
-
-          scenario tags: '@a' do
-            step 'text'
-          end
-        end
-      end
-
-      execute([gherkin], [Cucumber::Core::Test::TagFilter.new(['@a'])], event_bus)
+      execute([tagged_gherkin_document], [Cucumber::Core::Test::TagFilter.new(['@a'])], event_bus)
 
       expect(report.test_cases.total).to eq(2)
     end
 
     it 'filters test cases by name' do
-      gherkin = gherkin do
-        feature 'first feature' do
-          scenario 'first scenario' do
-            step 'missing'
-          end
-
-          scenario 'second' do
-            step 'missing'
-          end
-        end
-      end
-
-      execute([gherkin], [Cucumber::Core::Test::NameFilter.new([/scenario/])], event_bus)
+      execute([gherkin_document], [Cucumber::Core::Test::NameFilter.new([/passes/])], event_bus)
 
       expect(report.test_cases.total).to eq(1)
     end
