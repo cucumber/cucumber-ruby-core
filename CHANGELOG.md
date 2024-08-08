@@ -9,11 +9,13 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+
+## [14.0.0] - 2024-08-08
 ### Changed
 - Permit usage of gherkin up to v29 and messages up to v26
 - **Internal Breaking Change**: Structure of `Action` classes have changed.
 See upgrading notes for [14.0.0.md](upgrading_notes/14.0.0.md#upgrading-to-cucumber-core-1400)
-  ([#282](https://github.com/cucumber/cucumber-ruby-core/pull/282))
+([#282](https://github.com/cucumber/cucumber-ruby-core/pull/282))
 
 ### Removed
 - Remove support for ruby 2.6 and below. 2.7 or higher is required now (Autofixed to Ruby 2.7 styles)
@@ -72,7 +74,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.3...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v14.0.0...HEAD
+[14.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.3...v14.0.0
 [13.0.3]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.2...v13.0.3
 [13.0.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.1...v13.0.2
 [13.0.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.0...v13.0.1
