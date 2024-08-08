@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/result'
-require 'cucumber/core/test/actions'
+require 'cucumber/core/test/action'
 require 'cucumber/core/test/empty_multiline_argument'
 
 module Cucumber
@@ -10,7 +10,7 @@ module Cucumber
       class Step
         attr_reader :id, :text, :location, :multiline_arg
 
-        def initialize(id, text, location, multiline_arg = Test::EmptyMultilineArgument.new, action = Test::UndefinedAction.new(location))
+        def initialize(id, text, location, multiline_arg = Test::EmptyMultilineArgument.new, action = Test::Action::Undefined.new(location))
           raise ArgumentError if text.nil? || text.empty?
 
           @id = id
@@ -37,7 +37,7 @@ module Cucumber
         end
 
         def with_action(action_location = nil, &block)
-          self.class.new(id, text, location, multiline_arg, Test::Action.new(action_location, &block))
+          self.class.new(id, text, location, multiline_arg, Test::Action::Defined.new(action_location, &block))
         end
 
         def backtrace_line

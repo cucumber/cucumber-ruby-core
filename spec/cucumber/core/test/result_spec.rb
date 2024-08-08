@@ -371,14 +371,16 @@ module Cucumber
           describe '#merge!' do
             let(:merged_configuration) { described_class.new }
 
-            it 'sets the not default values from the argument accordingly' do
+            before do
               strict_configuration.set_strict(false, :undefined)
               strict_configuration.set_strict(false, :pending)
               strict_configuration.set_strict(true, :flaky)
               merged_configuration.set_strict(true, :pending)
               merged_configuration.set_strict(false, :flaky)
               strict_configuration.merge!(merged_configuration)
+            end
 
+            it 'sets the not default values from the argument accordingly' do
               expect(strict_configuration).not_to be_strict(:undefined)
               expect(strict_configuration).to be_strict(:pending)
               expect(strict_configuration).not_to be_strict(:flaky)
@@ -406,6 +408,7 @@ module Cucumber
 
           it 'counts passed results' do
             passed.describe_to(summary)
+
             expect(summary.total_passed).to eq(1)
             expect(summary.total(:passed)).to eq(1)
             expect(summary.total).to eq(1)
@@ -413,6 +416,7 @@ module Cucumber
 
           it 'counts skipped results' do
             skipped.describe_to(summary)
+
             expect(summary.total_skipped).to eq(1)
             expect(summary.total(:skipped)).to eq(1)
             expect(summary.total).to eq(1)
@@ -420,6 +424,7 @@ module Cucumber
 
           it 'counts undefined results' do
             undefined.describe_to(summary)
+
             expect(summary.total_undefined).to eq(1)
             expect(summary.total(:undefined)).to eq(1)
             expect(summary.total).to eq(1)
@@ -433,6 +438,7 @@ module Cucumber
             end
 
             flickering.new.describe_to(summary)
+
             expect(summary.total_flickering).to eq(1)
             expect(summary.total(:flickering)).to eq(1)
             expect(summary.total).to eq(1)
@@ -447,11 +453,12 @@ module Cucumber
 
           it "doesn't count unknown results" do
             unknown.describe_to(summary)
+
             expect(summary.total).to eq(0)
           end
 
           it 'counts combinations' do
-            [passed, passed, failed, skipped, undefined].each { |r| r.describe_to(summary) }
+            [passed, passed, failed, skipped, undefined].each { |result| result.describe_to(summary) }
 
             expect(summary.total).to eq(5)
             expect(summary.total_passed).to eq(2)
@@ -461,14 +468,16 @@ module Cucumber
           end
 
           it 'records durations' do
-            [passed, failed].each { |r| r.describe_to(summary) }
+            [passed, failed].each { |result| result.describe_to(summary) }
+
             expect(summary.durations[0]).to be_duration(11)
             expect(summary.durations[1]).to be_duration(10)
           end
 
           it 'records exceptions' do
-            [passed, failed].each { |r| r.describe_to(summary) }
-            expect(summary.exceptions).to eq [exception]
+            [passed, failed].each { |result| result.describe_to(summary) }
+
+            expect(summary.exceptions).to eq([exception])
           end
 
           describe '#ok?' do
@@ -492,6 +501,7 @@ module Cucumber
 
             it 'pending result is ok if not strict' do
               pending.describe_to(summary)
+
               expect(summary.ok?).to be true
               strict = Result::StrictConfiguration.new([:pending])
               expect(summary.ok?(strict: strict)).to be false
@@ -499,6 +509,7 @@ module Cucumber
 
             it 'undefined result is ok if not strict' do
               undefined.describe_to(summary)
+
               expect(summary.ok?).to be true
               strict = Result::StrictConfiguration.new([:undefined])
               expect(summary.ok?(strict: strict)).to be false

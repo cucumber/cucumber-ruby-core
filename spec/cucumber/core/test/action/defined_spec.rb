@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/actions'
+require 'cucumber/core/test/action'
 require 'cucumber/core/test/duration_matcher'
 
-describe Cucumber::Core::Test::Action do
+describe Cucumber::Core::Test::Action::Defined do
   it 'raises an error if created without a block' do
     expect { described_class.new }.to raise_error(ArgumentError)
   end

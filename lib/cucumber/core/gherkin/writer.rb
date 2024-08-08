@@ -16,7 +16,8 @@ module Cucumber
 
         class Gherkin
           def initialize(uri, &source)
-            @uri, @source = uri, source
+            @uri = uri
+            @source = source
           end
 
           def comment(line)
@@ -193,8 +194,7 @@ module Cucumber
           include Indentation.level(6)
           include HasRows
 
-          def initialize(*)
-          end
+          def initialize(*); end
 
           def build(source)
             source + statements

@@ -22,7 +22,7 @@ module Cucumber
           pwd = File.expand_path(Dir.pwd)
           pwd.force_encoding(file.encoding)
           if file.index(pwd)
-            file = file[pwd.length + 1..-1]
+            file = file[pwd.length + 1..]
           elsif file =~ /.*\/gems\/(.*\.rb)$/
             file = $1
           end
@@ -38,7 +38,7 @@ module Cucumber
           end
         end
 
-        class Wildcard < Struct.new(:file)
+        Wildcard = Struct.new(:file) do
           def to_s
             file
           end
@@ -52,7 +52,7 @@ module Cucumber
           end
         end
 
-        class Precise < Struct.new(:file, :lines)
+        Precise = Struct.new(:file, :lines) do
           def include?(other_lines)
             lines.include?(other_lines)
           end
@@ -96,7 +96,7 @@ module Cucumber
         end
 
         require 'set'
-        class Lines < Struct.new(:data)
+        Lines = Struct.new(:data) do
           protected :data
 
           def initialize(raw_data)
@@ -167,17 +167,17 @@ module Cucumber
         end
 
         def tags
-          # will be overriden by nodes that actually have tags
+          # will be overridden by nodes that actually have tags
           []
         end
 
         def comments
-          # will be overriden by nodes that actually have comments
+          # will be overridden by nodes that actually have comments
           []
         end
 
         def multiline_arg
-          # will be overriden by nodes that actually have a multiline_argument
+          # will be overridden by nodes that actually have a multiline_argument
           Test::EmptyMultilineArgument.new
         end
       end

@@ -50,7 +50,7 @@ module Cucumber
           case type?(message)
           when :gherkin_document; then event_bus.gherkin_source_parsed(message.gherkin_document)
           when :pickle;           then receiver.pickle(message.pickle)
-          when :parse_error;      then raise ParseError.new("#{document.uri}: #{message.parse_error.message}")
+          when :parse_error;      then raise ParseError, "#{document.uri}: #{message.parse_error.message}"
           else                    raise "Unknown message: #{message.to_hash}"
           end
         end

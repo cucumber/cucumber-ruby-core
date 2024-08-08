@@ -1,4 +1,3 @@
-# encoding: utf-8
 # frozen_string_literal: true
 
 require 'cucumber/messages'
@@ -173,7 +172,8 @@ module Cucumber
           attr_reader :message, :duration
 
           def initialize(message = '', duration = UnknownDuration.new, backtrace = nil)
-            @message, @duration = message, duration
+            @message = message
+            @duration = duration
             super(message)
             set_backtrace(backtrace) if backtrace
           end
@@ -287,7 +287,7 @@ module Cucumber
           private :settings
 
           def initialize(strict_types = [])
-            @settings = STRICT_AFFECTED_TYPES.map { |t| [t, :default] }.to_h
+            @settings = STRICT_AFFECTED_TYPES.to_h { |t| [t, :default] }
             strict_types.each do |type|
               set_strict(true, type)
             end

@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/actions'
+require 'cucumber/core/test/action'
 require 'cucumber/core/test/duration_matcher'
 
-describe Cucumber::Core::Test::UndefinedAction do
+describe Cucumber::Core::Test::Action::Undefined do
   let(:location) { double }
   let(:action) { described_class.new(location) }
   let(:test_step) { double }

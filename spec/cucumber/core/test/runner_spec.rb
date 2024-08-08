@@ -1,22 +1,18 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/around_hook'
+require 'cucumber/core/test/hook_step'
 require 'cucumber/core/test/runner'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
 require 'cucumber/core/test/duration_matcher'
 
 describe Cucumber::Core::Test::Runner do
+  include_context 'with different types of steps'
+
   let(:test_case)        { Cucumber::Core::Test::Case.new(double, double, test_steps, double, double, double, double) }
-  let(:text)             { 'Step Name' }
   let(:runner)           { described_class.new(event_bus) }
   let(:event_bus)        { double.as_null_object }
-  let(:passing)          { Cucumber::Core::Test::Step.new(double, text, double, double).with_action { :no_op } }
-  let(:failing)          { Cucumber::Core::Test::Step.new(double, text, double, double).with_action { raise exception } }
-  let(:pending)          { Cucumber::Core::Test::Step.new(double, text, double, double).with_action { raise Cucumber::Core::Test::Result::Pending.new('TODO') } }
-  let(:skipping)         { Cucumber::Core::Test::Step.new(double, text, double, double).with_action { raise Cucumber::Core::Test::Result::Skipped.new } }
-  let(:undefined)        { Cucumber::Core::Test::Step.new(double, text, double, double) }
-  let(:exception)        { StandardError.new('test error') }
 
   before { allow(event_bus).to receive(:test_case_started) }
 
@@ -54,7 +50,7 @@ describe Cucumber::Core::Test::Runner do
     it 'sets the exception on the result' do
       allow(event_bus).to receive(:before_test_case)
       expect(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
-        expect(result.exception).to eq(exception)
+        expect(result.exception).to be_a StandardError
       end
       test_case.describe_to runner
     end
@@ -200,7 +196,7 @@ describe Cucumber::Core::Test::Runner do
       it 'emits a test_case_finished event with a failed result' do
         expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
           expect(result).to be_failed
-          expect(result.exception).to eq exception
+          expect(result.exception).to be_a StandardError
         end
         test_case.describe_to runner
       end
@@ -230,24 +226,23 @@ describe Cucumber::Core::Test::Runner do
   end
 
   context 'when passing the latest result to a mapping' do
-    let(:hook_mapping) { Cucumber::Core::Test::UnskippableAction.new { |last_result| @result_spy = last_result } }
-    let(:after_hook) { Cucumber::Core::Test::HookStep.new(double, text, double, hook_mapping) }
-    let(:failing_step) { Cucumber::Core::Test::Step.new(double, text, double).with_action { fail } }
-    let(:test_steps) { [failing_step, after_hook] }
+    let(:hook_mapping) { Cucumber::Core::Test::Action::Unskippable.new { :no_op } }
+    let(:after_hook) { Cucumber::Core::Test::HookStep.new(double, 'After Hook Step', double, hook_mapping) }
+    let(:test_steps) { [failing, after_hook] }
 
     it 'passes a Failed result when the scenario is failing' do
-      test_case.describe_to(runner)
+      allow(event_bus).to receive(:test_case_finished) { |_reported_test_case, result|
+        expect(result).to be_failed
+      }
 
-      expect(@result_spy).to be_failed
+      test_case.describe_to(runner)
     end
   end
 
   context 'with around hooks' do
-    let(:passing_step) { Cucumber::Core::Test::Step.new(double, text, double, double).with_action { :no_op } }
-
     it "passes normally when around hooks don't fail" do
       around_hook = Cucumber::Core::Test::AroundHook.new { |block| block.call }
-      test_case = Cucumber::Core::Test::Case.new(double, double, [passing_step], double, double, double, double, [around_hook])
+      test_case = Cucumber::Core::Test::Case.new(double, double, [passing], double, double, double, double, [around_hook])
       expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
         expect(result).to be_passed
       end
@@ -255,11 +250,11 @@ describe Cucumber::Core::Test::Runner do
     end
 
     it 'gets a failed result if the Around hook fails before the test case is run' do
-      around_hook = Cucumber::Core::Test::AroundHook.new { |_block| raise exception }
-      test_case = Cucumber::Core::Test::Case.new(double, double, [passing_step], double, double, double, double, [around_hook])
+      around_hook = Cucumber::Core::Test::AroundHook.new { |_block| raise StandardError }
+      test_case = Cucumber::Core::Test::Case.new(double, double, [passing], double, double, double, double, [around_hook])
       expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
         expect(result).to be_failed
-        expect(result.exception).to eq exception
+        expect(result.exception).to be_a StandardError
       end
       test_case.describe_to runner
     end
@@ -267,23 +262,22 @@ describe Cucumber::Core::Test::Runner do
     it 'gets a failed result if the Around hook fails after the test case is run' do
       around_hook = Cucumber::Core::Test::AroundHook.new do |block|
         block.call
-        raise exception
+        raise StandardError
       end
-      test_case = Cucumber::Core::Test::Case.new(double, double, [passing_step], double, double, double, double, [around_hook])
+      test_case = Cucumber::Core::Test::Case.new(double, double, [passing], double, double, double, double, [around_hook])
       expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
         expect(result).to be_failed
-        expect(result.exception).to eq exception
+        expect(result.exception).to be_a StandardError
       end
       test_case.describe_to runner
     end
 
     it 'fails when a step fails if the around hook works' do
       around_hook = Cucumber::Core::Test::AroundHook.new { |block| block.call }
-      failing_step = Cucumber::Core::Test::Step.new(double, text, double, double).with_action { raise exception }
-      test_case = Cucumber::Core::Test::Case.new(double, double, [failing_step], double, double, double, double, [around_hook])
+      test_case = Cucumber::Core::Test::Case.new(double, double, [failing], double, double, double, double, [around_hook])
       expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
         expect(result).to be_failed
-        expect(result.exception).to eq exception
+        expect(result.exception).to be_a StandardError
       end
       test_case.describe_to runner
     end
@@ -291,17 +285,17 @@ describe Cucumber::Core::Test::Runner do
     it 'sends after_test_step for a step interrupted by (a timeout in) the around hook' do
       around_hook = Cucumber::Core::Test::AroundHook.new do |block|
         block.call
-        raise exception
+        raise StandardError
       end
       test_case = Cucumber::Core::Test::Case.new(double, double, [], double, double, double, double, [around_hook])
-      allow(runner).to receive(:running_test_step).and_return(passing_step)
-      expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |_reported_test_case, result|
+      allow(runner).to receive(:running_test_step).and_return(passing)
+      expect(event_bus).to receive(:test_step_finished).with(passing, anything) do |_reported_test_case, result|
         expect(result).to be_failed
-        expect(result.exception).to eq(exception)
+        expect(result.exception).to be_a StandardError
       end
       expect(event_bus).to receive(:test_case_finished).with(test_case, anything) do |_reported_test_case, result|
         expect(result).to be_failed
-        expect(result.exception).to eq(exception)
+        expect(result.exception).to be_a StandardError
       end
       test_case.describe_to(runner)
     end

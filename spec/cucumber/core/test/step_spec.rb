@@ -73,7 +73,7 @@ describe Cucumber::Core::Test::Step do
 
   it 'exposes the location of the action as attribute' do
     location = double
-    action = instance_double(Cucumber::Core::Test::Action, location: location)
+    action = instance_double(Cucumber::Core::Test::Action::Defined, location: location)
     test_step = described_class.new(id, text, location, action)
     expect(test_step.action_location).to eq(location)
   end

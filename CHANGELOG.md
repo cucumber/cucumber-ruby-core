@@ -9,6 +9,14 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- Permit usage of gherkin up to v29 and messages up to v26
+- **Internal Breaking Change**: Structure of `Action` classes have changed.
+See upgrading notes for [14.0.0.md](upgrading_notes/14.0.0.md#upgrading-to-cucumber-core-1400)
+  ([#282](https://github.com/cucumber/cucumber-ruby-core/pull/282))
+
+### Removed
+- Remove support for ruby 2.6 and below. 2.7 or higher is required now
 
 ## [13.0.3] - 2024-07-24
 ### Changed
@@ -31,8 +39,8 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 - Now using a 2-tiered changelog to avoid any bugs when using polyglot-release
 - More refactoring of the repo by fixing up a bunch of manual rubocop offenses (See PR's for details)
 ([#259](https://github.com/cucumber/cucumber-ruby-core/pull/259) [#262](https://github.com/cucumber/cucumber-ruby-core/pull/262) [#268](https://github.com/cucumber/cucumber-ruby-core/pull/268) [#274](https://github.com/cucumber/cucumber-ruby-core/pull/274))
-- In all `Summary` and `Result` classes, changed the `strict` argument into a keyword argument
-See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-1300)
+- In all `Summary` and `Result` classes, changed the `strict` argument into a keyword argument.
+See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucumber-core-1300)
 ([#261](https://github.com/cucumber/cucumber-ruby-core/pull/261))
 - Permit usage of gherkin v27
 
