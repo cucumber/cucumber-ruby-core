@@ -8,9 +8,9 @@ on:
   pull_request:
     branches:
       - main
-#  workflow_call:
-#  schedule:
-#    - cron: "0 5 * * *"
+  workflow_call:
+  schedule:
+    - cron: "0 5 * * *"
 
 jobs:
   test:
