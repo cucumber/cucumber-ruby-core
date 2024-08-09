@@ -119,7 +119,7 @@ processing: it should pass ✓
 ## Documentation and support
 
 - Getting started with Cucumber, writing features, step definitions, and more: https://cucumber.io/docs
-- Slack: [register for an account](https://cucumberbdd-slack-invite.herokuapp.com/) then head over to [#intro](https://cucumberbdd.slack.com/messages/C5WD8SA21/)
+- Discord ([invite link here](https://cucumber.io/docs/community/get-in-touch/#discord))
 - `cucumber-core` overview: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - How to work with local repositories for `cucumber-gherkin`, `cucumber-messages` or `cucumber-ruby`: [CONTRIBUTING.md#working-with-local-cucumber-dependencies](./CONTRIBUTING.md#working-with-local-cucumber-dependencies)
 

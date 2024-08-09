@@ -152,12 +152,12 @@ Looking for something simple to begin with? Look at issues with the label
 ### Having trouble getting started with the code? We're here to help!
 
 If you have trouble setting-up your development environment, or getting started
-with the code, you can join us on [Slack][community-slack]. You will find there
+with the code, you can join us on [Discord][community-discord]. You will find there
 a lot of contributors.
 
 Full-time maintainers are also available. We would be please to have 1:1 pairing
 sessions to help you getting started. Look for Luke Hill or Matt Wynne on
-[Slack][community-slack].
+[Discord][community-discord].
 
 ### Additional documentation and notice
 
@@ -169,7 +169,7 @@ You can find additional documentation in the [docs](./docs) directory such as
 
 <!-- Links -->
 
-[community-slack]: https://cucumberbdd.slack.com/
+[community-discord]: https://cucumber.io/docs/community/get-in-touch/#discord
 [cucumber-ruby]: https://github.com/cucumber/cucumber-ruby
 [cucumber-ruby-core]: https://github.com/cucumber/cucumber-ruby-core
 [cucumber-ruby-core-issues]: https://github.com/cucumber/cucumber-ruby-core/search?q=is%3Aissue
