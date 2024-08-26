@@ -19,7 +19,7 @@ module Cucumber
 
           define_method(:initialize) do |*attributes|
             events.zip(attributes) do |name, value|
-              instance_variable_set("@#{name}".to_sym, value)
+              instance_variable_set(:"@#{name}", value)
             end
           end
 
