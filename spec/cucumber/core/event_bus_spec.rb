@@ -22,6 +22,7 @@ module Cucumber
           called = false
           event_bus.on(:test_event) { called = true }
           event_bus.test_event
+
           expect(called).to be true
         end
 
@@ -29,15 +30,13 @@ module Cucumber
           called = false
           event_bus.on(:test_event) { called = true }
           event_bus.broadcast(Events::TestEvent.new(:some_attribute))
+
           expect(called).to be true
         end
 
         it 'calls a subscriber for an event, passing details of the event' do
           received_payload = nil
-          event_bus.on :test_event do |event|
-            received_payload = event
-          end
-
+          event_bus.on(:test_event) { |event| received_payload = event }
           event_bus.test_event :some_attribute
 
           expect(received_payload.some_attribute).to eq(:some_attribute)
