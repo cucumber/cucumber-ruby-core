@@ -48,7 +48,7 @@ module Cucumber
 
           define_method(:initialize) do |*args|
             attributes.zip(args) do |name, value|
-              instance_variable_set("@#{name}".to_sym, value)
+              instance_variable_set(:"@#{name}", value)
             end
           end
 
@@ -63,7 +63,7 @@ module Cucumber
           end
 
           define_method(:with_receiver) do |new_receiver|
-            args = attributes.map { |name| instance_variable_get("@#{name}".to_sym) }
+            args = attributes.map { |name| instance_variable_get(:"@#{name}") }
             args[-1] = new_receiver
             self.class.new(*args)
           end

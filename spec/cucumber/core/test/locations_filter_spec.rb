@@ -254,14 +254,11 @@ describe Cucumber::Core::Test::LocationsFilter do
       end
 
       context 'with a docstring' do
-        let(:test_case) do
-          test_cases.detect { |tc| tc.name == 'with docstring' }
-        end
-
         it 'matches a location at the start the docstring' do
           location = Cucumber::Core::Test::Location.new(file, 17)
           filter = described_class.new([location])
           compile([doc], receiver, [filter])
+
           expect(receiver.test_case_locations).to eq([test_case_named('with docstring').location])
         end
 
@@ -269,6 +266,7 @@ describe Cucumber::Core::Test::LocationsFilter do
           location = Cucumber::Core::Test::Location.new(file, 18)
           filter = described_class.new([location])
           compile([doc], receiver, [filter])
+
           expect(receiver.test_case_locations).to eq([test_case_named('with docstring').location])
         end
 
@@ -276,6 +274,7 @@ describe Cucumber::Core::Test::LocationsFilter do
           location = Cucumber::Core::Test::Location.new(file, 19)
           filter = described_class.new([location])
           compile([doc], receiver, [filter])
+
           expect(receiver.test_case_locations).to eq([test_case_named('with docstring').location])
         end
       end

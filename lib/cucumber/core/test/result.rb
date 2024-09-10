@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/messages'
-require 'cucumber/messages/time_conversion'
+require 'cucumber/messages/helpers/time_conversion'
 
 module Cucumber
   module Core
@@ -404,7 +404,7 @@ module Cucumber
         end
 
         class Duration
-          include Cucumber::Messages::TimeConversion
+          include Cucumber::Messages::Helpers::TimeConversion
 
           attr_reader :nanoseconds
 
@@ -425,7 +425,7 @@ module Cucumber
         end
 
         class UnknownDuration
-          include Cucumber::Messages::TimeConversion
+          include Cucumber::Messages::Helpers::TimeConversion
 
           def tap
             self

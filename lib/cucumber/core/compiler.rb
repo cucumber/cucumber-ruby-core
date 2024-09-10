@@ -18,7 +18,7 @@ module Cucumber
 
       def initialize(receiver, gherkin_query, event_bus = nil)
         @receiver = receiver
-        @id_generator = Cucumber::Messages::IdGenerator::UUID.new
+        @id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new
         @gherkin_query = gherkin_query
         @event_bus = event_bus
       end
