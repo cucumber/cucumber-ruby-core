@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://cucumber.io'
   s.platform    = Gem::Platform::RUBY
   s.license     = 'MIT'
-  s.required_ruby_version = '>= 2.7'
+  s.required_ruby_version = '>= 3.0'
   s.required_rubygems_version = '>= 3.2.8'
 
   s.metadata = {
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   }
 
   s.add_dependency 'cucumber-gherkin', '> 27', '< 30'
-  s.add_dependency 'cucumber-messages', '> 25', '< 27'
+  s.add_dependency 'cucumber-messages', '> 25', '< 28'
   s.add_dependency 'cucumber-tag-expressions', '> 5', '< 7'
 
   s.add_development_dependency 'rake', '~> 13.2'
