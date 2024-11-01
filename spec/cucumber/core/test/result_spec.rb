@@ -14,15 +14,19 @@ module Cucumber
           subject(:result) { described_class.new(duration) }
           let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
 
-          it 'describes itself to a visitor' do
+          before do
+            allow(visitor).to receive(:duration)
+            allow(visitor).to receive(:passed)
+          end
+
+          it 'is described as a passing test' do
             expect(visitor).to receive(:passed).with(args)
-            expect(visitor).to receive(:duration).with(duration, args)
 
             result.describe_to(visitor, args)
           end
 
           it 'converts to a string' do
-            expect(result.to_s).to eq '✓'
+            expect(result.to_s).to eq('✓')
           end
 
           it 'converts to a `Cucumber::Message::TestResult`' do
@@ -57,16 +61,26 @@ module Cucumber
           let(:duration)   { Result::Duration.new(1 * 1000 * 1000) }
           let(:exception)  { StandardError.new('error message') }
 
-          it 'describes itself to a visitor' do
+          before do
+            allow(visitor).to receive(:failed)
+            allow(visitor).to receive(:duration)
+            allow(visitor).to receive(:exception)
+          end
+
+          it 'is described as a failing test' do
             expect(visitor).to receive(:failed).with(args)
-            expect(visitor).to receive(:duration).with(duration, args)
+
+            result.describe_to(visitor, args)
+          end
+
+          it 'contains an exception message' do
             expect(visitor).to receive(:exception).with(exception, args)
 
             result.describe_to(visitor, args)
           end
 
           it 'has a duration' do
-            expect(result.duration).to eq duration
+            expect(result.duration).to eq(duration)
           end
 
           it 'converts to a Cucumber::Message::TestResult' do
@@ -430,7 +444,7 @@ module Cucumber
             expect(summary.total).to eq(1)
           end
 
-          it 'counts arbitrary raiseable results' do
+          it 'counts arbitrary raisable results' do
             flickering = Class.new(Result::Raisable) do
               def describe_to(visitor, *args)
                 visitor.flickering(*args)
@@ -444,7 +458,7 @@ module Cucumber
             expect(summary.total).to eq(1)
           end
 
-          it 'returns zero for a status where no messges have been received' do
+          it 'returns zero for a status where no messages have been received' do
             expect(summary.total_passed).to eq(0)
             expect(summary.total(:passed)).to eq(0)
             expect(summary.total_ponies).to eq(0)
