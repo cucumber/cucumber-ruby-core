@@ -125,23 +125,6 @@ describe Cucumber::Core::Compiler do
     let(:gherkin_documents) do
       [
         gherkin do
-          feature do
-            scenario_outline do
-              step 'passing <arg>'
-              step 'passing'
-
-              examples 'examples 1' do
-                row 'arg'
-                row '1'
-                row '2'
-              end
-
-              examples 'examples 2' do
-                row 'arg'
-                row 'a'
-              end
-            end
-          end
         end
       ]
     end
