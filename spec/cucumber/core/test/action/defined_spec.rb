@@ -4,26 +4,28 @@ require 'cucumber/core/test/action'
 require 'cucumber/core/test/duration_matcher'
 
 describe Cucumber::Core::Test::Action::Defined do
-  it 'raises an error if created without a block' do
-    expect { described_class.new }.to raise_error(ArgumentError)
+  it 'requires a block' do
+    expect { described_class.new }
+      .to raise_error(ArgumentError)
+      .with_message('Passing a block to execute the action is mandatory.')
   end
 
   describe '#location' do
-    context 'with location passed to the constructor' do
+    context 'with a location passed to the constructor' do
       let(:location) { double }
+      subject(:action) { described_class.new(location) { :no_op } }
 
       it 'returns the location passed to the constructor' do
-        action = described_class.new(location) { :no_op }
-        expect(action.location).to be location
+        expect(action.location).to eq(location)
       end
     end
 
     context 'without location passed to the constructor' do
       let(:block) { proc {} }
+      subject(:action) { described_class.new(&block) }
 
       it 'returns the location of the block passed to the constructor' do
-        action = described_class.new(&block)
-        expect(action.location).to eq Cucumber::Core::Test::Location.new(*block.source_location)
+        expect(action.location).to eq(Cucumber::Core::Test::Location.new(*block.source_location))
       end
     end
   end
@@ -88,7 +90,8 @@ describe Cucumber::Core::Test::Action::Defined do
 
       it 'records the nanoseconds duration of the execution on the result' do
         action = described_class.new { :no_op }
-        duration = action.execute.duration
+        res = action.execute
+        duration = res.duration
 
         expect(duration).to be_duration(1)
       end
@@ -107,11 +110,13 @@ describe Cucumber::Core::Test::Action::Defined do
       executed = false
       action = described_class.new { executed = true }
       action.skip
+
       expect(executed).to be_falsey
     end
 
     it 'returns a skipped result' do
       action = described_class.new { :no_op }
+
       expect(action.skip).to be_skipped
     end
   end
