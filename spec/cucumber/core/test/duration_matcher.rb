@@ -8,7 +8,6 @@ module Cucumber
     module Test
       RSpec::Matchers.define :be_duration do |expected|
         match do |actual|
-          # actual.tap { |duration| @nanoseconds = duration.nanoseconds }
           actual.nanoseconds == expected
         end
       end
