@@ -20,7 +20,8 @@ Gem::Specification.new do |s|
     'changelog_uri' => 'https://github.com/cucumber/cucumber-ruby-core/blob/master/CHANGELOG.md',
     'documentation_uri' => 'https://www.rubydoc.info/github/cucumber/cucumber-ruby-core',
     'mailing_list_uri' => 'https://groups.google.com/forum/#!forum/cukes',
-    'source_code_uri' => 'https://github.com/cucumber/cucumber-ruby-core'
+    'source_code_uri' => 'https://github.com/cucumber/cucumber-ruby-core',
+    'funding_uri' => 'https://opencollective.com/cucumber'
   }
 
   s.add_dependency 'cucumber-gherkin', '> 27', '< 30'
