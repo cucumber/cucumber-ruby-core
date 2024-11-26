@@ -47,6 +47,7 @@ describe Cucumber::Core do
             background do
               step 'text'
             end
+
             scenario do
               step 'text'
             end

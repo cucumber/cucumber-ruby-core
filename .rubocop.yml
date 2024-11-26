@@ -15,6 +15,10 @@ AllCops:
   DisplayStyleGuide: true
   NewCops: enable
 
+# Stylistic preference to keep dev dependencies in gemspec
+Gemspec/DevelopmentDependencies:
+  Enabled: false
+
 # We do not support MFA at the moment with the new automated release process
 Gemspec/RequireMFA:
   Enabled: false

@@ -17,8 +17,7 @@ module Cucumber
 
         # Defines to_sym on a result class for the given result type
         #
-        # Defines predicate methods on a result class with only the given one
-        # returning true
+        # Defines predicate methods on a result class with only the given one returning true
         def self.query_methods(result_type)
           Module.new do
             define_method :to_sym do
@@ -166,8 +165,7 @@ module Cucumber
           end
         end
 
-        # Base class for exceptions that can be raised in a step definition causing
-        # the step to have that result.
+        # Base class for exceptions that can be raised in a step definition causing the step to have that result.
         class Raisable < StandardError
           attr_reader :message, :duration
 
@@ -295,7 +293,7 @@ module Cucumber
 
           def strict?(type = nil)
             if type.nil?
-              settings.each do |_key, value|
+              settings.each_value do |value|
                 return true if value == true
               end
               false
@@ -309,9 +307,7 @@ module Cucumber
 
           def set_strict(setting, type = nil)
             if type.nil?
-              STRICT_AFFECTED_TYPES.each do |t|
-                set_strict(setting, t)
-              end
+              STRICT_AFFECTED_TYPES.each { |type| set_strict(setting, type) }
             else
               settings[type] = setting
             end

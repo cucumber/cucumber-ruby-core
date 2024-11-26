@@ -7,7 +7,7 @@ describe Cucumber::Core::Event do
     it 'generates new types of events' do
       my_event_type = described_class.new
       my_event = my_event_type.new
-      expect(my_event).to be_kind_of(described_class)
+      expect(my_event).to be_a(described_class)
     end
 
     it 'generates events with attributes' do

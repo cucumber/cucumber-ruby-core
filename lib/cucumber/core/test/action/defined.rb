@@ -19,10 +19,6 @@ module Cucumber
             @timer = Timer.new
           end
 
-          def skip(*)
-            skipped
-          end
-
           def execute(*args)
             @timer.start
             @block.call(*args)
@@ -35,6 +31,10 @@ module Cucumber
 
           def inspect
             "#<#{self.class}: #{location}>"
+          end
+
+          def skip(*)
+            skipped
           end
 
           private
