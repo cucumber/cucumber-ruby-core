@@ -5,22 +5,20 @@ class ReportAPISpy
     @result = []
   end
 
-  def test_case(*args)
-    @result << [:test_case, *args]
-    yield self if block_given?
+  def test_case(*_args)
+    @result << :test_case
+    yield self
   end
 
-  def test_step(*args)
-    @result << [:test_step, *args]
-    yield self if block_given?
+  def test_step(*_args)
+    @result << :test_step
   end
 
-  def done(*args)
-    @result << [:done, *args]
-    yield self if block_given?
+  def done
+    @result << :done
   end
 
   def messages
-    @result.map(&:first)
+    @result
   end
 end

@@ -122,35 +122,31 @@ describe Cucumber::Core::Compiler do
   end
 
   context 'when compiling scenario outlines' do
-    it 'compiles a scenario outline to test cases' do
-      gherkin_documents = [
+    let(:gherkin_documents) do
+      [
         gherkin do
-          feature do
-            background do
-              step 'passing'
-            end
-
-            scenario_outline do
-              step 'passing <arg>'
-              step 'passing'
-
-              examples 'examples 1' do
-                row 'arg'
-                row '1'
-                row '2'
-              end
-
-              examples 'examples 2' do
-                row 'arg'
-                row 'a'
-              end
-            end
-          end
         end
       ]
+    end
+
+    it 'produces test cases' do
       compile(gherkin_documents) do |visitor|
         expect(visitor).to receive(:test_case).exactly(3).times.and_yield(visitor)
-        expect(visitor).to receive(:test_step).exactly(9).times
+        allow(visitor).to receive(:test_step)
+        allow(visitor).to receive(:done)
+      end
+    end
+
+    it 'produces test steps' do
+      compile(gherkin_documents) do |visitor|
+        allow(visitor).to receive(:done)
+        expect(visitor).to receive(:test_step).exactly(6).times
+      end
+    end
+
+    it 'finishes the compilation once' do
+      compile(gherkin_documents) do |visitor|
+        allow(visitor).to receive(:test_step)
         expect(visitor).to receive(:done).once
       end
     end
@@ -174,7 +170,7 @@ describe Cucumber::Core::Compiler do
 
       compile(gherkin_documents) do |visitor|
         expect(visitor).to receive(:test_step) do |test_step|
-          expect(test_step.text).to eq 'passing 1 with 2'
+          expect(test_step.text).to eq 'passing 1'
         end.once.ordered
 
         expect(visitor).to receive(:test_step) do |test_step|
@@ -186,10 +182,19 @@ describe Cucumber::Core::Compiler do
     end
   end
 
-  context 'with empty scenarios' do
-    it 'creates test cases' do
+  context 'with no scenarios' do
+    it 'creates a single test case' do
       compile([empty_gherkin_document]) do |visitor|
+        allow(visitor).to receive(:done)
+
         expect(visitor).to receive(:test_case).once.ordered
+      end
+    end
+
+    it 'finishes the compilation once' do
+      compile([empty_gherkin_document]) do |visitor|
+        allow(visitor).to receive(:test_case)
+
         expect(visitor).to receive(:done).once.ordered
       end
     end

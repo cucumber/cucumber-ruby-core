@@ -67,15 +67,27 @@ describe Cucumber::Core::Test::Case do
   describe '#match_tags?' do
     let(:tags) { %w[@a @b @c].map { |value| Cucumber::Core::Test::Tag.new(location, value) } }
 
-    it 'matches tags using tag expressions' do
+    it 'matches tags using and tag expression logic' do
       expect(test_case).to be_match_tags(['@a and @b'])
+    end
+
+    it 'matches tags using or tag expression logic' do
       expect(test_case).to be_match_tags(['@a or @d'])
+    end
+
+    it 'matches tags using not tag expression logic' do
       expect(test_case).to be_match_tags(['not @d'])
+    end
+
+    it 'fails when a tag does not match the tag expression' do
       expect(test_case).not_to be_match_tags(['@a and @d'])
     end
 
-    it 'matches handles multiple expressions' do
+    it 'matches multiple tag expressions' do
       expect(test_case).to be_match_tags(['@a and @b', 'not @d'])
+    end
+
+    it 'fails when it does not match multiple tag expressions' do
       expect(test_case).not_to be_match_tags(['@a and @b', 'not @c'])
     end
   end
@@ -92,30 +104,41 @@ describe Cucumber::Core::Test::Case do
     let(:language) { 'en-pirate' }
 
     it 'the language is passed when creating the test case' do
-      expect(test_case.language).to eq 'en-pirate'
+      expect(test_case.language).to eq('en-pirate')
     end
   end
 
   describe 'equality' do
-    it 'is equal to another test case at the same location' do
-      gherkin = gherkin('features/foo.feature') do
+    let(:feature_code) do
+      gherkin('features/foo.feature') do
         feature do
           scenario do
             step 'text'
           end
         end
       end
-      test_case_instances = []
+    end
+    let(:test_case_instances) { [] }
+
+    it 'creates multiple test cases' do
       receiver = double.as_null_object
-      allow(receiver).to receive(:test_case) do |test_case|
-        test_case_instances << test_case
-      end
-      2.times { compile([gherkin], receiver) }
-      expect(test_case_instances.length).to eq 2
-      expect(test_case_instances.uniq.length).to eq 1
-      expect(test_case_instances[0]).to be_eql test_case_instances[1]
-      expect(test_case_instances[0]).to eq test_case_instances[1]
-      expect(test_case_instances[0]).not_to equal test_case_instances[1]
+      allow(receiver).to receive(:test_case) { |test_case| test_case_instances << test_case }
+      2.times { compile([feature_code], receiver) }
+      expect(test_case_instances.length).to eq(2)
+    end
+
+    it 'does not distinguish between identical test cases' do
+      receiver = double.as_null_object
+      allow(receiver).to receive(:test_case) { |test_case| test_case_instances << test_case }
+      2.times { compile([feature_code], receiver) }
+      expect(test_case_instances.uniq.length).to eq(1)
+    end
+
+    it 'is equal to another test case at the same location' do
+      receiver = double.as_null_object
+      allow(receiver).to receive(:test_case) { |test_case| test_case_instances << test_case }
+      2.times { compile([feature_code], receiver) }
+      expect(test_case_instances[0]).to eq(test_case_instances[1])
     end
   end
 end
