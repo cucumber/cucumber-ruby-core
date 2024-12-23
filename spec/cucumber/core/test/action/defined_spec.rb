@@ -12,8 +12,9 @@ describe Cucumber::Core::Test::Action::Defined do
 
   describe '#location' do
     context 'with a location passed to the constructor' do
-      let(:location) { double }
       subject(:action) { described_class.new(location) { :no_op } }
+
+      let(:location) { double }
 
       it 'returns the location passed to the constructor' do
         expect(action.location).to eq(location)
@@ -21,8 +22,9 @@ describe Cucumber::Core::Test::Action::Defined do
     end
 
     context 'without location passed to the constructor' do
-      let(:block) { proc {} }
       subject(:action) { described_class.new(&block) }
+
+      let(:block) { proc {} }
 
       it 'returns the location of the block passed to the constructor' do
         expect(action.location).to eq(Cucumber::Core::Test::Location.new(*block.source_location))

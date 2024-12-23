@@ -5,12 +5,12 @@ class ReportAPISpy
     @result = []
   end
 
-  def test_case(*args)
+  def test_case(*_args)
     @result << :test_case
     yield self
   end
 
-  def test_step(*args)
+  def test_step(*_args)
     @result << :test_step
   end
 
