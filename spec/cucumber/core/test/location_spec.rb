@@ -62,11 +62,11 @@ module Cucumber
             let(:precise) { described_class.new(file, line) }
 
             it 'matches a precise location of the same file and line' do
-              expect(matching).to match(precise)
+              expect(matching).to be_match(precise)
             end
 
             it 'does not match a precise location on a different line in the same file' do
-              expect(matching).not_to match(same_file_other_line)
+              expect(matching).not_to be_match(same_file_other_line)
             end
           end
 
@@ -74,15 +74,15 @@ module Cucumber
             let(:wildcard) { described_class.new(file) }
 
             it 'matches any location with the same filename' do
-              expect(wildcard).to match(matching)
+              expect(wildcard).to be_match(matching)
             end
 
             it 'is matched by any location of the same file' do
-              expect(matching).to match(wildcard)
+              expect(matching).to be_match(wildcard)
             end
 
             it 'does not match a location in a different file' do
-              expect(wildcard).not_to match(not_matching)
+              expect(wildcard).not_to be_match(not_matching)
             end
           end
         end
