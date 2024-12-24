@@ -178,7 +178,7 @@ describe Cucumber::Core::Compiler do
     it 'produces test steps' do
       compile(gherkin_documents_with_examples) do |visitor|
         allow(visitor).to receive(:done)
-        expect(visitor).to receive(:test_step).exactly(6).times
+        expect(visitor).to receive(:test_step).exactly(9).times
       end
     end
 
