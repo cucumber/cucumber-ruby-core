@@ -10,7 +10,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 
 ## [Unreleased]
 
-## [15.0.0] - 2024-12-23
+## [15.0.0] - 2024-12-24
 ### Changed
 - Permit usage of gherkin up to v29 and messages up to v28
 
