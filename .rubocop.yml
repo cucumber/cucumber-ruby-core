@@ -31,7 +31,7 @@ Layout/LineLength:
 # We want to permit Exception rescuing in these two instances as they literally guard against the final fail chance
 Lint/RescueException:
   Exclude:
-    - lib/cucumber/core/test/defined.rb
+    - lib/cucumber/core/test/action/defined.rb
     - lib/cucumber/core/test/around_hook.rb
 
 RSpec/ExampleLength:
