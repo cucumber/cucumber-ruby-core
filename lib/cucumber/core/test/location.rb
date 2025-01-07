@@ -24,7 +24,7 @@ module Cucumber
           if file.index(pwd)
             file = file[pwd.length + 1..]
           elsif file =~ /.*\/gems\/(.*\.rb)$/
-            file = $1
+            file = Regexp.last_match(1)
           end
           new(file, line)
         end
