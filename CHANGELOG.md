@@ -9,10 +9,12 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- Permit usage of gherkin up to v30
 
 ## [15.0.0] - 2024-12-24
 ### Changed
-- Permit usage of gherkin up to v29 and messages up to v28
+- Permit usage of messages up to v28
 
 ### Fixed
 - References to the Time Conversion and UUID helpers needed altering to use the `Helpers` namespace
