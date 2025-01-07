@@ -24,16 +24,16 @@ Gem::Specification.new do |s|
     'funding_uri' => 'https://opencollective.com/cucumber'
   }
 
-  s.add_dependency 'cucumber-gherkin', '> 27', '< 30'
-  s.add_dependency 'cucumber-messages', '> 25', '< 28'
+  s.add_dependency 'cucumber-gherkin', '> 27', '< 31'
+  s.add_dependency 'cucumber-messages', '> 25', '< 29'
   s.add_dependency 'cucumber-tag-expressions', '> 5', '< 7'
 
   s.add_development_dependency 'rake', '~> 13.2'
   s.add_development_dependency 'rspec', '~> 3.13'
-  s.add_development_dependency 'rubocop', '~> 1.69.0'
+  s.add_development_dependency 'rubocop', '~> 1.69.2'
   s.add_development_dependency 'rubocop-packaging', '~> 0.5.2'
   s.add_development_dependency 'rubocop-rake', '~> 0.6.0'
-  s.add_development_dependency 'rubocop-rspec', '~> 3.0.5'
+  s.add_development_dependency 'rubocop-rspec', '~> 3.3.0'
 
   s.files            = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*']
   s.rdoc_options     = ['--charset=UTF-8']
