@@ -241,7 +241,7 @@ describe Cucumber::Core::Test::Runner do
 
   context 'with around hooks' do
     let(:passing_around_hook) do
-      Cucumber::Core::Test::AroundHook.new { |block| block.call }
+      Cucumber::Core::Test::AroundHook.new(&:call)
     end
     let(:failing_around_hook) do
       Cucumber::Core::Test::AroundHook.new do |block|
