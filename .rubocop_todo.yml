@@ -118,13 +118,13 @@ Style/NumericPredicate:
     - 'lib/cucumber/core/event.rb'
     - 'lib/cucumber/core/test/result.rb'
 
-## Offense count: 2
-## This cop supports safe autocorrection (--autocorrect).
-## Configuration parameters: AllowModifier.
-#Style/SoleNestedConditional:
-#  Exclude:
-#    - 'lib/cucumber/core/test/doc_string.rb'
-#    - 'lib/cucumber/core/test/result.rb'
+# Offense count: 2
+# This cop supports safe autocorrection (--autocorrect).
+# Configuration parameters: AllowModifier.
+Style/SoleNestedConditional:
+  Exclude:
+    - 'lib/cucumber/core/test/doc_string.rb'
+    - 'lib/cucumber/core/test/result.rb'
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
