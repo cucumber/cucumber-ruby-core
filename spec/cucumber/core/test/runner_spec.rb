@@ -76,7 +76,7 @@ describe Cucumber::Core::Test::Runner do
 
   context 'with steps' do
     context 'with steps that all pass' do
-      let(:test_steps) { [passing_step, passing_step]  }
+      let(:test_steps) { [passing_step, passing_step] }
 
       it 'emits the test_case_finished event with a passing result' do
         expect(event_bus).to receive(:test_case_finished) do |_test_case, result|
