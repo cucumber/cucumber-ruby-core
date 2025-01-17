@@ -222,14 +222,14 @@ describe Cucumber::Core::Test::Runner do
       let(:test_steps) { [failing_step, passing_step] }
 
       it 'emits the test_step_finished event with a failed result' do
-        allow(event_bus).to receive(:test_case_finished).with(failing_step, anything) do |_reported_test_case, result|
+        expect(event_bus).to receive(:test_step_finished).with(failing_step, anything) do |_reported_test_case, result|
           expect(result).to be_failed
         end
         test_case.describe_to(runner)
       end
 
       it 'emits a test_step_finished event with a skipped result' do
-        allow(event_bus).to receive(:test_case_finished).with(passing_step, anything) do |_reported_test_case, result|
+        expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |_reported_test_case, result|
           expect(result).to be_skipped
         end
         test_case.describe_to(runner)
@@ -258,9 +258,9 @@ describe Cucumber::Core::Test::Runner do
     let(:test_cases)      { [first_test_case, last_test_case] }
 
     it 'reports the results correctly for test cases after a failing test case' do
-      allow(event_bus).to receive(:test_case_finished) { |_reported_test_case, result|
-        expect(result).to be_failed if reported_test_case.equal?(first_test_case)
-        expect(result).to be_passed if reported_test_case.equal?(last_test_case)
+      allow(event_bus).to receive(:test_case_finished) { |reported_test_case, result|
+        expect(result).to be_failed if reported_test_case == first_test_case
+        expect(result).to be_passed if reported_test_case == last_test_case
       }.twice
 
       test_cases.each { |test_case| test_case.describe_to(runner) }
