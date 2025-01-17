@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/timer'
-require 'cucumber/core/test/duration_matcher'
+require 'support/duration_matcher'
 
 describe Cucumber::Core::Test::Timer do
   let(:random_time) { 525_702_744_080_000 }

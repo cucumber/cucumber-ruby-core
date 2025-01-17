@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/action'
-require 'cucumber/core/test/duration_matcher'
+require 'support/duration_matcher'
 
 describe Cucumber::Core::Test::Action::Defined do
   it 'requires a block' do
