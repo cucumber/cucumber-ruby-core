@@ -37,8 +37,7 @@ describe Cucumber::Core::Filter do
 
     context 'when customizing using a subclass' do
       let(:basic_blanking_filter) do
-        # Each filter implicitly gets a :receiver attribute
-        # that you need to call with the new test case
+        # Each filter implicitly gets a :receiver attribute that you need to call with the new test case
         # once you've received yours and modified it.
 
         Class.new(described_class.new) do
@@ -49,8 +48,7 @@ describe Cucumber::Core::Filter do
       end
 
       let(:named_blanking_filter) do
-        # You can pass the names of attributes when building a
-        # filter, allowing you to have custom attributes.
+        # You can pass the names of attributes when building a filter, allowing you to have custom attributes.
 
         Class.new(described_class.new(:name_pattern)) do
           def test_case(test_case)

@@ -24,14 +24,14 @@ Gemspec/RequireMFA:
   Enabled: false
 
 # A line length of 200 covers most violations in the repo while still being
-# a more up to date length given today's screen sizes
+# a more up-to-date length given today's screen sizes
 Layout/LineLength:
   Max: 200
 
 # We want to permit Exception rescuing in these two instances as they literally guard against the final fail chance
 Lint/RescueException:
   Exclude:
-    - lib/cucumber/core/test/defined.rb
+    - lib/cucumber/core/test/action/defined.rb
     - lib/cucumber/core/test/around_hook.rb
 
 RSpec/ExampleLength:

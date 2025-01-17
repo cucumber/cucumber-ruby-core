@@ -57,9 +57,7 @@ module Cucumber
         end
 
         def ==(other)
-          if other.respond_to?(:content_type)
-            return false unless content_type == other.content_type
-          end
+          return false if other.respond_to?(:content_type) && content_type != other.content_type
           return content == other.to_str if other.respond_to?(:to_str)
 
           false

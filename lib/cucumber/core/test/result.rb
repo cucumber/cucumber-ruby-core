@@ -357,9 +357,7 @@ module Cucumber
 
           def ok?(strict: StrictConfiguration.new)
             TYPES.each do |type|
-              if get_total(type) > 0
-                return false unless Result.ok?(type, strict: strict)
-              end
+              return false if get_total(type).positive? && !Result.ok?(type, strict: strict)
             end
             true
           end
