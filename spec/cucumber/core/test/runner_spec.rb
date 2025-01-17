@@ -66,8 +66,20 @@ describe Cucumber::Core::Test::Runner do
     end
 
     it 'emits the `test_case_finished` event after running the the test case' do
-      allow(event_bus).to receive(:test_case_finished) do |reported_test_case, result|
+      expect(event_bus).to receive(:test_case_finished)
+
+      test_case.describe_to(runner)
+    end
+
+    it 'reports the `test_case` inside the `test_case_finished` event' do
+      allow(event_bus).to receive(:test_case_finished) do |reported_test_case, _result|
         expect(reported_test_case).to eq(test_case)
+      end
+      test_case.describe_to(runner)
+    end
+
+    it 'reports that the test result was undefined inside the `test_case_finished` event' do
+      allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
         expect(result).to be_undefined
       end
       test_case.describe_to(runner)
@@ -78,7 +90,13 @@ describe Cucumber::Core::Test::Runner do
     context 'with steps that all pass' do
       let(:test_steps) { [passing_step, passing_step] }
 
-      it 'emits the test_case_finished event with a passing result' do
+      it 'emits the `test_case_finished` event' do
+        expect(event_bus).to receive(:test_case_finished)
+
+        test_case.describe_to(runner)
+      end
+
+      it 'reports that the test result was passed inside the `test_case_finished` event' do
         allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
           expect(result).to be_passed
         end
@@ -89,7 +107,13 @@ describe Cucumber::Core::Test::Runner do
     context 'with an undefined step' do
       let(:test_steps) { [undefined_step] }
 
-      it 'emits the test_case_finished event with an undefined result' do
+      it 'emits the `test_case_finished` event' do
+        expect(event_bus).to receive(:test_case_finished)
+
+        test_case.describe_to(runner)
+      end
+
+      it 'reports that the test result was undefined inside the `test_case_finished` event' do
         allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
           expect(result).to be_undefined
         end
@@ -119,7 +143,13 @@ describe Cucumber::Core::Test::Runner do
     context 'with a pending step' do
       let(:test_steps) { [pending_step] }
 
-      it 'emits the test_case_finished event with a pending result' do
+      it 'emits the `test_case_finished` event' do
+        expect(event_bus).to receive(:test_case_finished)
+
+        test_case.describe_to(runner)
+      end
+
+      it 'reports that the test result was pending inside the `test_case_finished` event' do
         allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
           expect(result).to be_pending
         end
@@ -139,7 +169,13 @@ describe Cucumber::Core::Test::Runner do
     context 'with a skipping step' do
       let(:test_steps) { [skipping_step] }
 
-      it 'emits the test_case_finished event with a skipped result' do
+      it 'emits the `test_case_finished` event' do
+        expect(event_bus).to receive(:test_case_finished)
+
+        test_case.describe_to(runner)
+      end
+
+      it 'reports that the test result was skipped inside the `test_case_finished` event' do
         allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
           expect(result).to be_skipped
         end
@@ -159,7 +195,13 @@ describe Cucumber::Core::Test::Runner do
     context 'with failing steps' do
       let(:test_steps) { [failing_step] }
 
-      it 'emits the test_case_finished event with a failing result' do
+      it 'emits the `test_case_finished` event' do
+        expect(event_bus).to receive(:test_case_finished)
+
+        test_case.describe_to(runner)
+      end
+
+      it 'reports that the test result was failed inside the `test_case_finished` event' do
         allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
           expect(result).to be_failed
         end
