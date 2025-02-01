@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
     'funding_uri' => 'https://opencollective.com/cucumber'
   }
 
-  s.add_dependency 'cucumber-gherkin', '> 27', '< 30'
+  s.add_dependency 'cucumber-gherkin', '> 27', '< 31.0.1'
   s.add_dependency 'cucumber-messages', '> 25', '< 28'
   s.add_dependency 'cucumber-tag-expressions', '> 5', '< 7'
 
