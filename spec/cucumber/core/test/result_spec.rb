@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/result'
-require 'cucumber/core/test/duration_matcher'
+require 'support/duration_matcher'
 
 module Cucumber
   module Core

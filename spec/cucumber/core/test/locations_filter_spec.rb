@@ -395,7 +395,7 @@ describe Cucumber::Core::Test::LocationsFilter do
     end
   end
 
-  context 'when under extreme load', slow: true do
+  context 'when under extreme load', :slow do
     num_features = 50
     num_scenarios_per_feature = 50
 
