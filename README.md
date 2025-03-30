@@ -1,6 +1,4 @@
-<p align="center">
-  <img src="./.github/img/cucumber-open-logo.png" alt="Cucumber Open - Supported by Smartbear" width="428" />
-</p>
+<img src=".github/img/logo.svg" alt="" width="75" />
 
 # Cucumber
 
