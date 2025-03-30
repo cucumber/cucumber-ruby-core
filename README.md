@@ -49,9 +49,6 @@ or install the gem directly:
 - Ruby 3.2
 - Ruby 3.1
 - Ruby 3.0
-- Ruby 2.7
-- Ruby 2.6
-- Ruby 2.5
 - JRuby 9.4 (with [some limitations](https://github.com/cucumber/cucumber-ruby/blob/main/docs/jruby-limitations.md))
 
 ## Usage
