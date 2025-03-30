@@ -2,6 +2,7 @@
 
 # Cucumber
 
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://vshymanskyy.github.io/StandWithUkraine)
 [![OpenCollective](https://opencollective.com/cucumber/backers/badge.svg)](https://opencollective.com/cucumber)
 [![OpenCollective](https://opencollective.com/cucumber/sponsors/badge.svg)](https://opencollective.com/cucumber)
 [![Test cucumber-core](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/test.yml/badge.svg)](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/test.yml)
@@ -12,9 +13,7 @@ written in plain language, they can be read by anyone on your team. Because they
 read by anyone, you can use them to help improve communication, collaboration and trust on
 your team.
 
-<p align="center">
-  <img src="./.github/img/gherkin-example.png" alt="Cucumber Gherkin Example" width="728" />
-</p>
+<img src="./.github/img/gherkin-example.png" alt="Cucumber Gherkin Example" width="728" />
 
 Cucumber Core is the [inner hexagon](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software))
 for the [Ruby flavour of Cucumber](https://github.com/cucumber/cucumber-ruby).
