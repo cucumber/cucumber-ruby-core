@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Fixed
+Proc#source_location returns [path, start_line, start_column, end_line, end_column] with Ruby 3.5.0dev
 
 ## [15.1.0] - 2025-02-28
 ### Changed

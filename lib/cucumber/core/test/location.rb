@@ -17,7 +17,7 @@ module Cucumber
           from_source_location(file, raw_line.to_i)
         end
 
-        def self.from_source_location(file, line)
+        def self.from_source_location(file, start_line, _start_column = nil, _end_line = nil, _end_column = nil)
           file = File.expand_path(file)
           pwd = File.expand_path(Dir.pwd)
           pwd.force_encoding(file.encoding)
@@ -26,10 +26,10 @@ module Cucumber
           elsif file =~ /.*\/gems\/(.*\.rb)$/
             file = Regexp.last_match(1)
           end
-          new(file, line)
+          new(file, start_line)
         end
 
-        def self.new(file, raw_lines = nil)
+        def self.new(file, raw_lines = nil, _start_column = nil, _end_line = nil, _end_column = nil) # rubocop:disable Metrics/ParameterLists
           file || raise(ArgumentError, 'file is mandatory')
           if raw_lines
             Precise.new(file, Lines.new(raw_lines))
