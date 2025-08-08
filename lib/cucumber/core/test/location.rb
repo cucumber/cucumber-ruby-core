@@ -22,7 +22,7 @@ module Cucumber
           pwd = File.expand_path(Dir.pwd)
           pwd.force_encoding(file.encoding)
           if file.index(pwd)
-            file = file[pwd.length + 1..]
+            file = file[(pwd.length + 1)..]
           elsif file =~ /.*\/gems\/(.*\.rb)$/
             file = Regexp.last_match(1)
           end
