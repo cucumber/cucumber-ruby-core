@@ -27,7 +27,7 @@ describe Cucumber::Core::Test::Action::Defined do
       let(:block) { proc {} }
 
       it 'returns the location of the block passed to the constructor' do
-        expect(action.location).to eq(Cucumber::Core::Test::Location.new(*block.source_location))
+        expect(action.location).to eq(Cucumber::Core::Test::Location.new(*block.source_location[0..1]))
       end
     end
   end
