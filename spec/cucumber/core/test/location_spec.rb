@@ -90,13 +90,13 @@ module Cucumber
         describe '#from_source_location' do
           context 'when the location is in the tree below pwd' do
             it 'creates a relative path from pwd' do
-              expect(described_class.from_source_location("#{Dir.pwd}/path/file.rb", 1).file).to eq 'path/file.rb'
+              expect(described_class.from_source_location("#{Dir.pwd}/path/file.rb", 1).file).to eq('path/file.rb')
             end
           end
 
           context 'when the location is in an installed gem' do
             it 'creates a relative path from the gem directory' do
-              expect(described_class.from_source_location('/path/gems/gem-name/path/file.rb', 1).file).to eq 'gem-name/path/file.rb'
+              expect(described_class.from_source_location('/path/gems/gem-name/path/file.rb', 1).file).to eq('gem-name/path/file.rb')
             end
           end
 
