@@ -9,10 +9,12 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+
+## [15.2.1] - 2025-08-21
 ### Fixed
+- (`Proc#source_location` returns [path, start_line, start_column, end_line, end_column] with Ruby 3.5.0dev+)
+([#299](https://github.com/cucumber/cucumber-ruby-core/pull/299) [yahonda](https://github.com/yahonda) [luke-hill](https://github.com/luke-hill))
 - Alter default location provided to `Cucumber::Core::Test::Action::Defined` to only pass file and line
-  - (`Proc#source_location` returns [path, start_line, start_column, end_line, end_column] with Ruby 3.5.0dev+)
-  ([#299](https://github.com/cucumber/cucumber-ruby-core/pull/299) [yahonda](https://github.com/yahonda) [luke-hill](https://github.com/luke-hill))
 
 ## [15.2.0] - 2025-08-08
 ### Changed
@@ -97,7 +99,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.2.0...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.2.1...HEAD
+[15.2.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.2.0...v15.2.1
 [15.2.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.1.0...v15.2.0
 [15.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.0.0...v15.1.0
 [15.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v14.0.0...v15.0.0
