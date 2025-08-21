@@ -4,7 +4,7 @@ Please include a summary of the change, mentioning any issues that are fixed (or
 
 Please also include relevant motivation and context.
 
-e.g. "Fixes #99"
+e.g. "Fixes issue with XYZ"
 
 ## Type of change
 
