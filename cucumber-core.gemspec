@@ -30,9 +30,9 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'rake', '~> 13.3'
   s.add_development_dependency 'rspec', '~> 3.13'
-  s.add_development_dependency 'rubocop', '~> 1.80.1'
+  s.add_development_dependency 'rubocop', '~> 1.80.0'
   s.add_development_dependency 'rubocop-packaging', '~> 0.6.0'
-  s.add_development_dependency 'rubocop-rake', '~> 0.7.1'
+  s.add_development_dependency 'rubocop-rake', '~> 0.7.0'
   s.add_development_dependency 'rubocop-rspec', '~> 3.6.0'
 
   s.files            = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*']
