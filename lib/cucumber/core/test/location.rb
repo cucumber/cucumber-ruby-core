@@ -25,8 +25,8 @@ module Cucumber
           pwd.force_encoding(file.encoding)
           if file.index(pwd)
             file = file[(pwd.length + 1)..]
-          elsif file.match?(/.*\/gems\/(.*\.rb)$/)
-            file = Regexp.last_match(1)
+          elsif file.match?(/gems\/(.+\.rb)$/)
+            file = file.split('gems/').last
           end
           new(file, line)
         end
