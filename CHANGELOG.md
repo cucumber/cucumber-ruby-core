@@ -9,6 +9,9 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Fixed
+- Further fix situations in which multiple extraneous arguments could be passed from a proc to `Location#new`
+  (discarding these arguments)
 
 ## [15.2.1] - 2025-08-21
 ### Fixed
