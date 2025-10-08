@@ -87,7 +87,7 @@ module Cucumber
           end
         end
 
-        describe '#from_source_location' do
+        describe '.from_source_location' do
           context 'when the location is in the tree below pwd' do
             it 'creates a relative path from pwd' do
               expect(described_class.from_source_location("#{Dir.pwd}/path/file.rb", 1).file).to eq('path/file.rb')
@@ -100,6 +100,12 @@ module Cucumber
             end
           end
 
+          context 'when provided extraneous ruby 3.5+ information about the proc location' do
+            it 'only stores the first 2 arguments' do
+              expect(described_class.from_source_location('/path/gems/gem-name/path/file.rb', 7, :foo, :bar, :baz).to_s).to eq('gem-name/path/file.rb:7')
+            end
+          end
+
           context 'when the location is neither below pwd nor in an installed gem' do
             it 'uses the absolute path to the file' do
               # Use File.expand on expectation to ensure tests work on multiple platform.
@@ -109,14 +115,14 @@ module Cucumber
           end
         end
 
-        describe '#from_file_colon_line' do
+        describe '.from_file_colon_line' do
           it 'handles also Windows paths' do
             # NOTE: running this test on Windows will produce "c:/path/file.rb", but "c:\path\file.rb" on Linux.
             expect(described_class.from_file_colon_line('c:\\path\\file.rb:123').file).to match(/c:(\\|\/)path(\\|\/)file.rb/)
           end
         end
 
-        describe '#of_caller' do
+        describe '.of_caller' do
           it 'use the location of the caller' do
             expect(described_class.of_caller.to_s).to be_included_in caller[0]
           end
