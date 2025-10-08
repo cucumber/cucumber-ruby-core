@@ -2,6 +2,8 @@
 
 require 'forwardable'
 require 'cucumber/core/platform'
+require 'set'
+
 module Cucumber
   module Core
     module Test
@@ -17,20 +19,19 @@ module Cucumber
           from_source_location(file, raw_line.to_i)
         end
 
-        def self.from_source_location(file, line)
+        def self.from_source_location(file, line, *_args)
           file = File.expand_path(file)
           pwd = File.expand_path(Dir.pwd)
           pwd.force_encoding(file.encoding)
           if file.index(pwd)
             file = file[(pwd.length + 1)..]
-          elsif file =~ /.*\/gems\/(.*\.rb)$/
+          elsif file.match?(/.*\/gems\/(.*\.rb)$/)
             file = Regexp.last_match(1)
           end
           new(file, line)
         end
 
         def self.new(file, raw_lines = nil)
-          file || raise(ArgumentError, 'file is mandatory')
           if raw_lines
             Precise.new(file, Lines.new(raw_lines))
           else
@@ -95,12 +96,11 @@ module Cucumber
           end
         end
 
-        require 'set'
         Lines = Struct.new(:data) do
           protected :data
 
           def initialize(raw_data)
-            super Array(raw_data).to_set
+            super(Array(raw_data).to_set)
           end
 
           def first
