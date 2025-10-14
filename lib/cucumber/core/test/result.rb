@@ -54,6 +54,7 @@ module Cucumber
 
         class Passed
           include Result.query_methods :passed
+
           attr_accessor :duration
 
           def self.ok?(*)
