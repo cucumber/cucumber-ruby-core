@@ -9,6 +9,9 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- Permit usage of gherkin up to v34
+
 ### Fixed
 - Further fix situations in which multiple extraneous arguments could be passed from a proc to `Location#new`
   (discarding these arguments)
