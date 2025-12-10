@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+
+## [15.4.0] - 2025-12-10
 ### Changed
 - Permit usage of gherkin up to v39, messages up to v32
 
@@ -109,7 +111,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.3.0...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.4.0...HEAD
+[15.4.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.3.0...v15.4.0
 [15.3.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.2.1...v15.3.0
 [15.2.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.2.0...v15.2.1
 [15.2.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.1.0...v15.2.0
