@@ -10,7 +10,10 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 
 ## [Unreleased]
 ### Changed
-- Bumped the lower bounds of messages to v28 and tag-expressions to v6
+- Bumped the lower bounds of messages to v28, gherkin to v33 and tag-expressions to v6
+
+### Removed
+- Remove support for ruby 3.1 and below. 3.2 or higher is required now
 
 ## [15.4.0] - 2025-12-10
 ### Changed
