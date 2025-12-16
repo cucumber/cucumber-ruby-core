@@ -25,15 +25,15 @@ Gem::Specification.new do |s|
   }
 
   s.add_dependency 'cucumber-gherkin', '> 27', '< 40'
-  s.add_dependency 'cucumber-messages', '> 26', '< 33'
-  s.add_dependency 'cucumber-tag-expressions', '> 5', '< 9'
+  s.add_dependency 'cucumber-messages', '> 28', '< 33'
+  s.add_dependency 'cucumber-tag-expressions', '> 6', '< 9'
 
   s.add_development_dependency 'rake', '~> 13.3'
   s.add_development_dependency 'rspec', '~> 3.13'
-  s.add_development_dependency 'rubocop', '~> 1.80.0'
+  s.add_development_dependency 'rubocop', '~> 1.81.0'
   s.add_development_dependency 'rubocop-packaging', '~> 0.6.0'
   s.add_development_dependency 'rubocop-rake', '~> 0.7.0'
-  s.add_development_dependency 'rubocop-rspec', '~> 3.6.0'
+  s.add_development_dependency 'rubocop-rspec', '~> 3.8.0'
 
   s.files            = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*']
   s.rdoc_options     = ['--charset=UTF-8']
