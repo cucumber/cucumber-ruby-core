@@ -10,7 +10,7 @@ plugins:
 
 AllCops:
   # Keep this inline with the gemspec
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.2
   DisplayCopNames: true
   DisplayStyleGuide: true
   NewCops: enable
