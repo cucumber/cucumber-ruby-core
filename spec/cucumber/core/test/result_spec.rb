@@ -197,6 +197,7 @@ module Cucumber
 
         describe Result::Undefined do
           subject(:result) { described_class.new }
+          let(:undefined_strictness) { Result::StrictConfiguration.new([:undefined]) }
 
           it 'describes itself to a visitor' do
             expect(visitor).to receive(:undefined).with(args)
@@ -218,8 +219,7 @@ module Cucumber
           it { expect(result).not_to be_flaky }
           it { expect(result).to be_ok }
 
-          strict = Result::StrictConfiguration.new([:undefined])
-          it { expect(result).not_to be_ok(strict: strict) }
+          it { expect(result).not_to be_ok(strict: undefined_strictness) }
         end
 
         describe Result::Skipped do

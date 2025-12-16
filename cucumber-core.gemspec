@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://cucumber.io'
   s.platform    = Gem::Platform::RUBY
   s.license     = 'MIT'
-  s.required_ruby_version = '>= 3.0'
+  s.required_ruby_version = '>= 3.2'
   s.required_rubygems_version = '>= 3.2.8'
 
   s.metadata = {
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
     'funding_uri' => 'https://opencollective.com/cucumber'
   }
 
-  s.add_dependency 'cucumber-gherkin', '> 27', '< 40'
+  s.add_dependency 'cucumber-gherkin', '> 33', '< 40'
   s.add_dependency 'cucumber-messages', '> 28', '< 33'
   s.add_dependency 'cucumber-tag-expressions', '> 6', '< 9'
 
