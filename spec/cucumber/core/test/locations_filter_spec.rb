@@ -396,15 +396,14 @@ describe Cucumber::Core::Test::LocationsFilter do
   end
 
   context 'when under extreme load', :slow do
-    num_features = 50
-    num_scenarios_per_feature = 50
-
+    let(:number_of_features) { 50 }
+    let(:number_of_scenarios_per_feature) { 50 }
     let(:docs) do
-      (1..num_features).map do |i|
-        gherkin("features/test_#{i}.feature") do
+      50.times.map do |feature_number|
+        gherkin("features/test_#{feature_number}.feature") do
           feature do
-            (1..num_scenarios_per_feature).each do |j|
-              scenario "scenario #{j}" do
+            50.times.each do |scenario_number|
+              scenario "scenario #{scenario_number}" do
                 step 'text'
               end
             end
@@ -412,24 +411,22 @@ describe Cucumber::Core::Test::LocationsFilter do
         end
       end
     end
-
     let(:locations) do
-      (1..num_features).map do |i|
-        (1..num_scenarios_per_feature).map do |j|
-          line = 3 + ((j - 1) * 3)
-          Cucumber::Core::Test::Location.new("features/test_#{i}.feature", line)
+      50.times.map do |feature_number|
+        50.times.map do |scenario_number|
+          scenario_line = 3 + (scenario_number * 3)
+          Cucumber::Core::Test::Location.new("features/test_#{feature_number}.feature", scenario_line)
         end
       end.flatten
     end
+    let(:max_duration_ms) { defined?(JRUBY_VERSION) ? 25_000 : 10_000 }
 
-    max_duration_ms = 10_000
-    max_duration_ms *= 2.5 if defined?(JRUBY_VERSION)
-    it "filters #{num_features * num_scenarios_per_feature} test cases within #{max_duration_ms}ms" do
+    it 'filters all test cases within an appropriate time' do
       filter = described_class.new(locations)
       Timeout.timeout(max_duration_ms / 1000.0) do
         compile(docs, receiver, [filter])
       end
-      expect(receiver.test_cases.length).to eq(num_features * num_scenarios_per_feature)
+      expect(receiver.test_cases.length).to eq(number_of_features * number_of_scenarios_per_feature)
     end
   end
 end
