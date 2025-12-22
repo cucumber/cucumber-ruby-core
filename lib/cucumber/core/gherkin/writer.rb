@@ -20,8 +20,8 @@ module Cucumber
   module Core
     module Gherkin
       module Writer
-        def gherkin(uri = 'features/test.feature', &source)
-          Gherkin.new(uri, &source).build
+        def gherkin(uri = 'features/test.feature', &)
+          Gherkin.new(uri, &).build
         end
       end
     end

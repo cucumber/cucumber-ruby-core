@@ -36,8 +36,8 @@ module Cucumber
           @action.execute(*args)
         end
 
-        def with_action(action_location = nil, &block)
-          self.class.new(id, text, location, multiline_arg, Test::Action::Defined.new(action_location, &block))
+        def with_action(action_location = nil, &)
+          self.class.new(id, text, location, multiline_arg, Test::Action::Defined.new(action_location, &))
         end
 
         def backtrace_line
