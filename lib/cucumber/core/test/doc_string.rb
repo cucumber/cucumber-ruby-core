@@ -26,7 +26,7 @@ module Cucumber
         def initialize(content, content_type)
           @content = content
           @content_type = content_type
-          super @content
+          super(@content)
         end
 
         def describe_to(visitor, *)
