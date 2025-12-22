@@ -9,8 +9,8 @@ module Cucumber
           @timer = Timer.new
         end
 
-        def describe_to(visitor, *args, &)
-          visitor.around_hook(self, *args, &)
+        def describe_to(visitor, *, &)
+          visitor.around_hook(self, *, &)
         end
 
         def hook?

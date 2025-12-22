@@ -20,20 +20,20 @@ module Cucumber
           @action = action
         end
 
-        def describe_to(visitor, *args)
-          visitor.test_step(self, *args)
+        def describe_to(visitor, *)
+          visitor.test_step(self, *)
         end
 
         def hook?
           false
         end
 
-        def skip(*args)
-          @action.skip(*args)
+        def skip(*)
+          @action.skip(*)
         end
 
-        def execute(*args)
-          @action.execute(*args)
+        def execute(*)
+          @action.execute(*)
         end
 
         def with_action(action_location = nil, &)
