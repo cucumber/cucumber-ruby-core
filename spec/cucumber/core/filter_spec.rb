@@ -14,12 +14,12 @@ describe Cucumber::Core::Filter do
     let(:doc) do
       gherkin do
         feature do
-          scenario 'x' do
+          scenario 'First Scenario' do
             step 'a step'
           end
 
-          scenario 'y' do
-            step 'a step'
+          scenario 'Second Scenario' do
+            step 'a different step'
           end
         end
       end
@@ -30,7 +30,7 @@ describe Cucumber::Core::Filter do
       my_filter = my_filter_class.new
       expect(receiver).to receive(:test_case) do |test_case|
         expect(test_case.test_steps.length).to eq(1)
-        expect(test_case.test_steps.first.text).to eq('a step')
+        expect(test_case.test_steps.first.text).to match(/a(?: different)? step/)
       end.twice
       compile([doc], receiver, [my_filter])
     end
@@ -72,7 +72,7 @@ describe Cucumber::Core::Filter do
         expect(receiver).to receive(:test_case) { |test_case| expect(test_case.test_steps.length).to eq(0) }.once.ordered
         expect(receiver).to receive(:test_case) { |test_case| expect(test_case.test_steps.length).to eq(1) }.once.ordered
 
-        run(named_blanking_filter.new(/x/))
+        run(named_blanking_filter.new(/First Scenario/))
       end
     end
 
