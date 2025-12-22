@@ -34,9 +34,9 @@ module Cucumber
         @event_queue << event
       end
 
-      def method_missing(event_id, *args)
+      def method_missing(event_id, *)
         event_class = event_types.fetch(event_id) { super }
-        broadcast event_class.new(*args)
+        broadcast event_class.new(*)
       end
 
       def respond_to_missing?(event_id, *args)

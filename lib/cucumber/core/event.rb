@@ -3,11 +3,10 @@
 module Cucumber
   module Core
     class Event
-      # Macro to generate new sub-classes of {Event} with
-      # attribute readers.
+      # Macro to generate new subclasses of {Event} with attribute readers.
       def self.new(*events)
         # Use normal constructor for subclasses of Event
-        return super if ancestors.index(Event) > 0
+        return super if ancestors.index(Event).positive?
 
         Class.new(Event) do
           # NB: We need to use metaprogramming here instead of direct variable obtainment

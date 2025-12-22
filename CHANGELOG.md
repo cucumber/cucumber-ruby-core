@@ -9,6 +9,9 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- Code re-organised into more sub-files. No user facing changes
+- Further bumped the lower bounds of messages and gherkin several more versions
 
 ## [16.0.0] - 2025-12-16
 ### Changed

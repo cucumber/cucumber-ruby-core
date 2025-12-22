@@ -35,8 +35,8 @@ module Cucumber
         end
         attr_reader :raw
 
-        def describe_to(visitor, *args)
-          visitor.data_table(self, *args)
+        def describe_to(visitor, *)
+          visitor.data_table(self, *)
         end
 
         def to_step_definition_arg

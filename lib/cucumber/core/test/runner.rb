@@ -33,8 +33,8 @@ module Cucumber
           self
         end
 
-        def around_hook(hook, &continue)
-          result = running_test_case.execute(hook, &continue)
+        def around_hook(hook, &)
+          result = running_test_case.execute(hook, &)
           event_bus.test_step_finished running_test_step, result if running_test_step
           @running_test_step = nil
           self
@@ -50,8 +50,8 @@ module Cucumber
             @status = Status::Unknown.new(Result::Unknown.new)
           end
 
-          def execute(test_step, &continue)
-            status.execute(test_step, self, &continue)
+          def execute(test_step, &)
+            status.execute(test_step, self, &)
           end
 
           def result
@@ -103,8 +103,8 @@ module Cucumber
                 @step_result = step_result
               end
 
-              def execute(test_step, monitor, &continue)
-                result = test_step.execute(monitor.result, &continue)
+              def execute(test_step, monitor, &)
+                result = test_step.execute(monitor.result, &)
                 result = result.with_message(%(Undefined step: "#{test_step.text}")) if result.undefined?
                 result = result.with_appended_backtrace(test_step) unless test_step.hook?
                 result.describe_to(monitor, result)

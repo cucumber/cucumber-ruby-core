@@ -26,11 +26,11 @@ module Cucumber
         def initialize(content, content_type)
           @content = content
           @content_type = content_type
-          super @content
+          super(@content)
         end
 
-        def describe_to(visitor, *args)
-          visitor.doc_string(self, *args)
+        def describe_to(visitor, *)
+          visitor.doc_string(self, *)
         end
 
         def data_table?

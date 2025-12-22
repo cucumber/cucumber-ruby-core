@@ -67,9 +67,9 @@ module Cucumber
             @duration = duration
           end
 
-          def describe_to(visitor, *args)
-            visitor.passed(*args)
-            visitor.duration(duration, *args)
+          def describe_to(visitor, *)
+            visitor.passed(*)
+            visitor.duration(duration, *)
             self
           end
 
@@ -114,10 +114,10 @@ module Cucumber
             @exception = exception
           end
 
-          def describe_to(visitor, *args)
-            visitor.failed(*args)
-            visitor.duration(duration, *args)
-            visitor.exception(exception, *args) if exception
+          def describe_to(visitor, *)
+            visitor.failed(*)
+            visitor.duration(duration, *)
+            visitor.exception(exception, *) if exception
             self
           end
 
@@ -211,9 +211,9 @@ module Cucumber
             !strict
           end
 
-          def describe_to(visitor, *args)
-            visitor.undefined(*args)
-            visitor.duration(duration, *args)
+          def describe_to(visitor, *)
+            visitor.undefined(*)
+            visitor.duration(duration, *)
             self
           end
 
@@ -236,9 +236,9 @@ module Cucumber
             true
           end
 
-          def describe_to(visitor, *args)
-            visitor.skipped(*args)
-            visitor.duration(duration, *args)
+          def describe_to(visitor, *)
+            visitor.skipped(*)
+            visitor.duration(duration, *)
             self
           end
 
@@ -261,9 +261,9 @@ module Cucumber
             !strict
           end
 
-          def describe_to(visitor, *args)
-            visitor.pending(self, *args)
-            visitor.duration(duration, *args)
+          def describe_to(visitor, *)
+            visitor.pending(self, *)
+            visitor.duration(duration, *)
             self
           end
 

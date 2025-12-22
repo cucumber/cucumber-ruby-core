@@ -19,9 +19,9 @@ module Cucumber
             @timer = Timer.new
           end
 
-          def execute(*args)
+          def execute(*)
             @timer.start
-            @block.call(*args)
+            @block.call(*)
             passed
           rescue Result::Raisable => e
             e.with_duration(@timer.duration)
