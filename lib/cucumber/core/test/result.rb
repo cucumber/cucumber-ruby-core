@@ -409,19 +409,17 @@ module Cucumber
 
           def to_message_duration
             duration_hash = seconds_to_duration(nanoseconds.to_f / NANOSECONDS_PER_SECOND)
-            duration_hash.transform_keys! do |key|
-              key.to_sym
-            rescue Error
-              return key
-            end
+            Cucumber::Messages::Duration.new(seconds: duration_hash[:seconds], nanos: duration_hash[:nanos])
+          end
 
-            Cucumber::Messages::Duration.from_h(duration_hash)
+          def seconds_to_duration(seconds_float)
+            seconds, second_modulus = seconds_float.divmod(1)
+            nanos = second_modulus * NANOSECONDS_PER_SECOND
+            { seconds: seconds, nanos: nanos.to_i }
           end
         end
 
         class UnknownDuration
-          include Cucumber::Messages::Helpers::TimeConversion
-
           def tap
             self
           end
