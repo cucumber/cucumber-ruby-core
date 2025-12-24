@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+
+## [16.1.1] - 2025-12-24
 ### Fixed
 - Added a fix that prevented the `Duration` class from not being able to calculate duration correctly
 
@@ -125,7 +127,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.0...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.1...HEAD
+[16.1.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.0...v16.1.1
 [16.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.0.0...v16.1.0
 [16.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.4.0...v16.0.0
 [15.4.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.3.0...v15.4.0
