@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Fixed
+- Added a fix that prevented the `Duration` class from not being able to calculate duration correctly
 
 ## [16.1.0] - 2025-12-22
 ### Changed
