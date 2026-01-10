@@ -7,7 +7,7 @@ module Cucumber
   module Core
     module Test
       module Result
-        TYPES = %i[failed flaky skipped undefined pending passed unknown].freeze
+        TYPES = %i[failed ambiguous flaky skipped undefined pending passed unknown].freeze
         STRICT_AFFECTED_TYPES = %i[flaky undefined pending].freeze
 
         def self.ok?(type, strict: StrictConfiguration.new)
@@ -201,6 +201,31 @@ module Cucumber
 
           def ok?(strict: StrictConfiguration.new)
             self.class.ok?(strict: strict.strict?(to_sym))
+          end
+        end
+
+        class Ambiguous < Raisable
+          include Result.query_methods :ambiguous
+
+          def self.ok?(*)
+            false
+          end
+
+          def describe_to(visitor, *)
+            visitor.ambiguous(*)
+            visitor.duration(duration, *)
+            self
+          end
+
+          def to_s
+            'A'
+          end
+
+          def to_message
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::AMBIGUOUS,
+              duration: duration.to_message_duration
+            )
           end
         end
 

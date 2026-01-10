@@ -48,6 +48,7 @@ module Cucumber
           it { expect(result.to_sym).to eq(:passed) }
           it { expect(result).to be_passed }
           it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_ambiguous }
           it { expect(result).not_to be_undefined }
           it { expect(result).not_to be_unknown }
           it { expect(result).not_to be_skipped }
@@ -120,6 +121,7 @@ module Cucumber
           it { expect(result.to_sym).to eq(:failed) }
           it { expect(result).not_to be_passed }
           it { expect(result).to be_failed }
+          it { expect(result).not_to be_ambiguous }
           it { expect(result).not_to be_undefined }
           it { expect(result).not_to be_unknown }
           it { expect(result).not_to be_skipped }
@@ -137,6 +139,7 @@ module Cucumber
           it { expect(result.to_sym).to eq(:unknown) }
           it { expect(result).not_to be_passed }
           it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_ambiguous }
           it { expect(result).not_to be_undefined }
           it { expect(result).to be_unknown }
           it { expect(result).not_to be_skipped }
@@ -195,6 +198,31 @@ module Cucumber
           end
         end
 
+        describe Result::Ambiguous do
+          subject(:result) { described_class.new }
+
+          it 'describes itself to a visitor' do
+            expect(visitor).to receive(:ambiguous).with(args)
+            expect(visitor).to receive(:duration).with(an_unknown_duration, args)
+
+            result.describe_to(visitor, args)
+          end
+
+          it 'converts to a Cucumber::Message::TestResult' do
+            expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::AMBIGUOUS)
+          end
+
+          it { expect(result.to_sym).to eq(:ambiguous) }
+          it { expect(result).not_to be_passed }
+          it { expect(result).not_to be_failed }
+          it { expect(result).to be_ambiguous }
+          it { expect(result).not_to be_undefined }
+          it { expect(result).not_to be_unknown }
+          it { expect(result).not_to be_skipped }
+          it { expect(result).not_to be_flaky }
+          it { expect(result).not_to be_ok }
+        end
+
         describe Result::Undefined do
           subject(:result) { described_class.new }
           let(:undefined_strictness) { Result::StrictConfiguration.new([:undefined]) }
@@ -213,6 +241,7 @@ module Cucumber
           it { expect(result.to_sym).to eq(:undefined) }
           it { expect(result).not_to be_passed }
           it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_ambiguous }
           it { expect(result).to be_undefined }
           it { expect(result).not_to be_unknown }
           it { expect(result).not_to be_skipped }
@@ -239,6 +268,7 @@ module Cucumber
           it { expect(result.to_sym).to eq(:skipped) }
           it { expect(result).not_to be_passed }
           it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_ambiguous }
           it { expect(result).not_to be_undefined }
           it { expect(result).not_to be_unknown }
           it { expect(result).to be_skipped }
@@ -264,6 +294,7 @@ module Cucumber
           it { expect(result.to_sym).to eq(:pending) }
           it { expect(result).not_to be_passed }
           it { expect(result).not_to be_failed }
+          it { expect(result).not_to be_ambiguous }
           it { expect(result).not_to be_undefined }
           it { expect(result).not_to be_unknown }
           it { expect(result).not_to be_skipped }

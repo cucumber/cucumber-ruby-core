@@ -63,6 +63,11 @@ module Cucumber
             self
           end
 
+          def ambiguous(step_result)
+            @status = Status::Ambiguous.new(step_result)
+            self
+          end
+
           def passed(step_result)
             @status = Status::Passing.new(step_result)
             self
@@ -143,6 +148,8 @@ module Cucumber
             end
 
             Pending = Class.new(Failing)
+
+            Ambiguous = Class.new(Failing)
 
             class Skipping < Failing
               def result(duration)

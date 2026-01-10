@@ -40,6 +40,10 @@ module Cucumber
           self.class.new(id, text, location, multiline_arg, Test::Action::Defined.new(action_location, &))
         end
 
+        def with_unskippable_action(action_location = nil, &)
+          self.class.new(id, text, location, multiline_arg, Test::Action::Unskippable.new(action_location, &))
+        end
+
         def backtrace_line
           "#{location}:in `#{text}'"
         end
