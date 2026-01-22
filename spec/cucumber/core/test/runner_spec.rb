@@ -283,7 +283,7 @@ describe Cucumber::Core::Test::Runner do
         test_case.describe_to(runner)
       end
 
-      context 'followed by an ambiguous step' do
+      context 'with a following ambiguous step' do
         let(:test_steps) { [undefined_step, ambiguous_step] }
 
         it 'emits the test_step_finished event with an undefined result' do
@@ -316,7 +316,7 @@ describe Cucumber::Core::Test::Runner do
         end
       end
 
-      context 'followed by an failing after hook' do
+      context 'with a failing after hook' do
         let(:test_steps) { [undefined_step, failing_hook] }
 
         it 'emits the test_step_finished event with an undefined result' do
@@ -344,7 +344,7 @@ describe Cucumber::Core::Test::Runner do
         it 'skips, rather than executing the second step' do
           expect(failing_hook).not_to receive(:execute)
 
-          allow(failing_hook).to receive(:skip).and_return(Cucumber::Core::Test::Result::Failed.new(anything, StandardError))
+          allow(failing_hook).to receive(:skip).and_return(Cucumber::Core::Test::Result::Failed.new(anything, instance_double(StandardError, backtrace: [])))
           test_case.describe_to(runner)
         end
       end

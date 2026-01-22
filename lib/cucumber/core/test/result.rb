@@ -7,7 +7,7 @@ module Cucumber
   module Core
     module Test
       module Result
-        TYPES = %i[failed ambiguous flaky skipped undefined pending passed unknown].freeze
+        TYPES = %i[failed ambiguous flaky undefined pending skipped passed unknown].freeze
         STRICT_AFFECTED_TYPES = %i[flaky undefined pending].freeze
 
         def self.ok?(type, strict: StrictConfiguration.new)
