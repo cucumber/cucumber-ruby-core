@@ -6,6 +6,13 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
+# TODO: [LH] v14 Pre-release iteration -> 58 files inspected, 392 offenses detected, 100 offenses auto-correctable
+# TODO: [LH] v14 Pre-release iteration 2 (Rubocop upgrade) -> 60 files inspected, 324 offenses detected, 86 offenses autocorrectable
+# TODO: [LH] v14 Pre-release iteration 3 (Rubocop additional upgrade) -> 60 files inspected, 267 offenses detected, 26 offenses autocorrectable
+# TODO: [LH] v15 Release incoming (Minimum ruby bump) -> 60 files inspected, 234 offenses detected, 12 offenses autocorrectable
+# TODO: [LH] v15.1 (Minor fixes) -> 60 files inspected, 239 offenses detected, 15 offenses autocorrectable
+# TODO: [LH] v16 (Gherkin/Message bump) -> 61 files inspected, 272 offenses detected, 60 offenses autocorrectable
+
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 Lint/RedundantRequireStatement:
