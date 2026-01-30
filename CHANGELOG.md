@@ -9,6 +9,9 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- Added the test result type 'ambiguous'
+([#311](https://github.com/cucumber/cucumber-ruby-core/pull/311))
 
 ## [16.1.1] - 2025-12-24
 ### Fixed
