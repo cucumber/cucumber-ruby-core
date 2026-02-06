@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+
+## [16.2.0] - 2026-02-06
 ### Changed
 - Added the test result type 'ambiguous'
 ([#311](https://github.com/cucumber/cucumber-ruby-core/pull/311))
@@ -130,7 +132,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.1...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.2.0...HEAD
+[16.2.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.1...v16.2.0
 [16.1.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.0...v16.1.1
 [16.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.0.0...v16.1.0
 [16.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v15.4.0...v16.0.0
