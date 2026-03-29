@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/timer'
+require 'cucumber/messages/helpers/test_step_result_comparator'
 
 module Cucumber
   module Core
@@ -45,6 +46,8 @@ module Cucumber
         end
 
         class RunningTestCase
+          include Cucumber::Messages::Helpers::TestStepResultComparator
+
           def initialize
             @timer = Timer.new.start
             @status = Status::Unknown.new(Result::Unknown.new)
@@ -69,7 +72,7 @@ module Cucumber
           end
 
           def passed(step_result)
-            @status = Status::Passing.new(step_result) if Result::TYPES.index(step_result.to_sym) < Result::TYPES.index(status.step_result_sym)
+            @status = Status::Passing.new(step_result) if test_step_result_rankings[step_result.to_message.status] > test_step_result_rankings[status.step_result_message.status]
             self
           end
 
@@ -99,7 +102,7 @@ module Cucumber
           private
 
           def not_passing(step_result)
-            @status = Status::NotPassing.new(step_result) if Result::TYPES.index(step_result.to_sym) < Result::TYPES.index(status.step_result_sym)
+            @status = Status::NotPassing.new(step_result) if test_step_result_rankings[step_result.to_message.status] > test_step_result_rankings[status.step_result_message.status]
             self
           end
 
@@ -126,8 +129,8 @@ module Cucumber
                 raise NoMethodError, 'Override me'
               end
 
-              def step_result_sym
-                step_result.to_sym
+              def step_result_message
+                step_result.to_message
               end
             end
 
