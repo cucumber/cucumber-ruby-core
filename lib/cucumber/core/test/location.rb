@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'cucumber/core/platform'
 require 'set'
 
 module Cucumber

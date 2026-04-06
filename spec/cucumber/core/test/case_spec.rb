@@ -2,7 +2,6 @@
 
 require 'cucumber/core'
 require 'cucumber/core/gherkin/writer'
-require 'cucumber/core/platform'
 require 'cucumber/core/test/case'
 
 describe Cucumber::Core::Test::Case do
