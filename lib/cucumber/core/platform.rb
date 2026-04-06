@@ -5,13 +5,9 @@
 require 'rbconfig'
 
 module Cucumber
-  unless defined?(Cucumber::VERSION)
+  if false
     JRUBY         = defined?(JRUBY_VERSION)
-    IRONRUBY      = defined?(RUBY_ENGINE) && RUBY_ENGINE == 'ironruby'
     WINDOWS       = RbConfig::CONFIG['host_os'] =~ /mswin|mingw/
-    OS_X          = RbConfig::CONFIG['host_os'] =~ /darwin/
-    WINDOWS_MRI   = WINDOWS && !JRUBY && !IRONRUBY
-    RUBY_2_0      = RUBY_VERSION =~ /^2\.0/
-    RUBY_1_9      = RUBY_VERSION =~ /^1\.9/
+    WINDOWS_MRI   = WINDOWS && !JRUBY
   end
 end
