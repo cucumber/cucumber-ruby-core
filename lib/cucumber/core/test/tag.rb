@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'location'
+
 module Cucumber
   module Core
     module Test

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/result'
 require 'cucumber/tag_expressions'
+
+require_relative 'result'
 
 module Cucumber
   module Core

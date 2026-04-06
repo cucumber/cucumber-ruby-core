@@ -16,24 +16,24 @@ module Cucumber
       #
       # And a matching StepDefinition:
       #
-      #   Given /I have:/ do |table|
+      #   Given('I have:') do |table|
       #     data = table.raw
       #   end
       #
       # This will store <tt>[['a', 'b'], ['c', 'd']]</tt> in the <tt>data</tt> variable.
       #
       class DataTable
-        # Creates a new instance. +raw+ should be an Array of Array of String
-        # or an Array of Hash
+        attr_reader :raw
+
+        # Creates a new instance. +raw+ should be a square (2d), array of strings or an array of hashes
+        #
         # You don't typically create your own DataTable objects - Cucumber will do
         # it internally and pass them to your Step Definitions.
-        #
         def initialize(rows)
           raw = ensure_array_of_array(rows)
           verify_rows_are_same_length(raw)
           @raw = raw.freeze
         end
-        attr_reader :raw
 
         def describe_to(visitor, *)
           visitor.data_table(self, *)
@@ -52,7 +52,6 @@ module Cucumber
         end
 
         # Creates a copy of this table
-        #
         def dup
           self.class.new(raw.dup)
         end
@@ -67,7 +66,6 @@ module Cucumber
         #   | a | b |
         #   | 7 | 9 |
         #   | 4 | 2 |
-        #
         def transpose
           self.class.new(raw.transpose)
         end

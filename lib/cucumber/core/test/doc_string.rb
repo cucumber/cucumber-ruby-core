@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'delegate'
+
 module Cucumber
   module Core
     module Test
@@ -19,7 +20,6 @@ module Cucumber
       # example above, that would return: <tt>"I like\nCucumber sandwich"</tt>
       #
       # Note how the indentation from the source is stripped away.
-      #
       class DocString < SimpleDelegator
         attr_reader :content_type, :content
 

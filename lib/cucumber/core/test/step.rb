@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/result'
-require 'cucumber/core/test/action'
-require 'cucumber/core/test/empty_multiline_argument'
+require_relative 'action'
+require_relative 'empty_multiline_argument'
 
 module Cucumber
   module Core
