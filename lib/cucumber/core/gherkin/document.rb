@@ -6,10 +6,10 @@ module Cucumber
       class Document
         attr_reader :uri, :body, :language
 
-        def initialize(uri, body, language = nil)
-          @uri      = uri
-          @body     = body
-          @language = language || 'en'
+        def initialize(uri, body, language = 'en')
+          @uri = uri
+          @body = body
+          @language = language
         end
 
         def to_s
