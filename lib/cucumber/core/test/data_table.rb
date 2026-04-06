@@ -35,16 +35,16 @@ module Cucumber
           @raw = raw.freeze
         end
 
-        def describe_to(visitor, *)
-          visitor.data_table(self, *)
-        end
-
-        def to_step_definition_arg
-          dup
+        def ==(other)
+          other.class == self.class && raw == other.raw
         end
 
         def data_table?
           true
+        end
+
+        def describe_to(visitor, *)
+          visitor.data_table(self, *)
         end
 
         def doc_string?
@@ -54,6 +54,26 @@ module Cucumber
         # Creates a copy of this table
         def dup
           self.class.new(raw.dup)
+        end
+
+        def inspect
+          %{#<#{self.class} #{raw.inspect})>}
+        end
+
+        def lines_count
+          raw.count
+        end
+
+        def map(&block)
+          new_raw = raw.map do |row|
+            row.map(&block)
+          end
+
+          self.class.new(new_raw)
+        end
+
+        def to_step_definition_arg
+          dup
         end
 
         # Returns a new, transposed table. Example:
@@ -70,33 +90,7 @@ module Cucumber
           self.class.new(raw.transpose)
         end
 
-        def map(&block)
-          new_raw = raw.map do |row|
-            row.map(&block)
-          end
-
-          self.class.new(new_raw)
-        end
-
-        def lines_count
-          raw.count
-        end
-
-        def ==(other)
-          other.class == self.class && raw == other.raw
-        end
-
-        def inspect
-          %{#<#{self.class} #{raw.inspect})>}
-        end
-
         private
-
-        def verify_rows_are_same_length(raw)
-          raw.transpose
-        rescue IndexError
-          raise ArgumentError, 'Rows must all be the same length'
-        end
 
         def ensure_array_of_array(array)
           array[0].is_a?(Hash) ? hashes_to_array(array) : array
@@ -105,6 +99,12 @@ module Cucumber
         def hashes_to_array(hashes)
           header = hashes[0].keys.sort
           [header] + hashes.map { |hash| header.map { |key| hash[key] } }
+        end
+
+        def verify_rows_are_same_length(raw)
+          raw.transpose
+        rescue IndexError
+          raise ArgumentError, 'Rows must all be the same length'
         end
       end
     end
