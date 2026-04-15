@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/test/timer'
+require 'cucumber/messages/helpers/test_step_result_comparator'
 
 module Cucumber
   module Core
@@ -45,6 +46,8 @@ module Cucumber
         end
 
         class RunningTestCase
+          include Cucumber::Messages::Helpers::TestStepResultComparator
+
           def initialize
             @timer = Timer.new.start
             @status = Status::Unknown.new(Result::Unknown.new)
@@ -59,27 +62,27 @@ module Cucumber
           end
 
           def failed(step_result)
-            @status = Status::Failing.new(step_result)
+            not_passing(step_result)
             self
           end
 
           def ambiguous(step_result)
-            @status = Status::Ambiguous.new(step_result)
+            failed(step_result)
             self
           end
 
           def passed(step_result)
-            @status = Status::Passing.new(step_result)
+            @status = Status::Passing.new(step_result) if test_step_result_rankings[step_result.to_message.status] > test_step_result_rankings[status.step_result_message.status]
             self
           end
 
           def pending(_message, step_result)
-            @status = Status::Pending.new(step_result)
+            failed(step_result)
             self
           end
 
           def skipped(step_result)
-            @status = Status::Skipping.new(step_result)
+            failed(step_result)
             self
           end
 
@@ -93,6 +96,13 @@ module Cucumber
           end
 
           def duration(_step_duration, _step_result)
+            self
+          end
+
+          private
+
+          def not_passing(step_result)
+            @status = Status::NotPassing.new(step_result) if test_step_result_rankings[step_result.to_message.status] > test_step_result_rankings[status.step_result_message.status]
             self
           end
 
@@ -118,6 +128,10 @@ module Cucumber
               def result
                 raise NoMethodError, 'Override me'
               end
+
+              def step_result_message
+                step_result.to_message
+              end
             end
 
             class Unknown < Base
@@ -132,26 +146,14 @@ module Cucumber
               end
             end
 
-            class Failing < Base
+            class NotPassing < Base
               def execute(test_step, monitor)
                 result = test_step.skip(monitor.result)
-                if result.undefined?
-                  result = result.with_message(%(Undefined step: "#{test_step.text}"))
-                  result = result.with_appended_backtrace(test_step)
-                end
-                result
+                result = result.with_message(%(Undefined step: "#{test_step.text}")) if result.undefined?
+                result = result.with_appended_backtrace(test_step) unless test_step.hook?
+                result.describe_to(monitor, result)
               end
 
-              def result(duration)
-                step_result.with_duration(duration)
-              end
-            end
-
-            Pending = Class.new(Failing)
-
-            Ambiguous = Class.new(Failing)
-
-            class Skipping < Failing
               def result(duration)
                 step_result.with_duration(duration)
               end

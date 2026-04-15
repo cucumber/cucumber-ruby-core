@@ -10,6 +10,10 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 
 ## [Unreleased]
 
+### Changed
+- Change to use worst Test Step result as the Test Case result
+([#317](https://github.com/cucumber/cucumber-ruby-core/pull/317))
+
 ## [16.2.0] - 2026-02-06
 ### Changed
 - Added the test result type 'ambiguous'
