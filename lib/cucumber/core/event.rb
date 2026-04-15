@@ -21,19 +21,20 @@ module Cucumber
               instance_variable_set(:"@#{name}", value)
             end
           end
-
-          define_method(:attributes) do
-            events.map { |var| instance_variable_get(:"@#{var}") }
-          end
-
-          define_method(:to_h) do
-            events.zip(attributes).to_h
-          end
-
-          def event_id
-            self.class.event_id
-          end
         end
+      end
+
+      def to_h
+        instance_variables.to_h { |variable_name| [variable_name[1..].to_sym, instance_variable_get(variable_name)] }
+      end
+
+      def event_id
+        self.class.event_id
+      end
+
+      # Here just is an array of each method defined as your readers
+      def attributes
+        to_h.map { |_k, v| v }
       end
 
       class << self
