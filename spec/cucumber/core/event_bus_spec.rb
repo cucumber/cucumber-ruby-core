@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/event_bus'
-
 module Cucumber
   module Core
     module Events
