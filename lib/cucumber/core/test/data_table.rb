@@ -57,7 +57,7 @@ module Cucumber
         end
 
         def inspect
-          %{#<#{self.class} #{raw.inspect})>}
+          %{#<#{self.class} #{raw.inspect}>}
         end
 
         def lines_count
