@@ -25,16 +25,17 @@ module Cucumber
       end
 
       def to_h
-        instance_variables.to_h { |variable_name| [variable_name[1..].to_sym, instance_variable_get(variable_name)] }
+        instance_variables.to_h do |variable_name|
+          [variable_name.delete('@').to_sym, instance_variable_get(variable_name)]
+        end
       end
 
       def event_id
         self.class.event_id
       end
 
-      # Here just is an array of each method defined as your readers
       def attributes
-        to_h.map { |_k, v| v }
+        instance_variables.map { |var| instance_variable_get(var) }
       end
 
       class << self
