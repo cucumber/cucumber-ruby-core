@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- Refactored the internal base `Event` class to reduce complexity and make it more flexible for future use (No user facing changes)
 
 ## [16.2.0] - 2026-02-06
 ### Changed

@@ -6,7 +6,6 @@ module Cucumber
   module Core
     module Events
       class Envelope < Event.new(:envelope)
-        attr_reader :envelope
       end
     end
   end

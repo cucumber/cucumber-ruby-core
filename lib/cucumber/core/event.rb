@@ -21,19 +21,21 @@ module Cucumber
               instance_variable_set(:"@#{name}", value)
             end
           end
-
-          define_method(:attributes) do
-            events.map { |var| instance_variable_get(:"@#{var}") }
-          end
-
-          define_method(:to_h) do
-            events.zip(attributes).to_h
-          end
-
-          def event_id
-            self.class.event_id
-          end
         end
+      end
+
+      def to_h
+        instance_variables.to_h do |variable_name|
+          [variable_name[1..].to_sym, instance_variable_get(variable_name)]
+        end
+      end
+
+      def attributes
+        instance_variables.map { |var| instance_variable_get(var) }
+      end
+
+      def event_id
+        self.class.event_id
       end
 
       class << self
