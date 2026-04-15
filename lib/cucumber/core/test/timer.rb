@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/result'
+require_relative 'result'
 
 module Cucumber
   module Core

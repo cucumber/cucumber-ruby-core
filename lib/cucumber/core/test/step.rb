@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/result'
-require 'cucumber/core/test/action'
-require 'cucumber/core/test/empty_multiline_argument'
+require_relative 'action'
+require_relative 'empty_multiline_argument'
 
 module Cucumber
   module Core
@@ -20,20 +19,40 @@ module Cucumber
           @action = action
         end
 
+        def action_location
+          @action.location
+        end
+
+        def backtrace_line
+          "#{location}:in `#{text}'"
+        end
+
         def describe_to(visitor, *)
           visitor.test_step(self, *)
+        end
+
+        def execute(*)
+          @action.execute(*)
         end
 
         def hook?
           false
         end
 
+        def inspect
+          "#<#{self.class}: #{location}>"
+        end
+
+        def matching_locations
+          [location.merge(multiline_arg)]
+        end
+
         def skip(*)
           @action.skip(*)
         end
 
-        def execute(*)
-          @action.execute(*)
+        def to_s
+          text
         end
 
         def with_action(action_location = nil, &)
@@ -42,26 +61,6 @@ module Cucumber
 
         def with_unskippable_action(action_location = nil, &)
           self.class.new(id, text, location, multiline_arg, Test::Action::Unskippable.new(action_location, &))
-        end
-
-        def backtrace_line
-          "#{location}:in `#{text}'"
-        end
-
-        def to_s
-          text
-        end
-
-        def action_location
-          @action.location
-        end
-
-        def matching_locations
-          [location.merge(multiline_arg)]
-        end
-
-        def inspect
-          "#<#{self.class}: #{location}>"
         end
       end
     end

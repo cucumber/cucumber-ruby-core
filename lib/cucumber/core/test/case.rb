@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/result'
 require 'cucumber/tag_expressions'
+
+require_relative 'result'
 
 module Cucumber
   module Core
@@ -22,8 +23,8 @@ module Cucumber
           @around_hooks = around_hooks
         end
 
-        def step_count
-          test_steps.count
+        def ==(other)
+          eql?(other)
         end
 
         def describe_to(visitor, *args)
@@ -37,28 +38,16 @@ module Cucumber
           self
         end
 
-        def with_steps(test_steps)
-          self.class.new(id, name, test_steps, location, parent_locations, tags, language, around_hooks)
+        def eql?(other)
+          other.hash == hash
         end
 
-        def with_around_hooks(around_hooks)
-          self.class.new(id, name, test_steps, location, parent_locations, tags, language, around_hooks)
+        def hash
+          location.hash
         end
 
-        def match_tags?(*expressions)
-          expressions.flatten.all? { |expression| match_single_tag_expression?(expression) }
-        end
-
-        def match_name?(name_regexp)
-          name =~ name_regexp
-        end
-
-        def match_locations?(queried_locations)
-          queried_locations.any? do |queried_location|
-            matching_locations.any? do |location|
-              queried_location.match? location
-            end
-          end
+        def inspect
+          "#<#{self.class}: #{location}>"
         end
 
         def matching_locations
@@ -70,20 +59,32 @@ module Cucumber
           ].flatten
         end
 
-        def inspect
-          "#<#{self.class}: #{location}>"
+        def match_locations?(queried_locations)
+          queried_locations.any? do |queried_location|
+            matching_locations.any? do |location|
+              queried_location.match? location
+            end
+          end
         end
 
-        def hash
-          location.hash
+        def match_name?(name_regexp)
+          name =~ name_regexp
         end
 
-        def eql?(other)
-          other.hash == hash
+        def match_tags?(*expressions)
+          expressions.flatten.all? { |expression| match_single_tag_expression?(expression) }
         end
 
-        def ==(other)
-          eql?(other)
+        def step_count
+          test_steps.count
+        end
+
+        def with_around_hooks(around_hooks)
+          self.class.new(id, name, test_steps, location, parent_locations, tags, language, around_hooks)
+        end
+
+        def with_steps(test_steps)
+          self.class.new(id, name, test_steps, location, parent_locations, tags, language, around_hooks)
         end
 
         private

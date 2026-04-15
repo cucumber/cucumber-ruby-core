@@ -16,7 +16,7 @@ module Cucumber
       attr_reader :receiver, :gherkin_query, :id_generator
       private     :receiver, :gherkin_query, :id_generator
 
-      def initialize(receiver, gherkin_query, event_bus = nil)
+      def initialize(receiver, gherkin_query, event_bus)
         @receiver = receiver
         @id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new
         @gherkin_query = gherkin_query
@@ -42,7 +42,7 @@ module Cucumber
         parent_locations = parent_locations_from_pickle(pickle)
         tags = tags_from_pickle(pickle, uri)
         Test::Case.new(id_generator.new_id, pickle.name, test_steps, location, parent_locations, tags, pickle.language).tap do |test_case|
-          @event_bus&.test_case_created(test_case, pickle)
+          @event_bus.test_case_created(test_case, pickle)
         end
       end
 
@@ -50,7 +50,7 @@ module Cucumber
         location = location_from_pickle_step(pickle_step, uri)
         multiline_arg = create_multiline_arg(pickle_step, uri)
         Test::Step.new(id_generator.new_id, pickle_step.text, location, multiline_arg).tap do |test_step|
-          @event_bus&.test_step_created(test_step, pickle_step)
+          @event_bus.test_step_created(test_step, pickle_step)
         end
       end
 
