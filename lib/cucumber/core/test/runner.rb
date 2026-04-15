@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/timer'
+require_relative 'timer'
 
 module Cucumber
   module Core

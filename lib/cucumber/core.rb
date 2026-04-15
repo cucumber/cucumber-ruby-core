@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/event_bus'
-require 'cucumber/core/gherkin/parser'
-require 'cucumber/core/gherkin/document'
-require 'cucumber/core/compiler'
-require 'cucumber/core/test/runner'
+require_relative 'core/gherkin/parser'
+require_relative 'core/gherkin/document'
+require_relative 'core/test/runner'
+require_relative 'core/compiler'
+require_relative 'core/event_bus'
+
 require 'cucumber/messages'
 require 'gherkin/query'
 

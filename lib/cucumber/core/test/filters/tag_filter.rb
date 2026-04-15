@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/filter'
+require_relative '../../filter'
 
 module Cucumber
   module Core
