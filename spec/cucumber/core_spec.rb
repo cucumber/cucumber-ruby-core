@@ -3,7 +3,6 @@
 require 'support/report_api_spy'
 require 'support/activate_steps_for_self_test'
 
-require 'cucumber/core'
 require 'cucumber/core/filter'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/platform'

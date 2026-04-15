@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/location'
-
 module Cucumber
   module Core
     module Test

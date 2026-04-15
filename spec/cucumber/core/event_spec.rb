@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/event'
-
 describe Cucumber::Core::Event do
   describe '.new' do
     it 'generates new types of events' do

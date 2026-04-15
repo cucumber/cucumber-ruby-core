@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/event_bus'
-require 'cucumber/core/events'
 require 'cucumber/core/report/summary'
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/step'
