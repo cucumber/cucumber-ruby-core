@@ -9,7 +9,7 @@ module Cucumber
       module Result
         # Null object for results. Represents the state where we haven't run anything yet
         class Unknown
-          include Result.query_methods :unknown
+          include BooleanMethods
 
           def describe_to(_visitor, *_args)
             self
@@ -24,6 +24,10 @@ module Cucumber
               status: Cucumber::Messages::TestStepResultStatus::UNKNOWN,
               duration: UnknownDuration.new.to_message_duration
             )
+          end
+
+          def to_sym
+            :unknown
           end
         end
       end

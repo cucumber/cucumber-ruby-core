@@ -8,7 +8,7 @@ module Cucumber
     module Test
       module Result
         class Undefined < Raisable
-          include Result.query_methods :undefined
+          include BooleanMethods
 
           def self.ok?
             false
@@ -22,6 +22,10 @@ module Cucumber
 
           def to_s
             '?'
+          end
+
+          def to_sym
+            :undefined
           end
 
           def to_message

@@ -8,7 +8,7 @@ module Cucumber
     module Test
       module Result
         class Pending < Raisable
-          include Result.query_methods :pending
+          include BooleanMethods
 
           def self.ok?
             false
@@ -22,6 +22,10 @@ module Cucumber
 
           def to_s
             'P'
+          end
+
+          def to_sym
+            :pending
           end
 
           def to_message

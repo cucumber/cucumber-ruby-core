@@ -3,6 +3,8 @@
 require 'cucumber/messages'
 require 'cucumber/messages/helpers/time_conversion'
 
+require_relative 'result/boolean_methods'
+
 require_relative 'result/raisable'
 
 require_relative 'result/ambiguous'
@@ -25,24 +27,6 @@ module Cucumber
           const_get(class_name).ok?
         end
 
-        # Defines to_sym on a result class for the given result type
-        #
-        # Defines predicate methods on a result class with only the given one returning true
-        def self.query_methods(result_type)
-          Module.new do
-            define_method :to_sym do
-              result_type
-            end
-
-            TYPES.each do |possible_result_type|
-              define_method("#{possible_result_type}?") do
-                possible_result_type == to_sym
-              end
-            end
-          end
-        end
-
-        #
         # An object that responds to the description protocol from the results and collects summary information.
         #
         # e.g.

@@ -8,7 +8,7 @@ module Cucumber
     module Test
       module Result
         class Passed
-          include Result.query_methods :passed
+          include BooleanMethods
 
           attr_accessor :duration
 
@@ -30,6 +30,10 @@ module Cucumber
 
           def to_s
             '✓'
+          end
+
+          def to_sym
+            :passed
           end
 
           def to_message

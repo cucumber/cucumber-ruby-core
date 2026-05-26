@@ -8,7 +8,7 @@ module Cucumber
     module Test
       module Result
         class Skipped < Raisable
-          include Result.query_methods :skipped
+          include BooleanMethods
 
           def self.ok?(*)
             true
@@ -22,6 +22,10 @@ module Cucumber
 
           def to_s
             '-'
+          end
+
+          def to_sym
+            :skipped
           end
 
           def to_message

@@ -8,7 +8,7 @@ module Cucumber
     module Test
       module Result
         class Ambiguous < Raisable
-          include Result.query_methods :ambiguous
+          include BooleanMethods
 
           def self.ok?(*)
             false
@@ -22,6 +22,10 @@ module Cucumber
 
           def to_s
             'A'
+          end
+
+          def to_sym
+            :ambiguous
           end
 
           def to_message

@@ -8,7 +8,7 @@ module Cucumber
     module Test
       module Result
         class Failed
-          include Result.query_methods :failed
+          include BooleanMethods
 
           attr_reader :duration, :exception
 
@@ -33,6 +33,10 @@ module Cucumber
 
           def to_s
             '✗'
+          end
+
+          def to_sym
+            :failed
           end
 
           def to_message
