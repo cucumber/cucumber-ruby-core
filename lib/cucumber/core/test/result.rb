@@ -8,11 +8,10 @@ module Cucumber
     module Test
       module Result
         TYPES = %i[failed ambiguous flaky skipped undefined pending passed unknown].freeze
-        STRICT_AFFECTED_TYPES = %i[flaky undefined pending].freeze
 
-        def self.ok?(type, strict: StrictConfiguration.new)
+        def self.ok?(type)
           class_name = type.to_s.slice(0, 1).capitalize + type.to_s.slice(1..-1)
-          const_get(class_name).ok?(strict: strict.strict?(type))
+          const_get(class_name).ok?
         end
 
         # Defines to_sym on a result class for the given result type
@@ -161,8 +160,8 @@ module Cucumber
         # reporting result type for test cases that fails and the passes on
         # retry, therefore only the class method self.ok? is needed.
         class Flaky
-          def self.ok?(strict: false)
-            !strict
+          def self.ok?
+            false
           end
         end
 
@@ -199,8 +198,8 @@ module Cucumber
             filter.new(dup).exception
           end
 
-          def ok?(strict: StrictConfiguration.new)
-            self.class.ok?(strict: strict.strict?(to_sym))
+          def ok?
+            self.class.ok?
           end
         end
 
@@ -232,8 +231,8 @@ module Cucumber
         class Undefined < Raisable
           include Result.query_methods :undefined
 
-          def self.ok?(strict: false)
-            !strict
+          def self.ok?
+            false
           end
 
           def describe_to(visitor, *)
@@ -282,8 +281,8 @@ module Cucumber
         class Pending < Raisable
           include Result.query_methods :pending
 
-          def self.ok?(strict: false)
-            !strict
+          def self.ok?
+            false
           end
 
           def describe_to(visitor, *)
@@ -301,53 +300,6 @@ module Cucumber
               status: Cucumber::Messages::TestStepResultStatus::PENDING,
               duration: duration.to_message_duration
             )
-          end
-        end
-
-        # Handles the strict settings for the result types that are
-        # affected by the strict options (that is the STRICT_AFFECTED_TYPES).
-        class StrictConfiguration
-          attr_accessor :settings
-          private :settings
-
-          def initialize(strict_types = [])
-            @settings = STRICT_AFFECTED_TYPES.to_h { |t| [t, :default] }
-            strict_types.each do |type|
-              set_strict(true, type)
-            end
-          end
-
-          def strict?(type = nil)
-            if type.nil?
-              settings.each_value do |value|
-                return true if value == true
-              end
-              false
-            else
-              return false unless settings.key?(type)
-              return false unless set?(type)
-
-              settings[type]
-            end
-          end
-
-          def set_strict(setting, type = nil)
-            if type.nil?
-              STRICT_AFFECTED_TYPES.each { |type| set_strict(setting, type) }
-            else
-              settings[type] = setting
-            end
-          end
-
-          def merge!(other)
-            settings.each_key do |type|
-              set_strict(other.strict?(type), type) if other.set?(type)
-            end
-            self
-          end
-
-          def set?(type)
-            settings[type] != :default
           end
         end
 
@@ -381,9 +333,9 @@ module Cucumber
             true
           end
 
-          def ok?(strict: StrictConfiguration.new)
+          def ok?
             TYPES.each do |type|
-              return false if get_total(type).positive? && !Result.ok?(type, strict: strict)
+              return false if get_total(type).positive? && !Result.ok?(type)
             end
             true
           end
