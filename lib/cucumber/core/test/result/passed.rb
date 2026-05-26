@@ -12,7 +12,7 @@ module Cucumber
 
           attr_accessor :duration
 
-          def self.ok?(*)
+          def self.ok?
             true
           end
 
@@ -41,10 +41,6 @@ module Cucumber
               status: Cucumber::Messages::TestStepResultStatus::PASSED,
               duration: duration.to_message_duration
             )
-          end
-
-          def ok?(*)
-            self.class.ok?
           end
 
           def with_appended_backtrace(_step)

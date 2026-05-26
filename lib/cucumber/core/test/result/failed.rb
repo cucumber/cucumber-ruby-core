@@ -12,7 +12,7 @@ module Cucumber
 
           attr_reader :duration, :exception
 
-          def self.ok?(*)
+          def self.ok?
             false
           end
 
@@ -51,10 +51,6 @@ module Cucumber
               duration: duration.to_message_duration,
               message: message
             )
-          end
-
-          def ok?(*)
-            self.class.ok?
           end
 
           def with_duration(new_duration)

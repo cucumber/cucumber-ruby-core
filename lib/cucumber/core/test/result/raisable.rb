@@ -39,10 +39,6 @@ module Cucumber
 
             filter.new(dup).exception
           end
-
-          def ok?
-            self.class.ok?
-          end
         end
       end
     end

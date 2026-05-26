@@ -10,7 +10,7 @@ module Cucumber
         class Skipped < Raisable
           include BooleanMethods
 
-          def self.ok?(*)
+          def self.ok?
             true
           end
 

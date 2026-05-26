@@ -11,6 +11,10 @@ module Cucumber
         class Unknown
           include BooleanMethods
 
+          def self.ok?
+            false
+          end
+
           def describe_to(_visitor, *_args)
             self
           end

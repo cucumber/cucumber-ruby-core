@@ -8,6 +8,7 @@ module Cucumber
     module Test
       module Result
         # Simple module that when included generates all the boolean methods for each category of result
+        # The single exception to this is the class method `self.ok?` which is defined for each result individually
         module BooleanMethods
           TYPES = %i[failed ambiguous flaky skipped undefined pending passed unknown].freeze
 
@@ -15,6 +16,10 @@ module Cucumber
             define_method("#{result}?") do
               result == to_sym
             end
+          end
+
+          def ok?
+            self.class.ok?
           end
         end
       end
