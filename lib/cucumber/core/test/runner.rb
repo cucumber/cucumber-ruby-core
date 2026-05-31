@@ -1,26 +1,59 @@
 # frozen_string_literal: true
 
 require_relative 'timer'
+require 'cucumber/messages'
 
 module Cucumber
   module Core
     module Test
       class Runner
-        attr_reader :event_bus, :running_test_case, :running_test_step
-        private :event_bus, :running_test_case, :running_test_step
+        include Cucumber::Messages::Helpers::TimeConversion
 
-        def initialize(event_bus)
+        attr_reader :event_bus, :running_test_case, :running_test_step, :id_generator
+        private :event_bus, :running_test_case, :running_test_step, :id_generator
+
+        def initialize(event_bus, max_attempts = 1)
           @event_bus = event_bus
+          @max_attempts = max_attempts
+          @id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new
+          @current_test_case = nil
         end
 
         def test_case(test_case, &descend)
+          if @current_test_case == test_case
+            @attempt += 1
+          else
+            @attempt = 1
+          end
+          @current_test_case = test_case
+          @current_test_case_started_id = id_generator.new_id
           @running_test_case = RunningTestCase.new
           @running_test_step = nil
           event_bus.test_case_started(test_case)
+          message = Cucumber::Messages::Envelope.new(
+            test_case_started: Cucumber::Messages::TestCaseStarted.new(
+              id: @current_test_case_started_id,
+              test_case_id: test_case.id,
+              timestamp: time_to_timestamp(Time.now),
+              attempt: @attempt
+            )
+          )
+          event_bus.envelope(message)
+
           descend.call(self)
           result = running_test_case.result
           result = Result::Undefined.new('The test case has no steps', Result::UnknownDuration.new, ["#{test_case.location}:in `#{test_case.name}'"]) if result.unknown?
+
           event_bus.test_case_finished(test_case, result)
+          will_be_retried = result.failed? && (@attempt < @max_attempts)
+          message = Cucumber::Messages::Envelope.new(
+            test_case_finished: Cucumber::Messages::TestCaseFinished.new(
+              test_case_started_id: @current_test_case_started_id,
+              timestamp: time_to_timestamp(Time.now),
+              will_be_retried: will_be_retried
+            )
+          )
+          event_bus.envelope(message)
           self
         end
 
