@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'delegate'
+
 module Cucumber
   module Core
     module Test
@@ -19,7 +20,6 @@ module Cucumber
       # example above, that would return: <tt>"I like\nCucumber sandwich"</tt>
       #
       # Note how the indentation from the source is stripped away.
-      #
       class DocString < SimpleDelegator
         attr_reader :content_type, :content
 
@@ -29,16 +29,36 @@ module Cucumber
           super(@content)
         end
 
-        def describe_to(visitor, *)
-          visitor.doc_string(self, *)
+        def ==(other)
+          return false if other.respond_to?(:content_type) && content_type != other.content_type
+          return content == other.to_str if other.respond_to?(:to_str)
+
+          false
         end
 
         def data_table?
           false
         end
 
+        def describe_to(visitor, *)
+          visitor.doc_string(self, *)
+        end
+
         def doc_string?
           true
+        end
+
+        def inspect
+          [
+            %(#<#{self.class}),
+            %(  """#{content_type}),
+            %(  #{@content}),
+            %(  """>)
+          ].join("\n")
+        end
+
+        def lines_count
+          lines.count + 2
         end
 
         def map
@@ -50,26 +70,6 @@ module Cucumber
 
         def to_step_definition_arg
           self
-        end
-
-        def lines_count
-          lines.count + 2
-        end
-
-        def ==(other)
-          return false if other.respond_to?(:content_type) && content_type != other.content_type
-          return content == other.to_str if other.respond_to?(:to_str)
-
-          false
-        end
-
-        def inspect
-          [
-            %(#<#{self.class}),
-            %(  """#{content_type}),
-            %(  #{@content}),
-            %(  """>)
-          ].join("\n")
         end
       end
     end

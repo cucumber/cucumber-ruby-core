@@ -13,10 +13,6 @@ module Cucumber
           visitor.around_hook(self, *, &)
         end
 
-        def hook?
-          true
-        end
-
         def execute(*_args, &continue)
           @timer.start
           @block.call(continue)
@@ -25,6 +21,10 @@ module Cucumber
           e.with_duration(@timer.duration)
         rescue Exception => e
           failed(e)
+        end
+
+        def hook?
+          true
         end
 
         private
