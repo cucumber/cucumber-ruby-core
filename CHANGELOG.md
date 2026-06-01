@@ -11,6 +11,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ## [Unreleased]
 ### Removed
 - Strict configuration has been removed from all `Result` classes
+- Removed the ability to list event attributes (Only the `#to_h` method now remains for this purpose)
 
 ### Added
 - Added `#to_envelope` for `Cucumber::Core::Gherkin::Document` ([#329](https://github.com/cucumber/cucumber-ruby-core/pull/329))
