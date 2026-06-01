@@ -9,11 +9,15 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Removed
+- Strict configuration has been removed from all `Result` classes
+
 ### Added
 - Added `#to_envelope` for `Cucumber::Core::Gherkin::Document` ([#329](https://github.com/cucumber/cucumber-ruby-core/pull/329))
 
 ### Changed
 - Refactored the internal base `Event` class to reduce complexity and make it more flexible for future use (No user facing changes)
+- Refactored the `Result` classes to be more simplified and one class per file
 
 ## [16.2.0] - 2026-02-06
 ### Changed
