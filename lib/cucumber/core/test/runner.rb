@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/timer'
 require 'cucumber/messages/helpers/test_step_result_comparator'
+
+require_relative 'timer'
 
 module Cucumber
   module Core

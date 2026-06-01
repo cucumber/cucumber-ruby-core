@@ -1,17 +1,23 @@
 # frozen_string_literal: true
 
-require_relative '../event'
+require_relative 'base'
 
 module Cucumber
   module Core
     module Events
       # Signals that a Test::Step was created from a PickleStep
-      class TestStepCreated < Event.new(:test_step, :pickle_step)
-        # The created test step
-        attr_reader :test_step
+      class TestStepCreated < Base
+        attr_reader :test_step, :pickle_step
 
-        # The source pickle step
-        attr_reader :pickle_step
+        def self.event_id
+          :test_step_created
+        end
+
+        def initialize(test_step, pickle_step)
+          @test_step = test_step
+          @pickle_step = pickle_step
+          super()
+        end
       end
     end
   end

@@ -64,15 +64,11 @@ module Cucumber
         end
 
         def type(message)
-          if !message.gherkin_document.nil?
-            :gherkin_document
-          elsif !message.pickle.nil?
-            :pickle
-          elsif message.parse_error
-            :parse_error
-          else
-            :unknown
-          end
+          return :gherkin_document if message.gherkin_document
+          return :pickle if message.pickle
+          return :parse_error if message.parse_error
+
+          :unknown
         end
       end
     end

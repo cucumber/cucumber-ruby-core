@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'cucumber/core/event_bus'
-require 'cucumber/core/events'
 require 'cucumber/core/report/summary'
 require 'cucumber/core/test/result'
 require 'cucumber/core/test/step'
@@ -151,20 +150,16 @@ describe Cucumber::Core::Report::Summary do
       expect(summary.ok?).to be false
     end
 
-    it 'pending test cases are not ok if strict is configured for pending tests' do
+    it 'pending test cases are not ok' do
       event_bus.send(:test_case_finished, test_case, pending_result)
 
-      expect(summary.ok?).to be true
-      strict = Cucumber::Core::Test::Result::StrictConfiguration.new([:pending])
-      expect(summary.ok?(strict: strict)).to be false
+      expect(summary.ok?).to be false
     end
 
-    it 'undefined test cases are not ok if strict is configured for undefined tests' do
+    it 'undefined test cases are not ok' do
       event_bus.send(:test_case_finished, test_case, undefined_result)
 
-      expect(summary.ok?).to be true
-      strict = Cucumber::Core::Test::Result::StrictConfiguration.new([:undefined])
-      expect(summary.ok?(strict: strict)).to be false
+      expect(summary.ok?).to be false
     end
   end
 end

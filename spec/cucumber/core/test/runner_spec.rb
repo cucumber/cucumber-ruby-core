@@ -2,9 +2,9 @@
 
 require 'cucumber/core/test/around_hook'
 require 'cucumber/core/test/hook_step'
-require 'cucumber/core/test/runner'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
+
 require 'support/duration_matcher'
 
 describe Cucumber::Core::Test::Runner do
