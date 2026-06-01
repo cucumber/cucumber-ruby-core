@@ -15,6 +15,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ### Changed
 - Refactored the internal base `Event` class to reduce complexity and make it more flexible for future use (No user facing changes)
 - Refactored the `Result` classes to be more simplified and one class per file
+- Changed the base event inheritance to a new base class structure
 
 ## [16.2.0] - 2026-02-06
 ### Changed
