@@ -16,7 +16,7 @@ module Cucumber
         #     => 1
         #
         class Summary
-          TYPES = %i[failed ambiguous flaky skipped undefined pending passed unknown].freeze
+          TYPES = %i[failed ambiguous flaky undefined pending skipped passed unknown].freeze
 
           attr_reader :exceptions, :durations
 
