@@ -222,14 +222,14 @@ describe Cucumber::Core::Test::Runner do
       let(:test_steps) { [failing_step, passing_step] }
 
       it 'emits the test_step_finished event with a failed result' do
-        expect(event_bus).to receive(:test_step_finished).with(failing_step, anything) do |_reported_test_case, result|
+        expect(event_bus).to receive(:test_step_finished).with(failing_step, anything) do |_reported_test_step, result|
           expect(result).to be_failed
         end
         test_case.describe_to(runner)
       end
 
       it 'emits a test_step_finished event with a skipped result' do
-        expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |_reported_test_case, result|
+        expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |_reported_test_step, result|
           expect(result).to be_skipped
         end
         test_case.describe_to(runner)
@@ -254,24 +254,16 @@ describe Cucumber::Core::Test::Runner do
     context 'with an initial undefined step' do
       let(:test_steps) { [undefined_step, passing_step] }
 
+      it 'emits a test_step_finished event when executing an undefined step' do
+        allow(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |reported_test_step, _result|
+          expect(reported_test_step).to be_a(Cucumber::Core::Test::Step)
+        end
+        test_case.describe_to(runner)
+      end
+
       it 'emits a test_step_finished event with an undefined result' do
-        expect(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |_reported_test_case, result|
+        allow(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |_reported_test_step, result|
           expect(result).to be_undefined
-        end
-        test_case.describe_to(runner)
-      end
-
-      it 'emits a test_step_finished event with a skipped result' do
-        expect(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |_reported_test_case, result|
-          expect(result).to be_skipped
-        end
-        test_case.describe_to(runner)
-      end
-
-      it 'emits a test_case_finished event with an undefined result' do
-        allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
-          expect(result).to be_undefined
-          expect(result.exception).to be_a StandardError
         end
         test_case.describe_to(runner)
       end
@@ -283,19 +275,68 @@ describe Cucumber::Core::Test::Runner do
         test_case.describe_to(runner)
       end
 
+      it 'emits a test_step_finished event when executing a skipped step' do
+        allow(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |reported_test_step, _result|
+          expect(reported_test_step).to be_a(Cucumber::Core::Test::Step)
+        end
+        test_case.describe_to(runner)
+      end
+
+      it 'emits a test_step_finished event with a skipped result' do
+        allow(event_bus).to receive(:test_step_finished).with(passing_step, anything) do |_reported_test_step, result|
+          expect(result).to be_skipped
+        end
+        test_case.describe_to(runner)
+      end
+
+      it 'emits a test_case_finished event with an undefined result' do
+        allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
+          expect(result).to be_undefined
+        end
+        test_case.describe_to(runner)
+      end
+
+      it 'emits a test_case_finished event with an exception object' do
+        allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
+          expect(result.exception).to be_a StandardError
+        end
+        test_case.describe_to(runner)
+      end
+
       context 'with a following ambiguous step' do
         let(:test_steps) { [undefined_step, ambiguous_step] }
 
+        it 'emits a test_step_finished event when executing an undefined step' do
+          allow(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |reported_test_step, _result|
+            expect(reported_test_step).to be_a(Cucumber::Core::Test::Step)
+          end
+          test_case.describe_to(runner)
+        end
+
         it 'emits a test_step_finished event with an undefined result' do
-          expect(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |_reported_test_case, result|
+          allow(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |_reported_test_step, result|
             expect(result).to be_undefined
           end
           test_case.describe_to(runner)
         end
 
-        it 'emits a test_step_finished event with a ambiguous result' do
-          expect(event_bus).to receive(:test_step_finished).with(ambiguous_step, anything) do |_reported_test_case, result|
-            expect(result).to be_ambiguous
+        it 'skips, rather than executing the second step' do
+          expect(passing_step).not_to receive(:execute)
+
+          allow(passing_step).to receive(:skip).and_return(Cucumber::Core::Test::Result::Skipped.new)
+          test_case.describe_to(runner)
+        end
+
+        it 'emits a test_step_finished event when executing a skipped step' do
+          allow(event_bus).to receive(:test_step_finished).with(ambiguous_step, anything) do |reported_test_step, _result|
+            expect(reported_test_step).to be_a(Cucumber::Core::Test::Step)
+          end
+          test_case.describe_to(runner)
+        end
+
+        it 'emits a test_step_finished event with a skipped result' do
+          allow(event_bus).to receive(:test_step_finished).with(ambiguous_step, anything) do |_reported_test_step, result|
+            expect(result).to be_skipped
           end
           test_case.describe_to(runner)
         end
@@ -303,15 +344,14 @@ describe Cucumber::Core::Test::Runner do
         it 'emits a test_case_finished event with an ambiguous result' do
           allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
             expect(result).to be_ambiguous
-            expect(result.exception).to be_a StandardError
           end
           test_case.describe_to(runner)
         end
 
-        it 'skips, rather than executing the second step' do
-          expect(ambiguous_step).not_to receive(:execute)
-
-          allow(ambiguous_step).to receive(:skip).and_return(Cucumber::Core::Test::Result::Ambiguous.new)
+        it 'emits a test_case_finished event with an exception object' do
+          allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
+            expect(result.exception).to be_a StandardError
+          end
           test_case.describe_to(runner)
         end
       end
@@ -319,29 +359,42 @@ describe Cucumber::Core::Test::Runner do
       context 'with a failing after hook' do
         let(:test_steps) { [undefined_step, failing_hook] }
 
+        it 'emits a test_step_finished event when executing an undefined step' do
+          allow(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |reported_test_step, _result|
+            expect(reported_test_step).to be_a(Cucumber::Core::Test::Step)
+          end
+          test_case.describe_to(runner)
+        end
+
         it 'emits a test_step_finished event with an undefined result' do
-          expect(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |_reported_test_case, result|
+          allow(event_bus).to receive(:test_step_finished).with(undefined_step, anything) do |_reported_test_step, result|
             expect(result).to be_undefined
           end
           test_case.describe_to(runner)
         end
 
         it 'emits a test_step_finished event with a failing result' do
-          expect(event_bus).to receive(:test_step_finished).with(failing_hook, anything) do |_reported_test_case, result|
+          allow(event_bus).to receive(:test_step_finished).with(failing_hook, anything) do |_reported_test_step, result|
             expect(result).to be_failed
           end
           test_case.describe_to(runner)
         end
 
-        it 'emits a test_case_finished event with an failing result' do
+        it 'emits a test_case_finished event with a failing result' do
           allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
             expect(result).to be_failed
+          end
+          test_case.describe_to(runner)
+        end
+
+        it 'emits a test_case_finished event with an exception object' do
+          allow(event_bus).to receive(:test_case_finished) do |_reported_test_case, result|
             expect(result.exception).to be_a StandardError
           end
           test_case.describe_to(runner)
         end
 
-        it 'call skip, rather than execute on test step of the hook' do
+        it 'calls skip, rather than execute on test step of the hook' do
           expect(failing_hook).not_to receive(:execute)
 
           allow(failing_hook).to receive(:skip).and_return(Cucumber::Core::Test::Result::Failed.new(Cucumber::Core::Test::Result::UnknownDuration.new, instance_double(StandardError, backtrace: [])))
