@@ -25,7 +25,7 @@ module Cucumber
       class DataTable
         attr_reader :raw
 
-        # Creates a new instance. +raw+ should be a square (2d), array of strings or an array of hashes
+        # Creates a new instance. +rows+ should be a square (2d), array of strings or an array of hashes
         #
         # You don't typically create your own DataTable objects - Cucumber will do
         # it internally and pass them to your Step Definitions.
