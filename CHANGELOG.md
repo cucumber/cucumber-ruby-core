@@ -12,6 +12,9 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ### Removed
 - Strict configuration has been removed from all `Result` classes
 
+### Added
+- Added `#to_envelope` for `Cucumber::Core::Gherkin::Document` ([#329](https://github.com/cucumber/cucumber-ruby-core/pull/329))
+
 ### Changed
 - Refactored the internal base `Event` class to reduce complexity and make it more flexible for future use (No user facing changes)
 - Refactored the `Result` classes to be more simplified and one class per file
