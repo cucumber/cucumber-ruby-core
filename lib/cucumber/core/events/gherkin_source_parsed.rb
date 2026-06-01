@@ -7,8 +7,7 @@ module Cucumber
     module Events
       # Signals that a gherkin source has been parsed
       class GherkinSourceParsed < Event.new(:gherkin_document)
-        # @return [GherkinDocument] the GherkinDocument Ast Node
-        attr_reader :gherkin_document
+        # @return [GherkinDocument] the GherkinDocument Ast Node that was parsed
       end
     end
   end

@@ -3,7 +3,6 @@
 require 'support/report_api_spy'
 require 'support/activate_steps_for_self_test'
 
-require 'cucumber/core'
 require 'cucumber/core/filter'
 require 'cucumber/core/gherkin/writer'
 require 'cucumber/core/report/summary'
@@ -117,7 +116,8 @@ describe Cucumber::Core do
           observed_events << [:test_case_started, test_case.name]
         end
         event_bus.on(:test_case_finished) do |event|
-          test_case, result = *event.attributes
+          test_case = event.test_case
+          result = event.result
           observed_events << [:test_case_finished, test_case.name, result.to_sym]
         end
         event_bus.on(:test_step_started) do |event|
@@ -125,7 +125,8 @@ describe Cucumber::Core do
           observed_events << [:test_step_started, test_step.text]
         end
         event_bus.on(:test_step_finished) do |event|
-          test_step, result = *event.attributes
+          test_step = event.test_step
+          result = event.result
           observed_events << [:test_step_finished, test_step.text, result.to_sym]
         end
       end

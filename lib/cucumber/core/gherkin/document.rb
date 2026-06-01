@@ -12,12 +12,22 @@ module Cucumber
           @language = language
         end
 
+        def ==(other)
+          to_s == other.to_s
+        end
+
         def to_s
           body
         end
 
-        def ==(other)
-          to_s == other.to_s
+        def to_envelope
+          Cucumber::Messages::Envelope.new(
+            source: Cucumber::Messages::Source.new(
+              uri: uri,
+              data: body,
+              media_type: 'text/x.cucumber.gherkin+plain'
+            )
+          )
         end
       end
     end

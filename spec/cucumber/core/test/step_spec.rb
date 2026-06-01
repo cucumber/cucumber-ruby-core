@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/step'
-
 describe Cucumber::Core::Test::Step do
   let(:id) { 'some-random-uid' }
   let(:text) { 'step text' }
-  let(:location) { double }
+  let(:location) { { line: 3, column: 5 } }
 
   describe 'describing itself' do
     it 'describes itself to a visitor' do
       visitor = double
       args = double
       test_step = described_class.new(id, text, location)
+
       expect(visitor).to receive(:test_step).with(test_step, args)
+
       test_step.describe_to(visitor, args)
     end
   end
@@ -35,12 +35,14 @@ describe Cucumber::Core::Test::Step do
         args_spy = actual_args
       end
       test_step.execute(*expected_args)
+
       expect(args_spy).to eq expected_args
     end
 
     context 'when a passing action exists' do
       it 'returns a passing result' do
         test_step = described_class.new(id, text, location).with_action { :no_op }
+
         expect(test_step.execute).to be_passed
       end
     end
@@ -51,6 +53,7 @@ describe Cucumber::Core::Test::Step do
       it 'returns a failing result' do
         test_step = described_class.new(id, text, location).with_action { raise exception }
         result = test_step.execute
+
         expect(result).to be_failed
         expect(result.exception).to eq exception
       end
@@ -60,27 +63,23 @@ describe Cucumber::Core::Test::Step do
       it 'returns an Undefined result' do
         test_step = described_class.new(id, text, location)
         result = test_step.execute
+
         expect(result).to be_undefined
       end
     end
   end
 
-  it 'exposes the text and location of as attributes' do
-    test_step = described_class.new(id, text, location)
-    expect(test_step.text).to eq text
-    expect(test_step.location).to eq location
-  end
-
-  it 'exposes the location of the action as attribute' do
-    location = double
+  it 'exposes the location of the action as attribute as `#action_location`' do
     action = instance_double(Cucumber::Core::Test::Action::Defined, location: location)
-    test_step = described_class.new(id, text, location, action)
+    test_step = described_class.new(id, text, location, :a_blank_multiline_arg, action)
+
     expect(test_step.action_location).to eq(location)
   end
 
   it 'returns the text when converted to a string' do
     text = 'a passing step'
     test_step = described_class.new(id, text, location)
-    expect(test_step.to_s).to eq 'a passing step'
+
+    expect(test_step.to_s).to eq('a passing step')
   end
 end

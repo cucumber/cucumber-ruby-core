@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/case'
-require 'cucumber/core/test/data_table'
-require 'cucumber/core/test/doc_string'
-require 'cucumber/core/test/empty_multiline_argument'
-require 'cucumber/core/test/hook_step'
-require 'cucumber/core/test/step'
-require 'cucumber/core/test/tag'
+require_relative 'test/case'
+require_relative 'test/data_table'
+require_relative 'test/doc_string'
+require_relative 'test/empty_multiline_argument'
+require_relative 'test/hook_step'
+require_relative 'test/step'
+require_relative 'test/tag'
+
 require 'cucumber/messages'
 
 module Cucumber
