@@ -21,6 +21,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 - Refactored the `Result` classes to be more simplified and one class per file
 - Changed the base event inheritance to a new base class structure
 - Refactored some internals of the library to be slightly more performant (Including removing redundant nil checks)
+- Permit `cucumber-tag-expressions` up to v10
 
 ### Changed
 - Change to use worst Test Step result as the Test Case result
