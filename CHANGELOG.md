@@ -9,10 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
-### Removed
-- Strict configuration has been removed from all `Result` classes
-- Removed the ability to list event attributes (Only the `#to_h` method now remains for this purpose)
 
+## [17.0.0] - 2026-06-01
 ### Added
 - Added `#to_envelope` for `Cucumber::Core::Gherkin::Document` ([#329](https://github.com/cucumber/cucumber-ruby-core/pull/329))
 
@@ -22,10 +20,12 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 - Changed the base event inheritance to a new base class structure
 - Refactored some internals of the library to be slightly more performant (Including removing redundant nil checks)
 - Permit `cucumber-tag-expressions` up to v10
-
-### Changed
 - Change to use worst Test Step result as the Test Case result
 ([#317](https://github.com/cucumber/cucumber-ruby-core/pull/317))
+
+### Removed
+- Strict configuration has been removed from all `Result` classes
+- Removed the ability to list event attributes (Only the `#to_h` method now remains for this purpose)
 
 ## [16.2.0] - 2026-02-06
 ### Changed
@@ -149,7 +149,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.2.0...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v17.0.0...HEAD
+[17.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.2.0...v17.0.0
 [16.2.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.1...v16.2.0
 [16.1.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.0...v16.1.1
 [16.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.0.0...v16.1.0
