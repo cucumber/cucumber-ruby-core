@@ -11,6 +11,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ## [Unreleased]
 ### Removed
 - Strict configuration has been removed from all `Result` classes
+- Removed the ability to list event attributes (Only the `#to_h` method now remains for this purpose)
 
 ### Added
 - Added `#to_envelope` for `Cucumber::Core::Gherkin::Document` ([#329](https://github.com/cucumber/cucumber-ruby-core/pull/329))
@@ -18,6 +19,8 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ### Changed
 - Refactored the internal base `Event` class to reduce complexity and make it more flexible for future use (No user facing changes)
 - Refactored the `Result` classes to be more simplified and one class per file
+- Changed the base event inheritance to a new base class structure
+- Refactored some internals of the library to be slightly more performant (Including removing redundant nil checks)
 
 ## [16.2.0] - 2026-02-06
 ### Changed
