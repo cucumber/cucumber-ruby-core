@@ -10,7 +10,9 @@ module Cucumber
           include HasElements
           include HasOptionsInitializer
           include HasDescription
-          include Indentation.level 2
+          extend Indentation
+
+          indentation_level 2
 
           default_keyword 'Background'
 

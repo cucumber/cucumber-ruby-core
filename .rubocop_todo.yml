@@ -23,10 +23,10 @@ Lint/RedundantRequireStatement:
 Metrics/AbcSize:
   Max: 21
 
-# Offense count: 3
-# Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
-Metrics/MethodLength:
-  Max: 28
+## Offense count: 3
+## Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns.
+#Metrics/MethodLength:
+#  Max: 28
 
 # Offense count: 4
 # Configuration parameters: CountComments, CountAsOne.

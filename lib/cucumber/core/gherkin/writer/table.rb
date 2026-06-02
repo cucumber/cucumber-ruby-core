@@ -7,7 +7,9 @@ module Cucumber
     module Gherkin
       module Writer
         class Table
-          include Indentation.level(6)
+          extend IndentationDSLNew
+          indentation_level 6
+
           include HasRows
 
           def initialize(*); end
