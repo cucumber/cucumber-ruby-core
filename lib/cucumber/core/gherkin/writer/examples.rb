@@ -12,7 +12,9 @@ module Cucumber
           include HasOptionsInitializer
           include HasRows
           include HasDescription
-          include Indentation.level(4)
+          extend Indentation
+
+          indentation_level 4
 
           default_keyword 'Examples'
 

@@ -47,6 +47,16 @@ describe Cucumber::Core::Compiler do
       end
     end
   end
+  let(:event_bus_class) do
+    Class.new(Cucumber::Core::EventBus) do
+      def gherkin_source_parsed(*); end
+      def test_case_created(*); end
+      def test_step_created(*); end
+      def envelope(*); end
+    end
+  end
+
+  let(:event_bus) { event_bus_class.new }
 
   it 'compiles a feature with a single scenario' do
     compile([single_step_gherkin_document]) do |visitor|
@@ -56,55 +66,25 @@ describe Cucumber::Core::Compiler do
     end
   end
 
-  context 'when the event_bus is provided' do
-    let(:event_bus_class) do
-      Class.new(Cucumber::Core::EventBus) do
-        def gherkin_source_parsed(*); end
-        def test_case_created(*); end
-        def test_step_created(*); end
-        def envelope(*); end
-      end
+  it 'emits a TestCaseCreated event with the created Test::Case and Pickle' do
+    compile([single_step_gherkin_document]) do |visitor|
+      allow(visitor).to receive_messages(test_case: nil, test_step: nil, done: nil)
+
+      expect(event_bus).to receive(:test_case_created).once
     end
+  end
 
-    let(:event_bus) { event_bus_class.new }
+  it 'emits a TestStepCreated event with the created Test::Step and PickleStep' do
+    compile([double_step_gherkin_document]) do |visitor|
+      allow(visitor).to receive_messages(test_case: nil, test_step: nil, done: nil)
+      allow(event_bus).to receive(:envelope)
 
-    it 'emits a TestCaseCreated event with the created Test::Case and Pickle' do
-      compile([single_step_gherkin_document], event_bus) do |visitor|
-        allow(visitor).to receive(:test_case)
-        allow(visitor).to receive(:test_step)
-        allow(visitor).to receive(:done)
-
-        expect(event_bus).to receive(:test_case_created).once
-      end
-    end
-
-    it 'emits a TestStepCreated event with the created Test::Step and PickleStep' do
-      compile([double_step_gherkin_document], event_bus) do |visitor|
-        allow(visitor).to receive(:test_case)
-        allow(visitor).to receive(:test_step)
-        allow(visitor).to receive(:done)
-        allow(event_bus).to receive(:envelope)
-
-        expect(event_bus).to receive(:test_step_created).twice
-      end
+      expect(event_bus).to receive(:test_step_created).twice
     end
   end
 
   it 'compiles a feature with a background' do
-    gherkin_documents = [
-      gherkin do
-        feature do
-          background do
-            step 'passing'
-          end
-
-          scenario do
-            step 'passing'
-          end
-        end
-      end
-    ]
-    compile(gherkin_documents) do |visitor|
+    compile([background_step_gherkin_document]) do |visitor|
       expect(visitor).to receive(:test_case).once.ordered.and_yield(visitor)
       expect(visitor).to receive(:test_step).twice.ordered
       expect(visitor).to receive(:done).once.ordered
@@ -169,9 +149,8 @@ describe Cucumber::Core::Compiler do
 
     it 'produces test cases' do
       compile(gherkin_documents_with_examples) do |visitor|
+        allow(visitor).to receive_messages(test_step: nil, done: nil)
         expect(visitor).to receive(:test_case).exactly(3).times.and_yield(visitor)
-        allow(visitor).to receive(:test_step)
-        allow(visitor).to receive(:done)
       end
     end
 
@@ -208,34 +187,22 @@ describe Cucumber::Core::Compiler do
     it 'creates a single test case' do
       compile([empty_gherkin_document]) do |visitor|
         allow(visitor).to receive(:done)
-
-        expect(visitor).to receive(:test_case).once.ordered
+        expect(visitor).to receive(:test_case).once
       end
     end
 
     it 'finishes the compilation once' do
       compile([empty_gherkin_document]) do |visitor|
         allow(visitor).to receive(:test_case)
-
-        expect(visitor).to receive(:done).once.ordered
+        expect(visitor).to receive(:done).once
       end
     end
   end
 
-  def compile(gherkin_documents, event_bus = nil)
+  def compile(gherkin_documents)
     visitor = double
     allow(visitor).to receive(:test_suite).and_yield(visitor)
     allow(visitor).to receive(:test_case).and_yield(visitor)
-
-    if event_bus.nil?
-      event_bus = double
-      allow(event_bus).to receive_messages(
-        envelope: nil,
-        gherkin_source_parsed: nil,
-        test_case_created: nil,
-        test_step_created: nil
-      )
-    end
 
     yield visitor
     super(gherkin_documents, visitor, [], event_bus)

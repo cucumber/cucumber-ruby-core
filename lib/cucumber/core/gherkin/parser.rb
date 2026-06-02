@@ -5,7 +5,7 @@ require 'gherkin'
 module Cucumber
   module Core
     module Gherkin
-      ParseError = Class.new(StandardError)
+      class ParseError < StandardError; end
 
       class Parser
         attr_reader :receiver, :event_bus, :gherkin_query

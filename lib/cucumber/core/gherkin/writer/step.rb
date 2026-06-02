@@ -11,7 +11,9 @@ module Cucumber
         class Step
           include HasElements
           include HasOptionsInitializer
-          include Indentation.level 4
+          extend Indentation
+
+          indentation_level 4
 
           default_keyword 'Given'
 
