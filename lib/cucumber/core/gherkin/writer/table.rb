@@ -7,7 +7,8 @@ module Cucumber
     module Gherkin
       module Writer
         class Table
-          extend IndentationDSLNew
+          extend Indentation
+
           indentation_level 6
 
           include HasRows

@@ -8,6 +8,7 @@ module Cucumber
       module Writer
         class DocString
           extend Indentation
+
           indentation_level 6
 
           attr_reader :strings, :content_type

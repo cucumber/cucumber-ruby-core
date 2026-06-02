@@ -9,6 +9,7 @@ module Cucumber
       module Writer
         class Example < Scenario
           extend Indentation
+
           indentation_level 4
 
           default_keyword 'Example'

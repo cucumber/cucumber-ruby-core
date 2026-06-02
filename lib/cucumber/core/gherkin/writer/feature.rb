@@ -13,6 +13,7 @@ module Cucumber
           include HasOptionsInitializer
           include HasDescription
           extend Indentation
+
           indentation_level 0
 
           default_keyword 'Feature'
