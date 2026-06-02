@@ -183,14 +183,13 @@ describe Cucumber::Core::Test::Result do
         expect(result.with_appended_backtrace(step).backtrace).to eq(%w[backtrace step_line])
       end
 
-      it 'apply filters to the backtrace' do
+      it 'applies filters to the backtrace' do
         filter_class = double
         filter = double
-        filtered_result = double
-        allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
-        allow(filter).to receive(:exception).and_return(filtered_result)
+        filtered_backtrace = double
+        permit_exception_passthrough(filter_class, filter, filtered_backtrace)
 
-        expect(result.with_filtered_backtrace(filter_class)).to eq(filtered_result)
+        expect(result.with_filtered_backtrace(filter_class)).to eq(filtered_backtrace)
       end
     end
   end
@@ -454,8 +453,8 @@ describe Cucumber::Core::Test::Result do
   end
 
   # Permit an exception to be filtered and not excluded
-  def permit_exception_passthrough(filter_class, filter, filtered_exception)
+  def permit_exception_passthrough(filter_class, filter, filtered_value)
     allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
-    allow(filter).to receive(:exception).and_return(filtered_exception)
+    allow(filter).to receive(:exception).and_return(filtered_value)
   end
 end
