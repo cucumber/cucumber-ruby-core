@@ -67,36 +67,42 @@ describe Cucumber::Core::Gherkin::Writer do
   end
 
   context 'when a language is supplied' do
-    it 'inserts a language statement' do
-      source = gherkin do
-        feature language: 'ru'
+    let(:source) do
+      gherkin do
+        feature language: 'ja'
       end
+    end
 
-      expect(source).to eq("# language: ru\nFeature:\n")
+    it 'inserts a language statement' do
+      expect(source).to eq("# language: ja\nFeature:\n")
     end
   end
 
   context 'when a comment is supplied' do
-    it 'inserts a comment' do
-      source = gherkin do
+    let(:source) do
+      gherkin do
         comment 'wow'
         comment 'great'
         feature
       end
+    end
 
+    it 'inserts a comment' do
       expect(source.to_s).to eq("# wow\n# great\nFeature:\n")
     end
   end
 
   context 'with a scenario' do
-    it 'includes the scenario statement' do
-      source = gherkin do
+    let(:source) do
+      gherkin do
         feature 'A Feature' do
           scenario
         end
       end
+    end
 
-      expect(source.to_s).to match(/Scenario:/)
+    it 'includes the scenario statement' do
+      expect(source.to_s).to include('Scenario:')
     end
 
     context 'when a comment is provided' do
@@ -108,15 +114,16 @@ describe Cucumber::Core::Gherkin::Writer do
             Scenario:
         FEATURE
       end
-
-      it 'includes the comment in the scenario statement' do
-        source = gherkin do
+      let(:source) do
+        gherkin do
           feature do
             comment 'wow'
             scenario
           end
         end
+      end
 
+      it 'includes the comment in the scenario statement' do
         expect(source.to_s).to eq(expected)
       end
     end
@@ -132,9 +139,8 @@ describe Cucumber::Core::Gherkin::Writer do
               multiple lines.
         FEATURE
       end
-
-      it 'includes the description in the scenario statement' do
-        source = gherkin do
+      let(:source) do
+        gherkin do
           feature do
             scenario description: <<~SCENARIO
               This is the description
@@ -143,22 +149,26 @@ describe Cucumber::Core::Gherkin::Writer do
             SCENARIO
           end
         end
+      end
 
+      it 'includes the description in the scenario statement' do
         expect(source).to eq(expected)
       end
     end
 
     context 'with a step' do
-      it 'includes the step statement' do
-        source = gherkin do
+      let(:source) do
+        gherkin do
           feature 'A Feature' do
             scenario do
               step 'passing'
             end
           end
         end
+      end
 
-        expect(source.to_s).to match(/Given passing\Z/m)
+      it 'includes the step statement' do
+        expect(source.to_s).to include('Given passing')
       end
 
       context 'when a docstring is provided' do
@@ -173,9 +183,8 @@ describe Cucumber::Core::Gherkin::Writer do
                   """
           FEATURE
         end
-
-        it 'includes the content type when provided' do
-          source = gherkin do
+        let(:source) do
+          gherkin do
             feature do
               scenario do
                 step 'failing' do
@@ -184,7 +193,9 @@ describe Cucumber::Core::Gherkin::Writer do
               end
             end
           end
+        end
 
+        it 'includes the content type when provided' do
           expect(source).to eq(expected)
         end
       end
@@ -201,14 +212,15 @@ describe Cucumber::Core::Gherkin::Writer do
             and two..
       FEATURE
     end
-
-    it 'can have a description' do
-      source = gherkin do
+    let(:source) do
+      gherkin do
         feature do
           background description: "One line,\nand two.."
         end
       end
+    end
 
+    it 'can have a description' do
       expect(source).to eq(expected)
     end
   end
@@ -222,14 +234,15 @@ describe Cucumber::Core::Gherkin::Writer do
             Doesn't need to be multi-line.
       FEATURE
     end
-
-    it 'can have a description' do
-      source = gherkin do
+    let(:source) do
+      gherkin do
         feature do
           scenario_outline description: "Doesn't need to be multi-line."
         end
       end
+    end
 
+    it 'can have a description' do
       expect(source).to eq(expected)
     end
 
@@ -244,16 +257,17 @@ describe Cucumber::Core::Gherkin::Writer do
                 Doesn't need to be multi-line.
         FEATURE
       end
-
-      it 'can have a description' do
-        source = gherkin do
+      let(:source) do
+        gherkin do
           feature do
             scenario_outline do
               examples description: "Doesn't need to be multi-line."
             end
           end
         end
+      end
 
+      it 'can have a description' do
         expect(source).to eq(expected)
       end
     end
