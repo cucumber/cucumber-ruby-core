@@ -61,7 +61,7 @@ describe Cucumber::Core::Test::LocationsFilter do
     )
   end
 
-  it "filters out scenarios that do not match" do
+  it 'filters out scenarios that do not match' do
     locations = [to_location('features/test.feature', 3)]
     filter = described_class.new(locations)
     compile([doc], receiver, [filter])
@@ -153,7 +153,7 @@ describe Cucumber::Core::Test::LocationsFilter do
         expect(receiver.test_case_locations).to eq(test_cases.map(&:location))
       end
 
-      it "matches a rule keyword location (containing a background), to all of the scenarios contained in the rule" do
+      it 'matches a rule keyword location (containing a background), to all of the scenarios contained in the rule' do
         locations = [to_location(file, 29)]
         filter = described_class.new(locations)
         compile([doc], receiver, [filter])
@@ -165,7 +165,7 @@ describe Cucumber::Core::Test::LocationsFilter do
         )
       end
 
-      it "matches a rule background keyword location to all of the scenarios contained in the rule" do
+      it 'matches a rule background keyword location to all of the scenarios contained in the rule' do
         locations = [to_location(file, 30)]
         filter = described_class.new(locations)
         compile [doc], receiver, [filter]
@@ -177,7 +177,7 @@ describe Cucumber::Core::Test::LocationsFilter do
         )
       end
 
-      it "matches a rule background step keyword location to all of the scenarios contained in the rule" do
+      it 'matches a rule background step keyword location to all of the scenarios contained in the rule' do
         locations = [to_location(file, 31)]
         filter = described_class.new(locations)
         compile [doc], receiver, [filter]
@@ -189,7 +189,7 @@ describe Cucumber::Core::Test::LocationsFilter do
         )
       end
 
-      it "matches a rule keyword location (without a background), to all of the scenarios contained in the rule" do
+      it 'matches a rule keyword location (without a background), to all of the scenarios contained in the rule' do
         locations = [to_location(file, 39)]
         filter = described_class.new(locations)
         compile [doc], receiver, [filter]
@@ -382,7 +382,7 @@ describe Cucumber::Core::Test::LocationsFilter do
         expect(receiver.test_case_locations.map(&:line)).to eq([19, 23, 24])
       end
 
-      it "does not match the location of the examples keyword line" do
+      it 'does not match the location of the examples keyword line' do
         filter = described_class.new([to_location(file, 17)])
         compile([doc], receiver, [filter])
         expect(receiver.test_case_locations).to eq([])

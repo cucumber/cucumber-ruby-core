@@ -28,7 +28,7 @@ describe Cucumber::Core::Test::Step do
   end
 
   describe 'executing' do
-    it "passes arbitrary arguments to the action block" do
+    it 'passes arbitrary arguments to the action block' do
       expected_args = [double, double]
       test_step = described_class.new(id, text, location).with_action do |*actual_args|
         expect(actual_args).to eq(expected_args)
