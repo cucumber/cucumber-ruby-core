@@ -9,6 +9,10 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Breaking Change
+- Structure of Gherkin writer helpers have been changed. Now one helper per file, and all helpers are still available by requiring `gherkin/writer/helpers`.
+See upgrading notes for [18.0.0.md](upgrading_notes/18.0.0.md#upgrading-to-cucumber-core-1800), for full changes
+
 ### Changed
 - Tidied up a bunch of mostly internal test code to be more rubocop compliant
 
