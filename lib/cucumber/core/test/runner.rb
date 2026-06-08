@@ -12,56 +12,40 @@ module Cucumber
         attr_reader :event_bus, :running_test_case, :running_test_step, :id_generator
         private :event_bus, :running_test_case, :running_test_step, :id_generator
 
-        def initialize(event_bus, max_attempts = 1)
+        def initialize(event_bus, backtrace_filter = nil, max_attempts = 1)
           @event_bus = event_bus
           @max_attempts = max_attempts
+          @backtrace_filter = backtrace_filter
           @id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new
           @current_test_case = nil
         end
 
         def test_case(test_case, &descend)
-          if @current_test_case == test_case
-            @attempt += 1
-          else
-            @attempt = 1
-          end
+          @attempt = @current_test_case == test_case ? @attempt + 1 : 1
           @current_test_case = test_case
           @current_test_case_started_id = id_generator.new_id
           @running_test_case = RunningTestCase.new
           @running_test_step = nil
           event_bus.test_case_started(test_case)
-          message = Cucumber::Messages::Envelope.new(
-            test_case_started: Cucumber::Messages::TestCaseStarted.new(
-              id: @current_test_case_started_id,
-              test_case_id: test_case.id,
-              timestamp: time_to_timestamp(Time.now),
-              attempt: @attempt
-            )
-          )
-          event_bus.envelope(message)
+          event_bus.envelope(create_test_case_started_message(test_case))
 
           descend.call(self)
-          result = running_test_case.result
-          result = Result::Undefined.new('The test case has no steps', Result::UnknownDuration.new, ["#{test_case.location}:in `#{test_case.name}'"]) if result.unknown?
 
+          result = calculate_test_case_result(test_case)
           event_bus.test_case_finished(test_case, result)
-          will_be_retried = result.failed? && (@attempt < @max_attempts)
-          message = Cucumber::Messages::Envelope.new(
-            test_case_finished: Cucumber::Messages::TestCaseFinished.new(
-              test_case_started_id: @current_test_case_started_id,
-              timestamp: time_to_timestamp(Time.now),
-              will_be_retried: will_be_retried
-            )
-          )
-          event_bus.envelope(message)
+          event_bus.envelope(create_test_case_finished_message(result))
           self
         end
 
         def test_step(test_step)
           @running_test_step = test_step
           event_bus.test_step_started test_step
+          event_bus.envelope(create_test_step_started_message(test_step))
+
           step_result = running_test_case.execute(test_step)
+
           event_bus.test_step_finished test_step, step_result
+          event_bus.envelope(create_test_step_finished_message(test_step, step_result))
           @running_test_step = nil
           self
         end
@@ -75,6 +59,85 @@ module Cucumber
 
         def done
           self
+        end
+
+        def calculate_test_case_result(test_case)
+          if running_test_case.result.unknown?
+            Result::Undefined.new('The test case has no steps', Result::UnknownDuration.new, ["#{test_case.location}:in `#{test_case.name}'"])
+          else
+            running_test_case.result
+          end
+        end
+
+        def create_test_case_started_message(test_case)
+          Cucumber::Messages::Envelope.new(
+            test_case_started: Cucumber::Messages::TestCaseStarted.new(
+              id: @current_test_case_started_id,
+              test_case_id: test_case.id,
+              timestamp: time_to_timestamp(Time.now),
+              attempt: @attempt
+            )
+          )
+        end
+
+        def create_test_case_finished_message(result)
+          Cucumber::Messages::Envelope.new(
+            test_case_finished: Cucumber::Messages::TestCaseFinished.new(
+              test_case_started_id: @current_test_case_started_id,
+              timestamp: time_to_timestamp(Time.now),
+              will_be_retried: result.failed? && (@attempt < @max_attempts)
+            )
+          )
+        end
+
+        def create_test_step_started_message(test_step)
+          Cucumber::Messages::Envelope.new(
+            test_step_started: Cucumber::Messages::TestStepStarted.new(
+              test_step_id: test_step.id,
+              test_case_started_id: @current_test_case_started_id,
+              timestamp: time_to_timestamp(Time.now)
+            )
+          )
+        end
+
+        def create_test_step_finished_message(test_step, step_result)
+          result = @backtrace_filter.nil? ? step_result : step_result.with_filtered_backtrace(@backtrace_filter)
+          result_message = result.to_message
+          if result.failed? || result.pending?
+            message_element = result.failed? ? result.exception : result
+
+            result_message = Cucumber::Messages::TestStepResult.new(
+              status: result_message.status,
+              duration: result_message.duration,
+              message: create_error_message(message_element),
+              exception: create_exception_object(result, message_element)
+            )
+          end
+          Cucumber::Messages::Envelope.new(
+            test_step_finished: Cucumber::Messages::TestStepFinished.new(
+              test_step_id: test_step.id,
+              test_case_started_id: @current_test_case_started_id,
+              test_step_result: result_message,
+              timestamp: time_to_timestamp(Time.now)
+            )
+          )
+        end
+
+        def create_error_message(message_element)
+          <<~ERROR_MESSAGE
+            #{message_element.message} (#{message_element.class})
+            #{message_element.backtrace}
+          ERROR_MESSAGE
+        end
+
+        def create_exception_object(result, message_element)
+          return unless result.failed?
+
+          Cucumber::Messages::Exception.new(
+            type: message_element.class,
+            message: message_element.message,
+            stack_trace: message_element.backtrace.join("\n")
+          )
         end
 
         class RunningTestCase
