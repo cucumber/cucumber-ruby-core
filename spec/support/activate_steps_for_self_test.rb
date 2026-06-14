@@ -3,7 +3,7 @@
 # This filter is used for testing Cucumber itself. It adds step definitions that
 # will activate steps to have passed / failed / pending results if they use expected names.
 class ActivateStepsForSelfTest < Cucumber::Core::Filter.new
-  Failure = Class.new(StandardError)
+  class Failure < StandardError; end
 
   def test_case(test_case)
     test_case.with_steps(test_steps(test_case)).describe_to(receiver)

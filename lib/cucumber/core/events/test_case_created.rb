@@ -1,13 +1,23 @@
 # frozen_string_literal: true
 
-require_relative '../event'
+require_relative 'base'
 
 module Cucumber
   module Core
     module Events
       # Signals that a Test::Case was created from a Pickle
-      class TestCaseCreated < Event.new(:test_case, :pickle)
-        # The created test step & source pickle
+      class TestCaseCreated < Base
+        attr_reader :test_case, :pickle
+
+        def self.event_id
+          :test_case_created
+        end
+
+        def initialize(test_case, pickle)
+          @test_case = test_case
+          @pickle = pickle
+          super()
+        end
       end
     end
   end

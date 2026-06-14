@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'cucumber/core/test/result'
+require_relative 'result'
 
 module Cucumber
   module Core
@@ -38,7 +38,7 @@ module Cucumber
             end
           elsif (defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby') == 'jruby'
             def time_in_nanoseconds
-              java.lang.System.nanoTime()
+              java.lang.System.nanoTime
             end
           else
             def time_in_nanoseconds

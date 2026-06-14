@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
-require 'forwardable'
-require 'cucumber/core/platform'
 require 'set'
 
 module Cucumber
   module Core
     module Test
-      IncompatibleLocations = Class.new(StandardError)
+      class IncompatibleLocations < StandardError; end
 
       module Location
         def self.of_caller(additional_depth = 0)

@@ -7,7 +7,9 @@ module Cucumber
     module Gherkin
       module Writer
         class DocString
-          include Indentation.level(6)
+          extend Indentation
+
+          indentation_level 6
 
           attr_reader :strings, :content_type
           private :strings, :content_type

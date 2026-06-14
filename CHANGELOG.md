@@ -9,11 +9,29 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Breaking Change
+- Structure of Gherkin writer helpers have been changed. Now one helper per file, and all helpers are still available by requiring `gherkin/writer/helpers`.
+See upgrading notes for [18.0.0.md](upgrading_notes/18.0.0.md#upgrading-to-cucumber-core-1800), for full changes
+
+### Changed
+- Tidied up a bunch of mostly internal test code to be more rubocop compliant
+
+## [17.0.0] - 2026-06-01
+### Removed
+- Strict configuration has been removed from all `Result` classes
+- Removed the ability to list event attributes (Only the `#to_h` method now remains for this purpose)
+
 ### Added
 - Added `#to_envelope` for `Cucumber::Core::Gherkin::Document` ([#329](https://github.com/cucumber/cucumber-ruby-core/pull/329))
 
 ### Changed
 - Refactored the internal base `Event` class to reduce complexity and make it more flexible for future use (No user facing changes)
+- Refactored the `Result` classes to be more simplified and one class per file
+- Changed the base event inheritance to a new base class structure
+- Refactored some internals of the library to be slightly more performant (Including removing redundant nil checks)
+- Permit `cucumber-tag-expressions` up to v10
+- Change to use worst Test Step result as the Test Case result
+([#317](https://github.com/cucumber/cucumber-ruby-core/pull/317))
 
 ## [16.2.0] - 2026-02-06
 ### Changed
@@ -30,11 +48,11 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 - Further bumped the lower bounds of messages and gherkin several more versions
 
 ## [16.0.0] - 2025-12-16
-### Changed
-- Bumped the lower bounds of messages to v28, gherkin to v33 and tag-expressions to v6
-
 ### Removed
 - Remove support for ruby 3.1 and below. 3.2 or higher is required now
+
+### Changed
+- Bumped the lower bounds of messages to v28, gherkin to v33 and tag-expressions to v6
 
 ## [15.4.0] - 2025-12-10
 ### Changed
@@ -64,24 +82,25 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 - Permit usage of gherkin up to v30
 
 ## [15.0.0] - 2024-12-24
+### Removed
+- Remove support for ruby 2.7 and below. 3.0 or higher is required now (Owing to messages bump)
+
 ### Changed
 - Permit usage of messages up to v28
 
 ### Fixed
 - References to the Time Conversion and UUID helpers needed altering to use the `Helpers` namespace
 
-### Removed
-- Remove support for ruby 2.7 and below. 3.0 or higher is required now (Owing to messages bump)
-
 ## [14.0.0] - 2024-08-08
-### Changed
-- Permit usage of gherkin up to v29 and messages up to v26
-- **Internal Breaking Change**: Structure of `Action` classes have changed.
-See upgrading notes for [14.0.0.md](upgrading_notes/14.0.0.md#upgrading-to-cucumber-core-1400)
+### Breaking Change
+- Structure of `Action` classes have changed. See upgrading notes for [14.0.0.md](upgrading_notes/14.0.0.md#upgrading-to-cucumber-core-1400)
 ([#282](https://github.com/cucumber/cucumber-ruby-core/pull/282))
 
 ### Removed
-- Remove support for ruby 2.6 and below. 2.7 or higher is required now (Autofixed to Ruby 2.7 styles)
+- Removed support for ruby 2.6 and below. 2.7 or higher is required now (Autofixed to Ruby 2.7 styles)
+
+### Changed
+- Permit usage of gherkin up to v29 and messages up to v26
 
 ## [13.0.3] - 2024-07-24
 ### Changed
@@ -100,6 +119,9 @@ See upgrading notes for [14.0.0.md](upgrading_notes/14.0.0.md#upgrading-to-cucum
 - The `Cucumber::Core::Test::Result::Passed` class was missing the strict keyword argument handling
 
 ## [13.0.0] - 2023-12-05
+### Removed
+- Remove legacy `unindent` gem (Now no longer required since Ruby 2.3 and Squiggly heredocs) ([#278](https://github.com/cucumber/cucumber-ruby-core/pull/278))
+
 ### Changed
 - Now using a 2-tiered changelog to avoid any bugs when using polyglot-release
 - More refactoring of the repo by fixing up a bunch of manual rubocop offenses (See PR's for details)
@@ -111,9 +133,6 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 
 ### Fixed
 - Restore support for matching a scenario by its Feature, Background, and Rule line numbers ([#247](https://github.com/cucumber/cucumber-ruby-core/pull/247))
-
-### Removed
-- Remove legacy `unindent` gem (Now no longer required since Ruby 2.3 and Squiggly heredocs) ([#278](https://github.com/cucumber/cucumber-ruby-core/pull/278))
 
 ## [12.0.0] - 2023-09-06
 ### Changed
@@ -137,7 +156,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.2.0...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v17.0.0...HEAD
+[17.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.2.0...v17.0.0
 [16.2.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.1...v16.2.0
 [16.1.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.0...v16.1.1
 [16.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.0.0...v16.1.0

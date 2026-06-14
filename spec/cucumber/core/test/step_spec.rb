@@ -28,15 +28,12 @@ describe Cucumber::Core::Test::Step do
   end
 
   describe 'executing' do
-    it "passes arbitrary arguments to the action's block" do
-      args_spy = nil
+    it 'passes arbitrary arguments to the action block' do
       expected_args = [double, double]
       test_step = described_class.new(id, text, location).with_action do |*actual_args|
-        args_spy = actual_args
+        expect(actual_args).to eq(expected_args)
       end
       test_step.execute(*expected_args)
-
-      expect(args_spy).to eq expected_args
     end
 
     context 'when a passing action exists' do

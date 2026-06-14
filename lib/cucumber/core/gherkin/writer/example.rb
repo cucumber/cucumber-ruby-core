@@ -8,7 +8,9 @@ module Cucumber
     module Gherkin
       module Writer
         class Example < Scenario
-          include Indentation.level 4
+          extend Indentation
+
+          indentation_level 4
 
           default_keyword 'Example'
         end
