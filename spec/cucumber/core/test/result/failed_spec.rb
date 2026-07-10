@@ -10,6 +10,9 @@ describe Cucumber::Core::Test::Result::Failed do
   let(:exception)  { StandardError.new('error message') }
   let(:visitor) { double }
   let(:args) { double }
+  let(:filter_class) { double }
+  let(:filter) { double }
+  let(:filtered_exception) { double }
 
   before do
     allow(visitor).to receive(:failed)
@@ -33,10 +36,9 @@ describe Cucumber::Core::Test::Result::Failed do
   end
 
   it 'applies filters to the exception' do
-    filter_class = double
-    filter = double
-    filtered_exception = double
-    permit_exception_passthrough(filter_class, filter, filtered_exception)
+    # Permit an exception to be filtered and not excluded
+    allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
+    allow(filter).to receive(:exception).and_return(filtered_exception)
 
     expect(result.with_filtered_backtrace(filter_class).exception).to eq(filtered_exception)
   end
@@ -93,11 +95,5 @@ describe Cucumber::Core::Test::Result::Failed do
     it { expect(result).not_to be_skipped }
     it { expect(result).not_to be_passed }
     it { expect(result).not_to be_unknown }
-  end
-
-  # Permit an exception to be filtered and not excluded
-  def permit_exception_passthrough(filter_class, filter, filtered_value)
-    allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
-    allow(filter).to receive(:exception).and_return(filtered_value)
   end
 end

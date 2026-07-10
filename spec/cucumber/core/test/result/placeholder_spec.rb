@@ -7,53 +7,6 @@ describe Cucumber::Core::Test::Result do
   let(:visitor) { double }
   let(:args)    { double }
 
-  describe Cucumber::Core::Test::Result::Raisable do
-    context 'with or without backtrace' do
-      subject(:result) { described_class.new }
-
-      it 'does nothing if step has no backtrace line' do
-        step = 'does not respond_to?(:backtrace_line)'
-
-        expect(result.with_appended_backtrace(step).backtrace).to be_nil
-      end
-    end
-
-    context 'without backtrace' do
-      subject(:result) { described_class.new }
-
-      it 'set the backtrace to the backtrace line of the step' do
-        step = double
-        allow(step).to receive(:backtrace_line).and_return('step_line')
-
-        expect(result.with_appended_backtrace(step).backtrace).to eq(['step_line'])
-      end
-
-      it 'does nothing when filtering the backtrace' do
-        expect(result.with_filtered_backtrace(double)).to eq(result)
-      end
-    end
-
-    context 'with backtrace' do
-      subject(:result) { described_class.new('message', 0, 'backtrace') }
-
-      it 'appends the backtrace line of the step' do
-        step = double
-        allow(step).to receive(:backtrace_line).and_return('step_line')
-
-        expect(result.with_appended_backtrace(step).backtrace).to eq(%w[backtrace step_line])
-      end
-
-      it 'applies filters to the backtrace' do
-        filter_class = double
-        filter = double
-        filtered_backtrace = double
-        permit_exception_passthrough(filter_class, filter, filtered_backtrace)
-
-        expect(result.with_filtered_backtrace(filter_class)).to eq(filtered_backtrace)
-      end
-    end
-  end
-
   describe Cucumber::Core::Test::Result::Summary do
     let(:summary)   { described_class.new }
     let(:failed)    { Cucumber::Core::Test::Result::Failed.new(Cucumber::Core::Test::Result::Duration.new(10), exception) }
@@ -185,15 +138,6 @@ describe Cucumber::Core::Test::Result do
     end
   end
 
-  describe Cucumber::Core::Test::Result::Duration do
-    subject(:duration) { described_class.new(10) }
-
-    it '#nanoseconds can be accessed in #tap' do
-      expect(duration.tap { |duration| @duration = duration.nanoseconds }).to eq(duration)
-      expect(@duration).to eq(10)
-    end
-  end
-
   describe Cucumber::Core::Test::Result::UnknownDuration do
     subject(:duration) { described_class.new }
 
@@ -204,11 +148,5 @@ describe Cucumber::Core::Test::Result do
     it 'accessing #nanoseconds outside #tap block raises exception' do
       expect { duration.nanoseconds }.to raise_error(RuntimeError)
     end
-  end
-
-  # Permit an exception to be filtered and not excluded
-  def permit_exception_passthrough(filter_class, filter, filtered_value)
-    allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
-    allow(filter).to receive(:exception).and_return(filtered_value)
   end
 end
