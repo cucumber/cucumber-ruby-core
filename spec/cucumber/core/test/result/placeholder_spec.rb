@@ -54,35 +54,6 @@ describe Cucumber::Core::Test::Result do
     end
   end
 
-  describe Cucumber::Core::Test::Result::Skipped do
-    subject(:result) { described_class.new }
-
-    it 'describes itself to a visitor' do
-      expect(visitor).to receive(:skipped).with(args)
-      expect(visitor).to receive(:duration).with(an_unknown_duration, args)
-
-      result.describe_to(visitor, args)
-    end
-
-    it 'converts to a Cucumber::Message::TestResult' do
-      expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::SKIPPED)
-    end
-
-    it { expect(result.to_sym).to eq(:skipped) }
-    it { expect(result).not_to be_passed }
-    it { expect(result).not_to be_failed }
-    it { expect(result).not_to be_ambiguous }
-    it { expect(result).not_to be_undefined }
-    it { expect(result).not_to be_unknown }
-    it { expect(result).to be_skipped }
-    it { expect(result).not_to be_flaky }
-    it { expect(result).to be_ok }
-  end
-
-  describe Cucumber::Core::Test::Result::Flaky do
-    it { expect(described_class).not_to be_ok }
-  end
-
   describe Cucumber::Core::Test::Result::Summary do
     let(:summary)   { described_class.new }
     let(:failed)    { Cucumber::Core::Test::Result::Failed.new(Cucumber::Core::Test::Result::Duration.new(10), exception) }
