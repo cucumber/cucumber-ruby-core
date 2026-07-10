@@ -54,78 +54,6 @@ describe Cucumber::Core::Test::Result do
     it { expect(result).to be_ok }
   end
 
-  describe Cucumber::Core::Test::Result::Failed do
-    subject(:result) { described_class.new(duration, exception) }
-
-    let(:duration)   { Cucumber::Core::Test::Result::Duration.new(1 * 1000 * 1000) }
-    let(:exception)  { StandardError.new('error message') }
-
-    before do
-      allow(visitor).to receive(:failed)
-      allow(visitor).to receive(:duration)
-      allow(visitor).to receive(:exception)
-    end
-
-    it 'is described as a failing test' do
-      expect(visitor).to receive(:failed).with(args)
-
-      result.describe_to(visitor, args)
-    end
-
-    it 'contains an exception message' do
-      expect(visitor).to receive(:exception).with(exception, args)
-
-      result.describe_to(visitor, args)
-    end
-
-    it 'has a duration' do
-      expect(result.duration).to eq(duration)
-    end
-
-    it 'converts to a Cucumber::Message::TestResult' do
-      expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::FAILED)
-    end
-
-    it 'requires both constructor arguments' do
-      expect { described_class.new }.to raise_error(ArgumentError)
-      expect { described_class.new(duration) }.to raise_error(ArgumentError)
-    end
-
-    it 'does nothing if step has no backtrace line' do
-      result.exception.set_backtrace('exception backtrace')
-      step = 'does not respond_to?(:backtrace_line)'
-
-      expect(result.with_appended_backtrace(step).exception.backtrace).to eq(['exception backtrace'])
-    end
-
-    it 'appends the backtrace line of the step' do
-      result.exception.set_backtrace('exception backtrace')
-      step = double
-      allow(step).to receive(:backtrace_line).and_return('step_line')
-
-      expect(result.with_appended_backtrace(step).exception.backtrace).to eq(['exception backtrace', 'step_line'])
-    end
-
-    it 'applies filters to the exception' do
-      filter_class = double
-      filter = double
-      filtered_exception = double
-      permit_exception_passthrough(filter_class, filter, filtered_exception)
-
-      expect(result.with_filtered_backtrace(filter_class).exception).to eq(filtered_exception)
-    end
-
-    it { expect(result.to_sym).to eq(:failed) }
-    it { expect(result).not_to be_passed }
-    it { expect(result).to be_failed }
-    it { expect(result).not_to be_ambiguous }
-    it { expect(result).not_to be_undefined }
-    it { expect(result).not_to be_unknown }
-    it { expect(result).not_to be_skipped }
-    it { expect(result).not_to be_flaky }
-    it { expect(result).not_to be_ok }
-  end
-
   describe Cucumber::Core::Test::Result::Unknown do
     subject(:result) { described_class.new }
 
@@ -192,31 +120,6 @@ describe Cucumber::Core::Test::Result do
         expect(result.with_filtered_backtrace(filter_class)).to eq(filtered_backtrace)
       end
     end
-  end
-
-  describe Cucumber::Core::Test::Result::Ambiguous do
-    subject(:result) { described_class.new }
-
-    it 'describes itself to a visitor' do
-      expect(visitor).to receive(:ambiguous).with(args)
-      expect(visitor).to receive(:duration).with(an_unknown_duration, args)
-
-      result.describe_to(visitor, args)
-    end
-
-    it 'converts to a Cucumber::Message::TestResult' do
-      expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::AMBIGUOUS)
-    end
-
-    it { expect(result.to_sym).to eq(:ambiguous) }
-    it { expect(result).not_to be_passed }
-    it { expect(result).not_to be_failed }
-    it { expect(result).to be_ambiguous }
-    it { expect(result).not_to be_undefined }
-    it { expect(result).not_to be_unknown }
-    it { expect(result).not_to be_skipped }
-    it { expect(result).not_to be_flaky }
-    it { expect(result).not_to be_ok }
   end
 
   describe Cucumber::Core::Test::Result::Undefined do

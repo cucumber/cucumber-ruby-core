@@ -37,7 +37,7 @@ describe Cucumber::Core::Test::Result::Ambiguous do
       expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::AMBIGUOUS)
     end
 
-    it 'has an ambiguous, unran duration' do
+    it 'has a duration' do
       expect(result.to_message.duration).to have_attributes(seconds: 0, nanos: 0)
     end
   end
