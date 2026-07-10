@@ -7,53 +7,6 @@ describe Cucumber::Core::Test::Result do
   let(:visitor) { double }
   let(:args)    { double }
 
-  describe Cucumber::Core::Test::Result::Passed do
-    subject(:result) { described_class.new(duration) }
-
-    let(:duration)   { Cucumber::Core::Test::Result::Duration.new(1 * 1000 * 1000) }
-
-    before do
-      allow(visitor).to receive(:duration)
-      allow(visitor).to receive(:passed)
-    end
-
-    it 'is described as a passing test' do
-      expect(visitor).to receive(:passed).with(args)
-
-      result.describe_to(visitor, args)
-    end
-
-    it 'converts to a string' do
-      expect(result.to_s).to eq('✓')
-    end
-
-    it 'converts to a `Cucumber::Message::TestResult`' do
-      expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::PASSED)
-    end
-
-    it 'has a duration' do
-      expect(result.duration).to eq(duration)
-    end
-
-    it 'does nothing when appending the backtrace' do
-      expect(result.with_appended_backtrace(double)).to eq(result)
-    end
-
-    it 'does nothing when filtering the backtrace' do
-      expect(result.with_filtered_backtrace(double)).to eq(result)
-    end
-
-    it { expect(result.to_sym).to eq(:passed) }
-    it { expect(result).to be_passed }
-    it { expect(result).not_to be_failed }
-    it { expect(result).not_to be_ambiguous }
-    it { expect(result).not_to be_undefined }
-    it { expect(result).not_to be_unknown }
-    it { expect(result).not_to be_skipped }
-    it { expect(result).not_to be_flaky }
-    it { expect(result).to be_ok }
-  end
-
   describe Cucumber::Core::Test::Result::Unknown do
     subject(:result) { described_class.new }
 

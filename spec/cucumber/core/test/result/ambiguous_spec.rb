@@ -7,7 +7,7 @@ describe Cucumber::Core::Test::Result::Ambiguous do
   subject(:result) { described_class.new }
 
   let(:visitor) { double }
-  let(:args)    { double }
+  let(:args) { double }
 
   describe '.ok?' do
     it { expect(described_class).not_to be_ok }
@@ -23,17 +23,11 @@ describe Cucumber::Core::Test::Result::Ambiguous do
   end
 
   describe '#to_message' do
-    let(:message) do
-      Cucumber::Messages::TestStepResult.new(
-        status: Cucumber::Messages::TestStepResultStatus::AMBIGUOUS
-      )
-    end
-
     it 'is a `TestStepResult` message' do
       expect(result.to_message).to be_a Cucumber::Messages::TestStepResult
     end
 
-    it 'has an ambiguous status' do
+    it 'has a status' do
       expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::AMBIGUOUS)
     end
 

@@ -6,10 +6,10 @@ require 'support/duration_matcher'
 describe Cucumber::Core::Test::Result::Failed do
   subject(:result) { described_class.new(duration, exception) }
 
-  let(:duration)   { Cucumber::Core::Test::Result::Duration.new(1 * 1000 * 1000) }
+  let(:duration)   { Cucumber::Core::Test::Result::Duration.new(1 * 1_000 * 1_000) }
   let(:exception)  { StandardError.new('error message') }
   let(:visitor) { double }
-  let(:args)    { double }
+  let(:args) { double }
 
   before do
     allow(visitor).to receive(:failed)
@@ -64,7 +64,7 @@ describe Cucumber::Core::Test::Result::Failed do
       expect(result.to_message).to be_a Cucumber::Messages::TestStepResult
     end
 
-    it 'has an ambiguous status' do
+    it 'has a status' do
       expect(result.to_message.status).to eq(Cucumber::Messages::TestStepResultStatus::FAILED)
     end
 
@@ -93,5 +93,11 @@ describe Cucumber::Core::Test::Result::Failed do
     it { expect(result).not_to be_skipped }
     it { expect(result).not_to be_passed }
     it { expect(result).not_to be_unknown }
+  end
+
+  # Permit an exception to be filtered and not excluded
+  def permit_exception_passthrough(filter_class, filter, filtered_value)
+    allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
+    allow(filter).to receive(:exception).and_return(filtered_value)
   end
 end
