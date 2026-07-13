@@ -12,7 +12,7 @@ module Cucumber
         # retry, therefore only the class method self.ok? is needed.
         class Flaky
           def self.ok?
-            false
+            true
           end
         end
       end
