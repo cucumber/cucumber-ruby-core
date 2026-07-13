@@ -12,6 +12,11 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 
 ## [18.0.0] - 2026-07-13
 ### Changed
+- **BREAKING CHANGE:** Structure of Gherkin writer helpers have been changed. Now one helper per file, and all helpers are still available by requiring `gherkin/writer/helpers`.
+  See upgrading notes for [18.0.0.md](upgrading_notes/18.0.0.md#upgrading-to-cucumber-core-1800), for full changes
+- **BREAKING CHANGE:** Flaky results are now treated as a passing state. See upgrading notes for [18.0.0.md](upgrading_notes/18.0.0.md#upgrading-to-cucumber-core-1800), for full changes
+
+### Changed
 - Tidied up a bunch of mostly internal test code to be more rubocop compliant
 
 ## [17.0.0] - 2026-06-01
@@ -91,6 +96,8 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 
 ## [14.0.0] - 2024-08-08
 ### Changed
+- **BREAKING CHANGE:** Structure of `Action` classes have changed. See upgrading notes for [14.0.0.md](upgrading_notes/14.0.0.md#upgrading-to-cucumber-core-1400)
+([#282](https://github.com/cucumber/cucumber-ruby-core/pull/282))
 - Permit usage of gherkin up to v29 and messages up to v26
 
 ### Removed
@@ -165,13 +172,6 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 [15.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v14.0.0...v15.0.0
 [14.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.3...v14.0.0
 [13.0.3]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.2...v13.0.3
-[13.0.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.1...v13.0.2
-[13.0.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.0...v13.0.1
-[13.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v12.0.0...v13.0.0
-[12.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v11.1.0...v12.0.0
-[11.1.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v11.0.0...v11.1.0
-[11.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v10.1.1...v11.0.0
-.3]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.2...v13.0.3
 [13.0.2]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.1...v13.0.2
 [13.0.1]: https://github.com/cucumber/cucumber-ruby-core/compare/v13.0.0...v13.0.1
 [13.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v12.0.0...v13.0.0
