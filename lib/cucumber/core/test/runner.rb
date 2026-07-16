@@ -14,11 +14,11 @@ module Cucumber
         attr_reader :event_bus, :running_test_case, :running_test_step, :id_generator
         private :event_bus, :running_test_case, :running_test_step, :id_generator
 
-        def initialize(event_bus, backtrace_filter = nil, max_attempts = 1)
+        def initialize(event_bus, id_generator = nil, backtrace_filter = nil, max_attempts = 1)
           @event_bus = event_bus
-          @max_attempts = max_attempts
+          @id_generator = id_generator.nil? ? Cucumber::Messages::Helpers::IdGenerator::UUID.new : id_generator
           @backtrace_filter = backtrace_filter
-          @id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new
+          @max_attempts = max_attempts
           @current_test_case = nil
         end
 
@@ -29,25 +29,25 @@ module Cucumber
           @running_test_case = RunningTestCase.new
           @running_test_step = nil
           event_bus.test_case_started(test_case)
-          event_bus.envelope(create_test_case_started_message(test_case))
+          event_bus.envelope(to_test_case_started_envelope(test_case))
 
           descend.call(self)
 
           result = calculate_test_case_result(test_case)
           event_bus.test_case_finished(test_case, result)
-          event_bus.envelope(create_test_case_finished_message(result))
+          event_bus.envelope(to_test_case_finished_envelope(result))
           self
         end
 
         def test_step(test_step)
           @running_test_step = test_step
           event_bus.test_step_started test_step
-          event_bus.envelope(create_test_step_started_message(test_step))
+          event_bus.envelope(to_test_step_started_envelope(test_step))
 
           step_result = running_test_case.execute(test_step)
 
           event_bus.test_step_finished test_step, step_result
-          event_bus.envelope(create_test_step_finished_message(test_step, step_result))
+          event_bus.envelope(to_test_step_finished_envelope(test_step, step_result))
           @running_test_step = nil
           self
         end
@@ -71,7 +71,7 @@ module Cucumber
           end
         end
 
-        def create_test_case_started_message(test_case)
+        def to_test_case_started_envelope(test_case)
           Cucumber::Messages::Envelope.new(
             test_case_started: Cucumber::Messages::TestCaseStarted.new(
               id: @current_test_case_started_id,
@@ -82,7 +82,7 @@ module Cucumber
           )
         end
 
-        def create_test_case_finished_message(result)
+        def to_test_case_finished_envelope(result)
           Cucumber::Messages::Envelope.new(
             test_case_finished: Cucumber::Messages::TestCaseFinished.new(
               test_case_started_id: @current_test_case_started_id,
@@ -92,7 +92,7 @@ module Cucumber
           )
         end
 
-        def create_test_step_started_message(test_step)
+        def to_test_step_started_envelope(test_step)
           Cucumber::Messages::Envelope.new(
             test_step_started: Cucumber::Messages::TestStepStarted.new(
               test_step_id: test_step.id,
@@ -102,7 +102,7 @@ module Cucumber
           )
         end
 
-        def create_test_step_finished_message(test_step, step_result)
+        def to_test_step_finished_envelope(test_step, step_result)
           result = @backtrace_filter.nil? ? step_result : step_result.with_filtered_backtrace(@backtrace_filter)
           result_message = result.to_message
           if result.failed? || result.pending?
@@ -111,8 +111,8 @@ module Cucumber
             result_message = Cucumber::Messages::TestStepResult.new(
               status: result_message.status,
               duration: result_message.duration,
-              message: create_error_message(message_element),
-              exception: create_exception_object(result, message_element)
+              message: to_error_message(message_element),
+              exception: to_exception_object(result, message_element)
             )
           end
           Cucumber::Messages::Envelope.new(
@@ -125,14 +125,14 @@ module Cucumber
           )
         end
 
-        def create_error_message(message_element)
+        def to_error_message(message_element)
           <<~ERROR_MESSAGE
             #{message_element.message} (#{message_element.class})
             #{message_element.backtrace}
           ERROR_MESSAGE
         end
 
-        def create_exception_object(result, message_element)
+        def to_exception_object(result, message_element)
           return unless result.failed?
 
           Cucumber::Messages::Exception.new(
