@@ -14,9 +14,9 @@ module Cucumber
         attr_reader :event_bus, :running_test_case, :running_test_step, :id_generator
         private :event_bus, :running_test_case, :running_test_step, :id_generator
 
-        def initialize(event_bus, id_generator = nil, backtrace_filter = nil, max_attempts = 1)
+        def initialize(event_bus, id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter = nil, max_attempts = 1)
           @event_bus = event_bus
-          @id_generator = id_generator.nil? ? Cucumber::Messages::Helpers::IdGenerator::UUID.new : id_generator
+          @id_generator = id_generator
           @backtrace_filter = backtrace_filter
           @max_attempts = max_attempts
           @current_test_case = nil
