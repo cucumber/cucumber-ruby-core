@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'events'
+require_relative 'event'
 
 module Cucumber
   module Core
@@ -11,8 +11,30 @@ module Cucumber
     class EventBus
       attr_reader :event_types
 
+      # The registry contains all the event registered in the core, that will be used by the {EventBus} by default.
+      def self.registry
+        build_registry(
+          Envelope,
+          GherkinSourceParsed,
+          TestCaseCreated,
+          TestCaseStarted,
+          TestCaseFinished,
+          TestStepCreated,
+          TestStepStarted,
+          TestStepFinished
+        )
+      end
+
+      # Build an event registry to be passed to the {EventBus} constructor from a list of types.
+      # Each type must respond to `event_id` so that it can be added to the registry hash
+      #
+      # @return [Hash{Symbol => Class}]
+      def self.build_registry(*types)
+        types.to_h { |type| [type.event_id, type] }
+      end
+
       # @param registry [Hash{Symbol => Class}] a hash of event types to use on the bus
-      def initialize(registry = Events.registry)
+      def initialize(registry = Event.registry)
         @event_types = registry.freeze
         @handlers = {}
         @event_queue = []
