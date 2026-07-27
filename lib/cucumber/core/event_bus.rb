@@ -14,14 +14,14 @@ module Cucumber
       # The registry contains all the event registered in the core, that will be used by the {EventBus} by default.
       def self.registry
         build_registry(
-          Envelope,
-          GherkinSourceParsed,
-          TestCaseCreated,
-          TestCaseStarted,
-          TestCaseFinished,
-          TestStepCreated,
-          TestStepStarted,
-          TestStepFinished
+          Event::Envelope,
+          Event::GherkinSourceParsed,
+          Event::TestCaseCreated,
+          Event::TestCaseStarted,
+          Event::TestCaseFinished,
+          Event::TestStepCreated,
+          Event::TestStepStarted,
+          Event::TestStepFinished
         )
       end
 
@@ -34,7 +34,7 @@ module Cucumber
       end
 
       # @param registry [Hash{Symbol => Class}] a hash of event types to use on the bus
-      def initialize(registry = Event.registry)
+      def initialize(registry = self.class.registry)
         @event_types = registry.freeze
         @handlers = {}
         @event_queue = []

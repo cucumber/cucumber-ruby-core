@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Cucumber::Core::Events::Base do
+describe Cucumber::Core::Event::Base do
   subject(:event) { my_event_type.new(1, 2) }
 
   let(:my_event_type) do
