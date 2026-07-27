@@ -4,7 +4,7 @@ require_relative 'base'
 
 module Cucumber
   module Core
-    module Events
+    module Event
       # Signals that a {Test::Case} is about to be executed
       class TestCaseStarted < Base
         # @return [Cucumber::Core::Test::Case] the test case to be executed

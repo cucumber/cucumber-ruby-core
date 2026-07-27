@@ -4,7 +4,7 @@ require_relative 'base'
 
 module Cucumber
   module Core
-    module Events
+    module Event
       # Signals that a Test::Step was created from a PickleStep
       class TestStepCreated < Base
         attr_reader :test_step, :pickle_step
