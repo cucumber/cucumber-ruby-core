@@ -9,6 +9,9 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Added
+- Emit test_case_started/finished and test_step_started/test_step_finished envelopes from the Runner. ([#331](https://github.com/cucumber/cucumber-ruby-core/pull/331))
+
 ### Changed
 - Increased upper bounds of `cucumber-messages` to v34 and `cucumber-gherkin` to v42
 

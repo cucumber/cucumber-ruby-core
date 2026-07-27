@@ -397,7 +397,11 @@ describe Cucumber::Core::Test::Runner do
         it 'calls skip, rather than execute on test step of the hook' do
           expect(failing_hook).not_to receive(:execute)
 
-          allow(failing_hook).to receive(:skip).and_return(Cucumber::Core::Test::Result::Failed.new(Cucumber::Core::Test::Result::UnknownDuration.new, instance_double(StandardError, backtrace: [])))
+          allow(failing_hook).to receive(:skip).and_return(
+            Cucumber::Core::Test::Result::Failed.new(
+              Cucumber::Core::Test::Result::UnknownDuration.new, instance_double(StandardError, backtrace: [], message: nil)
+            )
+          )
           test_case.describe_to(runner)
         end
       end
