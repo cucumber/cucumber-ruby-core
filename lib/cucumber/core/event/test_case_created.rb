@@ -4,7 +4,7 @@ require_relative 'base'
 
 module Cucumber
   module Core
-    module Events
+    module Event
       # Signals that a Test::Case was created from a Pickle
       class TestCaseCreated < Base
         attr_reader :test_case, :pickle

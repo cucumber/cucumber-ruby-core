@@ -1,61 +1,10 @@
 # frozen_string_literal: true
 
-module Cucumber
-  module Core
-    class Event
-      # Macro to generate new subclasses of {Event} with attribute readers.
-      def self.new(*events)
-        # Use normal constructor for subclasses of Event
-        return super if ancestors.index(Event).positive?
-
-        Class.new(Event) do
-          # NB: We need to use metaprogramming here instead of direct variable obtainment
-          # because JRuby does not guarantee the order in which variables are defined is equivalent
-          # to the order in which they are obtainable
-          #
-          # See https://github.com/jruby/jruby/issues/7988 for more info
-          attr_reader(*events)
-
-          define_method(:initialize) do |*attributes|
-            events.zip(attributes) do |name, value|
-              instance_variable_set(:"@#{name}", value)
-            end
-          end
-        end
-      end
-
-      def to_h
-        instance_variables.to_h do |variable_name|
-          [variable_name[1..].to_sym, instance_variable_get(variable_name)]
-        end
-      end
-
-      def attributes
-        instance_variables.map { |var| instance_variable_get(var) }
-      end
-
-      def event_id
-        self.class.event_id
-      end
-
-      class << self
-        # @return [Symbol] the underscored name of the class to be used as the key in an event registry
-        def event_id
-          underscore(name.split('::').last).to_sym
-        end
-
-        private
-
-        def underscore(string)
-          string
-            .to_s
-            .gsub('::', '/')
-            .gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
-            .gsub(/([a-z\d])([A-Z])/, '\1_\2')
-            .tr('-', '_')
-            .downcase
-        end
-      end
-    end
-  end
-end
+require_relative 'event/envelope'
+require_relative 'event/gherkin_source_parsed'
+require_relative 'event/test_case_created'
+require_relative 'event/test_case_started'
+require_relative 'event/test_case_finished'
+require_relative 'event/test_step_created'
+require_relative 'event/test_step_started'
+require_relative 'event/test_step_finished'

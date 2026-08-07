@@ -4,7 +4,7 @@ require_relative 'base'
 
 module Cucumber
   module Core
-    module Events
+    module Event
       # Signals that a {Test::Step} is about to be executed
       class TestStepStarted < Base
         # @return [Cucumber::Core::Test::Step] the test step to be executed

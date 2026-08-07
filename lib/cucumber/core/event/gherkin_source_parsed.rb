@@ -4,7 +4,7 @@ require_relative 'base'
 
 module Cucumber
   module Core
-    module Events
+    module Event
       # Signals that a gherkin source has been parsed
       class GherkinSourceParsed < Base
         # @return [GherkinDocument] the GherkinDocument Ast Node that was parsed
