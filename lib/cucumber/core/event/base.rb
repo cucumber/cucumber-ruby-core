@@ -2,7 +2,7 @@
 
 module Cucumber
   module Core
-    module Events
+    module Event
       # An archetype of what each Cucumber Event defined in cucumber-ruby must adhere to
       class Base
         # The "key" name of the class to be used as the key in the event registry (Underscored name symbolized)

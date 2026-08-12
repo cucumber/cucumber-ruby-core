@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative '../event'
+require_relative 'base'
 
 module Cucumber
   module Core
-    module Events
+    module Event
       # Signals that a {Test::Case} has finished executing
       class TestCaseFinished < Base
         # @return [Test::Case] that was executed

@@ -14,6 +14,7 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 
 ### Changed
 - Increased upper bounds of `cucumber-messages` to v34 and `cucumber-gherkin` to v42
+- **BREAKING CHANGE:** Event base class has been internally refactored. See upgrading notes for [19.0.0.md](upgrading_notes/19.0.0.md#upgrading-to-cucumber-core-1900), for full changes
 
 ## [18.0.0] - 2026-07-13
 ### Changed
