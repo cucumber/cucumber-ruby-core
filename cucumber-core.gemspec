@@ -26,14 +26,14 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'cucumber-gherkin', '> 36', '< 43'
   s.add_dependency 'cucumber-messages', '> 31', '< 35'
-  s.add_dependency 'cucumber-tag-expressions', '> 6', '< 10'
+  s.add_dependency 'cucumber-tag-expressions', '> 6', '< 12'
 
   s.add_development_dependency 'rake', '~> 13.3'
   s.add_development_dependency 'rspec', '~> 3.13'
-  s.add_development_dependency 'rubocop', '~> 1.88.0'
+  s.add_development_dependency 'rubocop', '~> 1.89.0'
   s.add_development_dependency 'rubocop-packaging', '~> 0.6.0'
   s.add_development_dependency 'rubocop-rake', '~> 0.7.1'
-  s.add_development_dependency 'rubocop-rspec', '~> 3.10.0'
+  s.add_development_dependency 'rubocop-rspec', '~> 3.10.2'
 
   s.files            = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*']
   s.rdoc_options     = ['--charset=UTF-8']
