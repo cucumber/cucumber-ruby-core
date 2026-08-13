@@ -45,11 +45,7 @@ or install the gem directly:
 
 ### Supported platforms
 
-- Ruby 3.3
-- Ruby 3.2
-- Ruby 3.1
-- Ruby 3.0
-- JRuby 9.4 (with [some limitations](https://github.com/cucumber/cucumber-ruby/blob/main/docs/jruby-limitations.md))
+Supported Platforms are detailed in the [cucumber-ruby repository](https://github.com/cucumber/cucumber-ruby#supported-platforms).
 
 ## Usage
 
