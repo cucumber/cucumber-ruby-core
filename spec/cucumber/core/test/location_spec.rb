@@ -53,8 +53,7 @@ module Cucumber
         describe '#match?' do
           let(:matching) { described_class.new(file, line) }
           let(:same_file_other_line) { described_class.new(file, double) }
-          let(:not_matching) { described_class.new(other_file, line) }
-          let(:other_file) { double }
+          let(:not_matching) { described_class.new(double, line) }
 
           context 'with a precise location' do
             let(:precise) { described_class.new(file, line) }

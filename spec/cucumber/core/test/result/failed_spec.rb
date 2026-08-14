@@ -4,20 +4,16 @@ require 'cucumber/core/test/result'
 require 'support/duration_matcher'
 
 describe Cucumber::Core::Test::Result::Failed do
-  subject(:result) { described_class.new(duration, exception) }
+  subject(:result) { described_class.new(duration, StandardError.new('error message')) }
 
   let(:duration)   { Cucumber::Core::Test::Result::Duration.new(1 * 1_000 * 1_000) }
-  let(:exception)  { StandardError.new('error message') }
   let(:visitor) { double }
-  let(:args) { double }
   let(:filter_class) { double }
   let(:filter) { double }
   let(:filtered_exception) { double }
 
   before do
-    allow(visitor).to receive(:failed)
-    allow(visitor).to receive(:duration)
-    allow(visitor).to receive(:exception)
+    allow(visitor).to receive_messages(failed: nil, duration: nil, exception: nil)
   end
 
   it 'does nothing if step has no backtrace line' do
@@ -49,15 +45,15 @@ describe Cucumber::Core::Test::Result::Failed do
 
   describe '#describe_to' do
     it 'is described as a failing test' do
-      expect(visitor).to receive(:failed).with(args)
+      expect(visitor).to receive(:failed).with([1, 2, 3])
 
-      result.describe_to(visitor, args)
+      result.describe_to(visitor, [1, 2, 3])
     end
 
     it 'contains an exception message' do
-      expect(visitor).to receive(:exception).with(exception, args)
+      expect(visitor).to receive(:exception).with(result.exception, %w[foo bar baz])
 
-      result.describe_to(visitor, args)
+      result.describe_to(visitor, %w[foo bar baz])
     end
   end
 
