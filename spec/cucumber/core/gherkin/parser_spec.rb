@@ -143,12 +143,12 @@ describe Cucumber::Core::Gherkin::Parser do
       feature do
         rule description: 'First rule' do
           scenario name: 'Do not talk about the fight club' do
-            step 'text'
+            step 'step 1'
           end
         end
         rule description: 'Second rule' do
           example name: 'Do NOT talk about the fight club' do
-            step 'text'
+            step 'step 2'
           end
         end
       end
