@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+
+## [19.0.0] - 2026-08-19
 ### Added
 - Emit test_case_started/finished and test_step_started/test_step_finished envelopes from the Runner. ([#331](https://github.com/cucumber/cucumber-ruby-core/pull/331))
 
@@ -20,10 +22,8 @@ Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blo
 ## [18.0.0] - 2026-07-13
 ### Changed
 - **BREAKING CHANGE:** Structure of Gherkin writer helpers have been changed. Now one helper per file, and all helpers are still available by requiring `gherkin/writer/helpers`.
-  See upgrading notes for [18.0.0.md](upgrading_notes/18.0.0.md#upgrading-to-cucumber-core-1800), for full changes
+See upgrading notes for [18.0.0.md](upgrading_notes/18.0.0.md#upgrading-to-cucumber-core-1800), for full changes
 - **BREAKING CHANGE:** Flaky results are now treated as a passing state. See upgrading notes for [18.0.0.md](upgrading_notes/18.0.0.md#upgrading-to-cucumber-core-1800), for full changes
-
-### Changed
 - Tidied up a bunch of mostly internal test code to be more rubocop compliant
 
 ## [17.0.0] - 2026-06-01
@@ -164,7 +164,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v18.0.0...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v19.0.0...HEAD
+[19.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v18.0.0...v19.0.0
 [18.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v17.0.0...v18.0.0
 [17.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.2.0...v17.0.0
 [16.2.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.1.1...v16.2.0
