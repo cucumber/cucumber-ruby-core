@@ -548,7 +548,10 @@ describe Cucumber::Core::Test::Runner do
     end
 
     context 'when a failed test case is not run again although attempts remain' do
-      let(:runner) { described_class.new(event_bus, Cucumber::Messages::Helpers::IdGenerator::UUID.new, nil, 2) }
+      let(:retry_policy) { double }
+      let(:runner) { described_class.new(event_bus, Cucumber::Messages::Helpers::IdGenerator::UUID.new, nil, retry_policy) }
+
+      before { allow(retry_policy).to receive(:will_be_retried?).with(test_case, an_instance_of(Cucumber::Core::Test::Result::Failed)).and_return(false) }
 
       it 'reports the test case will not be retried' do
         test_case.describe_to(runner)

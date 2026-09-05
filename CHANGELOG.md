@@ -9,6 +9,14 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Changed
+- **BREAKING CHANGE:** `Cucumber::Core::Test::Runner` now takes a retry policy instead of a maximum number of attempts, and
+asks it whether a finished test case will be retried. See upgrading notes for
+[20.0.0.md](upgrading_notes/20.0.0.md#upgrading-to-cucumber-core-2000), for full changes
+
+### Fixed
+- The `TestCaseFinished` envelope is now emitted before the `test_case_finished` event, so a test case retried from
+that event no longer has its envelope emitted out of order and with the started id of the retry
 
 ## [19.0.0] - 2026-08-19
 ### Added

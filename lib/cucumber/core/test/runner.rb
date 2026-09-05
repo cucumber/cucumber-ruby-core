@@ -14,11 +14,13 @@ module Cucumber
         attr_reader :event_bus, :running_test_case, :running_test_step, :id_generator
         private :event_bus, :running_test_case, :running_test_step, :id_generator
 
-        def initialize(event_bus, id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter = nil, max_attempts = 1)
+        # @param retry_policy [#will_be_retried?, nil] asked, once a test case has finished, whether it is going to be
+        #   run again. It receives the test case and its result. When nil, no test case is ever reported as retried.
+        def initialize(event_bus, id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter = nil, retry_policy = nil)
           @event_bus = event_bus
           @id_generator = id_generator
           @backtrace_filter = backtrace_filter
-          @max_attempts = max_attempts
+          @retry_policy = retry_policy
           @current_test_case = nil
         end
 
@@ -34,8 +36,8 @@ module Cucumber
           descend.call(self)
 
           result = calculate_test_case_result(test_case)
+          event_bus.envelope(to_test_case_finished_envelope(test_case, result))
           event_bus.test_case_finished(test_case, result)
-          event_bus.envelope(to_test_case_finished_envelope(result))
           self
         end
 
@@ -82,12 +84,12 @@ module Cucumber
           )
         end
 
-        def to_test_case_finished_envelope(result)
+        def to_test_case_finished_envelope(test_case, result)
           Cucumber::Messages::Envelope.new(
             test_case_finished: Cucumber::Messages::TestCaseFinished.new(
               test_case_started_id: @current_test_case_started_id,
               timestamp: time_to_timestamp(Time.now),
-              will_be_retried: result.failed? && (@attempt < @max_attempts)
+              will_be_retried: @retry_policy&.will_be_retried?(test_case, result) || false
             )
           )
         end
