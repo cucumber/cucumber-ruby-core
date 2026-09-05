@@ -4,6 +4,7 @@ require 'cucumber/core/test/around_hook'
 require 'cucumber/core/test/hook_step'
 require 'cucumber/core/test/case'
 require 'cucumber/core/test/step'
+require 'cucumber/core/event_bus'
 
 require 'support/duration_matcher'
 
@@ -518,6 +519,45 @@ describe Cucumber::Core::Test::Runner do
         expect(result.exception).to be_a StandardError
       end
       test_case.describe_to(runner)
+    end
+  end
+
+  context 'when emitting envelopes' do
+    let(:event_bus) { Cucumber::Core::EventBus.new }
+    let(:test_steps) { [failing_step] }
+    let(:envelopes) { [] }
+
+    before { event_bus.on(:envelope) { |event| envelopes << event.envelope } }
+
+    context 'when the test case is run again from the `test_case_finished` event' do
+      before do
+        retried = false
+        event_bus.on(:test_case_finished) do
+          next if retried
+
+          retried = true
+          test_case.describe_to(runner)
+        end
+      end
+
+      it 'references the `test_case_started` id of the same attempt in each `test_case_finished` envelope' do
+        test_case.describe_to(runner)
+
+        expect(envelopes.filter_map(&:test_case_finished).map(&:test_case_started_id)).to eq(envelopes.filter_map(&:test_case_started).map(&:id))
+      end
+    end
+
+    context 'when a failed test case is not run again although attempts remain' do
+      let(:retry_policy) { double }
+      let(:runner) { described_class.new(event_bus, Cucumber::Messages::Helpers::IdGenerator::UUID.new, nil, retry_policy) }
+
+      before { allow(retry_policy).to receive(:will_be_retried?).with(test_case, an_instance_of(Cucumber::Core::Test::Result::Failed)).and_return(false) }
+
+      it 'reports the test case will not be retried' do
+        test_case.describe_to(runner)
+
+        expect(envelopes.filter_map(&:test_case_finished).map(&:will_be_retried)).to eq([false])
+      end
     end
   end
 end
