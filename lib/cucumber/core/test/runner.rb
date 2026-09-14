@@ -16,7 +16,7 @@ module Cucumber
 
         # @param retry_policy [#will_be_retried?, nil] asked, once a test case has finished, whether it is going to be
         #   run again. It receives the test case and its result. When nil, no test case is ever reported as retried.
-        def initialize(event_bus, id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter = nil, retry_policy = nil)
+        def initialize(event_bus, id_generator: Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter: nil, retry_policy: nil)
           @event_bus = event_bus
           @id_generator = id_generator
           @backtrace_filter = backtrace_filter
