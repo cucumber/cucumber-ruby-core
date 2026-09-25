@@ -547,6 +547,14 @@ describe Cucumber::Core::Test::Runner do
       end
     end
 
+    context 'when no retry policy is given' do
+      it 'reports a failed test case will not be retried' do
+        test_case.describe_to(runner)
+
+        expect(envelopes.filter_map(&:test_case_finished).map(&:will_be_retried)).to eq([false])
+      end
+    end
+
     context 'when a failed test case is not run again although attempts remain' do
       let(:retry_policy) { double }
       let(:runner) { described_class.new(event_bus, retry_policy: retry_policy) }

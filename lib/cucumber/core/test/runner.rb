@@ -2,6 +2,7 @@
 
 require 'cucumber/messages/helpers/test_step_result_comparator'
 
+require_relative 'no_retries'
 require_relative 'timer'
 require 'cucumber/messages'
 
@@ -14,9 +15,9 @@ module Cucumber
         attr_reader :event_bus, :running_test_case, :running_test_step, :id_generator
         private :event_bus, :running_test_case, :running_test_step, :id_generator
 
-        # @param retry_policy [#will_be_retried?, nil] asked, once a test case has finished, whether it is going to be
-        #   run again. It receives the test case and its result. When nil, no test case is ever reported as retried.
-        def initialize(event_bus, id_generator: Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter: nil, retry_policy: nil)
+        # @param retry_policy [#will_be_retried?] asked, once a test case has finished, whether it is going to be
+        #   run again. It receives the test case and its result. By default, no test case is ever reported as retried.
+        def initialize(event_bus, id_generator: Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter: nil, retry_policy: NoRetries.new)
           @event_bus = event_bus
           @id_generator = id_generator
           @backtrace_filter = backtrace_filter
@@ -89,7 +90,7 @@ module Cucumber
             test_case_finished: Cucumber::Messages::TestCaseFinished.new(
               test_case_started_id: @current_test_case_started_id,
               timestamp: time_to_timestamp(Time.now),
-              will_be_retried: @retry_policy&.will_be_retried?(test_case, result) || false
+              will_be_retried: @retry_policy.will_be_retried?(test_case, result)
             )
           )
         end
