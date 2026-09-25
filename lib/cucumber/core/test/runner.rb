@@ -14,12 +14,14 @@ module Cucumber
         attr_reader :event_bus, :running_test_case, :running_test_step, :id_generator
         private :event_bus, :running_test_case, :running_test_step, :id_generator
 
-        def initialize(event_bus, id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter = nil, max_attempts = 1)
+        def initialize(event_bus, id_generator = Cucumber::Messages::Helpers::IdGenerator::UUID.new, backtrace_filter = nil, max_attempts = 1, max_total_retried_tests = Float::INFINITY)
           @event_bus = event_bus
           @id_generator = id_generator
           @backtrace_filter = backtrace_filter
           @max_attempts = max_attempts
+          @max_total_retried_tests = max_total_retried_tests
           @current_test_case = nil
+          @total_permanently_failed = 0
         end
 
         def test_case(test_case, &descend)
@@ -83,11 +85,13 @@ module Cucumber
         end
 
         def to_test_case_finished_envelope(result)
+          will_be_retried = result.failed? && (@attempt < @max_attempts) && (@total_permanently_failed < @max_total_retried_tests)
+          @total_permanently_failed += 1 if result.failed? && !will_be_retried
           Cucumber::Messages::Envelope.new(
             test_case_finished: Cucumber::Messages::TestCaseFinished.new(
               test_case_started_id: @current_test_case_started_id,
               timestamp: time_to_timestamp(Time.now),
-              will_be_retried: result.failed? && (@attempt < @max_attempts)
+              will_be_retried: will_be_retried
             )
           )
         end
