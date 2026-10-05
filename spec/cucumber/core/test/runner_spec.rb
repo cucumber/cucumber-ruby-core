@@ -553,6 +553,14 @@ describe Cucumber::Core::Test::Runner do
 
         expect(envelopes.filter_map(&:test_case_finished).map(&:will_be_retried)).to eq([false])
       end
+
+      it 'asks a `NoRetries` instance whether the test case will be retried' do
+        no_retries = Cucumber::Core::Test::NoRetries.new
+        allow(Cucumber::Core::Test::NoRetries).to receive(:new).and_return(no_retries)
+        expect(no_retries).to receive(:will_be_retried?).with(test_case, an_instance_of(Cucumber::Core::Test::Result::Failed)).and_call_original
+
+        test_case.describe_to(runner)
+      end
     end
 
     context 'when a failed test case is not run again although attempts remain' do
@@ -565,6 +573,19 @@ describe Cucumber::Core::Test::Runner do
         test_case.describe_to(runner)
 
         expect(envelopes.filter_map(&:test_case_finished).map(&:will_be_retried)).to eq([false])
+      end
+    end
+
+    context 'when the retry policy reports the failed test case will be retried' do
+      let(:retry_policy) { double }
+      let(:runner) { described_class.new(event_bus, retry_policy: retry_policy) }
+
+      before { allow(retry_policy).to receive(:will_be_retried?).with(test_case, an_instance_of(Cucumber::Core::Test::Result::Failed)).and_return(true) }
+
+      it 'reports the test case will be retried' do
+        test_case.describe_to(runner)
+
+        expect(envelopes.filter_map(&:test_case_finished).map(&:will_be_retried)).to eq([true])
       end
     end
   end
