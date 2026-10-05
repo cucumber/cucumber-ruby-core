@@ -5,8 +5,7 @@
 [![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://vshymanskyy.github.io/StandWithUkraine)
 [![OpenCollective](https://opencollective.com/cucumber/backers/badge.svg)](https://opencollective.com/cucumber)
 [![OpenCollective](https://opencollective.com/cucumber/sponsors/badge.svg)](https://opencollective.com/cucumber)
-[![Test cucumber-core](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/test.yml/badge.svg)](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/test.yml)
-[![Code Climate](https://codeclimate.com/github/cucumber/cucumber-ruby-core.svg)](https://codeclimate.com/github/cucumber/cucumber-ruby-core)
+[![Test cucumber-core](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/test-ruby.yaml/badge.svg)](https://github.com/cucumber/cucumber-ruby-core/actions/workflows/test-ruby.yaml)
 
 Cucumber is a tool for running automated tests written in plain language. Because they're
 written in plain language, they can be read by anyone on your team. Because they can be
