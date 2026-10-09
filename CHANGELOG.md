@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+
+## [20.0.0] - 2026-10-09
 ### Changed
 - **BREAKING CHANGE:** `Cucumber::Core::Test::Runner` now takes a retry policy instead of a maximum number of attempts, and
 asks it whether a finished test case will be retried. Its optional constructor arguments became keyword arguments. See upgrading notes for
@@ -172,7 +174,8 @@ See upgrading notes for [13.0.0.md](upgrading_notes/13.0.0.md#upgrading-to-cucum
 ### Changed
 - Updated `cucumber-gherkin` and `cucumber-messages`
 
-[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v19.0.0...HEAD
+[Unreleased]: https://github.com/cucumber/cucumber-ruby-core/compare/v20.0.0...HEAD
+[20.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v19.0.0...v20.0.0
 [19.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v18.0.0...v19.0.0
 [18.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v17.0.0...v18.0.0
 [17.0.0]: https://github.com/cucumber/cucumber-ruby-core/compare/v16.2.0...v17.0.0
