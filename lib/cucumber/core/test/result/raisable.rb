@@ -46,7 +46,7 @@ module Cucumber
             Cucumber::Messages::Exception.new(
               type: self.class,
               message: message,
-              stack_trace: backtrace.join("\n")
+              stack_trace: backtrace ? backtrace.join("\n") : 'N/A'
             )
           end
         end
