@@ -31,7 +31,9 @@ module Cucumber
           def to_message
             Cucumber::Messages::TestStepResult.new(
               status: Cucumber::Messages::TestStepResultStatus::SKIPPED,
-              duration: duration.to_message_duration
+              duration: duration.to_message_duration,
+              message: message,
+              exception: exception_submessage
             )
           end
         end

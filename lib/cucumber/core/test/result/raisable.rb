@@ -39,6 +39,16 @@ module Cucumber
 
             filter.new(dup).exception
           end
+
+          private
+
+          def exception_submessage
+            Cucumber::Messages::Exception.new(
+              type: self.class,
+              message: message,
+              stack_trace: backtrace.join("\n")
+            )
+          end
         end
       end
     end
