@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'lib/cucumber/core/version'
+
 Gem::Specification.new do |s|
   s.name        = 'cucumber-core'
   s.version     = Cucumber::Core::VERSION
