@@ -9,6 +9,8 @@ This document is formatted according to the principles of [Keep A CHANGELOG](htt
 Please visit [cucumber/CONTRIBUTING.md](https://github.com/cucumber/cucumber/blob/master/CONTRIBUTING.md) for more info on how to contribute to Cucumber.
 
 ## [Unreleased]
+### Added
+- Moved the version definition to `lib/cucumber/core/version.rb` and updated the gemspec to use `Cucumber::Core::VERSION`
 
 ## [20.0.0] - 2026-10-09
 ### Changed
