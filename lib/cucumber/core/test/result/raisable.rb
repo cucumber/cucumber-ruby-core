@@ -11,7 +11,7 @@ module Cucumber
         class Raisable < StandardError
           attr_reader :message, :duration
 
-          def initialize(message = '', duration = UnknownDuration.new, backtrace = nil)
+          def initialize(message = nil, duration = UnknownDuration.new, backtrace = nil)
             @message = message
             @duration = duration
             super(message)

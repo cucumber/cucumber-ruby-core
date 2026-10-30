@@ -114,7 +114,7 @@ module Cucumber
             result_message = Cucumber::Messages::TestStepResult.new(
               status: result_message.status,
               duration: result_message.duration,
-              message: to_error_message(message_element),
+              message: result_message.message,
               exception: to_exception_object(result, message_element)
             )
           end
@@ -126,13 +126,6 @@ module Cucumber
               timestamp: time_to_timestamp(Time.now)
             )
           )
-        end
-
-        def to_error_message(message_element)
-          <<~ERROR_MESSAGE
-            #{message_element.message} (#{message_element.class})
-            #{message_element.backtrace}
-          ERROR_MESSAGE
         end
 
         def to_exception_object(result, message_element)
