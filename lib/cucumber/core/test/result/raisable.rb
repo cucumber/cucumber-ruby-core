@@ -42,11 +42,11 @@ module Cucumber
 
           private
 
-          def exception_submessage
+          def exception_sub_message
             Cucumber::Messages::Exception.new(
               type: self.class,
               message: message,
-              stack_trace: backtrace ? backtrace.join("\n") : 'N/A'
+              stack_trace: backtrace&.join("\n")
             )
           end
         end

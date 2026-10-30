@@ -33,7 +33,7 @@ module Cucumber
               status: Cucumber::Messages::TestStepResultStatus::PENDING,
               duration: duration.to_message_duration,
               message: message,
-              exception: exception_submessage
+              exception: exception_sub_message
             )
           end
         end
