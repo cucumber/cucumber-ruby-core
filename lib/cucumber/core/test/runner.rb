@@ -108,16 +108,6 @@ module Cucumber
         def to_test_step_finished_envelope(test_step, step_result)
           result = @backtrace_filter.nil? ? step_result : step_result.with_filtered_backtrace(@backtrace_filter)
           result_message = result.to_message
-          if result.failed? || result.pending?
-            message_element = result.failed? ? result.exception : result
-
-            result_message = Cucumber::Messages::TestStepResult.new(
-              status: result_message.status,
-              duration: result_message.duration,
-              message: result_message.message,
-              exception: to_exception_object(result, message_element)
-            )
-          end
           Cucumber::Messages::Envelope.new(
             test_step_finished: Cucumber::Messages::TestStepFinished.new(
               test_step_id: test_step.id,
@@ -125,16 +115,6 @@ module Cucumber
               test_step_result: result_message,
               timestamp: time_to_timestamp(Time.now)
             )
-          )
-        end
-
-        def to_exception_object(result, message_element)
-          return unless result.failed?
-
-          Cucumber::Messages::Exception.new(
-            type: message_element.class,
-            message: message_element.message,
-            stack_trace: message_element.backtrace.join("\n")
           )
         end
 
