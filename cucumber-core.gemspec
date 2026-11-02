@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-version = File.read(File.expand_path('VERSION', __dir__)).strip
+require_relative 'lib/cucumber/core/version'
 
 Gem::Specification.new do |s|
   s.name        = 'cucumber-core'
-  s.version     = version
+  s.version     = Cucumber::Core::VERSION
   s.authors     = ['Aslak Hellesøy', 'Matt Wynne', 'Steve Tooke', 'Oleg Sukhodolsky', 'Tom Brand']
   s.description = 'Core library for the Cucumber BDD app'
   s.summary     = "cucumber-core-#{s.version}"
