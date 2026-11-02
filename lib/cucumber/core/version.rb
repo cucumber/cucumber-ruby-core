@@ -2,6 +2,6 @@
 
 module Cucumber
   module Core
-    VERSION = '20.0.0'
+    VERSION = '20.1.0'
   end
 end
