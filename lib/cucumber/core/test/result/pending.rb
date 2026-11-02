@@ -20,28 +20,16 @@ module Cucumber
             self
           end
 
+          def status
+            Cucumber::Messages::TestStepResultStatus::PENDING
+          end
+
           def to_s
             'P'
           end
 
           def to_sym
             :pending
-          end
-
-          def to_message
-            if message
-              Cucumber::Messages::TestStepResult.new(
-                status: Cucumber::Messages::TestStepResultStatus::PENDING,
-                duration: duration.to_message_duration,
-                message: message,
-                exception: exception_sub_message
-              )
-            else
-              Cucumber::Messages::TestStepResult.new(
-                status: Cucumber::Messages::TestStepResultStatus::PENDING,
-                duration: duration.to_message_duration
-              )
-            end
           end
         end
       end

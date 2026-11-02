@@ -18,12 +18,20 @@ module Cucumber
             set_backtrace(backtrace) if backtrace
           end
 
-          def with_message(new_message)
-            self.class.new(new_message, duration, backtrace)
-          end
-
-          def with_duration(new_duration)
-            self.class.new(message, new_duration, backtrace)
+          def to_message
+            if message
+              Cucumber::Messages::TestStepResult.new(
+                status: status,
+                duration: duration.to_message_duration,
+                message: message,
+                exception: exception_sub_message
+              )
+            else
+              Cucumber::Messages::TestStepResult.new(
+                status: status,
+                duration: duration.to_message_duration
+              )
+            end
           end
 
           def with_appended_backtrace(step)
@@ -34,10 +42,18 @@ module Cucumber
             self
           end
 
+          def with_duration(new_duration)
+            self.class.new(message, new_duration, backtrace)
+          end
+
           def with_filtered_backtrace(filter)
             return self unless backtrace
 
             filter.new(dup).exception
+          end
+
+          def with_message(new_message)
+            self.class.new(new_message, duration, backtrace)
           end
 
           private

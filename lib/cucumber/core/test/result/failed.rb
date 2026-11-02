@@ -30,21 +30,16 @@ module Cucumber
             self
           end
 
+          def status
+            Cucumber::Messages::TestStepResultStatus::FAILED
+          end
+
           def to_s
             '✗'
           end
 
           def to_sym
             :failed
-          end
-
-          def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResultStatus::FAILED,
-              duration: duration.to_message_duration,
-              message: message,
-              exception: exception_sub_message
-            )
           end
         end
       end
