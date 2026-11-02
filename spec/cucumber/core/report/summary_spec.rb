@@ -15,7 +15,7 @@ describe Cucumber::Core::Report::Summary do
   let(:skipped_result) { Cucumber::Core::Test::Result::Skipped.new(duration) }
   let(:undefined_result) { Cucumber::Core::Test::Result::Undefined.new(duration) }
   let(:duration) { double }
-  let(:message) { double }
+  let(:message) { 'This failed!' }
   let(:backtrace) { ['error1 line 7', 'error2 line 14'] }
 
   describe 'test case summary' do

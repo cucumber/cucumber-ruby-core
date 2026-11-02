@@ -16,8 +16,6 @@ module Cucumber
             visitor.failed(*)
             visitor.duration(duration, *)
             visitor.exception(exception_sub_message.type, *)
-            # visitor.message(message, *) if message
-            # visitor.backtrace(backtrace, *)
             self
           end
 

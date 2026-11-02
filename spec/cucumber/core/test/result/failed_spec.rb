@@ -38,7 +38,7 @@ describe Cucumber::Core::Test::Result::Failed do
     allow(filter_class).to receive(:new).with(result.exception).and_return(filter)
     allow(filter).to receive(:exception).and_return(filtered_exception)
 
-    expect(result.with_filtered_backtrace(filter_class).exception).to eq(filtered_exception)
+    expect(result.with_filtered_backtrace(filter_class)).to eq(filtered_exception)
   end
 
   describe '.ok?' do
@@ -52,8 +52,14 @@ describe Cucumber::Core::Test::Result::Failed do
       result.describe_to(visitor, [1, 2, 3])
     end
 
+    it 'sets the duration' do
+      expect(visitor).to receive(:duration).with(duration, [1, 2, 3])
+
+      result.describe_to(visitor, [1, 2, 3])
+    end
+
     it 'contains an exception message' do
-      expect(visitor).to receive(:exception).with(result.exception, %w[foo bar baz])
+      expect(visitor).to receive(:exception).with(described_class, %w[foo bar baz])
 
       result.describe_to(visitor, %w[foo bar baz])
     end
