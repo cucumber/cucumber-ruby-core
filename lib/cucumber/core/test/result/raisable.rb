@@ -11,7 +11,7 @@ module Cucumber
         class Raisable < StandardError
           attr_reader :message, :duration
 
-          def initialize(message = '', duration = UnknownDuration.new, backtrace = nil)
+          def initialize(message = nil, duration = UnknownDuration.new, backtrace = nil)
             @message = message
             @duration = duration
             super(message)
@@ -38,6 +38,16 @@ module Cucumber
             return self unless backtrace
 
             filter.new(dup).exception
+          end
+
+          private
+
+          def exception_sub_message
+            Cucumber::Messages::Exception.new(
+              type: self.class,
+              message: message,
+              stack_trace: backtrace&.join("\n")
+            )
           end
         end
       end
