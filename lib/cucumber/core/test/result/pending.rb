@@ -8,8 +8,6 @@ module Cucumber
     module Test
       module Result
         class Pending < Raisable
-          include BooleanMethods
-
           def self.ok?
             false
           end
