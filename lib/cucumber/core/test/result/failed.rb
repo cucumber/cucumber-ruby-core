@@ -12,13 +12,6 @@ module Cucumber
             false
           end
 
-          def initialize(message, duration, backtrace)
-            raise ArgumentError unless duration
-            raise ArgumentError unless backtrace
-
-            super
-          end
-
           def describe_to(visitor, *)
             visitor.failed(*)
             visitor.duration(duration, *)
