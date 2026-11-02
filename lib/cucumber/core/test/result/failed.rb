@@ -24,8 +24,9 @@ module Cucumber
           def describe_to(visitor, *)
             visitor.failed(*)
             visitor.duration(duration, *)
-            visitor.message(message, *) if message
-            visitor.backtrace(backtrace, *)
+            visitor.exception(exception_sub_message.type, *)
+            # visitor.message(message, *) if message
+            # visitor.backtrace(backtrace, *)
             self
           end
 

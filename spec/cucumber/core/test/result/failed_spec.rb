@@ -4,12 +4,14 @@ require 'cucumber/core/test/result'
 require 'support/duration_matcher'
 
 describe Cucumber::Core::Test::Result::Failed do
-  subject(:result) { described_class.new(duration, StandardError.new('error message')) }
+  subject(:result) { described_class.new(message, duration, backtrace) }
 
   let(:duration)   { Cucumber::Core::Test::Result::Duration.new(1 * 1_000 * 1_000) }
   let(:visitor) { double }
   let(:filter_class) { double }
   let(:filter) { double }
+  let(:message) { double }
+  let(:backtrace) { ['error1 line 7', 'error2 line 14'] }
   let(:filtered_exception) { double }
 
   before do
