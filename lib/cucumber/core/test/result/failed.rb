@@ -7,27 +7,25 @@ module Cucumber
   module Core
     module Test
       module Result
-        class Failed
+        class Failed < Raisable
           include BooleanMethods
-
-          attr_reader :duration, :exception
 
           def self.ok?
             false
           end
 
-          def initialize(duration, exception)
+          def initialize(message, duration, backtrace)
             raise ArgumentError unless duration
-            raise ArgumentError unless exception
+            raise ArgumentError unless backtrace
 
-            @duration = duration
-            @exception = exception
+            super
           end
 
           def describe_to(visitor, *)
             visitor.failed(*)
             visitor.duration(duration, *)
-            visitor.exception(exception, *) if exception
+            visitor.message(message, *) if message
+            visitor.backtrace(backtrace, *)
             self
           end
 
@@ -40,30 +38,12 @@ module Cucumber
           end
 
           def to_message
-            begin
-              message = exception.backtrace.join("\n")
-            rescue NoMethodError
-              message = ''
-            end
-
             Cucumber::Messages::TestStepResult.new(
               status: Cucumber::Messages::TestStepResultStatus::FAILED,
               duration: duration.to_message_duration,
-              message: message
+              message: message,
+              exception: exception_sub_message
             )
-          end
-
-          def with_duration(new_duration)
-            self.class.new(new_duration, exception)
-          end
-
-          def with_appended_backtrace(step)
-            exception.backtrace << step.backtrace_line if step.respond_to?(:backtrace_line)
-            self
-          end
-
-          def with_filtered_backtrace(filter)
-            self.class.new(duration, filter.new(exception.dup).exception)
           end
         end
       end
