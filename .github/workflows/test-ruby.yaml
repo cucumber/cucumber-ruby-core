@@ -19,14 +19,14 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        ruby: ['3.2', '3.3', '3.4', '4.0']
+        ruby: ['3.4', '4.0', '4.1']
         include:
           - os: ubuntu-latest
             ruby: jruby
           - os: macos-latest
-            ruby: '3.4'
+            ruby: '4.1'
           - os: windows-latest
-            ruby: '3.4'
+            ruby: '4.1'
 
     runs-on: ${{ matrix.os }}
     steps:
