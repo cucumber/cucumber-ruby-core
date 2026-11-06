@@ -30,7 +30,7 @@ module Cucumber
         private
 
         def failed(exception)
-          Result::Failed.new(@timer.duration, exception)
+          Result::Failed.new(exception.message, @timer.duration, exception.backtrace)
         end
       end
     end

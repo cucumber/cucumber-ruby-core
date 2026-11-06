@@ -8,8 +8,6 @@ module Cucumber
     module Test
       module Result
         class Skipped < Raisable
-          include BooleanMethods
-
           def self.ok?
             true
           end
@@ -20,28 +18,16 @@ module Cucumber
             self
           end
 
+          def status
+            Cucumber::Messages::TestStepResultStatus::SKIPPED
+          end
+
           def to_s
             '-'
           end
 
           def to_sym
             :skipped
-          end
-
-          def to_message
-            if message
-              Cucumber::Messages::TestStepResult.new(
-                status: Cucumber::Messages::TestStepResultStatus::SKIPPED,
-                duration: duration.to_message_duration,
-                message: message,
-                exception: exception_sub_message
-              )
-            else
-              Cucumber::Messages::TestStepResult.new(
-                status: Cucumber::Messages::TestStepResultStatus::SKIPPED,
-                duration: duration.to_message_duration
-              )
-            end
           end
         end
       end
