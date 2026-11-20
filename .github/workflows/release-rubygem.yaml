@@ -21,6 +21,6 @@ jobs:
           persist-credentials: false
       - uses: ruby/setup-ruby@f9c4492e86def3e644ab32a0ef185eda5b0c20d0 # v1.342.0
         with:
-          ruby-version: 4.0.6
+          ruby-version: 4.1
       - uses: rubygems/configure-rubygems-credentials@dc5a8d8553e6ee01fc26761a49e99e733d17954a # v2.1.0
       - uses: cucumber/action-publish-rubygem@4e79bb9aed597c835e8438f57c04d0996ab80d72 # v2.0.0
