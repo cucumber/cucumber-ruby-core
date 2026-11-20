@@ -401,7 +401,9 @@ describe Cucumber::Core::Test::Runner do
 
         allow(failing_hook).to receive(:skip).and_return(
           Cucumber::Core::Test::Result::Failed.new(
-            Cucumber::Core::Test::Result::UnknownDuration.new, instance_double(StandardError, backtrace: [], message: nil)
+            'This failed!',
+            Cucumber::Core::Test::Result::UnknownDuration.new,
+            ['backtrace line 1', 'backtrace line 2']
           )
         )
         test_case.describe_to(runner)

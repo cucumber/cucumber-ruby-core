@@ -19,10 +19,6 @@ module Cucumber
             self
           end
 
-          def with_filtered_backtrace(_filter)
-            self
-          end
-
           def to_message
             Cucumber::Messages::TestStepResult.new(
               status: Cucumber::Messages::TestStepResultStatus::UNKNOWN,
@@ -32,6 +28,10 @@ module Cucumber
 
           def to_sym
             :unknown
+          end
+
+          def with_filtered_backtrace(_filter)
+            self
           end
         end
       end

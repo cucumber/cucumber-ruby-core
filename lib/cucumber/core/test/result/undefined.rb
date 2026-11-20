@@ -8,8 +8,6 @@ module Cucumber
     module Test
       module Result
         class Undefined < Raisable
-          include BooleanMethods
-
           def self.ok?
             false
           end
@@ -20,19 +18,19 @@ module Cucumber
             self
           end
 
+          def to_message
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::UNDEFINED,
+              duration: duration.to_message_duration
+            )
+          end
+
           def to_s
             '?'
           end
 
           def to_sym
             :undefined
-          end
-
-          def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResultStatus::UNDEFINED,
-              duration: duration.to_message_duration
-            )
           end
         end
       end

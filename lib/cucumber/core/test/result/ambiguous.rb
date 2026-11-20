@@ -8,8 +8,6 @@ module Cucumber
     module Test
       module Result
         class Ambiguous < Raisable
-          include BooleanMethods
-
           def self.ok?
             false
           end
@@ -20,19 +18,16 @@ module Cucumber
             self
           end
 
+          def status
+            Cucumber::Messages::TestStepResultStatus::AMBIGUOUS
+          end
+
           def to_s
             'A'
           end
 
           def to_sym
             :ambiguous
-          end
-
-          def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResultStatus::AMBIGUOUS,
-              duration: duration.to_message_duration
-            )
           end
         end
       end

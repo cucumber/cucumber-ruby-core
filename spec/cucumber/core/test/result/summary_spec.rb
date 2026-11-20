@@ -6,7 +6,7 @@ require 'support/duration_matcher'
 describe Cucumber::Core::Test::Result::Summary do
   subject(:summary) { described_class.new }
 
-  let(:failed)    { Cucumber::Core::Test::Result::Failed.new(Cucumber::Core::Test::Result::Duration.new(10), exception) }
+  let(:failed)    { Cucumber::Core::Test::Result::Failed.new(exception.message, Cucumber::Core::Test::Result::Duration.new(10), exception.backtrace) }
   let(:passed)    { Cucumber::Core::Test::Result::Passed.new(Cucumber::Core::Test::Result::Duration.new(11)) }
   let(:skipped)   { Cucumber::Core::Test::Result::Skipped.new }
   let(:unknown)   { Cucumber::Core::Test::Result::Unknown.new }

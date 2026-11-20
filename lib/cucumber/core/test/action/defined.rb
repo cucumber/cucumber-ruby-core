@@ -44,7 +44,7 @@ module Cucumber
           end
 
           def failed(exception)
-            Result::Failed.new(@timer.duration, exception)
+            Result::Failed.new(exception.message, @timer.duration, exception.backtrace)
           end
 
           def skipped

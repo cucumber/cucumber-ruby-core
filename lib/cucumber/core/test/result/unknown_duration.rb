@@ -8,12 +8,12 @@ module Cucumber
     module Test
       module Result
         class UnknownDuration
-          def tap
-            self
-          end
-
           def nanoseconds
             raise '#nanoseconds only allowed to be used in #tap block'
+          end
+
+          def tap
+            self
           end
 
           def to_message_duration

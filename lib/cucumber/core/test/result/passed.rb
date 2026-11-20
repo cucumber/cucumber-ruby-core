@@ -17,8 +17,6 @@ module Cucumber
           end
 
           def initialize(duration)
-            raise ArgumentError unless duration
-
             @duration = duration
           end
 
@@ -28,19 +26,19 @@ module Cucumber
             self
           end
 
+          def to_message
+            Cucumber::Messages::TestStepResult.new(
+              status: Cucumber::Messages::TestStepResultStatus::PASSED,
+              duration: duration.to_message_duration
+            )
+          end
+
           def to_s
             '✓'
           end
 
           def to_sym
             :passed
-          end
-
-          def to_message
-            Cucumber::Messages::TestStepResult.new(
-              status: Cucumber::Messages::TestStepResultStatus::PASSED,
-              duration: duration.to_message_duration
-            )
           end
 
           def with_appended_backtrace(_step)
